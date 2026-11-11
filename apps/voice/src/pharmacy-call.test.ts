@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
-import { PharmacyCall, toCents } from "./pharmacy-call.js";
+import { PharmacyCall, spokenChoice, toCents } from "./pharmacy-call.js";
 import type { SidebandSocket } from "./reminder-call.js";
 import { isAllowedPharmacy } from "./call-service.js";
 import { buildPharmacyLiveInstructions, pharmacyOpening, pharmacyTool } from "./pharmacy-prompt.js";
@@ -185,4 +185,28 @@ test("pharmacy session has no greeting input and both tools", () => {
     ["press_phone_keys", pharmacyTool.name],
   );
   assert.equal(req.transport.destination, "+5511912345678");
+});
+
+test("presses the key itself when the assistant says the option aloud instead of delegating", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para preço e estoque de remédios, tecle dois. Para outros assuntos, tecle" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Opção" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "nove" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: " 2." });
+  assert.deepEqual(
+    socket.sent.filter((e) => e.type === "transport.dtmf.send").map((e) => e.event),
+    ["2"],
+  );
+  // Saying it again without a new menu does not press again.
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o3", delta: " Opção 2." });
+  assert.equal(socket.sent.filter((e) => e.type === "transport.dtmf.send").length, 1);
+  await call.endCall();
+  assert.deepEqual((await call.result).keysPressed, ["2"]);
+});
+
+test("reads the option the assistant said", () => {
+  assert.equal(spokenChoice("Opção 2."), "2");
+  assert.equal(spokenChoice("vou teclar dois"), "2");
+  assert.equal(spokenChoice("Oi, boa tarde!"), null);
 });
