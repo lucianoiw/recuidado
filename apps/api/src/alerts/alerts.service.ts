@@ -34,6 +34,12 @@ export class AlertsService {
       caregivers.map((c) => c.id),
       { title: alert.title, body: alert.body, url: alert.url, doseId: alert.doseId },
     );
+    await this.record(familyId, alert, sent);
+    return { caregivers: caregivers.length, sent };
+  }
+
+  /** Keeps an entry in the history without a push, e.g. the emergency phone call to the first contact. */
+  async record(familyId: string, alert: Omit<CaregiverAlert, 'url'>, pushesDelivered = 0): Promise<void> {
     await this.db.insert(alerts).values({
       familyId,
       kind: alert.kind,
@@ -41,9 +47,8 @@ export class AlertsService {
       body: alert.body,
       doseId: alert.doseId ?? null,
       medicationId: alert.medicationId ?? null,
-      pushesDelivered: sent,
+      pushesDelivered,
     });
-    return { caregivers: caregivers.length, sent };
   }
 
   /** Newest first. */
@@ -56,6 +61,7 @@ export class AlertsService {
         body: alerts.body,
         doseId: alerts.doseId,
         medicationId: alerts.medicationId,
+        pushesDelivered: alerts.pushesDelivered,
         createdAt: alerts.createdAt,
       })
       .from(alerts)

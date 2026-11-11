@@ -141,13 +141,15 @@ export interface Stock {
   low: boolean;
 }
 
-export type AlertKind = "dose_missed" | "unwell" | "low_stock";
+export type AlertKind = "dose_missed" | "unwell" | "low_stock" | "emergency" | "emergency_call" | "check_in";
 
 export interface FamilyAlert {
   id: string;
   kind: AlertKind;
   title: string;
   body: string;
+  /** Phones that got the push. 0 for entries that were a phone call. */
+  pushesDelivered: number;
   createdAt: string;
 }
 

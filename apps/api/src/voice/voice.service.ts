@@ -333,7 +333,7 @@ export class VoiceCallService {
       .innerJoin(members, eq(medications.patientId, members.id))
       .where(eq(doses.id, doseId));
     if (!row) return;
-    await this.alerts.notifyCaregivers(row.familyId, { kind: 'unwell', url: '/family', doseId, ...text(row.patientName) });
+    await this.alerts.notifyCaregivers(row.familyId, { kind: 'check_in', url: '/family/avisos', doseId, ...text(row.patientName) });
   }
 
   private async safeCallCaregivers(doseId: string, reason: CaregiverCallReason, words?: string): Promise<void> {
@@ -361,7 +361,7 @@ export class VoiceCallService {
       .where(eq(doses.id, doseId));
     if (!patient) return;
     const caregivers = await this.db
-      .select({ id: members.id, phone: members.phone })
+      .select({ id: members.id, phone: members.phone, name: sql<string>`coalesce(${members.nickname}, ${members.name})` })
       .from(members)
       .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver'), isNotNull(members.phone), ne(members.phone, '')))
       .orderBy(desc(members.emergencyContact), asc(members.createdAt))
@@ -376,6 +376,14 @@ export class VoiceCallService {
       const outcome = res.ok ? 'requested' : res.status === 403 ? 'number_not_allowed' : `error_${res.status}`;
       telemetry.capture('emergency_call', { dose_id: doseId, outcome }, c.id);
       this.logger.log(`Dose ${doseId}: emergency call to a caregiver ${outcome}.`);
+      if (res.ok) {
+        await this.alerts.record(patient.familyId, {
+          kind: 'emergency_call',
+          title: `Ligamos para ${c.name}, o primeiro contato`,
+          body: `Recado: "${message.replace(/^Olá, aqui é a assistente virtual da Recuidado\. /, '').replace(/ Obrigada, tchau\.$/, '')}"`,
+          doseId,
+        });
+      }
     }
   }
 
@@ -389,7 +397,7 @@ export class VoiceCallService {
     if (!row) return;
     const said = note?.trim() ? `Ela disse: "${note.trim()}".` : 'Ela disse que não está bem.';
     const { sent } = await this.alerts.notifyCaregivers(row.familyId, {
-      kind: 'unwell',
+      kind: emergency ? 'emergency' : 'unwell',
       title: emergency ? `Urgente: ${row.patientName} pode precisar de ajuda` : `${row.patientName} não está se sentindo bem`,
       body: `${said} Vale ligar para ela.`,
       url: '/family',

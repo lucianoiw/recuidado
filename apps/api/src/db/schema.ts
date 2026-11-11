@@ -158,7 +158,16 @@ export const costShares = pgTable('cost_shares', {
   paidAt: timestamp({ withTimezone: true }),
 }, (t) => [unique().on(t.familyId, t.memberId, t.month)]);
 
-export const alertKind = pgEnum('alert_kind', ['dose_missed', 'unwell', 'low_stock']);
+// emergency: she said it on the call; emergency_call: we phoned the first contact (no push);
+// check_in: result of the call back after an emergency.
+export const alertKind = pgEnum('alert_kind', [
+  'dose_missed',
+  'unwell',
+  'low_stock',
+  'emergency',
+  'emergency_call',
+  'check_in',
+]);
 
 // Every alert sent to the caregivers, for the history screen of the family app.
 export const alerts = pgTable('alerts', {

@@ -24,6 +24,7 @@ import { callName, confirmDose, formatTime, isFree, telHref, type Dose } from "@
 import { dueText } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
+import { useUnseenAlerts } from "@/lib/alerts-seen";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
   if (d.status === "taken") {
@@ -50,6 +51,7 @@ function todayLabel(): string {
 export function FamilyView() {
   const { data, error, now, reload } = useFamily();
   const [confirming, setConfirming] = useState<string | null>(null);
+  const unseen = useUnseenAlerts();
 
   async function markTaken(group: Dose[]) {
     setConfirming(group[0].scheduledAt);
@@ -99,10 +101,18 @@ export function FamilyView() {
         </div>
         <Link
           href="/family/avisos"
-          className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface"
+          className="relative flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface"
         >
           <BellIcon size={22} />
-          <span className="sr-only">Avisos</span>
+          {unseen > 0 ? (
+            <span
+              aria-hidden="true"
+              className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-danger px-1.5 text-[13px] font-extrabold text-white"
+            >
+              {unseen > 9 ? "9+" : unseen}
+            </span>
+          ) : null}
+          <span className="sr-only">{unseen > 0 ? `Avisos, ${unseen} ${unseen === 1 ? "novo" : "novos"}` : "Avisos"}</span>
         </Link>
       </header>
 
@@ -296,7 +306,7 @@ export function FamilyView() {
           <BellIcon size={24} />
         </span>
         <span className="flex flex-1 flex-col">
-          <b>Histórico de avisos</b>
+          <b>Avisos{unseen === 1 ? " (1 novo)" : unseen > 1 ? ` (${unseen} novos)` : ""}</b>
           <span className="text-[15px] text-muted">Tudo que o Recuidado avisou à família</span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />

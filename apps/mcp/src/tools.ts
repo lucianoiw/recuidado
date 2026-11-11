@@ -244,6 +244,9 @@ const ALERT_KIND: Record<string, string> = {
   dose_missed: "dose não confirmada",
   unwell: "não está bem",
   low_stock: "remédio acabando",
+  emergency: "emergência",
+  emergency_call: "ligação para o primeiro contato",
+  check_in: "ligação de volta para ela",
 };
 
 function summary(doses: ReturnType<typeof doseView>[]): string {
