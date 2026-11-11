@@ -103,6 +103,8 @@ export class PharmacyCall {
   private assistantSinceMenu = "";
   /** The opening ("assistente virtual da Recuidado") was said or requested. */
   private introduced = false;
+  /** Transcript length when the last key was pressed. */
+  private transcriptAtKey = 0;
   private error?: string;
   private durationSeconds?: number;
   private hangupRequested = false;
@@ -188,12 +190,15 @@ export class PharmacyCall {
       case "session.input_transcript.delta":
         if (event.delta) this.heardOtherSide = true;
         this.appendTranscript("patient", String(event.delta ?? ""));
-        if (MENU.test(this.transcript.at(-1)?.text ?? "") && !this.answer) {
+        if (MENU.test(this.otherSideSinceKey()) && !this.answer && !this.menuPending && this.keysPressed.length === 0) {
+          this.menuPending = true;
+          this.assistantSinceMenu = "";
+        } else if (MENU.test(this.transcript.at(-1)?.text ?? "") && !this.answer) {
           this.menuPending = true;
           this.assistantSinceMenu = "";
         } else if (event.delta && !this.menuPending) {
           // A person (not a menu) is talking: the assistant must say who it is before anything else.
-          this.timers.push(setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 1500));
+          this.timers.push(setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 2500));
         }
         this.checkVoicemail();
         if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(1000);
@@ -225,8 +230,8 @@ export class PharmacyCall {
 
   private introduceIfNeeded() {
     if (this.introduced || this.answer || this.hangupRequested || this.finished || this.menuPending) return;
-    const line = this.transcript.at(-1);
-    if (line && MENU.test(line.text)) return;
+    // Menus arrive in small pieces mixed with the assistant's words: look at everything heard since the last key.
+    if (MENU.test(this.otherSideSinceKey())) return;
     this.introduced = true;
     this.log("person on the line and no introduction yet, introducing");
     this.send({
@@ -235,6 +240,15 @@ export class PharmacyCall {
       delegation_id: null,
       content: `Say exactly this in Brazilian Portuguese now, before anything else, then listen: "${pharmacyOpening(this.opts.context)}"`,
     });
+  }
+
+  /** What the other side said since the last key press (or since the start). */
+  private otherSideSinceKey(): string {
+    return this.transcript
+      .slice(this.transcriptAtKey)
+      .filter((l) => l.speaker === "patient")
+      .map((l) => l.text)
+      .join(" ");
   }
 
   private openIfSilent() {
@@ -275,6 +289,7 @@ export class PharmacyCall {
 
   private sendKeys(id: string, digits: string[]) {
     this.menuPending = false;
+    this.transcriptAtKey = this.transcript.length;
     this.assistantSinceMenu = "";
     const gap = this.opts.keyGapMs ?? 300;
     digits.forEach((key, i) => {
