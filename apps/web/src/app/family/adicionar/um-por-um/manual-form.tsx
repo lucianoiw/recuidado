@@ -73,7 +73,7 @@ export function ManualForm() {
         </span>
       </div>
       <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
-        Depois de salvar, a gente mostra se ele sai grátis no Farmácia Popular ou na UBS.
+        Depois de salvar, a gente mostra se ele pode sair grátis no Farmácia Popular ou na UBS.
       </p>
 
       {error ? (

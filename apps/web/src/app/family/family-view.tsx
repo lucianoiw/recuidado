@@ -160,7 +160,7 @@ export function FamilyView() {
         <section className="grid grid-cols-2 gap-3">
           <Card className="flex flex-col gap-0.5">
             <span className="text-[14px] text-muted">
-              Saem grátis
+              Podem sair grátis
             </span>
             <span className="text-[26px] font-extrabold text-brand">
               {free} de {data.medications.length}
@@ -187,7 +187,7 @@ export function FamilyView() {
         <span className="flex flex-1 flex-col">
           <b>Adicionar remédios</b>
           <span className="text-[15px] text-muted">
-            Pela foto da receita ou um por um
+            Foto da receita ou um por um
           </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />

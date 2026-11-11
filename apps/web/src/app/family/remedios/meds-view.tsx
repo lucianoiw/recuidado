@@ -147,7 +147,7 @@ export function MedsView() {
 
       {data.medications.some(isFree) ? (
         <p className="text-[15px] leading-snug text-muted">
-          Prefere comprar um remédio que sai grátis? Toque em Comprar e ele entra na conta da família.
+          Prefere comprar um remédio que pode sair grátis? Toque em Comprar e ele entra na conta da família.
         </p>
       ) : null}
 
