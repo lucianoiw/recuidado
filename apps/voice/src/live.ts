@@ -4,6 +4,7 @@ import {
   buildDelegateInstructions,
   buildGreeting,
   buildLiveInstructions,
+  buildRecordedGreetingNote,
   doseTool,
   type ReminderContext,
 } from "./prompt.js";
@@ -38,7 +39,13 @@ export class LiveClient {
     };
   }
 
-  buildSessionRequest(destination: string, ctx: ReminderContext) {
+  /** Reasoning settings for delegated requests; low effort keeps the answer recorded within a couple of seconds. */
+  private delegateReasoning() {
+    return this.config.delegateReasoningEffort ? { reasoning: { effort: this.config.delegateReasoningEffort } } : {};
+  }
+
+  /** recordedGreeting: the greeting line when its recording will play on answer, so the model does not say it. */
+  buildSessionRequest(destination: string, ctx: ReminderContext, recordedGreeting?: string) {
     return {
       session: {
         model: this.config.liveModel,
@@ -48,7 +55,12 @@ export class LiveClient {
           {
             type: "message",
             role: "developer",
-            content: [{ type: "input_text", text: buildGreeting(ctx) }],
+            content: [
+              {
+                type: "input_text",
+                text: recordedGreeting ? buildRecordedGreetingNote(recordedGreeting) : buildGreeting(ctx),
+              },
+            ],
           },
         ],
         delegation: {
@@ -56,6 +68,7 @@ export class LiveClient {
           responses: {
             model: this.config.delegateModel,
             instructions: buildDelegateInstructions(ctx),
+            ...this.delegateReasoning(),
             tools: [doseTool],
             tool_choice: "required",
             parallel_tool_calls: false,
@@ -110,8 +123,18 @@ export class LiveClient {
    * Places the outbound call. Not idempotent: every successful request dials again,
    * so callers must not retry blindly on timeouts.
    */
-  createSipCall(destination: string, ctx: ReminderContext): Promise<string> {
-    return this.createSession(this.buildSessionRequest(destination, ctx));
+  async createSipCall(destination: string, ctx: ReminderContext, recordedGreeting?: string): Promise<string> {
+    const request = this.buildSessionRequest(destination, ctx, recordedGreeting);
+    try {
+      return await this.createSession(request);
+    } catch (err) {
+      // A 400 places no call, so retrying once without the reasoning setting is safe.
+      if (err instanceof LiveApiError && err.status === 400 && /reasoning/i.test(err.body)) {
+        delete (request.session.delegation.responses as { reasoning?: unknown }).reasoning;
+        return this.createSession(request);
+      }
+      throw err;
+    }
   }
 
   private async createSession(request: unknown): Promise<string> {

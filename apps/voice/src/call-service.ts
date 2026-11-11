@@ -1,7 +1,8 @@
 import type { VoiceConfig } from "./config.js";
 import { LiveClient } from "./live.js";
 import { toE164 } from "./phone.js";
-import type { ReminderContext } from "./prompt.js";
+import { greetingLine, type ReminderContext } from "./prompt.js";
+import { GreetingCache } from "./greeting-cache.js";
 import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
@@ -41,12 +42,14 @@ export interface StartedCall {
 
 export class CallService {
   private readonly live: LiveClient;
+  private readonly greetings: GreetingCache;
 
   constructor(
     private readonly config: VoiceConfig,
     private readonly log: (msg: string, extra?: unknown) => void = console.log,
   ) {
     this.live = new LiveClient(config);
+    this.greetings = new GreetingCache(config.greetingCacheDir);
   }
 
   async start(input: StartCallInput, onStatusChange?: (status: CallStatus) => void): Promise<StartedCall> {
@@ -55,8 +58,11 @@ export class CallService {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
     }
     const context: ReminderContext = { patientName: input.patientName, medications: input.medications };
-    const sessionId = await this.live.createSipCall(destination, context);
-    this.log(`call created ${sessionId}`);
+    const now = new Date();
+    const line = greetingLine(context, now);
+    const greetingAudio = this.greetings.get(this.config.liveVoice, line);
+    const sessionId = await this.live.createSipCall(destination, context, greetingAudio ? line : undefined);
+    this.log(`call created ${sessionId}${greetingAudio ? " (recorded greeting)" : ""}`);
     // Attach right away: the sideband only replays the previous 3 seconds of call progress.
     const socket = this.live.attach(sessionId);
     const call = new ReminderCall({
@@ -67,6 +73,13 @@ export class CallService {
       maxCallMs: this.config.maxCallSeconds * 1000,
       log: this.log,
       onStatusChange,
+      now,
+      greetingAudio,
+      onGreetingRecorded: (spoken, audio) => {
+        if (this.greetings.set(this.config.liveVoice, spoken, audio)) {
+          this.log(`greeting recorded for later calls (${(audio.length / 48_000).toFixed(1)} s)`);
+        }
+      },
     });
     return { sessionId, call };
   }

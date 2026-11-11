@@ -1,4 +1,5 @@
-import { DOSE_TOOL_NAME, buildGreeting, type ReminderContext } from "./prompt.js";
+import { DOSE_TOOL_NAME, buildGreeting, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
+import { normalizeSpeech } from "./greeting-cache.js";
 
 export type CallStatus = "dialing" | "ringing" | "answered" | "ended";
 export type CallOutcome = "confirmed" | "not_taken" | "unclear" | "no_answer" | "failed";
@@ -47,6 +48,14 @@ export interface ReminderCallOptions {
   replyTailMs?: number;
   /** Longest time the patient's microphone stays muted while the greeting plays. */
   greetingMuteMs?: number;
+  /** Longest wait for the answer to be recorded after the goodbye was said. */
+  recordAfterGoodbyeMs?: number;
+  /** Raw PCM16 24 kHz greeting recorded on an earlier call; played as soon as the call is answered. */
+  greetingAudio?: Buffer;
+  /** Called with the greeting audio when the model said the expected greeting line, to reuse it. */
+  onGreetingRecorded?: (line: string, audio: Buffer) => void;
+  /** Fixed clock for the greeting line in tests. */
+  now?: Date;
   /** Time to wait for session.closed after hanging up. */
   closeGraceMs?: number;
   log?: (msg: string, extra?: unknown) => void;
@@ -61,7 +70,12 @@ const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o si
 const GOODBYE = /tchau/i;
 
 /** High-frequency events left out of the log. */
-const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
+const QUIET_EVENTS = new Set([
+  "session.usage.updated",
+  "response.event",
+  "session.input_audio.append",
+  "session.output_audio.delta",
+]);
 
 type LiveEvent = { type: string; event_id?: string; [key: string]: unknown };
 
@@ -82,9 +96,17 @@ export class ReminderCall {
   private voicemail = false;
   private greetingMuted = false;
   private greetingText = "";
-  private assistantAfterAnswer = "";
   private goodbyeTimer?: NodeJS.Timeout;
   private silenceTimer?: NodeJS.Timeout;
+  private recordTimer?: NodeJS.Timeout;
+  private goodbyeHeard = false;
+  private assistantSinceGreeting = "";
+  private greetingDone = false;
+  private readonly greetingLine: string;
+  /** Output audio of the greeting while the model speaks it, to record it for later calls. */
+  private greetingAudio: { startMs: number; audio: Buffer }[] = [];
+  private greetingEndMs?: number;
+  private greetingCaptured = false;
   private firstAssistantLogged = false;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
@@ -93,6 +115,7 @@ export class ReminderCall {
 
   constructor(private readonly opts: ReminderCallOptions) {
     this.result = new Promise((resolve) => (this.resolveResult = resolve));
+    this.greetingLine = greetingLine(opts.context, opts.now);
     const { socket } = opts;
     socket.on("message", (data) => this.onMessage(data));
     socket.on("close", () => {
@@ -150,16 +173,29 @@ export class ReminderCall {
         this.status = "answered";
         this.answered = true;
         this.opts.onStatusChange?.("answered");
-        // Mute her microphone while the greeting plays, so an "alô" does not make the model wait or restart.
-        this.greetingMuted = true;
-        this.send({ type: "session.input_audio.mute", event_id: `mute_${this.opts.sessionId}` });
+        if (this.opts.greetingAudio) {
+          // Recorded greeting: plays at once, and the server mutes her input while it plays.
+          this.log("playing recorded greeting");
+          this.send({
+            type: "session.output_audio.fixture.play",
+            event_id: `fixture_${this.opts.sessionId}`,
+            audio: this.opts.greetingAudio.toString("base64"),
+          });
+        } else {
+          this.speakGreeting();
+        }
+        break;
+      case "session.output_audio.fixture.played":
+        this.greetingDone = true;
         this.send({
-          type: "session.commentary.append",
-          event_id: `greeting_${this.opts.sessionId}`,
+          type: "session.instructions.append",
+          event_id: `greeted_${this.opts.sessionId}`,
           delegation_id: null,
-          content: buildGreeting(this.opts.context),
+          content: `You just greeted her out loud with: "${this.greetingLine}". Do not repeat it. Listen to her answer.`,
         });
-        this.timers.push(setTimeout(() => this.unmuteAfterGreeting("timeout"), this.opts.greetingMuteMs ?? 6000));
+        break;
+      case "session.output_audio.delta":
+        this.captureGreetingAudio(event);
         break;
       case "transport.failed": {
         const err = event.error as { code?: string; message?: string } | undefined;
@@ -169,13 +205,21 @@ export class ReminderCall {
         break;
       }
       case "session.input_transcript.delta":
+        if (event.delta) {
+          if (!this.greetingDone) {
+            // She spoke before the greeting question was heard: the greeting phase is over, and its audio is not clean.
+            this.greetingDone = true;
+            this.greetingCaptured = true;
+          }
+          this.finishGreetingCapture();
+        }
         this.appendTranscript("patient", String(event.delta ?? ""));
         this.checkVoicemail();
         // She answered the goodbye: hang up shortly after she stops talking.
         if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(this.opts.replyTailMs ?? 1000);
         break;
       case "session.output_transcript.delta":
-        this.onAssistantSpeech(String(event.delta ?? ""), event.start_ms);
+        this.onAssistantSpeech(String(event.delta ?? ""), event);
         break;
       case "response.event":
         this.handleResponseEvent(event.event as LiveEvent | undefined);
@@ -193,9 +237,13 @@ export class ReminderCall {
         this.finish();
         break;
       }
-      case "error":
+      case "error": {
         this.log("live error", event.error);
+        const failed = (event.error as { client_event_id?: string } | undefined)?.client_event_id;
+        // The recording was refused: greet the usual way.
+        if (failed?.startsWith("fixture_") && !this.greetingDone) this.speakGreeting();
         break;
+      }
     }
   }
 
@@ -229,8 +277,19 @@ export class ReminderCall {
     });
     this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
-    // Hang up 2 s after the goodbye; if no goodbye comes, hang up after a few seconds of silence anyway.
-    this.assistantAfterAnswer = "";
+    if (this.recordTimer) clearTimeout(this.recordTimer);
+    if (this.goodbyeHeard) {
+      // The goodbye was said while the answer was being recorded: give it a moment to finish, then hang up.
+      this.armGoodbyeHangup((this.opts.replyTailMs ?? 1000) * 2);
+      return;
+    }
+    // No goodbye yet: ask for it once, and hang up after a few seconds of silence anyway.
+    this.send({
+      type: "session.commentary.append",
+      event_id: `goodbye_${item.call_id}`,
+      delegation_id: null,
+      content: `Say now, exactly: "${goodbyeLine(this.opts.context)}"`,
+    });
     this.armSilenceHangup();
   }
 
@@ -240,34 +299,96 @@ export class ReminderCall {
       this.endReason ??= "hung_up_after_answer";
       this.log("no goodbye heard, hanging up");
       void this.endCall();
-    }, this.opts.goodbyeMs ?? 5000);
+    }, this.opts.goodbyeMs ?? 8000);
     this.timers.push(this.silenceTimer);
   }
 
-  private onAssistantSpeech(delta: string, startMs: unknown) {
+  private onAssistantSpeech(delta: string, event: LiveEvent) {
     if (!delta) return;
     if (!this.firstAssistantLogged) {
       this.firstAssistantLogged = true;
-      this.log(`assistant started speaking (session ms ${String(startMs ?? "?")})`);
+      this.log(`assistant started speaking (session ms ${String(event.start_ms ?? "?")})`);
     }
     this.appendTranscript("assistant", delta);
-    if (this.greetingMuted) {
+    if (!this.greetingDone) {
       this.greetingText += delta;
       // The greeting ends with the question; leave a moment for its audio to finish.
       if (this.greetingText.includes("?")) {
-        this.timers.push(setTimeout(() => this.unmuteAfterGreeting("question asked"), 800));
+        this.greetingDone = true;
+        if (typeof event.end_ms === "number") this.greetingEndMs = event.end_ms;
+        this.timers.push(setTimeout(() => this.finishGreetingCapture(), 2500));
+        if (this.greetingMuted) this.timers.push(setTimeout(() => this.unmuteAfterGreeting("question asked"), 800));
       }
-    }
-    if (!this.answer) return;
-    this.assistantAfterAnswer += delta;
-    if (!GOODBYE.test(this.assistantAfterAnswer)) {
-      // Still talking (for example telling her the family will be told): restart the silence wait.
-      this.armSilenceHangup();
       return;
     }
-    if (this.silenceTimer) clearTimeout(this.silenceTimer);
-    // Give her a moment to say goodbye back; minutes are paid, so do not wait long.
-    this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+    this.assistantSinceGreeting += delta;
+    if (GOODBYE.test(this.assistantSinceGreeting)) {
+      if (!this.goodbyeHeard) {
+        this.goodbyeHeard = true;
+        this.log("goodbye heard");
+      }
+      if (this.answer) {
+        if (this.silenceTimer) clearTimeout(this.silenceTimer);
+        // Give her a moment to say goodbye back; minutes are paid, so do not wait long.
+        this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+      } else if (!this.recordTimer) {
+        this.recordTimer = setTimeout(() => {
+          this.endReason ??= "hung_up_before_answer_recorded";
+          this.log("answer not recorded after the goodbye, hanging up");
+          void this.endCall();
+        }, this.opts.recordAfterGoodbyeMs ?? 12_000);
+        this.timers.push(this.recordTimer);
+      }
+      return;
+    }
+    // Still talking after the answer (for example telling her the family will be told): restart the silence wait.
+    if (this.answer) this.armSilenceHangup();
+  }
+
+  private speakGreeting() {
+    // Mute her microphone while the greeting plays, so an "alô" does not make the model wait or restart.
+    this.greetingMuted = true;
+    this.send({ type: "session.input_audio.mute", event_id: `mute_${this.opts.sessionId}` });
+    this.send({
+      type: "session.commentary.append",
+      event_id: `greeting_${this.opts.sessionId}`,
+      delegation_id: null,
+      content: buildGreeting(this.opts.context, this.opts.now),
+    });
+    this.timers.push(setTimeout(() => this.unmuteAfterGreeting("timeout"), this.opts.greetingMuteMs ?? 6000));
+  }
+
+  /** Keeps the model's greeting audio so later calls can play it the moment she answers. */
+  private captureGreetingAudio(event: LiveEvent) {
+    if (this.opts.greetingAudio || this.greetingCaptured || !this.answered || !this.opts.onGreetingRecorded) return;
+    const startMs = typeof event.start_ms === "number" ? event.start_ms : undefined;
+    if (startMs === undefined || typeof event.delta !== "string") return;
+    if (this.greetingEndMs !== undefined && startMs > this.greetingEndMs + 400) {
+      this.finishGreetingCapture();
+      return;
+    }
+    this.greetingAudio.push({ startMs, audio: Buffer.from(event.delta, "base64") });
+  }
+
+  private finishGreetingCapture() {
+    if (this.greetingCaptured || this.opts.greetingAudio || !this.opts.onGreetingRecorded) return;
+    if (!this.greetingDone) return;
+    this.greetingCaptured = true;
+    const said = this.greetingText.slice(0, this.greetingText.indexOf("?") + 1);
+    if (normalizeSpeech(said) !== normalizeSpeech(this.greetingLine)) {
+      this.log("greeting differed from the expected line, not recorded");
+      return;
+    }
+    const end = this.greetingEndMs ?? Number.POSITIVE_INFINITY;
+    const audio = Buffer.concat(
+      this.greetingAudio
+        .filter((c) => c.startMs <= end + 400)
+        .sort((a, b) => a.startMs - b.startMs)
+        .map((c) => c.audio),
+    );
+    this.greetingAudio = [];
+    if (audio.length === 0) return;
+    this.opts.onGreetingRecorded(this.greetingLine, audio);
   }
 
   private armGoodbyeHangup(ms: number) {

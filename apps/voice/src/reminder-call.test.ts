@@ -174,6 +174,7 @@ test("hangs up after the goodbye is spoken, not before", async () => {
     closeGraceMs: 5,
   });
   socket.emitEvent({ type: "transport.answered", event_id: "b1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b0", delta: "Oi, Maria! Como a senhora está?" });
   socket.emitEvent(toolCall(true));
   await new Promise((r) => setTimeout(r, 100));
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b1b", delta: "Vou avisar a família. " });
@@ -202,21 +203,75 @@ test("hangs up soon after she answers the goodbye", async () => {
     closeGraceMs: 5,
   });
   socket.emitEvent({ type: "transport.answered", event_id: "r1" });
-  socket.emitEvent(toolCall(true));
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "r0", delta: "Oi, Maria! Como a senhora está?" });
+  // The goodbye is said while the answer is still being recorded.
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "r2", delta: "Obrigada, tchau, Maria!" });
+  socket.emitEvent(toolCall(true));
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "r3", delta: "Tchau!" });
   const result = await call.result;
   assert.equal(hangups, 1);
   assert.equal(result.endReason, "hung_up_after_goodbye");
 });
 
-test("hangs up when no goodbye comes", async () => {
+test("asks for the goodbye once and hangs up when it does not come", async () => {
   const { socket, call } = setup();
   socket.emitEvent({ type: "transport.answered", event_id: "n1" });
   socket.emitEvent(toolCall(true));
   const result = await call.result;
   assert.equal(result.endReason, "hung_up_after_answer");
-  assert.ok(!socket.sent.some((e) => String(e.event_id).startsWith("goodbye_")), "does not ask again");
+  assert.equal(socket.sent.filter((e) => String(e.event_id).startsWith("goodbye_")).length, 1);
+});
+
+test("plays a recorded greeting when one exists", async () => {
+  const socket = new FakeSocket();
+  const call = new ReminderCall({
+    sessionId: "live_fixture",
+    context: { patientName: "Maria", medications: [{ name: "Losartana" }] },
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    greetingAudio: Buffer.alloc(48_000),
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "f1" });
+  assert.equal(socket.sent[0].type, "session.output_audio.fixture.play");
+  assert.ok(!socket.sent.some((e) => e.type === "session.commentary.append"));
+  socket.emitEvent({ type: "session.output_audio.fixture.played", event_id: "f2" });
+  assert.equal(socket.sent.at(-1)?.type, "session.instructions.append");
+  socket.emit("close");
+  await call.result;
+});
+
+test("records the greeting audio when the model says the expected line", async () => {
+  const socket = new FakeSocket();
+  let recorded: Buffer | undefined;
+  const now = new Date("2026-11-11T12:00:00Z");
+  const call = new ReminderCall({
+    sessionId: "live_capture",
+    context: { patientName: "Dona Maria", medications: [{ name: "Losartana" }] },
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    now,
+    onGreetingRecorded: (_line, audio) => (recorded = audio),
+    closeGraceMs: 5,
+  });
+  const chunk = Buffer.alloc(9600, 1).toString("base64");
+  socket.emitEvent({ type: "transport.answered", event_id: "c1" });
+  socket.emitEvent({ type: "session.output_audio.delta", delta: chunk, start_ms: 1000, end_ms: 1200 });
+  socket.emitEvent({ type: "session.output_audio.delta", delta: chunk, start_ms: 1200, end_ms: 1400 });
+  socket.emitEvent({
+    type: "session.output_transcript.delta",
+    event_id: "c2",
+    delta: "Oi, Dona Maria, bom dia! É a assistente virtual da Recuidado. Como a senhora está?",
+    start_ms: 1000,
+    end_ms: 1400,
+  });
+  // Audio after the greeting is not part of it.
+  socket.emitEvent({ type: "session.output_audio.delta", delta: chunk, start_ms: 3000, end_ms: 3200 });
+  assert.equal(recorded?.length, 2 * 9600);
+  socket.emit("close");
+  await call.result;
 });
 
 test("records that she is not feeling well", async () => {

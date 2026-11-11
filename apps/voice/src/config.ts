@@ -5,6 +5,10 @@ export interface VoiceConfig {
   liveModel: string;
   liveVoice: string;
   delegateModel: string;
+  /** Reasoning effort for the delegated model; empty leaves the model default. */
+  delegateReasoningEffort?: string;
+  /** Where recorded greetings are kept between calls. */
+  greetingCacheDir?: string;
   sip: {
     providerUrl: string;
     username: string;
@@ -46,6 +50,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     liveModel: env.OPENAI_LIVE_MODEL?.trim() || "gpt-live-1",
     liveVoice: env.OPENAI_LIVE_VOICE?.trim() || "bossa",
     delegateModel: env.OPENAI_DELEGATE_MODEL?.trim() || "gpt-6-luna",
+    delegateReasoningEffort: env.OPENAI_DELEGATE_REASONING_EFFORT?.trim() ?? "low",
+    greetingCacheDir: env.GREETING_CACHE_DIR?.trim() || "/tmp/recuidado-greetings",
     sip: {
       providerUrl,
       username: env.OPENAI_SIP_USERNAME?.trim() || "openai",

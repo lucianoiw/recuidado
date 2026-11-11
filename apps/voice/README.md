@@ -42,8 +42,8 @@ Result posted to `{API_URL}/doses/:doseId/voice-result`:
 ```
 
 `feelsUnwell` is what she answered to "Como a senhora está?" (self-report, no diagnosis).
-`endReason` says why the call ended: `hung_up_after_goodbye`, `hung_up_after_answer` (answer
-recorded, then 5 s of silence without a goodbye), `voicemail`, `max_duration`,
+`endReason` says why the call ended: `hung_up_after_goodbye`, `hung_up_before_answer_recorded`, `hung_up_after_answer` (answer
+recorded, then 8 s of silence without a goodbye), `voicemail`, `max_duration`,
 `session_closed: <reason>`, `sideband_closed` or `error`.
 
 The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and, when
@@ -51,16 +51,19 @@ The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and,
 
 ## Call script
 
-1. "Oi, Dona Maria, bom dia! Como a senhora está?" (bom dia / boa tarde / boa noite by São Paulo time).
-   Her microphone is muted while this plays, so an "alô" does not make the model wait.
+1. "Oi, Dona Maria, bom dia! É a assistente virtual da Recuidado. Como a senhora está?"
+   (bom dia / boa tarde / boa noite by São Paulo time). The first call says it through the model
+   (about 3.5 s after answer, her microphone muted meanwhile) and records that audio from the
+   sideband when the words match. Later calls with the same line and voice play the recording as
+   a fixture the moment she answers. Recordings live in memory and `GREETING_CACHE_DIR`.
 2. A short reaction, then "A senhora já tomou a Losartana?". With three or more medicines it asks
    about "os remédios da manhã" instead of reading the list.
-3. "Obrigada, tchau, Dona Maria!". After the goodbye it waits up to 3 s for her to say goodbye
-   back and hangs up 1 s after she stops talking. If the
-   assistant stays silent for 5 s without saying goodbye, it hangs up anyway (older people often
-   do not hang up themselves).
+3. "Obrigada, tchau, Dona Maria!", said while the answer is delegated (no waiting for the delegated
+   model). Once the answer is recorded it waits up to 3 s for her to say goodbye back and hangs up
+   1 s after she stops talking. Without a goodbye it asks for it once and hangs up after 8 s of
+   silence. If the answer is not recorded 12 s after the goodbye, it hangs up anyway.
 
-If she asks who is calling: "É a Recuidado, do lembrete do remédio." A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
+If she asks who is calling: "É a Recuidado, assistente virtual do lembrete do remédio." A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
 call as `no_answer`.
 
 ## Debugging a call

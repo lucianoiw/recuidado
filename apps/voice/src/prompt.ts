@@ -24,14 +24,14 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     "The call has three steps:",
     "1. You already greeted her, said in one short sentence that you are a virtual assistant, and asked how she is. Listen to her answer and react with one short, warm sentence (for example \"Que bom!\" or \"Poxa, sinto muito.\").",
     `2. Then ask: "A senhora já tomou ${medicationNames(ctx.medications, now)}?" If she has not taken them yet, kindly ask her to take them now. If the answer is unclear, ask once more in a different, simple way.`,
-    "3. When you know both how she is and whether she took the medicine, delegate once so both answers are recorded.",
+    `3. When you know both how she is and whether she took the medicine, say exactly "${goodbyeLine(ctx)}" and, at the same time, delegate once so both answers are recorded. Do not wait for the result.`,
     "Do not ask anything else and do not say filler like \"vou anotar\" or \"vamos lá\".",
     "If she or an automated call-screening assistant asks who is calling, say only: \"É a Recuidado, assistente virtual do lembrete do remédio.\"",
     "You are an AI. If she asks whether you are a person or a robot, say honestly that you are a virtual assistant, not a person. Never pretend to be human.",
     "If she says she does not want these calls, say kindly that you will tell the family, and put that in note.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell or an emergency, tell her the family will be notified and suggest calling SAMU 192.",
-    `After the answer is recorded, say exactly "${goodbyeLine(ctx)}" and stop talking.`,
+    "After the goodbye, say nothing else, even when the delegated result arrives.",
   ].join("\n");
 }
 
@@ -50,14 +50,24 @@ function periodOf(now: Date): "manhã" | "tarde" | "noite" {
   return "noite";
 }
 
+/** The first line she hears: a warm hello, that it is a virtual assistant, and how she is. */
+export function greetingLine(ctx: ReminderContext, now: Date = new Date()): string {
+  // The AI says it is an AI before anything else (transparency, LGPD art. 9 and art. 20).
+  return `Oi, ${ctx.patientName}, ${greetingFor(now)}! É a assistente virtual da Recuidado. Como a senhora está?`;
+}
+
 /** Spoken immediately when the call is answered: a warm hello and how she is, nothing about medicine yet. */
 export function buildGreeting(ctx: ReminderContext, now: Date = new Date()): string {
   return [
     `Say only this short, warm line in Brazilian Portuguese, right now, then stop and listen:`,
-    // The AI says it is an AI before anything else (transparency, LGPD art. 9 and art. 20).
-    `"Oi, ${ctx.patientName}, ${greetingFor(now)}! É a assistente virtual da Recuidado. Como a senhora está?"`,
+    `"${greetingLine(ctx, now)}"`,
     `Do not add anything else.`,
   ].join(" ");
+}
+
+/** Used instead of buildGreeting when a recording of the greeting plays as the call is answered. */
+export function buildRecordedGreetingNote(line: string): string {
+  return `When the call is answered, a recording of you saying "${line}" plays first. Do not say the greeting yourself. After it, listen to her answer.`;
 }
 
 /**
@@ -70,12 +80,12 @@ export function medicationNames(medications: Medication[], now: Date = new Date(
   return names.length > 1 ? `${names[0]} e ${names[1]}` : (names[0] ?? "o remédio");
 }
 
-/** Backend prompt for the delegated Responses model. */
 /** The last line of the call, e.g. "Obrigada, tchau, Dona Maria!". */
 export function goodbyeLine(ctx: ReminderContext): string {
   return `Obrigada, tchau, ${ctx.patientName}!`;
 }
 
+/** Backend prompt for the delegated Responses model. */
 export function buildDelegateInstructions(ctx: ReminderContext): string {
   return [
     `Your only job is to record the patient's answer by calling ${DOSE_TOOL_NAME}.`,
@@ -83,7 +93,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
     "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
     "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false only if she says she is fine.",
     "Put what she said about how she feels, and any other relevant detail (ran out of medicine), in note, in Portuguese, close to her own words.",
-    `After the tool result, reply only: Say exactly "${goodbyeLine(ctx)}" and nothing else.`,
+    "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
   ].join("\n");
 }
 
