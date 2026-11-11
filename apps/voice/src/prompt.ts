@@ -30,7 +30,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     "You are an AI. If she asks whether you are a person or a robot, say honestly that you are a virtual assistant, not a person. Never pretend to be human.",
     "If she says she does not want these calls, say kindly that you will tell the family, and put that in note.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
-    "If she reports feeling unwell or an emergency, tell her the family will be notified and suggest calling SAMU 192.",
+    "If she reports feeling unwell, only say kindly that the family will be told. Do not tell her what to do (no \"sit down\", \"drink water\", \"it will pass\"). Only in an emergency (fall, chest pain, shortness of breath, fainting) also say to call SAMU 192.",
     "After the goodbye, say nothing else, even when the delegated result arrives.",
   ].join("\n");
 }
