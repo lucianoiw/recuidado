@@ -1,4 +1,4 @@
-import { DOSE_TOOL_NAME, buildGreeting, checkInUnwellLine, emergencyLine, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
+import { DOSE_TOOL_NAME, FAMILY_LINE, buildGreeting, checkInBetterLine, checkInUnwellLine, emergencyLine, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
 import { normalizeSpeech } from "./greeting-cache.js";
 
 export type CallStatus = "dialing" | "ringing" | "answered" | "ended";
@@ -102,7 +102,7 @@ export class ReminderCall {
   private silenceTimer?: NodeJS.Timeout;
   private recordTimer?: NodeJS.Timeout;
   private goodbyeHeard = false;
-  /** Emergency recorded but the SAMU line not said yet: the goodbye only counts after it. */
+  /** Emergency or call back recorded but the family line not said yet: the goodbye only counts after it. */
   private emergencyLinePending = false;
   private assistantSinceGreeting = "";
   private greetingDone = false;
@@ -286,17 +286,19 @@ export class ReminderCall {
     // The model does not always follow these steps: make sure she hears the line before the call ends.
     const ctx = this.opts.context;
     const requiredLine = ctx.checkIn
-      ? feelsUnwell || emergency
-        ? checkInUnwellLine(ctx)
-        : undefined
+      ? taken === undefined
+        ? undefined
+        : feelsUnwell === false && !emergency
+          ? checkInBetterLine(ctx)
+          : checkInUnwellLine(ctx)
       : emergency
         ? emergencyLine(ctx)
         : undefined;
-    if (requiredLine && !/SAMU/i.test(this.assistantSinceGreeting)) {
+    if (requiredLine && !FAMILY_LINE.test(this.assistantSinceGreeting)) {
       this.emergencyLinePending = true;
       if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
       this.goodbyeTimer = undefined;
-      this.log("emergency recorded without the SAMU line: asking for it");
+      this.log("answer recorded without the family line: asking for it");
       this.send({
         type: "session.commentary.append",
         event_id: `emergency_${item.call_id}`,
@@ -352,7 +354,7 @@ export class ReminderCall {
     this.assistantSinceGreeting += delta;
     let spoken = this.assistantSinceGreeting;
     if (this.emergencyLinePending) {
-      const samu = spoken.search(/SAMU/i);
+      const samu = spoken.search(FAMILY_LINE);
       if (samu < 0) {
         if (this.answer) this.armSilenceHangup();
         return;

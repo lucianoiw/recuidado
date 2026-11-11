@@ -69,7 +69,8 @@ function parseCallRequest(body: unknown) {
   if (meds.length === 0) throw new Error("medications must have at least one item");
   const patientId = typeof b.patientId === "string" && b.patientId ? b.patientId : undefined;
   const checkIn = b.checkIn === true;
-  return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds, checkIn };
+  const callBack = b.callBack !== false;
+  return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds, checkIn, callBack };
 }
 
 /** Body of POST /pharmacy-calls. At most 3 medicines, so the call stays short. */

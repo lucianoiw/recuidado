@@ -58,7 +58,7 @@ export class CallService {
     if (!isAllowed(this.config, destination)) {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
     }
-    const context: ReminderContext = { patientName: input.patientName, medications: input.medications, checkIn: input.checkIn };
+    const context: ReminderContext = { patientName: input.patientName, medications: input.medications, checkIn: input.checkIn, callBack: input.callBack };
     const now = new Date();
     const line = greetingLine(context, now);
     const greetingAudio = this.greetings.get(this.config.liveVoice, line);

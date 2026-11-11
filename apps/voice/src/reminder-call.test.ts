@@ -344,19 +344,18 @@ test("alert call speaks the message and hangs up after it", async () => {
   assert.equal(result.endReason, "message_delivered");
 });
 
-test("emergency: says SAMU, frees the line and promises the call back; the call back only asks how she is", () => {
+test("emergency: tells her the family will be told and promises the call back; the call back only asks how she is", () => {
   const ctx = { patientName: "Dona Maria", medications: [{ name: "Losartana" }] };
   const live = buildLiveInstructions(ctx);
-  assert.match(live, /SAMU, 192/);
-  assert.match(live, /daqui a pouco eu ligo de novo\. Tchau, Dona Maria!/);
+  assert.match(live, /Tá bom, Dona Maria, eu vou avisar a sua família\. Já te ligo para saber como a senhora está\. Tchau, Dona Maria!/);
   const back = { ...ctx, checkIn: true };
-  assert.match(greetingLine(back), /de novo\. A sua família já foi avisada\. Como a senhora está agora\?/);
+  assert.match(greetingLine(back), /de novo\. Já avisei a sua família\. Como a senhora está agora\?/);
   assert.equal(goodbyeLine(back), "Tchau, Dona Maria!");
   assert.doesNotMatch(buildLiveInstructions(back), /já tomou/);
   assert.match(buildDelegateInstructions(back), /taken=false/);
 });
 
-test("emergency recorded without the SAMU line: asks for it, and only the goodbye after it ends the call", async () => {
+test("emergency recorded without the family line: asks for it, and only the goodbye after it ends the call", async () => {
   const { socket, call } = setup();
   socket.emitEvent({ type: "transport.answered", event_id: "e1" });
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e2", delta: "Oi, Maria! Como a senhora está?" });
@@ -375,13 +374,13 @@ test("emergency recorded without the SAMU line: asks for it, and only the goodby
     },
   });
   const ask = socket.sent.find((m) => m.event_id === "emergency_call_e");
-  assert.match(String(ask?.content), /SAMU, 192/);
+  assert.match(String(ask?.content), /eu vou avisar a sua família/);
   // The model's own short goodbye does not end the call before the SAMU line.
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e4", delta: "Já volto. Obrigada, tchau, Maria!" });
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Eu vou avisar a sua família agora. Se achar necessário, ligue para o SAMU, 192." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Tá bom, Maria, eu vou avisar a sua família. Já te ligo para saber como a senhora está." });
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e6", delta: " Tchau, Maria!" });
   const result = await call.result;
   assert.equal(result.emergency, true);
   assert.equal(result.endReason, "hung_up_after_goodbye");
-  assert.match(result.transcript.map((l) => l.text).join(" "), /SAMU/);
+  assert.match(result.transcript.map((l) => l.text).join(" "), /avisar a sua família/);
 });
