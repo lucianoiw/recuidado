@@ -1,6 +1,7 @@
 import {
   BadGatewayException,
   BadRequestException,
+  Body,
   Controller,
   HttpCode,
   PayloadTooLargeException,
@@ -16,6 +17,8 @@ import {
   type PrescriptionMediaType,
   type ReadPrescriptionResult,
 } from '@recuidado/prescription-reader';
+import { z } from 'zod';
+import { confirmPrescriptionBody } from './confirm.schema.js';
 import { PrescriptionsService } from './prescriptions.service.js';
 
 /** Upper bound for the multipart upload; images above 5 MB are rejected by the reader. */
@@ -67,6 +70,16 @@ export class PrescriptionsController {
     } catch (error) {
       throw toHttpError(error);
     }
+  }
+
+  /** Saves the items the family reviewed and confirmed, then schedules their doses. */
+  @Post('confirm')
+  @HttpCode(201)
+  confirm(@Body() body: unknown) {
+    const result = confirmPrescriptionBody.safeParse(body);
+    if (!result.success)
+      throw new BadRequestException(z.prettifyError(result.error));
+    return this.prescriptions.confirm(result.data);
   }
 }
 

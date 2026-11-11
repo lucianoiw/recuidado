@@ -66,4 +66,12 @@ Meal cues ("após o café", "à noite") and intervals ("12/12h") become clock ti
 curl -F "file=@packages/prescription-reader/fixtures/receita-01-ubs-digitada.png" http://localhost:4000/prescriptions/parse
 ```
 
+After the family reviews the reading, `POST /prescriptions/confirm` saves the medicines and schedules their doses:
+
+```json
+{ "patientId": "<uuid from GET /family>", "items": [{ "name": "Losartana potássica", "activeIngredient": "losartana potássica", "strength": "50 mg", "times": ["08:00", "20:00"] }] }
+```
+
+Items with `times: []` (as-needed) are saved without reminders.
+
 The package is consumed through `dist/`, built by the `prepare` script on `pnpm install` (and by `pnpm build`).
