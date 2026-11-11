@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MedSearch } from "@/components/med-search";
 import { TimeChips } from "@/components/time-chips";
 import { Button, CheckIcon, Field, TopBar, buttonClass } from "@/components/ui";
 import { confirmPrescription, getFamily } from "@/lib/api";
@@ -54,13 +55,14 @@ export function ManualForm() {
         </p>
       ) : null}
 
-      <Field
-        label="Nome do remédio"
+      <MedSearch
         value={name}
         onValue={setName}
-        autoComplete="off"
-        placeholder="Losartana"
-        aria-invalid={tried && !name.trim()}
+        onPick={(o) => {
+          setName(o.name);
+          setStrength(o.strength);
+        }}
+        invalid={tried && !name.trim()}
       />
       <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
       <div className="flex flex-col gap-2">
