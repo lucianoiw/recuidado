@@ -23,7 +23,7 @@ if (token) {
         captureConsoleLogs: true,
       },
     });
-    posthog.register({ app: "web" });
+    posthog.register({ app: "web", service: "web" });
   } catch (error) {
     console.error("PostHog init failed", error);
   }
