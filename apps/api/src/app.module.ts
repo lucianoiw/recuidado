@@ -5,7 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnv } from './config/env.js';
 import { DbModule } from './db/db.module.js';
 import { DosesModule } from './doses/doses.module.js';
+import { FamilyModule } from './family/family.module.js';
 import { HealthController } from './health/health.controller.js';
+import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { VoiceModule } from './voice/voice.module.js';
 
@@ -27,6 +29,8 @@ import { VoiceModule } from './voice/voice.module.js';
     }),
     DbModule,
     DosesModule,
+    FamilyModule,
+    PushModule,
     PrescriptionsModule,
     VoiceModule,
   ],

@@ -7,6 +7,11 @@ const optionalUrl = z.preprocess(
   z.string().url().optional(),
 );
 
+const optionalString = z.preprocess(
+  (v) => (v === '' ? undefined : v),
+  z.string().optional(),
+);
+
 export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
@@ -26,6 +31,10 @@ export const envSchema = z.object({
     (v) => (v === '' ? undefined : v),
     z.string().optional(),
   ),
+  // Web Push (VAPID). Without the keys, pushes are skipped and only logged.
+  VAPID_PUBLIC_KEY: optionalString,
+  VAPID_PRIVATE_KEY: optionalString,
+  VAPID_SUBJECT: z.string().default('https://recuidado.com.br'),
   // Minutes to wait for a dose confirmation before calling the patient.
   DOSE_CALL_AFTER_MINUTES: z.coerce.number().int().positive().default(15),
   // Minutes to wait after the call before alerting the family.

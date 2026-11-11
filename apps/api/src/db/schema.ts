@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -61,6 +62,19 @@ export const doses = pgTable('doses', {
   confirmedVia: confirmationChannel(),
   confirmedAt: timestamp({ withTimezone: true }),
   familyAlertedAt: timestamp({ withTimezone: true }),
+}, (t) => [unique().on(t.medicationId, t.scheduledAt)]);
+
+// Web Push subscriptions (one per browser). Patients get dose reminders,
+// caregivers get alerts when a dose is not confirmed.
+export const pushSubscriptions = pgTable('push_subscriptions', {
+  id: uuid().primaryKey().defaultRandom(),
+  memberId: uuid()
+    .notNull()
+    .references(() => members.id, { onDelete: 'cascade' }),
+  endpoint: text().notNull().unique(),
+  p256dh: text().notNull(),
+  auth: text().notNull(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
 export const costShares = pgTable('cost_shares', {
