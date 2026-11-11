@@ -31,10 +31,20 @@ export function buildLiveInstructions(ctx: ReminderContext): string {
   ].join("\n");
 }
 
+/** "bom dia", "boa tarde" or "boa noite" for the time in São Paulo. */
+export function greetingFor(now: Date = new Date()): string {
+  const hour = Number(
+    new Intl.DateTimeFormat("en-US", { hour: "numeric", hourCycle: "h23", timeZone: "America/Sao_Paulo" }).format(now),
+  );
+  if (hour >= 5 && hour < 12) return "bom dia";
+  if (hour >= 12 && hour < 18) return "boa tarde";
+  return "boa noite";
+}
+
 /** Spoken immediately when the call is answered. */
-export function buildGreeting(ctx: ReminderContext): string {
+export function buildGreeting(ctx: ReminderContext, now: Date = new Date()): string {
   return [
-    `Greet her now in Brazilian Portuguese: say good day, that you are the Recuidado assistant calling on behalf of her family,`,
+    `Greet her now in Brazilian Portuguese: say "${greetingFor(now)}", that you are the Recuidado assistant calling on behalf of her family,`,
     `that it is time for ${medicationList(ctx.medications)}, and ask if she has already taken it. Then pause and listen.`,
   ].join(" ");
 }

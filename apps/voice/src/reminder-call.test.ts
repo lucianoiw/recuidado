@@ -109,3 +109,10 @@ test("toE164 normalizes Brazilian numbers", () => {
   assert.equal(toE164("1132345678"), "+551132345678");
   assert.throws(() => toE164("12345"));
 });
+
+test("greeting follows the time in São Paulo", async () => {
+  const { greetingFor } = await import("./prompt.js");
+  assert.equal(greetingFor(new Date("2026-11-11T12:00:00Z")), "bom dia");
+  assert.equal(greetingFor(new Date("2026-11-11T18:00:00Z")), "boa tarde");
+  assert.equal(greetingFor(new Date("2026-11-11T02:30:00Z")), "boa noite");
+});
