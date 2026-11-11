@@ -1,5 +1,6 @@
 "use client";
 
+import { callName } from "@/lib/api";
 import { useState } from "react";
 import { InfoIcon, NavigationIcon, Segmented, StatusPill } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
@@ -86,7 +87,7 @@ export function WhereView() {
   const { data } = useFamily();
   const [tab, setTab] = useState<Tab>("fp");
 
-  const patient = data?.patient.name ?? "a pessoa cuidada";
+  const patient = (data ? callName(data.patient) : "a pessoa cuidada");
   const freeMeds = (data?.medications ?? [])
     .filter((m) => m.freeInFarmaciaPopular)
     .map((m) => medLabel(m.name, null));

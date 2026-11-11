@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
-import { and, asc, eq, gte, lt } from 'drizzle-orm';
+import { and, asc, eq, gte, lt, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, medications, members } from '../db/schema.js';
 import { PushService } from '../push/push.service.js';
@@ -189,7 +189,7 @@ export class DosesService implements OnApplicationBootstrap {
         medicationName: medications.name,
         strength: medications.strength,
         patientId: members.id,
-        patientName: members.name,
+        patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         familyId: members.familyId,
       })
       .from(doses)

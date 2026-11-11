@@ -20,14 +20,21 @@ function subscribe(listener: () => void) {
   };
 }
 
-/** Which caregiver is using this device. Kept only in this browser. */
+/** Saves which caregiver is using this device. */
+export function setMe(id: string): void {
+  try {
+    localStorage.setItem(KEY, id);
+  } catch {}
+  listeners.forEach((l) => l());
+}
+
+/** The caregiver id this device keeps, read once outside React. */
+export function readMe(): string | null {
+  return read();
+}
+
+/** Which caregiver is using this device. Only the id is kept in this browser. */
 export function useMe(): [string | null, (id: string) => void] {
   const me = useSyncExternalStore(subscribe, read, () => null);
-  const setMe = (id: string) => {
-    try {
-      localStorage.setItem(KEY, id);
-    } catch {}
-    listeners.forEach((l) => l());
-  };
   return [me, setMe];
 }
