@@ -30,3 +30,12 @@ Dockerfile resources use Base Directory `/` (build context is the repo root). As
 | `web` (build variables) | `NEXT_PUBLIC_API_URL` | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`, `NEXT_PUBLIC_POSTHOG_HOST` |
 
 `docker-compose.dev.yml` at the root is local infra only (Postgres and Redis).
+
+### Test phone menu (URA)
+
+`recuidado/asterisk` answers `+5500000000000` itself (DDD 00 does not exist, nothing is dialed out):
+a synthetic voice menu ("Para preço e estoque de remédios, tecle 2") followed by a recorded
+"attendant" who gives stock and price. It tests the pharmacy call end to end, DTMF included,
+without calling anyone. To use it, list `+5500000000000` in `CALL_ALLOWED_NUMBERS` of
+`recuidado/voice` and set `PHARMACY_CALL_PHONE=+5500000000000` on `recuidado/api`. The Asterisk
+log shows `URA test: pressed N`.
