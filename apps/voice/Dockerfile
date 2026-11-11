@@ -18,6 +18,9 @@ FROM node:22-alpine
 ENV NODE_ENV=production PORT=5000
 WORKDIR /app
 COPY --from=build /out .
+# Recorded greetings; mount a volume here so they survive redeploys (see deploy/README.md).
+RUN mkdir -p /data/greetings && chown node:node /data/greetings
+ENV GREETING_CACHE_DIR=/data/greetings
 USER node
 EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=5s CMD wget -qO- http://127.0.0.1:5000/health || exit 1
