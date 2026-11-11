@@ -328,6 +328,7 @@ export class VoiceCallService {
     patientName: string;
     medication: string;
     strength?: string;
+    caregiverPhone?: string;
   }): Promise<string> {
     const familyName = 'Família Demo';
     let [family] = await this.db.select().from(families).where(eq(families.name, familyName));
@@ -345,6 +346,15 @@ export class VoiceCallService {
         .returning();
     } else if (patient.phone !== input.phone) {
       await this.db.update(members).set({ phone: input.phone }).where(eq(members.id, patient.id));
+    }
+    if (input.caregiverPhone) {
+      const [caregiver] = await this.db
+        .select({ id: members.id })
+        .from(members)
+        .where(and(eq(members.familyId, family.id), eq(members.role, 'caregiver')))
+        .orderBy(members.createdAt)
+        .limit(1);
+      if (caregiver) await this.db.update(members).set({ phone: input.caregiverPhone }).where(eq(members.id, caregiver.id));
     }
     const [medication] = await this.db
       .insert(medications)

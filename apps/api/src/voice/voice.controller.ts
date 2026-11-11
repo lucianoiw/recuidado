@@ -34,6 +34,8 @@ const demoSchema = z.object({
   patientName: z.string().default('Maria'),
   medication: z.string().default('Losartana'),
   strength: z.string().default('50 mg'),
+  // Phone of the demo son (first caregiver), who gets the emergency call.
+  caregiverPhone: z.string().min(10).optional(),
 });
 
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
