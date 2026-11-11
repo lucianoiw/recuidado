@@ -8,18 +8,24 @@ import { PrescriptionsService } from './prescriptions.service.js';
 describe('POST /prescriptions/parse', () => {
   let app: INestApplication;
   const parse = vi.fn();
+  const confirm = vi.fn();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [PrescriptionsController],
-      providers: [{ provide: PrescriptionsService, useValue: { parse } }],
+      providers: [
+        { provide: PrescriptionsService, useValue: { parse, confirm } },
+      ],
     }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
   });
 
   afterAll(() => app.close());
-  beforeEach(() => parse.mockReset());
+  beforeEach(() => {
+    parse.mockReset();
+    confirm.mockReset();
+  });
 
   it('passes the uploaded image to the reader and returns its result', async () => {
     const result = {
@@ -57,6 +63,36 @@ describe('POST /prescriptions/parse', () => {
         contentType: 'text/plain',
       });
     expect(res.status).toBe(415);
+  });
+
+  it('confirms reviewed items', async () => {
+    confirm.mockResolvedValue({ medications: [] });
+    const body = {
+      patientId: '6f1c2b8e-7a4d-4c3e-9b1a-2d5e8f0a1b2c',
+      items: [
+        {
+          name: 'Losartana potássica',
+          strength: '50 mg',
+          times: ['08:00', '20:00'],
+        },
+      ],
+    };
+    const res = await request(app.getHttpServer())
+      .post('/prescriptions/confirm')
+      .send(body);
+    expect(res.status).toBe(201);
+    expect(confirm).toHaveBeenCalledWith({
+      ...body,
+      items: [{ ...body.items[0], activeIngredient: null }],
+    });
+  });
+
+  it('rejects an invalid confirmation without calling the service', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/prescriptions/confirm')
+      .send({ patientId: 'x', items: [] });
+    expect(res.status).toBe(400);
+    expect(confirm).not.toHaveBeenCalled();
   });
 });
 
