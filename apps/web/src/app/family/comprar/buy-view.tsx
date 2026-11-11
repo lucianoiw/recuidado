@@ -4,7 +4,8 @@ import Link from "next/link";
 import { CartIcon, ChevronLeftIcon, InfoIcon, NavigationIcon } from "@/components/ui";
 import { SplitPix } from "@/components/split-pix";
 import { PageTitle } from "@/components/page-title";
-import { isFree } from "@/lib/api";
+import { PlacesMap } from "@/components/places-map";
+import { callName, isFree } from "@/lib/api";
 import { formatDistance, mapsUrl, pharmacies } from "@/lib/pharmacies";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { PharmacyCallCard } from "./pharmacy-call-card";
@@ -71,11 +72,14 @@ export function BuyView() {
 
           <section className="flex flex-col gap-2">
             <h2 className="text-[18px] font-extrabold">Farmácias perto dela</h2>
+            <PlacesMap places={pharmacies.slice(0, 3)} homeLabel={`Casa de ${callName(data.patient)}`} />
             <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
-              {pharmacies.slice(0, 3).map((p) => (
+              {pharmacies.slice(0, 3).map((p, i) => (
                 <li key={p.cnes} className="flex flex-col gap-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">
                   <div className="flex items-start justify-between gap-3">
-                    <b className="leading-snug">{p.name}</b>
+                    <b className="leading-snug">
+                      {i + 1}. {p.name}
+                    </b>
                     <span className="whitespace-nowrap text-[15px] font-bold text-muted">
                       {formatDistance(p.distanceKm)}
                     </span>

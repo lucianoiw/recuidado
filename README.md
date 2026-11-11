@@ -255,6 +255,12 @@ O painel mostra adesão às doses, o funil do lembrete até o "Tomei", ligaçõe
 
 A região da demo é São Paulo capital. Detalhes em [packages/data/README.md](packages/data/README.md).
 
+## Tecnologia dos patrocinadores
+
+Usamos produtos de patrocinadores do Hack Brasil onde eles resolvem algo do produto, sem mudar a proposta.
+
+- **Google Maps (Maps Static API).** As telas Onde pegar grátis (Farmácia Popular e Posto de saúde) e Onde comprar e dividir mostram um mapa com a casa da Dona Maria (pino C) e os lugares numerados na mesma ordem da lista, com a distância ao lado de cada um. O botão Como chegar abre a rota no Google Maps. A chave fica em `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, restrita aos domínios do Recuidado. Sem a chave, a tela mostra só a lista. Escolhemos a imagem estática porque carrega rápido no celular, não pede interação de quem tem pouca prática com mapa e cada pino bate com um número da lista.
+
 ## Segurança e privacidade
 
 - Toda a demo usa dados sintéticos. A Dona Maria é uma personagem.
