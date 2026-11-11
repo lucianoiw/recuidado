@@ -261,7 +261,7 @@ A região da demo é São Paulo capital. Detalhes em [packages/data/README.md](p
 
 Usamos produtos de patrocinadores do Hack Brasil onde eles resolvem algo do produto, sem mudar a proposta.
 
-- **Google Maps (Maps Static API).** As telas Onde pegar grátis (Farmácia Popular e Posto de saúde) e Onde comprar e dividir mostram um mapa com a casa da Dona Maria (pino C) e os lugares numerados na mesma ordem da lista, com a distância ao lado de cada um. O botão Como chegar abre a rota no Google Maps. A chave fica em `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, restrita aos domínios do Recuidado. Sem a chave, a tela mostra só a lista. Escolhemos a imagem estática porque carrega rápido no celular, não pede interação de quem tem pouca prática com mapa e cada pino bate com um número da lista.
+- **Google Maps (Maps JavaScript API).** As telas Onde pegar grátis (Farmácia Popular e Posto de saúde) e Onde comprar e dividir mostram um mapa interativo com a casa da Dona Maria (pino C) e os lugares numerados na mesma ordem da lista. Dá para arrastar e dar zoom; ao tocar em um número aparecem o nome, a distância até a casa e o botão Como chegar, que abre a rota no Google Maps. A chave fica em `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, restrita aos domínios do Recuidado. Sem a chave, a tela mostra só a lista.
 
 ## Segurança e privacidade
 
