@@ -51,17 +51,7 @@ pnpm lint && pnpm test && pnpm build
 
 ## Deploy
 
-O deploy é feito no Coolify, com um recurso para cada parte, todos no projeto "Recuidado" e na branch `main`:
-
-| Recurso | Tipo | Domínio |
-| --- | --- | --- |
-| `recuidado/web` | Dockerfile `/apps/web/Dockerfile` | recuidado.com.br |
-| `recuidado/api` | Dockerfile `/apps/api/Dockerfile` | api.recuidado.com.br |
-| `recuidado/voice` | Dockerfile `/apps/voice/Dockerfile` | voz.recuidado.com.br |
-| `recuidado/asterisk` | Docker Compose `/infra/asterisk/docker-compose.yml` | rede do host |
-| `recuidado/postgresql` e `recuidado/redis` | Bancos do Coolify | interno |
-
-Cada recurso só é reconstruído quando muda a pasta dele. Os segredos ficam nas variáveis de ambiente do Coolify, nunca no repositório. A lista completa está em [.env.example](.env.example).
+No Coolify, com um recurso para cada parte (web, api, voz, Asterisk, Postgres e Redis). Os detalhes estão em [deploy/README.md](deploy/README.md). Os segredos ficam nas variáveis de ambiente do Coolify, nunca no repositório.
 
 ## Licença
 

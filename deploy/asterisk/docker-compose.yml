@@ -1,11 +1,11 @@
-# Coolify resource "recuidado/asterisk" (Docker Compose, base directory
-# /infra/asterisk). SIP bridge: GPT-Live (TLS, SRTP, Opus) <-> Nvoip (G.711).
+# Coolify resource "recuidado/asterisk" (Docker Compose, base directory /,
+# compose file /deploy/asterisk/docker-compose.yml). SIP bridge: GPT-Live (TLS, SRTP, Opus) <-> Nvoip (G.711).
 # Host network so RTP ports reach the internet.
 # Open 5061/tcp and 10000-10200/udp on the VPS firewall.
 services:
   asterisk:
     build:
-      context: .
+      context: ../../infra/asterisk
     network_mode: host
     environment:
       - SIP_DOMAIN=${SIP_DOMAIN:-voz.recuidado.com.br}

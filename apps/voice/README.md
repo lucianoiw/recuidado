@@ -51,7 +51,7 @@ node apps/voice/dist/cli.js 11912345678 Maria "Losartana 50 mg"
 ## Deploy (Coolify)
 
 1. Give the `recuidado/voice` resource the domain `voz.recuidado.com.br` so Traefik issues its
-   certificate. The `recuidado/asterisk` resource (`infra/asterisk/docker-compose.yml`) reads it
+   certificate. The `recuidado/asterisk` resource (`deploy/asterisk/docker-compose.yml`) reads it
    from `/data/coolify/proxy/acme.json`.
 2. Set the variables listed in the root `.env.example` (voice section).
 3. Open `5061/tcp` and `10000-10200/udp` on the VPS firewall.
