@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { captureError } from "./analytics";
 import { getFamily, type FamilyOverview } from "./api";
+import { refreshMs } from "./demo";
 
-/** Loads GET /family and refreshes it every 30 seconds. */
+/** Loads GET /family and refreshes it every 30 seconds (every 3 during a demo run). */
 export function useFamily() {
   const [data, setData] = useState<FamilyOverview | null>(null);
   const [error, setError] = useState(false);
@@ -25,9 +26,13 @@ export function useFamily() {
   }, []);
 
   useEffect(() => {
-    load();
-    const timer = setInterval(load, 30_000);
-    return () => clearInterval(timer);
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      load();
+      timer = setTimeout(tick, refreshMs());
+    };
+    tick();
+    return () => clearTimeout(timer);
   }, [load]);
 
   return { data, error, now, reload: load };

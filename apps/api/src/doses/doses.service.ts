@@ -84,8 +84,8 @@ export class DosesService implements OnApplicationBootstrap {
     }
   }
 
-  /** Push to the patient, then queue the call and the family alert. */
-  async remind(doseId: string): Promise<void> {
+  /** Push to the patient, then queue the call and the family alert. The demo run passes shorter waits. */
+  async remind(doseId: string, waits: { callAfterMs?: number; alertAfterMs?: number } = {}): Promise<void> {
     const dose = await this.getDetails(doseId);
     if (!dose || dose.status !== 'pending') return;
 
@@ -98,14 +98,14 @@ export class DosesService implements OnApplicationBootstrap {
 
     telemetry.capture(
       'dose_reminder_sent',
-      { dose_id: doseId, medication: dose.medicationLabel, channel: 'push', pushes_delivered: delivered },
+      { dose_id: doseId, medication: dose.medicationLabel, channel: 'push', pushes_delivered: delivered, demo: dose.demo },
       dose.patientId,
     );
     this.logger.log(`Reminder for dose ${doseId} sent (${delivered} pushes).`);
 
     const minute = 60 * 1000;
-    const callAfter = this.config.getOrThrow<number>('DOSE_CALL_AFTER_MINUTES') * minute;
-    const alertAfter = this.config.getOrThrow<number>('DOSE_ALERT_AFTER_MINUTES') * minute;
+    const callAfter = waits.callAfterMs ?? this.config.getOrThrow<number>('DOSE_CALL_AFTER_MINUTES') * minute;
+    const alertAfter = waits.alertAfterMs ?? this.config.getOrThrow<number>('DOSE_ALERT_AFTER_MINUTES') * minute;
     await this.queue.add(
       'call',
       { kind: 'call', doseId },
@@ -147,6 +147,7 @@ export class DosesService implements OnApplicationBootstrap {
       dose_id: doseId,
       medication: dose.medicationLabel,
       minutes_since_scheduled: minutesSince(dose.scheduledAt),
+      demo: dose.demo,
     };
     telemetry.capture('dose_missed', props, dose.patientId);
     telemetry.capture('family_alerted', { ...props, caregivers: caregivers.length, pushes_delivered: sent }, dose.patientId);
@@ -170,6 +171,7 @@ export class DosesService implements OnApplicationBootstrap {
           via: 'app',
           medication: details.medicationLabel,
           minutes_since_scheduled: minutesSince(details.scheduledAt),
+          demo: details.demo,
         },
         details.patientId,
       );
@@ -215,6 +217,7 @@ export class DosesService implements OnApplicationBootstrap {
         status: doses.status,
         scheduledAt: doses.scheduledAt,
         familyAlertedAt: doses.familyAlertedAt,
+        demo: doses.demo,
         medicationName: medications.name,
         strength: medications.strength,
         patientId: members.id,

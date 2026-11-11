@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import { Button, Card, CheckIcon, ClockIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
 import { captureError, identifyMember, track } from "@/lib/analytics";
+import { refreshMs } from "@/lib/demo";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
 import { callName, confirmDose, formatTime, getFamily, telHref, type Dose, type FamilyOverview } from "@/lib/api";
 
@@ -68,9 +69,13 @@ export function PatientView() {
   }, []);
 
   useEffect(() => {
-    load();
-    const timer = setInterval(load, 30_000);
-    return () => clearInterval(timer);
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      load();
+      timer = setTimeout(tick, refreshMs());
+    };
+    tick();
+    return () => clearTimeout(timer);
   }, [load]);
 
   if (error) {

@@ -1,0 +1,1 @@
+ALTER TABLE "doses" ADD COLUMN "demo" boolean DEFAULT false NOT NULL;
