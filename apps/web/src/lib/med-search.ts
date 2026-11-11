@@ -1,23 +1,26 @@
-/** One medication presentation the family can pick while typing. */
-export type MedOption = { name: string; strength: string };
+import { API_URL } from "./api";
 
-// Temporary local list of common presentations. The data thread is building the
-// Anvisa/CMED search in the API; searchMedications() switches to it once it lands.
+export type MedStrength = {
+  strength: string;
+  form: string | null;
+  freeAt: ("farmacia_popular" | "ubs")[];
+  highCost: boolean;
+};
+
+/** One medicine from GET /medications/search (CMED list): a generic or a brand. */
+export type MedResult = {
+  name: string;
+  activeIngredient: string;
+  kind: "generic" | "brand";
+  laboratory: string | null;
+  strengths: MedStrength[];
+};
+
+// Fallback when the API cannot be reached, so the demo still suggests common names.
 const LOCAL: [string, string[]][] = [
-  ["AAS", ["100 mg"]],
   ["Anlodipino", ["5 mg", "10 mg"]],
   ["Atenolol", ["25 mg", "50 mg"]],
-  ["Atorvastatina", ["10 mg", "20 mg", "40 mg"]],
-  ["Captopril", ["25 mg"]],
-  ["Carvedilol", ["6,25 mg", "12,5 mg", "25 mg"]],
-  ["Enalapril", ["10 mg", "20 mg"]],
-  ["Espironolactona", ["25 mg"]],
-  ["Furosemida", ["40 mg"]],
-  ["Glibenclamida", ["5 mg"]],
-  ["Hidroclorotiazida", ["25 mg"]],
-  ["Insulina NPH", ["100 UI/mL"]],
-  ["Levotiroxina", ["25 mcg", "50 mcg", "100 mcg"]],
-  ["Losartana", ["25 mg", "50 mg", "100 mg"]],
+  ["Losartana potássica", ["25 mg", "50 mg", "100 mg"]],
   ["Metformina", ["500 mg", "850 mg"]],
   ["Omeprazol", ["20 mg"]],
   ["Rosuvastatina", ["10 mg", "20 mg"]],
@@ -27,13 +30,37 @@ const LOCAL: [string, string[]][] = [
 const fold = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("pt-BR").trim();
 
-/** Up to `limit` presentations whose name starts with (or contains) the query. */
-export function searchMedications(query: string, limit = 6): MedOption[] {
-  const q = fold(query);
-  if (q.length < 2) return [];
-  const starts = LOCAL.filter(([n]) => fold(n).startsWith(q));
-  const contains = LOCAL.filter(([n]) => !fold(n).startsWith(q) && fold(n).includes(q));
-  return [...starts, ...contains]
-    .flatMap(([name, strengths]) => strengths.map((strength) => ({ name, strength })))
-    .slice(0, limit);
+function searchLocal(q: string): MedResult[] {
+  const f = fold(q);
+  return LOCAL.filter(([n]) => fold(n).includes(f)).map(([name, strengths]) => ({
+    name,
+    activeIngredient: name,
+    kind: "generic",
+    laboratory: null,
+    strengths: strengths.map((strength) => ({ strength, form: null, freeAt: [], highCost: false })),
+  }));
+}
+
+/** Medicines matching what the family typed. Fewer than 2 letters returns []. */
+export async function searchMedications(q: string, signal?: AbortSignal): Promise<MedResult[]> {
+  if (q.trim().length < 2) return [];
+  try {
+    const res = await fetch(`${API_URL}/medications/search?q=${encodeURIComponent(q.trim())}&limit=8`, {
+      signal,
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    return (await res.json()) as MedResult[];
+  } catch (e) {
+    if (signal?.aborted) throw e;
+    return searchLocal(q);
+  }
+}
+
+/** Distinct strengths of a medicine, in API order, marking the ones that can be free. */
+export function strengthChoices(m: MedResult): { strength: string; free: boolean }[] {
+  const seen = new Map<string, boolean>();
+  for (const s of m.strengths) {
+    seen.set(s.strength, (seen.get(s.strength) ?? false) || s.freeAt.length > 0);
+  }
+  return [...seen].map(([strength, free]) => ({ strength, free }));
 }

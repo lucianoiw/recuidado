@@ -1,10 +1,10 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { cn, inputClass } from "@/components/ui";
-import { searchMedications, type MedOption } from "@/lib/med-search";
+import { searchMedications, type MedResult } from "@/lib/med-search";
 
-/** Name field that suggests medications while typing; picking one also fills the dose. */
+/** Name field that searches the CMED list while typing (debounced) and lets the family pick one. */
 export function MedSearch({
   value,
   onValue,
@@ -13,17 +13,33 @@ export function MedSearch({
 }: {
   value: string;
   onValue: (name: string) => void;
-  onPick: (option: MedOption) => void;
+  onPick: (medicine: MedResult) => void;
   invalid?: boolean;
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
-  const options = open ? searchMedications(value) : [];
+  const [found, setFound] = useState<{ q: string; items: MedResult[] }>({ q: "", items: [] });
+
+  useEffect(() => {
+    if (!open || value.trim().length < 2) return;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => {
+      searchMedications(value, ctrl.signal)
+        .then((items) => setFound({ q: value, items }))
+        .catch(() => {});
+    }, 200);
+    return () => {
+      clearTimeout(timer);
+      ctrl.abort();
+    };
+  }, [value, open]);
+
+  const options = open && value.trim().length >= 2 && found.q === value ? found.items : [];
   const shown = options.length > 0;
 
-  function pick(o: MedOption) {
-    onPick(o);
+  function pick(m: MedResult) {
+    onPick(m);
     setOpen(false);
     setActive(-1);
   }
@@ -72,28 +88,40 @@ export function MedSearch({
         <ul
           id={`${id}-list`}
           role="listbox"
-          className="absolute inset-x-0 top-full z-20 mt-1.5 overflow-hidden rounded-[14px] border border-line-soft bg-surface shadow-[0_12px_32px_rgba(22,32,31,0.14)]"
+          className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-[22rem] overflow-y-auto rounded-[14px] border border-line-soft bg-surface shadow-[0_12px_32px_rgba(22,32,31,0.14)]"
         >
-          {options.map((o, i) => (
-            <li
-              key={`${o.name} ${o.strength}`}
-              id={`${id}-${i}`}
-              role="option"
-              aria-selected={i === active}
-              // mousedown keeps the input from blurring before the pick.
-              onMouseDown={(e) => {
-                e.preventDefault();
-                pick(o);
-              }}
-              className={cn(
-                "flex min-h-12 cursor-pointer items-center justify-between gap-3 border-b border-line-soft px-3.5 text-[17px] last:border-b-0",
-                i === active && "bg-brand-soft",
-              )}
-            >
-              <b className="truncate">{o.name}</b>
-              <span className="whitespace-nowrap text-muted">{o.strength}</span>
-            </li>
-          ))}
+          {options.map((m, i) => {
+            const free = m.strengths.some((s) => s.freeAt.length > 0);
+            return (
+              <li
+                key={`${m.kind} ${m.name} ${m.laboratory ?? ""}`}
+                id={`${id}-${i}`}
+                role="option"
+                aria-selected={i === active}
+                // mousedown keeps the input from blurring before the pick.
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  pick(m);
+                }}
+                className={cn(
+                  "flex min-h-14 cursor-pointer items-center justify-between gap-3 border-b border-line-soft px-3.5 py-2 last:border-b-0",
+                  i === active && "bg-brand-soft",
+                )}
+              >
+                <span className="flex min-w-0 flex-col">
+                  <b className="line-clamp-2 text-[17px] leading-snug">{m.name}</b>
+                  <span className="truncate text-[14px] text-muted">
+                    {m.kind === "generic" ? "Genérico" : m.activeIngredient}
+                  </span>
+                </span>
+                {free ? (
+                  <span className="whitespace-nowrap rounded-full bg-brand-soft px-2.5 py-1 text-[13px] font-bold text-brand">
+                    Pode ser grátis
+                  </span>
+                ) : null}
+              </li>
+            );
+          })}
         </ul>
       ) : null}
     </div>
