@@ -1,10 +1,10 @@
 import { Inject, Injectable, NotFoundException, OnApplicationBootstrap } from '@nestjs/common';
 import { findFreeAccess, type FreeAccess } from '@recuidado/data';
-import { and, asc, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
-import { families, medications, members } from '../db/schema.js';
+import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DosesService } from '../doses/doses.service.js';
-import type { OnboardingBody } from './onboarding.schema.js';
+import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
 export const DEMO_FAMILY = 'Família Demo';
@@ -53,7 +53,7 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /** Everything the family and patient screens show. */
-  async overview() {
+  async overview(now = new Date()) {
     const { familyId, patientId } = await this.ensureDemoFamily();
     const people = await this.db
       .select({
@@ -63,6 +63,7 @@ export class FamilyService implements OnApplicationBootstrap {
         role: members.role,
         relation: members.relation,
         relationOther: members.relationOther,
+        phone: members.phone,
         // Added as an invite and not opened the app yet.
         pending: and(isNotNull(members.invitedById), isNull(members.joinedAt))!.mapWith(Boolean),
       })
@@ -92,7 +93,56 @@ export class FamilyService implements OnApplicationBootstrap {
         ...freeAccessOf(activeIngredient ?? med.name, med.strength),
       })),
       today: await this.doses.listForDay(patientId),
+      unwellReports: await this.unwellReports(patientId, now),
     };
+  }
+
+  /** What she said in the calls of the last 24 hours when she reported not feeling well. */
+  private unwellReports(patientId: string, now: Date) {
+    return this.db
+      .select({ at: voiceCalls.createdAt, note: voiceCalls.note, doseId: voiceCalls.doseId })
+      .from(voiceCalls)
+      .innerJoin(doses, eq(voiceCalls.doseId, doses.id))
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .where(
+        and(
+          eq(medications.patientId, patientId),
+          eq(voiceCalls.feelsUnwell, true),
+          gte(voiceCalls.createdAt, new Date(now.getTime() - 24 * 60 * 60 * 1000)),
+        ),
+      )
+      .orderBy(desc(voiceCalls.createdAt));
+  }
+
+  /** Family changes the dose text or the times. New times replace the pending future doses. */
+  async updateMedication(medicationId: string, input: MedicationUpdateBody, now = new Date()): Promise<void> {
+    const { patientId } = await this.ensureDemoFamily();
+    const [row] = await this.db
+      .update(medications)
+      .set({
+        ...(input.strength !== undefined ? { strength: input.strength || null } : {}),
+        ...(input.times !== undefined ? { times: [...new Set(input.times)].sort() } : {}),
+      })
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
+      .returning({ id: medications.id });
+    if (!row) throw new NotFoundException('Remédio não encontrado.');
+    if (input.times !== undefined) {
+      // Queued jobs of removed doses find no dose and do nothing.
+      await this.db
+        .delete(doses)
+        .where(and(eq(doses.medicationId, medicationId), eq(doses.status, 'pending'), gte(doses.scheduledAt, now)));
+      await this.doses.scheduleForMedication(medicationId, now);
+    }
+  }
+
+  /** Family stops a medication: it and its doses are removed. */
+  async removeMedication(medicationId: string): Promise<void> {
+    const { patientId } = await this.ensureDemoFamily();
+    const [row] = await this.db
+      .delete(medications)
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
+      .returning({ id: medications.id });
+    if (!row) throw new NotFoundException('Remédio não encontrado.');
   }
 
   /** Saved onboarding answers of one caregiver, to restore the sign-up form. */

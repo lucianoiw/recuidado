@@ -65,6 +65,8 @@ const READING_STEPS = [
   "Lendo os remédios",
   "Montando os horários",
   "Procurando no Farmácia Popular",
+  "Procurando na farmácia da UBS",
+  "Vendo se entra no Alto Custo",
   "Separando o que precisa comprar",
 ];
 
@@ -127,7 +129,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
       {meds.length > 0 ? (
         <section className="rounded-card bg-brand-soft p-4">
           <p className="text-[22px] font-extrabold text-brand">
-            {free.length} de {meds.length} remédios saem de graça
+            {free.length} de {meds.length} remédios podem sair de graça
           </p>
           <p className="text-[15px]">no Farmácia Popular ou na UBS, com receita e documento.</p>
         </section>

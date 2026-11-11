@@ -42,7 +42,7 @@ export function BuyView() {
             <CartIcon size={28} />
           </span>
           <b className="text-[19px]">Nada para comprar</b>
-          <p className="text-muted">Todos os remédios da receita saem grátis.</p>
+          <p className="text-muted">Todos os remédios da receita podem sair grátis.</p>
         </section>
       ) : (
         <>

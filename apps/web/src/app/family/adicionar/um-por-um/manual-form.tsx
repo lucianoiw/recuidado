@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MedSearch } from "@/components/med-search";
 import { TimeChips } from "@/components/time-chips";
-import { Button, CheckIcon, Field, TopBar, buttonClass } from "@/components/ui";
+import { Button, CheckIcon, Field, GiftIcon, TopBar, buttonClass, cn } from "@/components/ui";
 import { confirmPrescription, getFamily } from "@/lib/api";
+import { strengthChoices, type MedResult } from "@/lib/med-search";
 
 export function ManualForm() {
   const router = useRouter();
@@ -16,6 +18,7 @@ export function ManualForm() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
   const [tried, setTried] = useState(false);
+  const [picked, setPicked] = useState<MedResult | null>(null);
 
   async function save(another: boolean) {
     if (!name.trim()) {
@@ -32,6 +35,7 @@ export function ManualForm() {
       setSaved((s) => [...s, [name.trim(), strength.trim()].filter(Boolean).join(" ")]);
       setName("");
       setStrength("");
+      setPicked(null);
       setTimes(["08:00"]);
       setTried(false);
       if (!another) router.push("/family/remedios");
@@ -54,15 +58,52 @@ export function ManualForm() {
         </p>
       ) : null}
 
-      <Field
-        label="Nome do remédio"
+      <MedSearch
         value={name}
-        onValue={setName}
-        autoComplete="off"
-        placeholder="Losartana"
-        aria-invalid={tried && !name.trim()}
+        onValue={(v) => {
+          setName(v);
+          setPicked(null);
+        }}
+        onPick={(m) => {
+          setName(m.name);
+          setPicked(m);
+          const choices = strengthChoices(m);
+          setStrength(choices.length === 1 ? choices[0]!.strength : "");
+        }}
+        invalid={tried && !name.trim()}
       />
-      <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
+      <div className="flex flex-col gap-2">
+        <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
+        {picked && strengthChoices(picked).length > 1 ? (
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Doses deste remédio">
+            {strengthChoices(picked).map((c) => (
+              <button
+                key={c.strength}
+                type="button"
+                aria-pressed={strength === c.strength}
+                onClick={() => setStrength(c.strength)}
+                className={cn(
+                  "inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] px-3 text-[16px] font-bold",
+                  strength === c.strength
+                    ? "border-brand bg-brand text-white"
+                    : "border-line bg-surface text-ink",
+                )}
+              >
+                {c.strength}
+                {c.free ? (
+                  <GiftIcon size={16} className={strength === c.strength ? "text-white" : "text-brand"} />
+                ) : null}
+              </button>
+            ))}
+          </div>
+        ) : null}
+        {picked && strengthChoices(picked).some((c) => c.free) ? (
+          <span className="flex items-center gap-1.5 text-[14px] text-muted">
+            <GiftIcon size={16} className="text-brand" />
+            Pode sair grátis no Farmácia Popular ou na UBS.
+          </span>
+        ) : null}
+      </div>
       <div className="flex flex-col gap-2">
         <span className="text-[15px] font-bold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
@@ -71,7 +112,7 @@ export function ManualForm() {
         </span>
       </div>
       <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
-        Depois de salvar, a gente mostra se ele sai grátis no Farmácia Popular ou na UBS.
+        Depois de salvar, a gente mostra se ele pode sair grátis no Farmácia Popular ou na UBS.
       </p>
 
       {error ? (

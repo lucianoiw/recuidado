@@ -287,7 +287,17 @@ function InviteStep({
 
   async function send() {
     const who = add();
-    if (!who) return;
+    if (who) await shareTo(who);
+  }
+
+  async function shareTo(who: string) {
+    if (!canShare) {
+      try {
+        await navigator.clipboard.writeText(message(who));
+        setDone(`Convite de ${who} copiado. Cole na conversa com a pessoa.`);
+      } catch {}
+      return;
+    }
     try {
       // The phone's own share sheet: WhatsApp, SMS or e-mail, chosen by the user.
       await navigator.share({ title: "Convite do Recuidado", text: message(who) });
@@ -306,6 +316,11 @@ function InviteStep({
     } catch {
       setDone(`${who} foi adicionado(a).`);
     }
+  }
+
+  function later() {
+    const who = add();
+    if (who) setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
   }
 
   const me = data.caregiver;
@@ -328,7 +343,14 @@ function InviteStep({
               <b>{i.name}</b>
               {i.relation ? <span className="text-[15px] text-muted">{i.relation}</span> : null}
             </span>
-            <StatusPill tone="warn">Convite pronto</StatusPill>
+            <button
+              type="button"
+              onClick={() => shareTo(i.name)}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-bold"
+            >
+              {canShare ? <ShareIcon size={18} /> : <CopyIcon size={18} />}
+              {canShare ? "Enviar" : "Copiar"}
+            </button>
           </li>
         ))}
       </ul>
@@ -349,7 +371,8 @@ function InviteStep({
       <Sheet open={adding} onClose={() => setAdding(false)} title="Chamar mais alguém">
         <Field label="Nome" value={name} onValue={setName} autoComplete="off" />
         <Field
-          label="Celular"
+          label="Celular (opcional)"
+          hint="Para enviar não precisa: você escolhe a pessoa no WhatsApp ou no SMS."
           value={phone}
           onValue={setPhone}
           mask={maskPhone}
@@ -379,11 +402,19 @@ function InviteStep({
             <CopyIcon size={20} />
             Copiar convite
           </Button>
+          <button
+            type="button"
+            onClick={later}
+            disabled={!name.trim()}
+            className="min-h-12 font-bold text-brand disabled:opacity-40"
+          >
+            Só adicionar, envio depois
+          </button>
         </div>
       </Sheet>
       <p className="flex gap-2.5 rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
         <InfoIcon size={22} className="shrink-0 text-brand" />
-        Mande o link para quem você chamou. A pessoa abre e já acompanha a {nickname}.
+        Toque em Enviar para mandar o link a quem você chamou. A pessoa abre e já acompanha a {nickname}.
       </p>
     </>
   );

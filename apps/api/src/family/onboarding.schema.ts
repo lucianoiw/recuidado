@@ -75,3 +75,15 @@ export const onboardingBody = z
 export type OnboardingBody = z.infer<typeof onboardingBody>;
 
 export const buyChoiceBody = z.object({ buy: z.boolean() });
+
+const clock = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Horário no formato 08:00.');
+
+/** Family edits a medication: dose text and/or times of day. */
+export const medicationUpdateBody = z
+  .object({
+    strength: z.string().trim().max(60).nullable().optional(),
+    times: z.array(clock).min(1, 'Pelo menos um horário.').max(6).optional(),
+  })
+  .refine((b) => b.strength !== undefined || b.times !== undefined, { message: 'Nada para mudar.' });
+
+export type MedicationUpdateBody = z.infer<typeof medicationUpdateBody>;

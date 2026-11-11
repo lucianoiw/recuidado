@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
-import { Button, Card, CheckIcon, ClockIcon, PillIcon, ScreenHeader } from "@/components/ui";
+import { Button, Card, CheckIcon, ClockIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
 import { captureError, identifyMember, track } from "@/lib/analytics";
-import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
+import { callName, confirmDose, formatTime, getFamily, telHref, type Dose, type FamilyOverview } from "@/lib/api";
 
 function todayLabel(): string {
   const text = new Intl.DateTimeFormat("pt-BR", {
@@ -143,6 +143,9 @@ export function PatientView() {
     );
   }
 
+  // The first caregiver with a phone: one big button to reach the family.
+  const callable = data.caregivers.find((c) => telHref(c) !== null);
+
   return (
     <>
       <ScreenHeader audience="patient" eyebrow={todayLabel()} title={
@@ -213,7 +216,13 @@ export function PatientView() {
         </section>
       ) : null}
 
-      <div className="mt-auto pt-2">
+      <div className="mt-auto flex flex-col gap-3 pt-2">
+        {callable ? (
+          <a href={telHref(callable)!} className={buttonClass({ variant: "secondary", size: "lg" })}>
+            <PhoneIcon size={26} />
+            Ligar para {callable.name.trim().split(/\s+/)[0]}
+          </a>
+        ) : null}
         <EnableNotifications memberId={data.patient.id} label="Receber lembretes no celular" large />
       </div>
     </>
