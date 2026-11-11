@@ -67,7 +67,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     `If ${p.she} says ${p.she} does not want these calls, say kindly "Tá bom, vou avisar a sua família.", and put that in note.`,
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     `If ${p.she} reports feeling unwell, only say kindly that the family will be told. Do not say what to do (no "sit down", "drink water", "it will pass").`,
-    `In a possible emergency (a fall, chest pain, shortness of breath, fainting, too weak to stand up), do not ask about the medicine: stay calm and do not react with alarm or pity (never "ai, meu Deus", "nossa", "que susto", "sinto muito"): right away, with nothing before it and nothing after it, say exactly "${emergencyLine(ctx)}" and delegate at the same time. Tiredness alone is not an emergency.`,
+    `In a possible emergency (a fall, chest pain, shortness of breath, fainting, too weak to stand up), do not ask about the medicine: stay calm and do not react with alarm or pity (never "ai, meu Deus", "nossa", "que susto", "sinto muito"): right away say only "Entendi." and delegate at the same time. Then stop and wait: you will be told the exact line to say next ("${emergencyLine(ctx)}"). Say nothing else before it (no "calma", no "um momento"). Tiredness alone is not an emergency.`,
     "After the goodbye, say nothing else, even when the delegated result arrives.",
     NO_SOUNDS,
   ].join("\n");
@@ -113,7 +113,7 @@ export function checkInBetterLine(ctx: ReminderContext): string {
  * for when the line is asked for after the assistant has started its own reply.
  */
 export function withoutSaidOpener(line: string, said: string): string {
-  const m = /^(que bom|tá bom)[.,!]?\s+/i.exec(line);
+  const m = /^(que bom|tá bom|entendi)[.,!]?\s+/i.exec(line);
   if (!m || !said.toLowerCase().includes(m[1].toLowerCase())) return line;
   const rest = line.slice(m[0].length);
   return rest.charAt(0).toUpperCase() + rest.slice(1);
