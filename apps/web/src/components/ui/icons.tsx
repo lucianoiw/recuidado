@@ -133,12 +133,12 @@ export function ChevronRightIcon(props: IconProps) {
   );
 }
 
-export function GiftIcon(props: IconProps) {
+/** Price tag: marks what can be free. */
+export function FreeIcon(props: IconProps) {
   return (
     <Icon {...props}>
-      <path d="M20 12v8H4v-8" />
-      <path d="M2 7h20v5H2z" />
-      <path d="M12 20V7M12 7H8a2 2 0 1 1 2-3l2 3 2-3a2 2 0 1 1 2 3h-4" />
+      <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z" />
+      <circle cx="7.5" cy="7.5" r="1.5" />
     </Icon>
   );
 }

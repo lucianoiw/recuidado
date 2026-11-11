@@ -7,7 +7,7 @@ import { useState } from "react";
 import { MedSearch } from "@/components/med-search";
 import { StockField } from "@/components/stock-field";
 import { TimeChips } from "@/components/time-chips";
-import { Button, CheckIcon, Field, GiftIcon, TopBar, buttonClass, cn } from "@/components/ui";
+import { Button, CheckIcon, Field, FreeIcon, TopBar, buttonClass, cn } from "@/components/ui";
 import { confirmPrescription, getFamily } from "@/lib/api";
 import { strengthChoices, type MedResult } from "@/lib/med-search";
 import { parseUnits } from "@/lib/stock";
@@ -97,7 +97,7 @@ export function ManualForm() {
               >
                 {c.strength}
                 {c.free ? (
-                  <GiftIcon size={16} className={strength === c.strength ? "text-white" : "text-brand"} />
+                  <FreeIcon size={16} className={strength === c.strength ? "text-white" : "text-brand"} />
                 ) : null}
               </button>
             ))}
@@ -105,7 +105,7 @@ export function ManualForm() {
         ) : null}
         {picked && strengthChoices(picked).some((c) => c.free) ? (
           <span className="flex items-center gap-1.5 text-[14px] text-muted">
-            <GiftIcon size={16} className="text-brand" />
+            <FreeIcon size={16} className="text-brand" />
             Pode sair grátis no Farmácia Popular ou na UBS.
           </span>
         ) : null}

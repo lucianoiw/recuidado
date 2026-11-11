@@ -7,7 +7,7 @@ import {
   CameraIcon,
   CartIcon,
   ChevronRightIcon,
-  GiftIcon,
+  FreeIcon,
   PencilIcon,
   PinIcon,
   PlusIcon,
@@ -145,7 +145,7 @@ export function MedsView() {
 
       {free.length > 0 ? (
         <Group
-          icon={<GiftIcon size={22} className="text-brand" />}
+          icon={<FreeIcon size={22} className="text-brand" />}
           title="Grátis"
           meds={free}
           link={{ href: "/family/onde-pegar", label: "Ver onde pegar" }}

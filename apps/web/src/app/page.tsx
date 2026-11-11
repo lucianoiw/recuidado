@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { BellIcon, CameraIcon, GiftIcon, Logo, buttonClass } from "@/components/ui";
+import { BellIcon, CameraIcon, FreeIcon, Logo, buttonClass } from "@/components/ui";
 
 const points = [
   { icon: CameraIcon, title: "Foto da receita.", text: "A IA lê e monta os horários." },
-  { icon: GiftIcon, title: "O que é grátis.", text: "No Farmácia Popular, perto de casa." },
+  { icon: FreeIcon, title: "O que é grátis.", text: "No Farmácia Popular, perto de casa." },
   { icon: BellIcon, title: "Lembrete e ligação.", text: "Se não confirmar, você fica sabendo." },
 ];
 
