@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AlertIcon, BellIcon, HeartIcon, PillIcon, TopBar, cn } from "@/components/ui";
 import { captureError } from "@/lib/analytics";
+import { MonthSummary } from "./month-summary";
 import { formatTime, getAlerts, type AlertKind, type FamilyAlert } from "@/lib/api";
 
 const KINDS: Record<AlertKind, { label: string; icon: typeof AlertIcon; tone: string }> = {
@@ -64,9 +65,11 @@ export function AlertsView() {
     <>
       <TopBar backHref="/family" />
       <header className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.01em]">Avisos</h1>
-        <p className="text-[16px] text-muted">Tudo que o Recuidado avisou à família.</p>
+        <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.01em]">Histórico</h1>
+        <p className="text-[16px] text-muted">Como foi o cuidado no mês e tudo que o Recuidado avisou.</p>
       </header>
+
+      <MonthSummary />
 
       {error && !alerts ? <p className="text-muted">Sem conexão com o servidor.</p> : null}
       {!error && !alerts ? <p className="text-muted">Carregando...</p> : null}
