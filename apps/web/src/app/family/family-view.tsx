@@ -13,6 +13,7 @@ import {
   ClockIcon,
   DoseList,
   DoseRow,
+  FreeIcon,
   HeartIcon,
   PhoneIcon,
   buttonClass,
@@ -21,7 +22,7 @@ import {
 import { DemoBanner } from "@/components/demo-banner";
 import { callName, confirmDose, formatTime, isFree, telHref, type Dose } from "@/lib/api";
 import { stockText } from "@/lib/stock";
-import { medLabel, useFamily } from "@/lib/use-family";
+import { brl, medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
   if (d.status === "taken") {
@@ -73,6 +74,10 @@ export function FamilyView() {
   }
   const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
+  // Free medicines the family gets for free save their CMED price; the others are bought.
+  const getsFree = (m: (typeof data.medications)[number]) => isFree(m) && !m.buyInsteadOfFree;
+  const savedCents = data.medications.filter(getsFree).reduce((sum, m) => sum + m.monthlyCostCents, 0);
+  const costCents = data.medications.filter((m) => !getsFree(m)).reduce((sum, m) => sum + m.monthlyCostCents, 0);
   const tel = telHref(data.patient);
   const unwell = data.unwellReports?.[0];
   const runningOut = data.medications.filter((m) => m.stock?.low);
@@ -247,6 +252,24 @@ export function FamilyView() {
           </DoseList>
         )}
       </section>
+
+      {savedCents > 0 || costCents > 0 ? (
+        <Link
+          href="/family/mes"
+          className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+        >
+          <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+            <FreeIcon size={24} />
+          </span>
+          <span className="flex flex-1 flex-col">
+            <b>{savedCents > 0 ? `Economia do mês: ${brl.format(savedCents / 100)}` : "Resumo do mês"}</b>
+            <span className="text-[15px] text-muted">
+              {costCents > 0 ? `Para comprar: até ${brl.format(costCents / 100)}. Dividir com Pix` : "Doses e gastos do mês"}
+            </span>
+          </span>
+          <ChevronRightIcon size={20} className="text-muted" />
+        </Link>
+      ) : null}
 
       <Link
         href="/family/avisos"

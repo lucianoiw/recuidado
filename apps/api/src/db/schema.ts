@@ -44,6 +44,9 @@ export const members = pgTable('members', {
   relation: text(),
   relationOther: text(),
   // Set on caregivers added as an invite during onboarding; joinedAt is set when they open the app.
+  // Pix key of the caregiver who buys the medicines and receives the others' shares.
+  // Normalized: CPF digits, "+55" phone, lowercase e-mail or a random key (EVP).
+  pixKey: text(),
   invitedById: uuid().references((): AnyPgColumn => members.id, { onDelete: 'set null' }),
   joinedAt: timestamp({ withTimezone: true }),
   // LGPD consent of the patient (health data, art. 11): reminders, calls and the family seeing doses.
@@ -145,7 +148,7 @@ export const costShares = pgTable('cost_shares', {
   month: text().notNull(),
   amountCents: integer().notNull(),
   paidAt: timestamp({ withTimezone: true }),
-});
+}, (t) => [unique().on(t.familyId, t.memberId, t.month)]);
 
 export const alertKind = pgEnum('alert_kind', ['dose_missed', 'unwell', 'low_stock']);
 

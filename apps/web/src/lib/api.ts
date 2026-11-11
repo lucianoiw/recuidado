@@ -57,6 +57,19 @@ export interface Medication {
   highCost?: boolean;
   /** Pills left at home and how many days they last; null when nobody counted them. */
   stock?: Stock | null;
+  /** CMED ceiling price (PMC, São Paulo); null when the list has no match. */
+  price?: MedicationPrice | null;
+}
+
+export interface MedicationPrice {
+  /** Cheapest presentation on the CMED list, for a month of doses. Null without fixed times. */
+  monthlyCents: number | null;
+  monthlyMaxCents: number | null;
+  packCents: number;
+  unitsPerPack: number;
+  product: string;
+  /** "2026-11-09": publication date of the CMED list. */
+  listDate: string | null;
 }
 
 export interface Stock {
@@ -294,4 +307,68 @@ export function exportDataUrl(caregiverId: string): string {
 export async function deleteFamilyData(caregiverId: string): Promise<void> {
   const res = await fetch(`${API_URL}/privacy/family?caregiverId=${caregiverId}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para apagar os dados."));
+}
+
+export interface MonthItem {
+  id: string;
+  name: string;
+  strength: string | null;
+  monthlyCents: number;
+  free: boolean;
+  freeAt: string[];
+  highCost: boolean;
+  priced: boolean;
+}
+
+export type PixKeyType = "cpf" | "phone" | "email" | "random";
+
+export interface MonthShare {
+  memberId: string;
+  name: string;
+  amountCents: number;
+  /** Buys the medicines and receives the others' shares. */
+  isReceiver: boolean;
+  paid: boolean;
+  paidAt: string | null;
+  /** Pix "copia e cola" to pay the receiver; null for the receiver or without a key. */
+  pix: string | null;
+}
+
+/** GET /family/month: savings, cost, split and doses of the current month. */
+export interface MonthSummary {
+  month: string;
+  /** "novembro de 2026" */
+  label: string;
+  savedCents: number;
+  costCents: number;
+  highCostPotentialCents: number;
+  saved: MonthItem[];
+  toBuy: MonthItem[];
+  /** Medicines to buy without a price. */
+  unpriced: number;
+  /** "2026-11-09": publication date of the CMED list the prices come from. */
+  priceListDate: string | null;
+  split: {
+    receiver: { id: string; name: string; keyType: PixKeyType; pixKey: string } | null;
+    /** The demo family: its Pix key is fictitious. */
+    demoPix: boolean;
+    shares: MonthShare[];
+  };
+  doses: { total: number; taken: number; missed: number; pending: number; byVoice: number };
+}
+
+export async function getMonth(): Promise<MonthSummary> {
+  const res = await fetch(`${API_URL}${withFamily("/family/month")}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+/** Marks a caregiver's share of this month as paid or not. */
+export async function setSharePaid(memberId: string, paid: boolean): Promise<void> {
+  await send("PUT", withFamily(`/family/shares/${memberId}/paid`), { paid }, "Não deu para salvar.");
+}
+
+/** Saves who receives the Pix (null removes the key). */
+export async function setPixKey(memberId: string, pix: { type: PixKeyType; key: string } | null): Promise<void> {
+  await send("PUT", withFamily(`/family/members/${memberId}/pix`), { pix }, "Não deu para salvar a chave Pix.");
 }

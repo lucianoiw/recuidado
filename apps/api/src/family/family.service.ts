@@ -16,6 +16,7 @@ import { DosesService } from '../doses/doses.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { seedDemoFamily } from './demo-seed.js';
 import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
+import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
 export const DEMO_FAMILY = 'Família Demo';
@@ -184,12 +185,18 @@ export class FamilyService implements OnApplicationBootstrap {
       isDemo,
       patient: shown.find((p) => p.id === patientId)!,
       caregivers: shown.filter((p) => p.role === 'caregiver'),
-      medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => ({
-        ...med,
-        ...freeAccessOf(activeIngredient ?? med.name, med.strength),
-        // Pills left and days they last; null when the family has not counted them.
-        stock: stock.get(med.id) ?? null,
-      })),
+      medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => {
+        const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
+        return {
+          ...med,
+          ...freeAccessOf(activeIngredient ?? med.name, med.strength),
+          // Saved price, else the CMED ceiling of the cheapest pack for a month of doses.
+          monthlyCostCents: monthlyCostOf(med.monthlyCostCents, price),
+          price,
+          // Pills left and days they last; null when the family has not counted them.
+          stock: stock.get(med.id) ?? null,
+        };
+      }),
       today: await this.doses.listForDay(patientId),
       unwellReports: await this.unwellReports(patientId, now),
     };
