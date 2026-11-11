@@ -79,7 +79,14 @@ export class VoiceCallService {
       this.logger.warn(`Patient of dose ${doseId} has no phone; not calling.`);
       return null;
     }
-    const overLimit = await this.overCallLimit(row.familyId, row.familyName === DEMO_FAMILY);
+    const isDemoFamily = row.familyName === DEMO_FAMILY;
+    // The demo phone is a real person's: its daily doses only push, unless DEMO_SCHEDULED_CALLS is on.
+    if (isDemoFamily && !row.demo && !this.config.get<boolean>('DEMO_SCHEDULED_CALLS')) {
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'demo_scheduled' }, row.patientId);
+      this.logger.log(`Dose ${doseId} is a scheduled demo dose; push only.`);
+      return null;
+    }
+    const overLimit = await this.overCallLimit(row.familyId, isDemoFamily);
     if (overLimit) {
       telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: overLimit }, row.patientId);
       this.logger.warn(`Not calling for dose ${doseId}: ${overLimit}.`);

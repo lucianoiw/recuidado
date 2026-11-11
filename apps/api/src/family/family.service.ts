@@ -2,16 +2,19 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { findFreeAccess, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
+import { ConfigService } from '@nestjs/config';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { DosesService } from '../doses/doses.service.js';
 import { StockService } from '../stock/stock.service.js';
+import { seedDemoFamily } from './demo-seed.js';
 import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
@@ -40,15 +43,28 @@ export function maskPhone(phone: string | null): string | null {
 
 @Injectable()
 export class FamilyService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(FamilyService.name);
+
   constructor(
     @Inject(DB) private readonly db: Database,
     private readonly doses: DosesService,
     private readonly stock: StockService,
     private readonly alerts: AlertsService,
+    private readonly config: ConfigService,
   ) {}
 
   async onApplicationBootstrap() {
-    await this.ensureDemoFamily();
+    const ids = await this.ensureDemoFamily();
+    if (!this.config.get<boolean>('DEMO_SEED_ENABLED')) return;
+    try {
+      // Fixed story of Dona Maria: three medicines, times, stock and a week of history.
+      const medIds = await seedDemoFamily(this.db, ids);
+      for (const id of medIds) await this.doses.scheduleForMedication(id);
+      this.logger.log('Demo family seeded.');
+    } catch (error) {
+      // The app works without the demo story; never block the boot on it.
+      this.logger.error(`Demo family seed failed: ${String(error)}`);
+    }
   }
 
   /** Creates the demo family if missing. Returns its id and the patient id. */
