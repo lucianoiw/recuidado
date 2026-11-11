@@ -49,7 +49,7 @@ export class LiveClient {
           type: "responses",
           responses: {
             model: this.config.delegateModel,
-            instructions: buildDelegateInstructions(),
+            instructions: buildDelegateInstructions(ctx),
             tools: [doseTool],
             tool_choice: "required",
             parallel_tool_calls: false,

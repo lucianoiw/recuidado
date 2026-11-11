@@ -39,10 +39,8 @@ export interface ReminderCallOptions {
   socket: SidebandSocket;
   hangup: () => Promise<void>;
   maxCallMs: number;
-  /** Longest wait for the goodbye after the answer is recorded, then the call is hung up anyway. */
+  /** After the answer is recorded, hang up when the assistant has said nothing for this long and no goodbye came. */
   goodbyeMs?: number;
-  /** If no goodbye was heard this long after the answer is recorded, ask for it again. */
-  goodbyeNudgeMs?: number;
   /** Silence after the goodbye before hanging up, so its audio finishes playing. */
   goodbyeTailMs?: number;
   /** Longest time the patient's microphone stays muted while the greeting plays. */
@@ -84,6 +82,7 @@ export class ReminderCall {
   private greetingText = "";
   private assistantAfterAnswer = "";
   private goodbyeTimer?: NodeJS.Timeout;
+  private silenceTimer?: NodeJS.Timeout;
   private firstAssistantLogged = false;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
@@ -226,25 +225,19 @@ export class ReminderCall {
     });
     this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
-    // Hang up only after the goodbye is spoken; the timers below are fallbacks.
+    // Hang up 2 s after the goodbye; if no goodbye comes, hang up after a few seconds of silence anyway.
     this.assistantAfterAnswer = "";
-    this.timers.push(
-      setTimeout(() => {
-        if (GOODBYE.test(this.assistantAfterAnswer) || this.hangupRequested) return;
-        this.log("no goodbye yet, asking for it");
-        this.send({
-          type: "session.commentary.append",
-          event_id: `goodbye_${item.call_id}`,
-          delegation_id: null,
-          content: 'Say now, in Brazilian Portuguese, exactly: "Obrigada, tchau!"',
-        });
-      }, this.opts.goodbyeNudgeMs ?? 5000),
-      setTimeout(() => {
-        this.endReason ??= "hung_up_after_answer";
-        this.log("goodbye not heard in time, hanging up");
-        void this.endCall();
-      }, this.opts.goodbyeMs ?? 15000),
-    );
+    this.armSilenceHangup();
+  }
+
+  private armSilenceHangup() {
+    if (this.silenceTimer) clearTimeout(this.silenceTimer);
+    this.silenceTimer = setTimeout(() => {
+      this.endReason ??= "hung_up_after_answer";
+      this.log("no goodbye heard, hanging up");
+      void this.endCall();
+    }, this.opts.goodbyeMs ?? 5000);
+    this.timers.push(this.silenceTimer);
   }
 
   private onAssistantSpeech(delta: string, startMs: unknown) {
@@ -263,13 +256,18 @@ export class ReminderCall {
     }
     if (!this.answer) return;
     this.assistantAfterAnswer += delta;
-    if (!GOODBYE.test(this.assistantAfterAnswer)) return;
+    if (!GOODBYE.test(this.assistantAfterAnswer)) {
+      // Still talking (for example telling her the family will be told): restart the silence wait.
+      this.armSilenceHangup();
+      return;
+    }
+    if (this.silenceTimer) clearTimeout(this.silenceTimer);
     // Wait until the assistant stops talking, then hang up.
     if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
     this.goodbyeTimer = setTimeout(() => {
       this.endReason ??= "hung_up_after_goodbye";
       void this.endCall();
-    }, this.opts.goodbyeTailMs ?? 2500);
+    }, this.opts.goodbyeTailMs ?? 2000);
     this.timers.push(this.goodbyeTimer);
   }
 
