@@ -103,10 +103,14 @@ export function PatientView() {
           <span className="flex size-36 items-center justify-center rounded-full bg-brand text-white">
             <CheckIcon size={84} aria-hidden={false} role="img" aria-label="Confirmado" />
           </span>
-          <h1 className="text-[40px] font-bold leading-tight">Pronto, {patientName}!</h1>
+          <h1 className="text-[40px] font-bold leading-tight">
+            Pronto,
+            <br />
+            {patientName}!
+          </h1>
           <p className="text-[26px] leading-snug">
-            Anotei {justTaken.length > 1 ? "os remédios" : doseName(justTaken[0])} das{" "}
-            {formatTime(justTaken[0].scheduledAt)}.
+            Anotei {justTaken.length > 1 ? "os remédios" : doseName(justTaken[0])}
+            {` das\u00a0${formatTime(justTaken[0].scheduledAt)}.`}
             {names.length > 0 ? (
               <>
                 <br />
@@ -118,7 +122,11 @@ export function PatientView() {
         {next ? (
           <Card className="flex flex-col gap-1 p-5">
             <p className="text-muted">Próximo remédio</p>
-            <p className="text-[28px] font-bold leading-tight">{namesOf(next.doses)}</p>
+            <ul className="text-[28px] font-bold leading-tight">
+              {next.doses.map((d) => (
+                <li key={d.id}>{doseName(d)}</li>
+              ))}
+            </ul>
             <p className="text-[24px] font-semibold text-brand">às {next.time}</p>
           </Card>
         ) : null}
@@ -131,7 +139,13 @@ export function PatientView() {
 
   return (
     <>
-      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={`${greeting()}, ${patientName}`} />
+      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={
+          <>
+            {greeting()},
+            <br />
+            {patientName}
+          </>
+        } />
 
       {due.length > 0 ? (
         <Card className="flex flex-col gap-5 border-2 border-line px-4 py-6" aria-live="polite">
@@ -145,7 +159,12 @@ export function PatientView() {
                 <span className="flex size-16 shrink-0 items-center justify-center rounded-[18px] bg-brand-soft text-brand">
                   <PillIcon size={36} />
                 </span>
-                <h2 className="text-[28px] font-bold leading-tight">{doseName(d)}</h2>
+                <div className="flex min-w-0 flex-col">
+                  <h2 className="text-[30px] font-bold leading-tight">{d.medicationName}</h2>
+                  {d.strength ? (
+                    <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
+                  ) : null}
+                </div>
               </li>
             ))}
           </ul>

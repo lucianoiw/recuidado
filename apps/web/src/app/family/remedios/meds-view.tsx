@@ -8,6 +8,7 @@ import {
   GiftIcon,
   PinIcon,
   buttonClass,
+  cn,
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { FreeOrBuy } from "@/components/free-or-buy";
@@ -27,7 +28,12 @@ function freeWhere(m: Medication): string | null {
 function MedRow({ m }: { m: Medication }) {
   const { getsFree, setBuy } = useBuyChoice();
   return (
-    <li className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">
+    <li
+      className={cn(
+        "flex gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0",
+        isFree(m) ? "flex-col" : "items-center justify-between",
+      )}
+    >
       <div className="flex min-w-0 flex-col">
         <span className="font-bold">{medLabel(m.name, m.strength)}</span>
         <span className="text-[15px] text-muted">

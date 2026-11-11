@@ -216,7 +216,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           </h2>
           <ul className="px-4 py-1">
             {free.map((m) => (
-              <li key={m.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5">
+              <li key={m.id} className="flex flex-col gap-2.5 py-2.5">
                 <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
                 <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
               </li>
