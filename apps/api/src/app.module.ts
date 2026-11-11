@@ -6,6 +6,7 @@ import { validateEnv } from './config/env.js';
 import { DbModule } from './db/db.module.js';
 import { DosesModule } from './doses/doses.module.js';
 import { FamilyModule } from './family/family.module.js';
+import { MedicationsModule } from './medications/medications.module.js';
 import { HealthController } from './health/health.controller.js';
 import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
@@ -31,6 +32,7 @@ import { telemetry } from './telemetry/telemetry.js';
     DbModule,
     DosesModule,
     FamilyModule,
+    MedicationsModule,
     PushModule,
     PrescriptionsModule,
     VoiceModule,
