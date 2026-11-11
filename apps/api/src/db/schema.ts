@@ -77,6 +77,8 @@ export const doses = pgTable('doses', {
   confirmedVia: confirmationChannel(),
   confirmedAt: timestamp({ withTimezone: true }),
   familyAlertedAt: timestamp({ withTimezone: true }),
+  // Extra dose created by the demo run (POST /demo/run). Telemetry tags its events with demo: true.
+  demo: boolean().notNull().default(false),
 }, (t) => [unique().on(t.medicationId, t.scheduledAt)]);
 
 // Web Push subscriptions (one per browser). Patients get dose reminders,

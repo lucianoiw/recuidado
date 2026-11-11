@@ -198,3 +198,37 @@ export async function removeMedication(id: string): Promise<void> {
   const res = await fetch(`${API_URL}/family/medications/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para tirar o remédio."));
 }
+
+export type DemoStepState = "waiting" | "active" | "done" | "skipped" | "failed";
+
+export interface DemoStep {
+  state: DemoStepState;
+  /** When a waiting step is due. */
+  at: string | null;
+  detail: string | null;
+}
+
+/** GET /demo/run/:doseId: where the 2 minute demo is. */
+export interface DemoRun {
+  doseId: string;
+  startedAt: string;
+  status: DoseStatus;
+  reminder: DemoStep;
+  call: DemoStep;
+  family: DemoStep;
+  finished: boolean;
+  transcript: { speaker: "assistant" | "patient"; text: string }[];
+}
+
+/** Starts the demo run, or returns the one already going. */
+export async function startDemoRun(): Promise<{ doseId: string; alreadyRunning: boolean }> {
+  const res = await fetch(`${API_URL}/demo/run`, { method: "POST" });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para começar a demo."));
+  return res.json();
+}
+
+export async function getDemoRun(doseId: string): Promise<DemoRun> {
+  const res = await fetch(`${API_URL}/demo/run/${doseId}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}

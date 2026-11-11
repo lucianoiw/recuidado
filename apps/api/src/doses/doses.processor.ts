@@ -18,9 +18,9 @@ export class DosesProcessor extends WorkerHost {
     super();
   }
 
-  async process(job: Job<DoseJob>): Promise<void> {
+  async process(job: Job<DoseJob>): Promise<string | void> {
     try {
-      await this.run(job);
+      return await this.run(job);
     } catch (error) {
       telemetry.captureException(error, {
         job_kind: job.data.kind,
@@ -32,23 +32,24 @@ export class DosesProcessor extends WorkerHost {
     }
   }
 
-  private async run(job: Job<DoseJob>): Promise<void> {
+  /** A 'call' job returns 'called', 'skipped' or 'failed' (read by the demo run status). */
+  private async run(job: Job<DoseJob>): Promise<string | void> {
     const data = job.data;
     switch (data.kind) {
       case 'plan':
         return this.doses.planAll();
       case 'remind':
-        return this.doses.remind(data.doseId);
+        return this.doses.remind(data.doseId, { callAfterMs: data.callAfterMs, alertAfterMs: data.alertAfterMs });
       case 'call':
         try {
-          await this.voice.call(data.doseId);
+          return (await this.voice.call(data.doseId)) ? 'called' : 'skipped';
         } catch (error) {
           // The family alert job still runs later.
           telemetry.captureException(error, { job_kind: 'call', dose_id: data.doseId });
           telemetry.capture('dose_call_failed', { dose_id: data.doseId, error: String(error) });
           this.logger.error(`Call for dose ${data.doseId} failed: ${String(error)}`);
+          return 'failed';
         }
-        return;
       case 'alert-family':
         return this.doses.alertFamily(data.doseId);
     }

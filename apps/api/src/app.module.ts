@@ -4,6 +4,7 @@ import { Redis } from 'ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnv } from './config/env.js';
 import { DbModule } from './db/db.module.js';
+import { DemoModule } from './demo/demo.module.js';
 import { DosesModule } from './doses/doses.module.js';
 import { FamilyModule } from './family/family.module.js';
 import { MedicationsModule } from './medications/medications.module.js';
@@ -30,6 +31,7 @@ import { telemetry } from './telemetry/telemetry.js';
       }),
     }),
     DbModule,
+    DemoModule,
     DosesModule,
     FamilyModule,
     MedicationsModule,

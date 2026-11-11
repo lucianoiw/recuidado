@@ -7,6 +7,7 @@ import {
   CameraIcon,
   Card,
   ChevronRightIcon,
+  ClockIcon,
   DoseList,
   DoseRow,
   HeartIcon,
@@ -226,6 +227,22 @@ export function FamilyView() {
           <b>Adicionar remédios</b>
           <span className="text-[15px] text-muted">
             Foto da receita ou um por um
+          </span>
+        </span>
+        <ChevronRightIcon size={20} className="text-muted" />
+      </Link>
+
+      <Link
+        href="/family/demo"
+        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+      >
+        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+          <ClockIcon size={24} />
+        </span>
+        <span className="flex flex-1 flex-col">
+          <b>Demo em 2 minutos</b>
+          <span className="text-[15px] text-muted">
+            Lembrete, ligação e aviso, acelerados
           </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />

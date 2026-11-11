@@ -8,7 +8,8 @@ export const DOSES_QUEUE = 'doses';
 
 export type DoseJob =
   | { kind: 'plan' }
-  | { kind: 'remind'; doseId: string }
+  // The demo run (apps/api/src/demo) passes short waits; real doses use the env minutes.
+  | { kind: 'remind'; doseId: string; callAfterMs?: number; alertAfterMs?: number }
   | { kind: 'call'; doseId: string }
   | { kind: 'alert-family'; doseId: string };
 

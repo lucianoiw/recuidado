@@ -53,6 +53,7 @@ export class VoiceCallService {
     const [row] = await this.db
       .select({
         status: doses.status,
+        demo: doses.demo,
         patientId: members.id,
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         phone: members.phone,
@@ -90,7 +91,7 @@ export class VoiceCallService {
     const body = (await res.json()) as { callId: string };
     telemetry.capture(
       'dose_call_requested',
-      { dose_id: doseId, call_id: body.callId, medication: row.medication },
+      { dose_id: doseId, call_id: body.callId, medication: row.medication, demo: row.demo },
       row.patientId,
     );
     this.logger.log(`Calling patient of dose ${doseId} (${body.callId}).`);
@@ -100,7 +101,7 @@ export class VoiceCallService {
   /** Records the call outcome. A dose not confirmed by voice alerts the family right away. */
   async applyResult(doseId: string, result: VoiceResult): Promise<'taken' | 'missed' | 'ignored'> {
     const [dose] = await this.db
-      .select({ status: doses.status, scheduledAt: doses.scheduledAt, patientId: medications.patientId })
+      .select({ status: doses.status, scheduledAt: doses.scheduledAt, demo: doses.demo, patientId: medications.patientId })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .where(eq(doses.id, doseId));
@@ -108,9 +109,9 @@ export class VoiceCallService {
     const saved = await this.saveCall(doseId, result);
     if (saved && result.feelsUnwell) {
       await this.alertUnwell(doseId, result.note);
-      telemetry.capture('patient_reported_unwell', { dose_id: doseId, call_id: result.sessionId }, dose.patientId);
+      telemetry.capture('patient_reported_unwell', { dose_id: doseId, call_id: result.sessionId, demo: dose.demo }, dose.patientId);
     }
-    const props = { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome };
+    const props = { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome, demo: dose.demo };
     // Confirmed in the app while the phone was ringing: the app wins.
     if (dose.status === 'taken') {
       telemetry.capture('dose_voice_result', { ...props, applied: 'ignored' }, dose.patientId);
@@ -121,7 +122,7 @@ export class VoiceCallService {
       telemetry.capture('dose_voice_result', { ...props, applied: 'taken' }, dose.patientId);
       telemetry.capture(
         'dose_confirmed',
-        { dose_id: doseId, via: 'voice', call_id: result.sessionId, minutes_since_scheduled: minutesSince(dose.scheduledAt) },
+        { dose_id: doseId, via: 'voice', call_id: result.sessionId, minutes_since_scheduled: minutesSince(dose.scheduledAt), demo: dose.demo },
         dose.patientId,
       );
       this.logger.log(`Dose ${doseId} confirmed by voice (${result.sessionId}).`);
@@ -238,7 +239,7 @@ export class VoiceCallService {
       .returning();
     const [dose] = await this.db
       .insert(doses)
-      .values({ medicationId: medication.id, scheduledAt: new Date() })
+      .values({ medicationId: medication.id, scheduledAt: new Date(), demo: true })
       .returning();
     return dose.id;
   }

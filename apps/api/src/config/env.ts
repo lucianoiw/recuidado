@@ -39,6 +39,15 @@ export const envSchema = z.object({
   DOSE_CALL_AFTER_MINUTES: z.coerce.number().int().positive().default(15),
   // Minutes to wait after the call before alerting the family.
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
+  // Demo run (POST /demo/run): the whole dose flow in about two minutes. "false" turns it off.
+  DEMO_RUN_ENABLED: z.preprocess(
+    (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
+    z.boolean(),
+  ),
+  // Seconds after the demo reminder before the call.
+  DEMO_CALL_AFTER_SECONDS: z.coerce.number().int().positive().default(20),
+  // Seconds after the demo call starts before the family is alerted if the call never reports back.
+  DEMO_ALERT_AFTER_SECONDS: z.coerce.number().int().positive().default(100),
 });
 
 export type Env = z.infer<typeof envSchema>;
