@@ -96,7 +96,7 @@ flowchart LR
 
 ## Servidor MCP
 
-Endereço: `https://mcp.recuidado.com.br/mcp` (Streamable HTTP, sem login). Sem `familyId`, usa a família de demonstração.
+Endereço: `https://mcp.recuidado.com.br/mcp` (Streamable HTTP). Ao conectar, abre a tela "Conexão da família": um toque em Autorizar liga o assistente à família de demonstração, sem senha. Quem cadastrou a própria família cola o link do convite. Por baixo é OAuth 2.1 com PKCE, então o assistente só enxerga a família que foi conectada.
 
 | Ferramenta | O que faz |
 | --- | --- |
@@ -108,7 +108,13 @@ Endereço: `https://mcp.recuidado.com.br/mcp` (Streamable HTTP, sem login). Sem 
 
 O telefone nunca sai nas respostas, e o servidor não dá conselho clínico. Detalhes em [apps/mcp/README.md](apps/mcp/README.md).
 
-**Como conectar.** No Claude: Configurações, Conectores, Adicionar conector personalizado, URL acima. No Claude Code: `claude mcp add --transport http recuidado https://mcp.recuidado.com.br/mcp`.
+**Decisões e achados.**
+- Serviço separado sobre a API pública, e não dentro da API: o MCP vê exatamente o que o app vê, e não conflita com o resto.
+- SDK MCP v2 (especificação de 28/07/2026), sem estado. Clientes antigos (especificação de 2025) também funcionam; testado com os dois.
+- Login de propósito simples, porque é prova de conceito com dados fictícios. Os tokens são assinados, nada fica guardado, e um redeploy não desconecta ninguém.
+- Siri: pesquisado em 11/11/2026, não achamos fonte confiável de que a Siri do iOS 27 aceite servidor MCP pela URL. O caminho da Apple é App Intents, que exige app instalado. O mais perto hoje é usar o app do Claude ou do ChatGPT por voz com este conector.
+
+**Como conectar.** No Claude: Configurações, Conectores, Adicionar conector personalizado, URL acima, e tocar em Autorizar. No Claude Code: `claude mcp add --transport http recuidado https://mcp.recuidado.com.br/mcp`.
 
 **Casos de uso**
 

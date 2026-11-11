@@ -4,14 +4,15 @@ import { ApiError, type Dose, type FreePlace, type Medication, type RecuidadoApi
 
 const TIME_ZONE = "America/Sao_Paulo";
 
-const INSTRUCTIONS = `Recuidado cuida do remédio de um idoso junto com a família: plano de remédios, o que é grátis no SUS, doses do dia e avisos.
-Sem familyId, as ferramentas usam a família de demonstração (Dona Maria, dados sintéticos).
-Nunca dê conselho clínico nem sugira mudar dose ou tratamento. Para isso, oriente procurar o médico. Em emergência, SAMU 192.`;
+const ICONS = [
+  { src: "https://mcp.recuidado.com.br/icon-512.png", mimeType: "image/png", sizes: ["512x512"] },
+  { src: "https://mcp.recuidado.com.br/icon-192.png", mimeType: "image/png", sizes: ["192x192"] },
+  { src: "https://mcp.recuidado.com.br/favicon.svg", mimeType: "image/svg+xml", sizes: ["any"] },
+];
 
-const familyIdInput = z
-  .uuid()
-  .optional()
-  .describe("Id da família (aparece no link do convite). Sem ele, usa a família de demonstração.");
+const INSTRUCTIONS = `Recuidado cuida do remédio de um idoso junto com a família: plano de remédios, o que é grátis no SUS, doses do dia e avisos.
+As ferramentas usam a família escolhida ao conectar (ou a família de demonstração, Dona Maria, com dados sintéticos).
+Nunca dê conselho clínico nem sugira mudar dose ou tratamento. Para isso, oriente procurar o médico. Em emergência, SAMU 192.`;
 
 const FREE_PLACE_LABEL: Record<FreePlace, string> = {
   farmacia_popular: "Farmácia Popular",
@@ -89,8 +90,23 @@ async function run(tool: string, onCall: ToolCallHook | undefined, body: () => P
 
 export type ToolCallHook = (tool: string, ok: boolean, error?: unknown) => void;
 
-export function createRecuidadoServer(api: RecuidadoApi, onCall?: ToolCallHook): McpServer {
-  const server = new McpServer({ name: "recuidado", title: "Recuidado", version: "0.1.0" }, { instructions: INSTRUCTIONS });
+/**
+ * One MCP server bound to one family: the one linked at login (null is the demo family).
+ * Tools never take a family id, so a client only reaches the family it was linked to.
+ */
+export function createRecuidadoServer(api: RecuidadoApi, family: string | null, onCall?: ToolCallHook): McpServer {
+  const familyId = family ?? undefined;
+  const server = new McpServer(
+    {
+      name: "recuidado",
+      title: "Recuidado",
+      version: "0.2.0",
+      description: "Remédios do idoso junto com a família: plano, doses do dia, avisos e o que é grátis no SUS.",
+      websiteUrl: "https://recuidado.com.br",
+      icons: ICONS,
+    },
+    { instructions: INSTRUCTIONS },
+  );
 
   server.registerTool(
     "get_care_plan",
@@ -98,14 +114,14 @@ export function createRecuidadoServer(api: RecuidadoApi, onCall?: ToolCallHook):
       title: "Plano de cuidado",
       description:
         "Mostra o plano de remédios da pessoa cuidada: cada remédio com dosagem, horários, onde é grátis (Farmácia Popular, UBS), se entra no Alto Custo, custo do mês e quantos comprimidos restam. Também lista quem da família cuida.",
-      inputSchema: z.object({ familyId: familyIdInput }),
+      inputSchema: z.object({}),
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
-    ({ familyId }) =>
+    () =>
       run("get_care_plan", onCall, async () => {
         const family = await api.family(familyId);
         return result({
-          familia: family.isDemo ? "demonstração (dados sintéticos)" : family.familyId,
+          familia: family.isDemo ? "demonstração (dados sintéticos)" : "família conectada",
           pessoaCuidada: personName(family.patient),
           cuidadores: family.caregivers.map((c) => ({
             nome: personName(c),
@@ -123,10 +139,10 @@ export function createRecuidadoServer(api: RecuidadoApi, onCall?: ToolCallHook):
       title: "Doses de hoje",
       description:
         "Lista as doses de hoje (horário de Brasília) e se cada uma foi tomada, está pendente ou foi perdida, por onde foi confirmada (app ou ligação) e se a família foi avisada. Inclui o que a pessoa disse nas ligações das últimas 24 horas quando relatou não estar bem.",
-      inputSchema: z.object({ familyId: familyIdInput }),
+      inputSchema: z.object({}),
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
-    ({ familyId }) =>
+    () =>
       run("get_today_doses", onCall, async () => {
         const family = await api.family(familyId);
         const doses = family.today.map(doseView);
@@ -147,13 +163,12 @@ export function createRecuidadoServer(api: RecuidadoApi, onCall?: ToolCallHook):
         "Marca uma dose de hoje como tomada, igual ao botão \"Tomei\" do app. Use só quando a pessoa cuidada ou um familiar disser que ela já tomou. Pegue o doseId em get_today_doses. Cancela a ligação e o aviso à família daquela dose.",
       inputSchema: z.object({
         doseId: z.uuid().describe("Id da dose, de get_today_doses."),
-        familyId: familyIdInput,
       }),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
-    ({ doseId, familyId }) =>
+    ({ doseId }) =>
       run("confirm_dose", onCall, async () => {
-        // The API confirms any dose id; only doses of today in this family are accepted here.
+        // The API confirms any dose id; only doses of today in the linked family are accepted here.
         const family = await api.family(familyId);
         const dose = family.today.find((d) => d.id === doseId);
         if (!dose) throw new ApiError(404, "Essa dose não é de hoje nesta família. Veja as doses em get_today_doses.");
@@ -170,12 +185,11 @@ export function createRecuidadoServer(api: RecuidadoApi, onCall?: ToolCallHook):
       description:
         "Lista os avisos que o Recuidado mandou para a família, do mais novo para o mais antigo: dose não confirmada, pessoa disse que não está bem, remédio acabando.",
       inputSchema: z.object({
-        familyId: familyIdInput,
         limit: z.number().int().min(1).max(50).default(10).describe("Quantos avisos, de 1 a 50."),
       }),
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
-    ({ familyId, limit }) =>
+    ({ limit }) =>
       run("list_family_alerts", onCall, async () => {
         const alerts = (await api.alerts(familyId)).slice(0, limit);
         return result({
