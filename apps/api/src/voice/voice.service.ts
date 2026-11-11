@@ -8,11 +8,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, count, eq, gte, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 import { AlertsService } from '../alerts/alerts.service.js';
+import { DEMO_FAMILY } from '../family/family.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { minutesSince } from '../doses/time.js';
 import { telemetry } from '../telemetry/telemetry.js';
@@ -59,12 +60,15 @@ export class VoiceCallService {
         patientId: members.id,
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         phone: members.phone,
+        familyId: members.familyId,
+        familyName: families.name,
         medication: medications.name,
         strength: medications.strength,
       })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
+      .innerJoin(families, eq(members.familyId, families.id))
       .where(eq(doses.id, doseId));
     if (!row) throw new NotFoundException('Dose não encontrada.');
     if (row.status !== 'pending') {
@@ -73,6 +77,12 @@ export class VoiceCallService {
     }
     if (!row.phone) {
       this.logger.warn(`Patient of dose ${doseId} has no phone; not calling.`);
+      return null;
+    }
+    const overLimit = await this.overCallLimit(row.familyId, row.familyName === DEMO_FAMILY);
+    if (overLimit) {
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: overLimit }, row.patientId);
+      this.logger.warn(`Not calling for dose ${doseId}: ${overLimit}.`);
       return null;
     }
 
@@ -87,9 +97,16 @@ export class VoiceCallService {
         medications: [{ name: row.medication, dose: row.strength ?? undefined }],
       }),
     });
+    if (res.status === 403) {
+      // apps/voice only calls numbers in CALL_ALLOWED_NUMBERS. Push and the family alert still work.
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'number_not_allowed' }, row.patientId);
+      this.logger.log(`Voice refused the number of dose ${doseId}; push only.`);
+      return null;
+    }
     if (!res.ok) {
       throw new Error(`Voice service answered ${res.status}: ${await res.text()}`);
     }
+    await this.db.update(doses).set({ callRequestedAt: new Date() }).where(eq(doses.id, doseId));
     const body = (await res.json()) as { callId: string };
     telemetry.capture(
       'dose_call_requested',
@@ -98,6 +115,26 @@ export class VoiceCallService {
     );
     this.logger.log(`Calling patient of dose ${doseId} (${body.callId}).`);
     return body;
+  }
+
+  /**
+   * Why a call must not be made now, or null. Counts calls started in the last 24 hours,
+   * per family (not the demo family, used by the team and the judges) and in total.
+   */
+  async overCallLimit(familyId: string, isDemo: boolean, now = new Date()): Promise<string | null> {
+    const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const total = this.config.get<number>('CALL_DAILY_LIMIT_TOTAL') ?? 20;
+    const [all] = await this.db.select({ n: count() }).from(doses).where(gte(doses.callRequestedAt, since));
+    if (all.n >= total) return 'daily_total_limit';
+    if (isDemo) return null;
+    const perFamily = this.config.get<number>('CALL_DAILY_LIMIT_PER_FAMILY') ?? 3;
+    const [mine] = await this.db
+      .select({ n: count() })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .innerJoin(members, eq(medications.patientId, members.id))
+      .where(and(eq(members.familyId, familyId), gte(doses.callRequestedAt, since)));
+    return mine.n >= perFamily ? 'daily_family_limit' : null;
   }
 
   /** Records the call outcome. A dose not confirmed by voice alerts the family right away. */

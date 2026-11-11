@@ -13,6 +13,8 @@ export interface VoiceConfig {
   };
   /** Destinations this service may dial. The demo must never call anyone else. */
   allowedNumbers: Set<string>;
+  /** CALL_ALLOWED_NUMBERS=* : any Brazilian number. The API limits how many calls are made. */
+  allowAnyBrazilian: boolean;
   maxCallSeconds: number;
   port: number;
   voiceApiToken: string;
@@ -30,12 +32,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
   if (!providerUrl.startsWith("sips:")) {
     throw new Error("SIP_PROVIDER_URL must use sips: (GPT-Live only dials over TLS)");
   }
-  const allowed = (env.CALL_ALLOWED_NUMBERS ?? "")
+  const entries = (env.CALL_ALLOWED_NUMBERS ?? "")
     .split(",")
     .map((n) => n.trim())
-    .filter(Boolean)
-    .map(toE164);
-  if (allowed.length === 0) {
+    .filter(Boolean);
+  const allowAnyBrazilian = entries.includes("*");
+  const allowed = entries.filter((n) => n !== "*").map(toE164);
+  if (allowed.length === 0 && !allowAnyBrazilian) {
     throw new Error("CALL_ALLOWED_NUMBERS must list at least one number");
   }
   return {
@@ -50,6 +53,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
       callerNumber: toE164(required(env, "SIP_CALLER_NUMBER")),
     },
     allowedNumbers: new Set(allowed),
+    allowAnyBrazilian,
     maxCallSeconds: Number(env.CALL_MAX_SECONDS ?? 150),
     port: Number(env.PORT ?? 5000),
     voiceApiToken: required(env, "VOICE_API_TOKEN"),

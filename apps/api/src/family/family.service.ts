@@ -1,4 +1,10 @@
-import { Inject, Injectable, NotFoundException, OnApplicationBootstrap } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { findFreeAccess, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
@@ -12,6 +18,16 @@ import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.j
 export const DEMO_FAMILY = 'Família Demo';
 const DEMO_PATIENT = 'Dona Maria';
 const DEMO_CAREGIVERS = ['Ana', 'Carlos'];
+
+/** The family a request works on. Without an id it is the demo family. */
+export interface FamilyRef {
+  familyId: string;
+  patientId: string;
+  isDemo: boolean;
+}
+
+export const DEMO_READ_ONLY =
+  'Esta é a família de demonstração e ela não muda. Faça o seu cadastro para testar com a sua família.';
 
 @Injectable()
 export class FamilyService implements OnApplicationBootstrap {
@@ -56,9 +72,47 @@ export class FamilyService implements OnApplicationBootstrap {
     return { familyId: family.id, patientId: patient.id };
   }
 
+  /**
+   * The family of this device (the id the web keeps), or the demo family when there is none.
+   * Families are separate: nothing here reads or writes another family.
+   */
+  async resolveFamily(familyId?: string | null): Promise<FamilyRef> {
+    if (!familyId) return { ...(await this.ensureDemoFamily()), isDemo: true };
+    const [row] = await this.db
+      .select({ familyId: families.id, name: families.name, patientId: members.id })
+      .from(families)
+      .innerJoin(members, and(eq(members.familyId, families.id), eq(members.role, 'patient')))
+      .where(eq(families.id, familyId))
+      .orderBy(asc(members.createdAt))
+      .limit(1);
+    if (!row) throw new NotFoundException('Família não encontrada.');
+    return { familyId: row.familyId, patientId: row.patientId, isDemo: row.name === DEMO_FAMILY };
+  }
+
+  /** Same as resolveFamily, but refuses changes to the demo family. */
+  async writableFamily(familyId?: string | null): Promise<FamilyRef> {
+    const ref = await this.resolveFamily(familyId);
+    if (ref.isDemo) throw new ForbiddenException(DEMO_READ_ONLY);
+    return ref;
+  }
+
+  /** True when this patient belongs to the demo family. */
+  async isDemoPatient(patientId: string): Promise<boolean> {
+    const [row] = await this.db
+      .select({ name: families.name })
+      .from(members)
+      .innerJoin(families, eq(members.familyId, families.id))
+      .where(eq(members.id, patientId));
+    return row?.name === DEMO_FAMILY;
+  }
+
   /** Everything the family and patient screens show. */
-  async overview(now = new Date()) {
-    const { familyId, patientId } = await this.ensureDemoFamily();
+  async overview(familyId?: string | null, now = new Date()) {
+    const ref = await this.resolveFamily(familyId);
+    return this.overviewOf(ref, now);
+  }
+
+  private async overviewOf({ familyId, patientId, isDemo }: FamilyRef, now: Date) {
     const people = await this.db
       .select({
         id: members.id,
@@ -92,6 +146,7 @@ export class FamilyService implements OnApplicationBootstrap {
     const stock = await this.stock.statusFor(meds);
     return {
       familyId,
+      isDemo,
       patient: people.find((p) => p.id === patientId)!,
       caregivers: people.filter((p) => p.role === 'caregiver'),
       medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => ({
@@ -123,17 +178,22 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /** Alerts sent to the caregivers, newest first. */
-  async alertHistory() {
-    const { familyId } = await this.ensureDemoFamily();
-    return this.alerts.list(familyId);
+  async alertHistory(familyId?: string | null) {
+    const ref = await this.resolveFamily(familyId);
+    return this.alerts.list(ref.familyId);
   }
 
   /**
    * Family changes the dose text, the times or the pills at home.
    * New times replace the pending future doses.
    */
-  async updateMedication(medicationId: string, input: MedicationUpdateBody, now = new Date()): Promise<void> {
-    const { patientId } = await this.ensureDemoFamily();
+  async updateMedication(
+    familyId: string | null | undefined,
+    medicationId: string,
+    input: MedicationUpdateBody,
+    now = new Date(),
+  ): Promise<void> {
+    const { patientId } = await this.writableFamily(familyId);
     const changes = {
       ...(input.strength !== undefined ? { strength: input.strength || null } : {}),
       ...(input.times !== undefined ? { times: [...new Set(input.times)].sort() } : {}),
@@ -157,8 +217,8 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /** Family stops a medication: it and its doses are removed. */
-  async removeMedication(medicationId: string): Promise<void> {
-    const { patientId } = await this.ensureDemoFamily();
+  async removeMedication(familyId: string | null | undefined, medicationId: string): Promise<void> {
+    const { patientId } = await this.writableFamily(familyId);
     const [row] = await this.db
       .delete(medications)
       .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
@@ -168,16 +228,23 @@ export class FamilyService implements OnApplicationBootstrap {
 
   /** Saved onboarding answers of one caregiver, to restore the sign-up form. */
   async getOnboarding(caregiverId: string) {
-    const { familyId, patientId } = await this.ensureDemoFamily();
+    const [found] = await this.db
+      .select({ familyId: members.familyId })
+      .from(members)
+      .where(and(eq(members.id, caregiverId), eq(members.role, 'caregiver')));
+    if (!found) throw new NotFoundException('Cadastro não encontrado.');
+    const { familyId, patientId, isDemo } = await this.resolveFamily(found.familyId);
+    // Sign-ups made before families were separate live in the demo family: start a new one.
+    if (isDemo) throw new NotFoundException('Cadastro não encontrado.');
     const people = await this.db
       .select()
       .from(members)
       .where(eq(members.familyId, familyId))
       .orderBy(asc(members.createdAt));
-    const caregiver = people.find((m) => m.id === caregiverId && m.role === 'caregiver');
-    if (!caregiver) throw new NotFoundException('Cadastro não encontrado.');
+    const caregiver = people.find((m) => m.id === caregiverId)!;
     const patient = people.find((m) => m.id === patientId)!;
     return {
+      familyId,
       caregiverId,
       caregiver: {
         name: caregiver.name,
@@ -206,24 +273,33 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /**
-   * Saves the sign-up answers into the demo family (no login in the demo):
-   * updates the patient, creates or updates the caregiver and syncs their pending invites.
+   * Saves the sign-up answers. A caregiver saved earlier from this device updates their own
+   * family; anyone else gets a new family. The demo family is never changed here.
    */
-  async saveOnboarding(input: OnboardingBody): Promise<{ caregiverId: string }> {
-    const { familyId, patientId } = await this.ensureDemoFamily();
+  async saveOnboarding(input: OnboardingBody): Promise<{ caregiverId: string; familyId: string }> {
+    const own = input.caregiverId ? await this.ownFamily(input.caregiverId) : null;
     return this.db.transaction(async (tx) => {
       const p = input.patient;
-      await tx
-        .update(members)
-        .set({
-          name: p.name,
-          nickname: p.nickname || null,
-          phone: p.phone,
-          birthDate: p.birth,
-          cep: p.cep,
-          prefersVoice: !p.usesPhone,
-        })
-        .where(eq(members.id, patientId));
+      const patientValues = {
+        name: p.name,
+        nickname: p.nickname || null,
+        phone: p.phone,
+        birthDate: p.birth,
+        cep: p.cep,
+        prefersVoice: !p.usesPhone,
+      };
+      let familyId: string;
+      if (own) {
+        familyId = own.familyId;
+        await tx.update(members).set(patientValues).where(eq(members.id, own.patientId));
+      } else {
+        const [family] = await tx
+          .insert(families)
+          .values({ name: `Família de ${p.nickname || p.name}` })
+          .returning({ id: families.id });
+        familyId = family.id;
+        await tx.insert(members).values({ ...patientValues, familyId, role: 'patient' });
+      }
 
       const c = input.caregiver;
       const caregiverValues = {
@@ -233,7 +309,7 @@ export class FamilyService implements OnApplicationBootstrap {
         relationOther: c.relation === 'Outro' ? c.relationOther : null,
       };
       let caregiverId: string | undefined;
-      if (input.caregiverId) {
+      if (own && input.caregiverId) {
         const [updated] = await tx
           .update(members)
           .set(caregiverValues)
@@ -285,13 +361,24 @@ export class FamilyService implements OnApplicationBootstrap {
           })),
         );
       }
-      return { caregiverId };
+      return { caregiverId, familyId };
     });
   }
 
+  /** The non-demo family of a caregiver, or null (unknown id or a sign-up kept in the demo family). */
+  private async ownFamily(caregiverId: string): Promise<FamilyRef | null> {
+    const [row] = await this.db
+      .select({ familyId: members.familyId })
+      .from(members)
+      .where(and(eq(members.id, caregiverId), eq(members.role, 'caregiver')));
+    if (!row) return null;
+    const ref = await this.resolveFamily(row.familyId).catch(() => null);
+    return ref && !ref.isDemo ? ref : null;
+  }
+
   /** Marks an invited caregiver as joined when they pick themselves on a device. */
-  async join(memberId: string): Promise<void> {
-    const { familyId } = await this.ensureDemoFamily();
+  async join(familyIdOrDemo: string | null | undefined, memberId: string): Promise<void> {
+    const { familyId } = await this.resolveFamily(familyIdOrDemo);
     const [row] = await this.db
       .select({ id: members.id, joinedAt: members.joinedAt })
       .from(members)
@@ -303,8 +390,9 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /** Free in Farmácia Popular, but the family chose to buy it (buy = true) or to get it free. */
-  async setBuyChoice(medicationId: string, buy: boolean): Promise<void> {
-    const { patientId } = await this.ensureDemoFamily();
+  async setBuyChoice(familyId: string | null | undefined, medicationId: string, buy: boolean): Promise<void> {
+    // Allowed on the demo family too: it is a toggle and the visitor can switch it back.
+    const { patientId } = await this.resolveFamily(familyId);
     const [row] = await this.db
       .update(medications)
       .set({ buyInsteadOfFree: buy })

@@ -10,6 +10,11 @@ export interface StartCallInput extends ReminderContext {
 
 export class NumberNotAllowedError extends Error {}
 
+/** Listed numbers, or any Brazilian number when CALL_ALLOWED_NUMBERS has "*". Never international. */
+export function isAllowed(config: Pick<VoiceConfig, "allowedNumbers" | "allowAnyBrazilian">, e164: string): boolean {
+  return config.allowedNumbers.has(e164) || (config.allowAnyBrazilian && e164.startsWith("+55"));
+}
+
 export interface StartedCall {
   sessionId: string;
   call: ReminderCall;
@@ -27,7 +32,7 @@ export class CallService {
 
   async start(input: StartCallInput, onStatusChange?: (status: CallStatus) => void): Promise<StartedCall> {
     const destination = toE164(input.phone);
-    if (!this.config.allowedNumbers.has(destination)) {
+    if (!isAllowed(this.config, destination)) {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
     }
     const context: ReminderContext = { patientName: input.patientName, medications: input.medications };

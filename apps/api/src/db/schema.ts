@@ -84,6 +84,8 @@ export const doses = pgTable('doses', {
   familyAlertedAt: timestamp({ withTimezone: true }),
   // Extra dose created by the demo run (POST /demo/run). Telemetry tags its events with demo: true.
   demo: boolean().notNull().default(false),
+  // When the API asked apps/voice to call. Counts toward the daily call limits.
+  callRequestedAt: timestamp({ withTimezone: true }),
 }, (t) => [unique().on(t.medicationId, t.scheduledAt)]);
 
 // Web Push subscriptions (one per browser). Patients get dose reminders,

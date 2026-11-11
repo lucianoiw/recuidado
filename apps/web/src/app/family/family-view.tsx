@@ -16,6 +16,7 @@ import {
   buttonClass,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
+import { DemoBanner } from "@/components/demo-banner";
 import { callName, formatTime, isFree, telHref, type Dose } from "@/lib/api";
 import { stockText } from "@/lib/stock";
 import { medLabel, useFamily } from "@/lib/use-family";
@@ -85,6 +86,8 @@ export function FamilyView() {
           <span className="sr-only">Avisos</span>
         </Link>
       </header>
+
+      <DemoBanner isDemo={data.isDemo} />
 
       {unwell ? (
         <section

@@ -24,6 +24,7 @@ import { useCanShare, useOrigin } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
 import { getOnboarding, saveOnboarding } from "@/lib/api";
+import { familyLink } from "@/lib/family-id";
 import { readMe, setMe } from "@/lib/me";
 import {
   RELATIONS,
@@ -281,7 +282,7 @@ function InviteStep({
     return who;
   }
 
-  const link = () => `${window.location.origin}/family`;
+  const link = () => familyLink(window.location.origin, "/family");
   const message = (who: string) =>
     `${who}, estou cuidando dos remédios da ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link()}`;
 
@@ -422,7 +423,7 @@ function InviteStep({
 
 function PatientLink() {
   const origin = useOrigin();
-  const url = `${origin}/patient`;
+  const url = origin ? familyLink(origin, "/patient") : "";
   const [copied, setCopied] = useState(false);
   async function copy() {
     try {
