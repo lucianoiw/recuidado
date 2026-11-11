@@ -7,6 +7,7 @@ import { DbModule } from './db/db.module.js';
 import { DosesModule } from './doses/doses.module.js';
 import { HealthController } from './health/health.controller.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
+import { VoiceModule } from './voice/voice.module.js';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
     DbModule,
     DosesModule,
     PrescriptionsModule,
+    VoiceModule,
   ],
   controllers: [HealthController],
 })

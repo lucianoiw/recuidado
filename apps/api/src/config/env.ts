@@ -16,6 +16,11 @@ export const envSchema = z.object({
   REDIS_URL: z.string().url(),
   WEB_URL: z.string().url().default('http://localhost:3000'),
   VOICE_URL: optionalUrl,
+  // Shared secret with apps/voice: sent on POST /calls and expected on POST /doses/:id/voice-result.
+  VOICE_API_TOKEN: z.preprocess(
+    (v) => (v === '' ? undefined : v),
+    z.string().min(16).optional(),
+  ),
   // Prescription reading (packages/prescription-reader). Without it, POST /prescriptions/parse answers 503.
   ANTHROPIC_API_KEY: z.preprocess(
     (v) => (v === '' ? undefined : v),
