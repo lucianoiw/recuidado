@@ -37,6 +37,25 @@ Conclusão: dois dos cinco pilares da história do vídeo (o custo e a conta da 
 
 **Como falar no pitch.** "O agente não só lembra. Ele liga para a farmácia, pergunta se tem e quanto custa, e traz a resposta para a família."
 
+## 2b. Caminho do Alto Custo (CEAF)
+
+**Por que importa.** É o caso real que originou a ideia: um remédio de cerca de R$ 300 por mês que sai de graça pelo Componente Especializado (Alto Custo) com laudo. É onde a família mais economiza e onde ninguém explica o caminho.
+
+**Feito.** Cada remédio já é cruzado com a lista do Alto Custo de SP (`highCost` no `GET /family`) e a tela só sinaliza.
+
+**Não feito.** Guiar a família do "pode sair de graça" até a retirada:
+- Checklist por remédio: laudo LME preenchido pelo médico, receita, documentos (RG, CPF, Cartão SUS, comprovante de endereço) e exames pedidos pelo protocolo (PCDT) daquela doença. Os itens exatos variam por remédio; o conteúdo precisa vir das fontes da SES-SP e do Ministério, não da IA.
+- Lembrete de renovação do laudo (é periódica; o prazo exato confirmar na fonte antes de colocar na tela).
+- Indicar a farmácia de Alto Custo da região (já temos as unidades "Farmácia Medex" da SES-SP em `seed/sus-units.json`).
+- Estoque: a SES-SP tem consulta pública de estoque das farmácias de Alto Custo (plataformacaf.digital/consulta). O acesso automático foi bloqueado no nosso ambiente em 11/11. Para a farmácia de Alto Custo, a consulta pública é melhor caminho que ligação (linha estadual costuma ser difícil de atender). A ligação fica para a farmácia comum.
+- Economia: mostrar "este remédio custa R$ X pela CMED; pelo Alto Custo, R$ 0". Depende do pilar 3.
+
+**Esforço:** P a M (1 dia, mais pesquisa das fontes para os remédios da demo). **Peso:** IM alto (maior economia em reais da história), CO alto (caso real), ET médio.
+
+**Limite.** O agente não decide se a pessoa tem direito nem preenche laudo. Só organiza o caminho; quem avalia é o médico e a Secretaria.
+
+**Como falar no pitch.** "O remédio mais caro da Dona Maria pode sair de graça. O Recuidado mostra o caminho: o laudo, os documentos e onde retirar."
+
 ## 3. WhatsApp
 
 **Por que ficou fora em 10/11.** Risco de bloqueio da Meta, conta oficial verificada exigida para grupo, e prazo de time solo. A Dona Maria é atendida por push e voz, que não dependem da Meta.
@@ -124,6 +143,7 @@ Dado de saúde é dado sensível (LGPD, art. 5º II e art. 11). Exige consentime
 | 1 | Mascarar telefone, throttler, helmet | P | ET | 12/11 |
 | 2 | Seed fixo da Dona Maria em produção | P | ET, CO | 12/11 |
 | 3 | Preço CMED em cada remédio e "economia do mês" | P a M | ET, IM | 14/11 |
+| 3b | Caminho do Alto Custo (checklist, renovação, farmácia, economia) | P a M | IM, CO | 15/11 |
 | 4 | Ligação para a farmácia | M | IT, CO | 18/11 |
 | 5 | Consentimento, aviso de privacidade, apagar dados, retenção | P a M | IM, IT | 19/11 |
 | 6 | Pix copia e cola e "quem pagou" | P a M | ET | 20/11 |
