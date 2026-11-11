@@ -326,3 +326,29 @@ test("hangs up soon when the goodbye came before the answer was recorded", async
   assert.equal(result.outcome, "answered");
   assert.equal(result.endReason, "hung_up_after_goodbye");
 });
+
+test("a stray menu word after the key press does not block the introduction", async () => {
+  const socket = new FakeSocket();
+  const call = new PharmacyCall({
+    sessionId: "live_stray",
+    context,
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    openingWaitMs: 60_000,
+    introduceAfterMs: 60_000,
+    menuPauseMs: 5,
+    keyGapMs: 1,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para preço e estoque, tecle 2." });
+  await new Promise((r) => setTimeout(r, 20));
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: " Tecle. Boa tarde, sim, temos." });
+  await new Promise((r) => setTimeout(r, 20));
+  const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.equal(intro.length, 1);
+  assert.match(intro[0].content, /assistente virtual/);
+  await call.endCall();
+  await call.result;
+});
