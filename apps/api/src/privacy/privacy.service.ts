@@ -1,4 +1,3 @@
-import { runsApi } from '../role.js';
 import {
   ForbiddenException,
   Inject,
@@ -43,7 +42,6 @@ export class PrivacyService implements OnApplicationBootstrap, OnApplicationShut
   ) {}
 
   onApplicationBootstrap() {
-    if (!runsApi()) return;
     // Once on boot and then every 6 hours. Idempotent, so several API containers are fine.
     const run = () =>
       this.purgeTranscripts().catch((error) => {

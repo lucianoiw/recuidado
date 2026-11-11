@@ -1,11 +1,9 @@
-import { runsApi } from '../role.js';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
   Inject,
   Injectable,
   Logger,
   NotFoundException,
-  OnApplicationBootstrap,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
@@ -22,7 +20,7 @@ import { localDate, localDateTime, localTime, minutesSince, upcomingDoseTimes } 
 const KEEP_FINISHED = { removeOnComplete: { age: 7 * 24 * 3600 }, removeOnFail: { age: 7 * 24 * 3600 } };
 
 @Injectable()
-export class DosesService implements OnApplicationBootstrap {
+export class DosesService {
   private readonly logger = new Logger(DosesService.name);
 
   constructor(
@@ -34,9 +32,8 @@ export class DosesService implements OnApplicationBootstrap {
     private readonly config: ConfigService,
   ) {}
 
-  async onApplicationBootstrap() {
-    if (!runsApi()) return;
-    // Hourly safety net, plus one run on every boot.
+  /** Hourly safety net, plus one run now. Called by the worker on boot. */
+  async schedulePlanner(): Promise<void> {
     await this.queue.upsertJobScheduler(
       'plan-doses',
       { every: 60 * 60 * 1000 },

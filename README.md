@@ -93,7 +93,7 @@ flowchart LR
 | --- | --- | --- |
 | `apps/web` | App instalável (PWA). A família cadastra a Dona Maria, lê a receita e acompanha as doses. A Dona Maria vê o remédio da hora e confirma com um toque. | Next.js 16, React 19, Tailwind 4, Web Push |
 | `apps/api` | Família, remédios, doses, leitura de receita e escalonamento. Agenda lembrete, ligação e aviso em uma fila. | NestJS 12, PostgreSQL, Drizzle, Redis, BullMQ |
-| worker (`apps/api` com `APP_ROLE=worker`) | Executa a fila na hora certa: lembrete, ligação, segunda ligação, aviso à família, ligação de volta. Separado da API para um não derrubar o outro, o deploy da API não parar a fila e cada um escalar sozinho. Os jobs ficam no Redis, então sobrevivem a reinício. É a mesma imagem da API, com outro papel, para não duplicar código. | NestJS 12, BullMQ |
+| worker (`apps/api/src/worker`) | Executa a fila na hora certa: lembrete, ligação, segunda ligação, aviso à família, ligação de volta, e agenda as doses de hora em hora. Processo próprio, sem servidor HTTP e sem controllers: carrega só o banco, a fila e os serviços que os jobs usam. A API não consome a fila. Separado para um não derrubar o outro, o deploy da API não parar a fila e cada um escalar sozinho. Usa os mesmos serviços da API (uma implementação de cada passo), e os dois sobem a cada push na main. Os jobs ficam no Redis e sobrevivem a reinício. | NestJS 12 (application context), BullMQ |
 | `apps/voice` | Liga para a Dona Maria, conversa por voz e devolve o resultado para a API. | OpenAI GPT-Live por SIP, Asterisk, Nvoip |
 | `apps/mcp` | Servidor MCP sobre a API: qualquer assistente de IA consulta o plano, as doses, os avisos e onde o remédio é grátis. | MCP TypeScript SDK v2, Streamable HTTP |
 | `packages/prescription-reader` | Leitura de receita (inclusive manuscrita) com saída estruturada. | Claude Opus 5.5 |
@@ -272,7 +272,7 @@ Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coo
 - Telefone mascarado no `GET /family`, limite de requisições e cabeçalhos de segurança ativos. O e-mail privacidade@recuidado.com.br tem MX (Migadu); entrega não testada.
 
 **Quebrado ou não testado**
-- `recuidado/worker` no Coolify está parado (nunca ficou online). A fila roda dentro da `api` (sem `APP_ROLE`), então nada parou. Não mudar a `api` para `APP_ROLE=api` antes do worker subir.
+- Corrigido no mesmo dia: o `recuidado/worker` não subia. Agora é um processo próprio (`apps/api/src/worker`, `apps/api/Dockerfile.worker`), sem HTTP, e a API não consome mais a fila.
 - Corrigido no mesmo dia: a atendente da URA de teste dizia que a Rosuvastatina "sai pelo Farmácia Popular", contradizendo o "Para comprar" do app. Agora diz que não sai.
 - Corrigido no mesmo dia: os avisos da família demo estavam cheios de testes (falso "não está bem", ponto duplo, resumo no lugar das palavras dela). O texto foi corrigido no PR #108 e os avisos antigos foram apagados com `DEMO_CLEAR_ALERTS_BEFORE`.
 - Corrigido no PR #108: "Vale ligar para ela" agora respeita "O senhor".
@@ -314,6 +314,7 @@ cp .env.example .env
 pnpm install
 pnpm db:up        # Postgres e Redis locais em Docker
 pnpm dev          # web em http://localhost:3000, api em http://localhost:4000
+pnpm --filter @recuidado/api dev:worker   # worker da fila (lembretes, ligações, avisos)
 ```
 
 Testes, lint e build:

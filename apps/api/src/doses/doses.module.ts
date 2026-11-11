@@ -5,16 +5,14 @@ import { PushModule } from '../push/push.module.js';
 import { StockModule } from '../stock/stock.module.js';
 import { VoiceModule } from '../voice/voice.module.js';
 import { DosesController } from './doses.controller.js';
-import { DosesProcessor } from './doses.processor.js';
 import { DOSES_QUEUE } from './doses.queue.js';
 import { DosesService } from './doses.service.js';
-import { runsWorker } from '../role.js';
 
 @Module({
   imports: [BullModule.registerQueue({ name: DOSES_QUEUE }), PushModule, AlertsModule, StockModule, VoiceModule],
   controllers: [DosesController],
-  // The queue worker runs only where APP_ROLE allows it (the recuidado/worker resource in production).
-  providers: [DosesService, ...(runsWorker() ? [DosesProcessor] : [])],
+  // The queue is consumed by the worker (src/worker), never by the API process.
+  providers: [DosesService],
   exports: [DosesService],
 })
 export class DosesModule {}
