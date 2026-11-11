@@ -135,7 +135,7 @@ test("greeting is one short line", async () => {
     { patientName: "Dona Maria", medications: [{ name: "Losartana", dose: "50 mg" }] },
     new Date("2026-11-11T02:30:00Z"),
   );
-  assert.match(g, /"Oi, Dona Maria, boa noite! É a assistente virtual da Recuidado\. Como a senhora está\?"/);
+  assert.match(g, /"Oi, Dona Maria, boa noite! Aqui é a assistente virtual da Recuidado\. Como a senhora está\?"/);
   assert.doesNotMatch(g, /Losartana/);
 });
 
@@ -264,7 +264,7 @@ test("records the greeting audio when the model says the expected line", async (
   socket.emitEvent({
     type: "session.output_transcript.delta",
     event_id: "c2",
-    delta: "Oi, Dona Maria, bom dia! É a assistente virtual da Recuidado. Como a senhora está?",
+    delta: "Oi, Dona Maria, bom dia! Aqui é a assistente virtual da Recuidado. Como a senhora está?",
     start_ms: 1000,
     end_ms: 1400,
   });
@@ -322,7 +322,8 @@ test("alert call speaks the message and hangs up after it", async () => {
   const socket = new FakeSocket();
   let hangups = 0;
   const message = buildEmergencyMessage("Dona Maria", "Caí no banheiro");
-  assert.match(message, /Dona Maria disse agora na ligação do remédio: "Caí no banheiro"/);
+  assert.match(message, /Liguei para Dona Maria para saber sobre o medicamento, e ela disse: "Caí no banheiro"/);
+  assert.doesNotMatch(message, /tchau/i);
   const call = new AlertCall({
     sessionId: "live_alert",
     message,
@@ -347,9 +348,10 @@ test("alert call speaks the message and hangs up after it", async () => {
 test("emergency: tells her the family will be told and promises the call back; the call back only asks how she is", () => {
   const ctx = { patientName: "Dona Maria", medications: [{ name: "Losartana" }] };
   const live = buildLiveInstructions(ctx);
-  assert.match(live, /Tá bom, Dona Maria, eu vou avisar a sua família\. Já te ligo para saber como a senhora está\. Tchau, Dona Maria!/);
+  assert.match(live, /Entendi, Dona Maria, eu vou ligar e avisar a sua família e já te ligo de volta para saber como a senhora está, tá bom\? Até já\./);
+  assert.match(live, /Tiredness alone is not an emergency/);
   const back = { ...ctx, checkIn: true };
-  assert.match(greetingLine(back), /de novo\. Já avisei a sua família\. Como a senhora está agora\?/);
+  assert.match(greetingLine(back), /de novo\. Já avisei a sua família\. Como a senhora está se sentindo agora\?/);
   assert.equal(goodbyeLine(back), "Tchau, Dona Maria!");
   assert.doesNotMatch(buildLiveInstructions(back), /já tomou/);
   assert.match(buildDelegateInstructions(back), /taken=false/);
@@ -374,13 +376,54 @@ test("emergency recorded without the family line: asks for it, and only the good
     },
   });
   const ask = socket.sent.find((m) => m.event_id === "emergency_call_e");
-  assert.match(String(ask?.content), /eu vou avisar a sua família/);
+  assert.match(String(ask?.content), /eu vou ligar e avisar a sua família/);
   // The model's own short goodbye does not end the call before the SAMU line.
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e4", delta: "Já volto. Obrigada, tchau, Maria!" });
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Tá bom, Maria, eu vou avisar a sua família. Já te ligo para saber como a senhora está." });
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e6", delta: " Tchau, Maria!" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Entendi, Maria, eu vou ligar e avisar a sua família e já te ligo de volta para saber como a senhora está, tá bom?" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e6", delta: " Até já." });
   const result = await call.result;
   assert.equal(result.emergency, true);
   assert.equal(result.endReason, "hung_up_after_goodbye");
   assert.match(result.transcript.map((l) => l.text).join(" "), /avisar a sua família/);
+});
+
+test("dose time and gender: the question names the time, and a man is \"o senhor\"", async () => {
+  const { medicationQuestion, spokenTime, notTakenLine, recallNotTakenLine } = await import("./prompt.js");
+  // 17:00 UTC = 14:00 in São Paulo.
+  assert.equal(spokenTime(new Date("2026-11-11T17:00:00Z")), "das duas da tarde");
+  assert.equal(spokenTime(new Date("2026-11-11T16:30:00Z")), "da uma e meia da tarde");
+  assert.equal(spokenTime(new Date("2026-11-11T15:00:00Z")), "do meio-dia");
+  assert.equal(spokenTime(new Date("2026-11-11T11:15:00Z")), "das oito e 15 da manhã");
+  assert.equal(spokenTime(new Date("2026-11-11T23:00:00Z")), "das oito da noite");
+  const ctx = { patientName: "Dona Maria", medications: [{ name: "Losartana" }], doseTime: "2026-11-11T17:00:00Z" };
+  assert.equal(medicationQuestion(ctx), "A senhora já tomou a Losartana das duas da tarde?");
+  const three = { ...ctx, medications: [{ name: "A" }, { name: "B" }, { name: "C" }] };
+  assert.equal(medicationQuestion(three), "A senhora já tomou os remédios das duas da tarde?");
+  const man = { patientName: "Seu João", gender: "male" as const, medications: [{ name: "Losartana" }] };
+  assert.match(greetingLine(man), /Como o senhor está\?$/);
+  assert.match(buildLiveInstructions(man), /address him as "o senhor"/);
+  assert.equal(notTakenLine({ ...ctx, recallLater: true }), "Tá bom, Dona Maria, daqui a pouco eu ligo para confirmar. Obrigada, tchau, Dona Maria!");
+  assert.equal(notTakenLine({ ...ctx, recallLater: false }), recallNotTakenLine(ctx));
+  const recall = { ...ctx, recall: true };
+  assert.equal(greetingLine(recall), "Oi, Dona Maria! É a assistente virtual da Recuidado de novo. A senhora já tomou a Losartana das duas da tarde?");
+});
+
+test("not taken yet: the closing line promises the second call", async () => {
+  const socket = new FakeSocket();
+  const call = new ReminderCall({
+    sessionId: "live_recall",
+    context: { patientName: "Maria", medications: [{ name: "Losartana" }], recallLater: true },
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    goodbyeMs: 5,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "n1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "n2", delta: "Oi, Maria! Como a senhora está?" });
+  socket.emitEvent(toolCall(false, "Vou tomar depois"));
+  const ask = socket.sent.find((m) => m.event_id === "goodbye_call_1");
+  assert.match(String(ask?.content), /daqui a pouco eu ligo para confirmar/);
+  const result = await call.result;
+  assert.equal(result.outcome, "not_taken");
 });

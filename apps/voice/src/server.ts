@@ -70,7 +70,23 @@ function parseCallRequest(body: unknown) {
   const patientId = typeof b.patientId === "string" && b.patientId ? b.patientId : undefined;
   const checkIn = b.checkIn === true;
   const callBack = b.callBack !== false;
-  return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds, checkIn, callBack };
+  const gender = b.gender === "male" ? ("male" as const) : ("female" as const);
+  const doseTime = typeof b.doseTime === "string" && b.doseTime ? b.doseTime : undefined;
+  const recall = b.recall === true;
+  const recallLater = b.recallLater === true;
+  return {
+    doseId: b.doseId,
+    patientId,
+    phone: b.phone,
+    patientName: b.patientName.trim(),
+    medications: meds,
+    checkIn,
+    callBack,
+    gender,
+    doseTime,
+    recall,
+    recallLater,
+  };
 }
 
 /** Body of POST /pharmacy-calls. At most 3 medicines, so the call stays short. */
@@ -159,7 +175,7 @@ const server = createServer(async (req, res) => {
             distinctId,
             properties: { dose_id: input.doseId, outcome: result.outcome },
           });
-          await service.report(input.doseId, { ...result, checkIn: input.checkIn });
+          await service.report(input.doseId, { ...result, checkIn: input.checkIn, recall: input.recall });
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {

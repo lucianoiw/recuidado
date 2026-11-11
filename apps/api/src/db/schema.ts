@@ -37,6 +37,8 @@ export const members = pgTable('members', {
   prefersVoice: boolean().notNull().default(false),
   // How the family calls the patient, e.g. "Dona Maria". Used by screens and the voice call.
   nickname: text(),
+  // How the voice call addresses the patient: "a senhora" (female) or "o senhor" (male).
+  gender: text().$type<'female' | 'male'>().notNull().default('female'),
   birthDate: date(),
   // Digits only, e.g. "01310100".
   cep: text(),

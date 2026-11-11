@@ -22,6 +22,7 @@ const voiceResultSchema = z.object({
   feelsUnwell: z.boolean().nullish(),
   emergency: z.boolean().nullish(),
   checkIn: z.boolean().nullish(),
+  recall: z.boolean().nullish(),
   transcript: z
     .array(z.object({ speaker: z.enum(['assistant', 'patient']), text: z.string() }))
     .default([]),

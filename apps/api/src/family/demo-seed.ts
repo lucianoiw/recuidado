@@ -76,10 +76,10 @@ export function demoHistory(now: Date): HistoryDose[] {
 /** What she says in the synthetic reminder calls of the history. */
 function demoTranscript(name: string, medication: string) {
   return [
-    { speaker: 'assistant' as const, text: `Oi, ${name}! Aqui é a assistente do Recuidado. Já tomou a ${medication} das oito?` },
+    { speaker: 'assistant' as const, text: `Oi, ${name}, bom dia! Aqui é a assistente virtual da Recuidado. Como a senhora está?` },
+    { speaker: 'patient' as const, text: 'Estou bem, graças a Deus.' },
+    { speaker: 'assistant' as const, text: `Que bom! A senhora já tomou a ${medication} das oito da manhã?` },
     { speaker: 'patient' as const, text: 'Tomei sim, agorinha com o café.' },
-    { speaker: 'assistant' as const, text: 'Que bom! E a senhora, está bem?' },
-    { speaker: 'patient' as const, text: 'Estou bem, obrigada.' },
     { speaker: 'assistant' as const, text: `Obrigada, tchau, ${name}!` },
   ];
 }

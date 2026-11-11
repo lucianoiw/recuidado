@@ -1,0 +1,1 @@
+ALTER TABLE "members" ADD COLUMN "gender" text DEFAULT 'female' NOT NULL;

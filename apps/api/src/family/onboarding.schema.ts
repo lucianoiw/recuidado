@@ -51,6 +51,8 @@ export const onboardingBody = z
     patient: z.object({
       name,
       nickname: z.string().trim().max(40).default(''),
+      // "A senhora" or "O senhor" on the call.
+      gender: z.enum(['female', 'male']).default('female'),
       phone,
       birth,
       cep,

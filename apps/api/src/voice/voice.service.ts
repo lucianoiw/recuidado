@@ -30,6 +30,8 @@ export interface VoiceResult {
   emergency?: boolean | null;
   /** The call back after an emergency: only how she is now, the dose is left as it was. */
   checkIn?: boolean | null;
+  /** The second call after she said she had not taken it yet. */
+  recall?: boolean | null;
   transcript?: { speaker: 'assistant' | 'patient'; text: string }[];
   durationSeconds?: number | null;
   endReason?: string | null;
@@ -55,13 +57,19 @@ export function patientWords(result: Pick<VoiceResult, 'transcript' | 'note'>): 
 export type CaregiverCallReason = 'emergency' | 'still_unwell' | 'no_answer';
 
 /** What the first contact hears: her own words and a request to call her. */
-export function caregiverMessage(name: string, reason: CaregiverCallReason, words?: string): string {
+export function caregiverMessage(
+  name: string,
+  reason: CaregiverCallReason,
+  words?: string,
+  gender: 'female' | 'male' = 'female',
+): string {
+  const she = gender === 'male' ? 'ele' : 'ela';
   const intro = 'Olá, aqui é a assistente virtual da Recuidado.';
-  const end = 'Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.';
-  if (reason === 'no_answer') return `${intro} Liguei de novo para ${name} e ela não atendeu. ${end}`;
+  const end = `Por favor, entre em contato com ${she} agora. Se for grave, ligue para o SAMU, 192.`;
+  if (reason === 'no_answer') return `${intro} Liguei de novo para ${name} e ${she} não atendeu. ${end}`;
   const said = words ? `: "${words}"` : ' que não está bem';
-  if (reason === 'still_unwell') return `${intro} Liguei de novo para ${name} e ela disse${said}. ${end}`;
-  return `${intro} ${name} disse agora na ligação do remédio${said}. ${end}`;
+  if (reason === 'still_unwell') return `${intro} Liguei de novo para ${name} e ${she} disse${said}. ${end}`;
+  return `${intro} Liguei para ${name} para saber sobre o medicamento, e ${she} disse${said}. ${end}`;
 }
 
 @Injectable()
@@ -80,7 +88,10 @@ export class VoiceCallService {
    * Asks apps/voice to call the patient. Does nothing if the dose is no longer pending.
    * With checkIn, it is the call back after an emergency: the dose status does not matter.
    */
-  async call(doseId: string, opts: { checkIn?: boolean; callBack?: boolean } = {}): Promise<{ callId: string } | null> {
+  async call(
+    doseId: string,
+    opts: { checkIn?: boolean; callBack?: boolean; recall?: boolean } = {},
+  ): Promise<{ callId: string } | null> {
     const checkIn = Boolean(opts.checkIn);
     const voiceUrl = this.config.get<string>('VOICE_URL');
     const token = this.config.get<string>('VOICE_API_TOKEN');
@@ -94,6 +105,8 @@ export class VoiceCallService {
         demo: doses.demo,
         patientId: members.id,
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
+        gender: members.gender,
+        scheduledAt: doses.scheduledAt,
         phone: members.phone,
         consentAt: members.consentAt,
         familyId: members.familyId,
@@ -146,6 +159,11 @@ export class VoiceCallService {
         medications: [{ name: row.medication, dose: row.strength ?? undefined }],
         checkIn,
         callBack: opts.callBack ?? true,
+        gender: row.gender,
+        doseTime: row.scheduledAt.toISOString(),
+        recall: Boolean(opts.recall),
+        // Demo run doses keep the two-minute flow: no second call.
+        recallLater: !checkIn && !opts.recall && !row.demo,
       }),
     });
     if (res.status === 403) {
@@ -256,6 +274,13 @@ export class VoiceCallService {
       return 'taken';
     }
 
+    // "Ainda não tomei" on the first call: she was told Recuidado calls again to confirm.
+    if (result.outcome === 'not_taken' && !result.recall && !dose.demo) {
+      await this.scheduleRecall(doseId);
+      telemetry.capture('dose_voice_result', { ...props, applied: 'recall' }, dose.patientId);
+      return 'ignored';
+    }
+
     await this.db
       .update(doses)
       .set({ status: 'missed' })
@@ -285,6 +310,24 @@ export class VoiceCallService {
       .onConflictDoNothing({ target: voiceCalls.sessionId })
       .returning({ id: voiceCalls.id });
     return rows.length > 0;
+  }
+
+  /**
+   * She said she has not taken it yet and heard "daqui a pouco eu ligo para confirmar": call once more
+   * after DOSE_RECALL_MINUTES. The family alert moves after it, as a fallback if that call never reports.
+   */
+  private async scheduleRecall(doseId: string): Promise<void> {
+    const minutes = this.config.get<number>('DOSE_RECALL_MINUTES') ?? 15;
+    const alertAfter = this.config.get<number>('DOSE_ALERT_AFTER_MINUTES') ?? 30;
+    await this.queue.add('recall', { kind: 'recall', doseId }, { jobId: doseJobId('recall', doseId), delay: minutes * 60_000 });
+    const alert = await this.queue.getJob(alertJobId(doseId));
+    if (alert && (await alert.isDelayed())) await alert.remove();
+    await this.queue.add(
+      'alert-family',
+      { kind: 'alert-family', doseId },
+      { jobId: alertJobId(doseId), delay: (minutes + alertAfter) * 60_000 },
+    );
+    this.logger.log(`Dose ${doseId}: not taken yet, calling her again in ${minutes} min.`);
   }
 
   /** She told the assistant it would call back: queue that call (EMERGENCY_CHECKIN_MINUTES). */
@@ -354,7 +397,11 @@ export class VoiceCallService {
     const token = this.config.get<string>('VOICE_API_TOKEN');
     if (!voiceUrl || !token) return;
     const [patient] = await this.db
-      .select({ name: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
+      .select({
+        name: sql<string>`coalesce(${members.nickname}, ${members.name})`,
+        familyId: members.familyId,
+        gender: members.gender,
+      })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
@@ -366,7 +413,7 @@ export class VoiceCallService {
       .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver'), isNotNull(members.phone), ne(members.phone, '')))
       .orderBy(desc(members.emergencyContact), asc(members.createdAt))
       .limit(1);
-    const message = caregiverMessage(patient.name, reason, words);
+    const message = caregiverMessage(patient.name, reason, words, patient.gender);
     for (const c of caregivers) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',
@@ -380,7 +427,7 @@ export class VoiceCallService {
         await this.alerts.record(patient.familyId, {
           kind: 'emergency_call',
           title: `Ligamos para ${c.name}, o primeiro contato`,
-          body: `Recado: "${message.replace(/^Olá, aqui é a assistente virtual da Recuidado\. /, '').replace(/ Obrigada, tchau\.$/, '')}"`,
+          body: `Recado: "${message.replace(/^Olá, aqui é a assistente virtual da Recuidado\. /, '')}"`,
           doseId,
         });
       }

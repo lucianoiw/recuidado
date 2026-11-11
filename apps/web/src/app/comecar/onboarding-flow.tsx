@@ -145,6 +145,29 @@ export function OnboardingFlow() {
               <Field label="Nome" value={p.name} onValue={(v) => patch("patient", { name: v })} placeholder="Maria Helena" aria-invalid={tried && p.name.trim().length < 2} />
               <Field label="Como chamar" value={p.nickname} onValue={(v) => patch("patient", { nickname: v })} placeholder="Dona Maria" />
             </div>
+            <fieldset className="flex flex-col gap-2">
+              <legend className="mb-2 text-[15px] font-bold">Na ligação, a assistente fala</legend>
+              <div className="grid grid-cols-2 gap-3">
+                {([
+                  { value: "female", label: "A senhora" },
+                  { value: "male", label: "O senhor" },
+                ] as const).map((o) => (
+                  <button
+                    key={o.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={p.gender === o.value}
+                    onClick={() => patch("patient", { gender: o.value })}
+                    className={cn(
+                      "rounded-2xl bg-surface p-3.5 text-[15px] font-bold",
+                      p.gender === o.value ? "border-2 border-brand bg-[#f2f8f6]" : "border-[1.5px] border-line-soft",
+                    )}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
             <Field
               label="Telefone, para a ligação"
               inputMode="tel"

@@ -20,13 +20,13 @@ export type Relation = (typeof RELATIONS)[number];
 
 export interface Onboarding {
   caregiver: { name: string; phone: string; relation: Relation | null; relationOther: string };
-  patient: { name: string; nickname: string; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
+  patient: { name: string; nickname: string; gender: "female" | "male"; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
   invites: { name: string; phone?: string; relation: Relation | null }[];
 }
 
 export const emptyOnboarding: Onboarding = {
   caregiver: { name: "", phone: "", relation: null, relationOther: "" },
-  patient: { name: "", nickname: "", phone: "", birth: "", cep: "", usesPhone: true, consent: false },
+  patient: { name: "", nickname: "", gender: "female", phone: "", birth: "", cep: "", usesPhone: true, consent: false },
   invites: [],
 };
 
