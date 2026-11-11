@@ -147,6 +147,10 @@ export class FamilyService implements OnApplicationBootstrap {
         relation: members.relation,
         relationOther: members.relationOther,
         phone: members.phone,
+        consentAt: members.consentAt,
+        consentSource: members.consentSource,
+        // Added as an invite by another caregiver (only the one who signed up exports or deletes).
+        invited: isNotNull(members.invitedById).mapWith(Boolean),
         // Added as an invite and not opened the app yet.
         pending: and(isNotNull(members.invitedById), isNull(members.joinedAt))!.mapWith(Boolean),
       })
@@ -290,6 +294,7 @@ export class FamilyService implements OnApplicationBootstrap {
         birth: patient.birthDate ?? '',
         cep: patient.cep ?? '',
         usesPhone: !patient.prefersVoice,
+        consent: patient.consentAt !== null,
       },
       invites: people
         .filter((m) => m.invitedById === caregiverId)
@@ -320,16 +325,29 @@ export class FamilyService implements OnApplicationBootstrap {
         prefersVoice: !p.usesPhone,
       };
       let familyId: string;
+      let patientId: string;
       if (own) {
         familyId = own.familyId;
-        await tx.update(members).set(patientValues).where(eq(members.id, own.patientId));
+        patientId = own.patientId;
+        await tx.update(members).set(patientValues).where(eq(members.id, patientId));
       } else {
         const [family] = await tx
           .insert(families)
           .values({ name: `Família de ${p.nickname || p.name}` })
           .returning({ id: families.id });
         familyId = family.id;
-        await tx.insert(members).values({ ...patientValues, familyId, role: 'patient' });
+        const [patient] = await tx
+          .insert(members)
+          .values({ ...patientValues, familyId, role: 'patient' })
+          .returning({ id: members.id });
+        patientId = patient.id;
+      }
+      // Her own "Aceito" in the app wins; the caregiver's declaration only fills an empty consent.
+      if (p.consent) {
+        await tx
+          .update(members)
+          .set({ consentAt: new Date(), consentSource: 'caregiver' })
+          .where(and(eq(members.id, patientId), isNull(members.consentAt)));
       }
 
       const c = input.caregiver;

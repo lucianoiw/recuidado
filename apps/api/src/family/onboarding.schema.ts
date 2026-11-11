@@ -55,6 +55,8 @@ export const onboardingBody = z
       birth,
       cep,
       usesPhone: z.boolean(),
+      // The caregiver says she agreed to reminders, calls and the family seeing her doses (LGPD art. 11).
+      consent: z.boolean().default(false),
     }),
     invites: z
       .array(

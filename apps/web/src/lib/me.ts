@@ -28,6 +28,14 @@ export function setMe(id: string): void {
   listeners.forEach((l) => l());
 }
 
+/** Forgets the caregiver on this device. */
+export function clearMe(): void {
+  try {
+    localStorage.removeItem(KEY);
+  } catch {}
+  listeners.forEach((l) => l());
+}
+
 /** The caregiver id this device keeps, read once outside React. */
 export function readMe(): string | null {
   return read();

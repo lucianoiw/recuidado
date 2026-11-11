@@ -52,6 +52,8 @@ export const envSchema = z.object({
   // per family (the demo family is exempt) and for the whole app. 0 turns calls off.
   CALL_DAILY_LIMIT_PER_FAMILY: z.coerce.number().int().nonnegative().default(3),
   CALL_DAILY_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(20),
+  // Days a call transcript (and what she said about how she feels) is kept. After that only the outcome stays.
+  VOICE_TRANSCRIPT_RETENTION_DAYS: z.coerce.number().int().positive().default(90),
   // Minutes to wait after the call before alerting the family.
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
   // Demo run (POST /demo/run): the whole dose flow in about two minutes. "false" turns it off.

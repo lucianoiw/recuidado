@@ -20,6 +20,13 @@ export function readFamilyId(): string | null {
   }
 }
 
+/** Forgets the family on this device (after the family deleted its data). */
+export function clearFamilyId(): void {
+  try {
+    localStorage.removeItem(KEY);
+  } catch {}
+}
+
 export function setFamilyId(id: string): void {
   try {
     localStorage.setItem(KEY, id);

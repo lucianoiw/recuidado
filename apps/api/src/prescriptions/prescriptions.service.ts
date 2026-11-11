@@ -56,7 +56,8 @@ export class PrescriptionsService {
         latencySeconds,
         inputTokens: result.usage.input_tokens,
         outputTokens: result.usage.output_tokens,
-        output: [{ role: 'assistant', content: JSON.stringify(result.reading) }],
+        // LGPD: medicine names and doses are health data and stay out of PostHog (US). Only the shape goes.
+        output: [{ role: 'assistant', content: `[leitura com ${result.reading.items.length} remédio(s)]` }],
       });
       telemetry.capture('prescription_read', {
         $ai_trace_id: traceId,

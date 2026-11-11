@@ -94,7 +94,7 @@ export class StockService {
     });
     telemetry.capture(
       'low_stock_alerted',
-      { medication: label, units_left: status.units, days_left: status.daysLeft, caregivers, pushes_delivered: sent },
+      { medication_id: med.id, units_left: status.units, days_left: status.daysLeft, caregivers, pushes_delivered: sent },
       med.patientId,
     );
     this.logger.log(`Low stock of ${med.id}: ${status.units} left (${sent} pushes).`);

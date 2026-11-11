@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   useEffect,
@@ -16,7 +17,7 @@ import {
   ShareIcon,
 } from "@/components/ui";
 import { track } from "@/lib/analytics";
-import { callName, type FamilyOverview } from "@/lib/api";
+import { callName, setConsent, type FamilyOverview } from "@/lib/api";
 import { enablePush, type PushState } from "@/lib/push";
 
 const READY_KEY = "recuidado:patient-ready";
@@ -70,14 +71,14 @@ interface InstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-type Step = "hello" | "install" | "notify" | "done";
+type Step = "hello" | "consent" | "install" | "notify" | "done";
 
 function Dots({ step }: { step: number }) {
   return (
     <div className="flex items-center justify-between">
-      <p className="text-[22px] text-muted">Passo {step} de 4</p>
+      <p className="text-[22px] text-muted">Passo {step} de 5</p>
       <div className="flex gap-1.5" aria-hidden>
-        {[1, 2, 3, 4].map((i) => (
+        {[1, 2, 3, 4, 5].map((i) => (
           <span
             key={i}
             className={`h-2.5 rounded-full ${i === step ? "w-7" : "w-2.5"} ${i <= step ? "bg-brand" : "bg-line"}`}
@@ -108,7 +109,7 @@ function joinTimes(list: string[]): string {
     : (list[0] ?? "");
 }
 
-/** First access on Dona Maria's phone: hello, add to home screen, allow reminders, ready. */
+/** First access on Dona Maria's phone: hello, her consent (LGPD), add to home screen, allow reminders, ready. */
 export function PatientWelcome({ data }: { data: FamilyOverview }) {
   const platform = useSyncExternalStore(
     noSubscribe,
@@ -121,6 +122,8 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
   );
   const [push, setPush] = useState<PushState | null>(null);
   const [busy, setBusy] = useState(false);
+  const [declined, setDeclined] = useState(false);
+  const [consentError, setConsentError] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -148,6 +151,23 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     await installEvent.userChoice.catch(() => null);
     setInstallEvent(null);
     go("notify");
+  }
+
+  const afterConsent: Step = platform === "installed" ? "notify" : "install";
+
+  async function answer(accepted: boolean) {
+    setBusy(true);
+    setConsentError(false);
+    try {
+      await setConsent(data.patient.id, accepted);
+      track(accepted ? "patient_consent_given" : "patient_consent_declined");
+      if (accepted) go(afterConsent);
+      else setDeclined(true);
+    } catch {
+      setConsentError(true);
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function allow() {
@@ -182,7 +202,8 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         </div>
         <Button
           size="xl"
-          onClick={() => go(platform === "installed" ? "notify" : "install")}
+          // She already said yes in this app: no need to ask again.
+          onClick={() => go(data.patient.consentSource === "patient" ? afterConsent : "consent")}
         >
           Começar
         </Button>
@@ -190,10 +211,52 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     );
   }
 
+  if (step === "consent") {
+    return (
+      <div className="flex flex-1 flex-col gap-5">
+        <Dots step={2} />
+        <h1 className="text-[36px] font-bold leading-tight">Combinado, {name}?</h1>
+        {declined ? (
+          <Card className="px-4 py-5 text-[24px] leading-snug" role="status">
+            Tudo bem. O Recuidado não vai avisar nem ligar. Se mudar de ideia, toque em <b>Aceito</b>.
+          </Card>
+        ) : (
+          <Card className="px-4 py-5">
+            <ul className="flex flex-col gap-3.5 text-[24px] leading-snug">
+              <li>O celular avisa na hora do remédio.</li>
+              <li>
+                Se você não tocar em <b>Tomei</b>, uma assistente virtual liga. Não é uma pessoa.
+              </li>
+              <li>{host} {family.length > 1 ? "e a família ficam" : "fica"} sabendo se você tomou.</li>
+            </ul>
+          </Card>
+        )}
+        {consentError ? (
+          <p className="text-[22px] font-semibold text-danger" role="alert">
+            Não deu para salvar. Tente de novo.
+          </p>
+        ) : null}
+        <div className="mt-auto flex flex-col gap-3">
+          <Button size="xl" onClick={() => answer(true)} disabled={busy}>
+            {busy ? "Só um instante..." : "Aceito"}
+          </Button>
+          {declined ? null : (
+            <Button variant="secondary" size="lg" onClick={() => answer(false)} disabled={busy}>
+              Não quero
+            </Button>
+          )}
+          <Link href="/privacidade" className="py-2 text-center text-[22px] font-bold text-brand">
+            Como cuidamos dos seus dados
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (step === "install") {
     return (
       <div className="flex flex-1 flex-col gap-4">
-        <Dots step={2} />
+        <Dots step={3} />
         <h1 className="text-[34px] font-bold leading-tight">
           Coloque o Recuidado na tela do celular
         </h1>
@@ -258,7 +321,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     const blocked = push !== null && push !== "on";
     return (
       <div className="flex flex-1 flex-col gap-6">
-        <Dots step={3} />
+        <Dots step={4} />
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
           <Badge>
             <BellIcon size={60} strokeWidth={2.2} />
@@ -309,7 +372,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
 
   return (
     <div className="flex flex-1 flex-col gap-6">
-      <Dots step={4} />
+      <Dots step={5} />
       <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
         <Badge>
           <CheckIcon size={66} strokeWidth={2.8} />

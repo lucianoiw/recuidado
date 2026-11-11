@@ -12,7 +12,7 @@ Os logs do Coolify ficam dentro do container. Cada deploy cria um container novo
 
 | Serviço | Logs | Erros | Eventos | IA |
 | --- | --- | --- | --- | --- |
-| `web` | `console.*` do navegador | exceções do navegador | page views, cliques, web vitals, replay das telas (campos mascarados) e eventos do app | |
+| `web` | `console.*` do navegador | exceções do navegador | page views, cliques, web vitals, replay das telas (todo texto e campo mascarados) e eventos do app | |
 | `api` | todo log do Nest e uma linha por requisição HTTP (método, rota, status, tempo) | 5xx, falhas de job da fila e falha no boot | lembrete, dose confirmada, dose perdida, família avisada, ligação pedida, receita lida e salva | leitura da receita com Claude (`$ai_generation`: modelo, tokens, latência, custo) |
 | `voice` | todo log da ligação | falha ao iniciar ligação e erro interno | ligação iniciada, chamando, atendida, encerrada (resultado, duração), recusada | ligação do agente de voz GPT-Live (`$ai_generation`) |
 
@@ -22,7 +22,7 @@ O web manda o id da sessão para a API (`tracing_headers`). Assim cada log de ac
 
 | Evento | Origem | Propriedades principais |
 | --- | --- | --- |
-| `dose_reminder_sent` | api | `dose_id`, `medication`, `pushes_delivered` |
+| `dose_reminder_sent` | api | `dose_id`, `pushes_delivered` |
 | `dose_confirmed` | api | `dose_id`, `via` (`app` ou `voice`), `minutes_since_scheduled` |
 | `dose_missed` | api | `dose_id`, `minutes_since_scheduled` |
 | `family_alerted` | api | `dose_id`, `caregivers`, `pushes_delivered` |
@@ -31,13 +31,15 @@ O web manda o id da sessão para a API (`tracing_headers`). Assim cada log de ac
 | `prescription_read` / `prescription_read_failed` | api | `items`, `model`, tokens, `latency_seconds` |
 | `prescription_confirmed` | api | `medications`, `daily_doses` |
 | `push_subscribed` | api | `push_service` |
+| `consent_given` / `consent_revoked` | api | `source` |
+| `family_exported`, `family_deleted`, `transcripts_purged` | api | `calls`, `retention_days` |
 | `call_started`, `call_ringing`, `call_answered` | voice | `dose_id`, `call_id` |
 | `call_ended` | voice | `outcome`, `confirmed`, `duration_seconds`, `error` |
 | `call_refused`, `call_start_failed` | voice | `dose_id`, motivo |
 | `dose_confirm_tapped`, `prescription_upload_started`, `prescription_reviewed`, `prescription_saved`, `notifications_permission` | web | |
 | `service_started` | api, voice | |
 
-A transcrição da ligação não vai para o PostHog: ela fica no Postgres.
+LGPD: nenhum evento leva nome de remédio, transcrição ou o que ela disse. A transcrição fica só no Postgres e é esvaziada depois de `VOICE_TRANSCRIPT_RETENTION_DAYS` (90). O trace de IA da receita leva só quantos remédios foram lidos, não a leitura. O replay esconde todo o texto da tela (`maskTextSelector: "*"`). Exceção: `demo_run_started` leva o nome do remédio da família demo, que é sintética.
 
 ## Variáveis
 
