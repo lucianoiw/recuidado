@@ -32,6 +32,12 @@ export class FamilyController {
     return this.family.overview();
   }
 
+  /** Alerts sent to the family (missed dose, not feeling well, running out), newest first. */
+  @Get('alerts')
+  alerts() {
+    return this.family.alertHistory();
+  }
+
   /** Sign-up answers saved by one caregiver (the id this device keeps). */
   @Get('onboarding')
   getOnboarding(@Query('caregiverId', new ParseUUIDPipe()) caregiverId: string) {

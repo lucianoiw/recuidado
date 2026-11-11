@@ -101,6 +101,7 @@ export class PrescriptionsService {
           activeIngredient: item.activeIngredient,
           strength: item.strength,
           times: [...new Set(item.times)].sort(),
+          ...(item.stockUnits != null ? { stockUnits: item.stockUnits, stockCountedAt: new Date() } : {}),
         })),
       )
       .returning({

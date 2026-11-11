@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   AlertIcon,
   BellIcon,
+  PillIcon,
   CameraIcon,
   Card,
   ChevronRightIcon,
@@ -16,6 +17,7 @@ import {
   type DoseStatus as RowStatus,
 } from "@/components/ui";
 import { callName, formatTime, isFree, telHref, type Dose } from "@/lib/api";
+import { stockText } from "@/lib/stock";
 import { medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
@@ -60,6 +62,7 @@ export function FamilyView() {
   const free = data.medications.filter(isFree).length;
   const tel = telHref(data.patient);
   const unwell = data.unwellReports?.[0];
+  const runningOut = data.medications.filter((m) => m.stock?.low);
 
   return (
     <>
@@ -75,11 +78,11 @@ export function FamilyView() {
           <span className="text-[15px] text-muted">{todayLabel()}</span>
         </div>
         <Link
-          href="/family/familia"
+          href="/family/avisos"
           className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface"
         >
           <BellIcon size={22} />
-          <span className="sr-only">Alertas</span>
+          <span className="sr-only">Avisos</span>
         </Link>
       </header>
 
@@ -157,6 +160,32 @@ export function FamilyView() {
           </section>
         );
       })}
+
+      {runningOut.length > 0 ? (
+        <section className="flex flex-col gap-3 rounded-card border-[1.5px] border-warn bg-warn-soft p-4">
+          <div className="flex items-start gap-2.5">
+            <PillIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
+            <div className="flex flex-col gap-1">
+              <b className="text-warn">
+                {runningOut.length > 1 ? "Remédios acabando" : "Remédio acabando"}
+              </b>
+              <ul className="flex flex-col gap-0.5 text-[15px] leading-snug">
+                {runningOut.map((m) => (
+                  <li key={m.id}>
+                    <b>{medLabel(m.name, m.strength)}</b>: {stockText(m.stock!)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <Link
+            href={runningOut.every(isFree) ? "/family/onde-pegar" : "/family/comprar"}
+            className={buttonClass({ variant: "secondary" })}
+          >
+            {runningOut.every(isFree) ? "Ver onde pegar grátis" : "Ver onde comprar"}
+          </Link>
+        </section>
+      ) : null}
 
       <section className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between">

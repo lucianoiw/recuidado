@@ -46,6 +46,33 @@ export interface Medication {
   freeAt?: string[];
   /** In the state high cost program (CEAF): needs the LME form from the doctor. */
   highCost?: boolean;
+  /** Pills left at home and how many days they last; null when nobody counted them. */
+  stock?: Stock | null;
+}
+
+export interface Stock {
+  units: number;
+  /** Null for a medicine without times. */
+  daysLeft: number | null;
+  /** Few days left: time to get more. */
+  low: boolean;
+}
+
+export type AlertKind = "dose_missed" | "unwell" | "low_stock";
+
+export interface FamilyAlert {
+  id: string;
+  kind: AlertKind;
+  title: string;
+  body: string;
+  createdAt: string;
+}
+
+/** Alerts sent to the family, newest first. */
+export async function getAlerts(): Promise<FamilyAlert[]> {
+  const res = await fetch(`${API_URL}/family/alerts`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
 }
 
 export interface FamilyOverview {
@@ -132,6 +159,8 @@ export interface ConfirmItem {
   activeIngredient: string | null;
   strength: string | null;
   times: string[];
+  /** Pills at home, when the family knows. */
+  stockUnits?: number | null;
 }
 
 export async function confirmPrescription(patientId: string, items: ConfirmItem[]): Promise<void> {
@@ -188,7 +217,7 @@ export async function saveOnboarding(body: unknown): Promise<{ caregiverId: stri
 /** Family edits the dose text or the times of a medication. */
 export async function updateMedication(
   id: string,
-  body: { strength?: string | null; times?: string[] },
+  body: { strength?: string | null; times?: string[]; stockUnits?: number | null },
 ): Promise<void> {
   await send("PATCH", `/family/medications/${id}`, body, "Não deu para salvar a mudança.");
 }
