@@ -27,3 +27,4 @@ export {
   type PrescriptionReading,
   type ScheduledDose,
 } from "./schema.ts";
+export { fromModelReading, MAX_UNION_PARAMETERS, ModelReadingSchema, type ModelReading } from "./model-schema.ts";

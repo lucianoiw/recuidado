@@ -4,7 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { normalizeReading, type NormalizedReading } from "./normalize.ts";
 import { SYSTEM_PROMPT, USER_INSTRUCTION } from "./prompt.ts";
-import { PrescriptionReadingSchema } from "./schema.ts";
+import { fromModelReading, ModelReadingSchema } from "./model-schema.ts";
 
 /**
  * Claude Opus 5.5: strongest vision model in the current lineup for reading
@@ -96,7 +96,7 @@ export async function readPrescription(
     fallbacks: "default",
     output_config: {
       effort: options.effort ?? "high",
-      format: betaZodOutputFormat(PrescriptionReadingSchema),
+      format: betaZodOutputFormat(ModelReadingSchema),
     },
     system: SYSTEM_PROMPT,
     messages: [
@@ -123,13 +123,13 @@ export async function readPrescription(
   } catch {
     throw new PrescriptionReadError("invalid_output", "O modelo não devolveu um JSON válido.");
   }
-  const parsed = PrescriptionReadingSchema.safeParse(json);
+  const parsed = ModelReadingSchema.safeParse(json);
   if (!parsed.success) {
     throw new PrescriptionReadError("invalid_output", `JSON fora do esquema: ${parsed.error.message}`);
   }
 
   return {
-    reading: normalizeReading(parsed.data),
+    reading: normalizeReading(fromModelReading(parsed.data)),
     model: response.model,
     usage: { input_tokens: response.usage.input_tokens, output_tokens: response.usage.output_tokens },
   };
