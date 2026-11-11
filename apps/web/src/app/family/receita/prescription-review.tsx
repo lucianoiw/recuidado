@@ -21,6 +21,7 @@ import {
 import {
   confirmPrescription,
   getFamily,
+  isFree,
   parsePrescription,
   type FamilyOverview,
   type ReadItem,
@@ -180,7 +181,7 @@ function TimeChips({
 function Result({ family, count }: { family: FamilyOverview | null; count: number }) {
   const { getsFree, setBuy } = useBuyChoice();
   const meds = family?.medications ?? [];
-  const free = meds.filter((m) => m.freeInFarmaciaPopular);
+  const free = meds.filter(isFree);
   const paid = meds.filter((m) => !getsFree(m));
   return (
     <>
@@ -203,7 +204,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           <p className="text-[22px] font-extrabold text-brand">
             {free.length} de {meds.length} remédios saem de graça
           </p>
-          <p className="text-[15px]">no Farmácia Popular, com receita e documento.</p>
+          <p className="text-[15px]">no Farmácia Popular ou na UBS, com receita e documento.</p>
         </section>
       ) : null}
 

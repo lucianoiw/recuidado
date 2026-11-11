@@ -41,6 +41,11 @@ export interface FamilyOverview {
   today: Dose[];
 }
 
+/** Free somewhere: Farmácia Popular or the UBS pharmacy. */
+export function isFree(m: Medication): boolean {
+  return m.freeInFarmaciaPopular || (m.freeAt?.length ?? 0) > 0;
+}
+
 export async function getFamily(): Promise<FamilyOverview> {
   const res = await fetch(`${API_URL}/family`, { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);

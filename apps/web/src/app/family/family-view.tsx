@@ -13,7 +13,7 @@ import {
   buttonClass,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
-import { formatTime, type Dose } from "@/lib/api";
+import { formatTime, isFree, type Dose } from "@/lib/api";
 import { medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
@@ -55,7 +55,7 @@ export function FamilyView() {
   }
   const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
-  const free = data.medications.filter((m) => m.freeInFarmaciaPopular).length;
+  const free = data.medications.filter(isFree).length;
 
   return (
     <>
@@ -160,7 +160,7 @@ export function FamilyView() {
         <section className="grid grid-cols-2 gap-3">
           <Card className="flex flex-col gap-0.5">
             <span className="text-[14px] text-muted">
-              Grátis no Farmácia Popular
+              Saem grátis
             </span>
             <span className="text-[26px] font-extrabold text-brand">
               {free} de {data.medications.length}

@@ -11,9 +11,18 @@ import {
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { FreeOrBuy } from "@/components/free-or-buy";
-import type { Medication } from "@/lib/api";
+import { isFree, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
+
+function freeWhere(m: Medication): string | null {
+  const fp = m.freeInFarmaciaPopular || m.freeAt?.includes("farmacia_popular");
+  const ubs = m.freeAt?.includes("ubs");
+  if (fp && ubs) return "No Farmácia Popular ou na UBS";
+  if (fp) return "No Farmácia Popular";
+  if (ubs) return "Só na UBS";
+  return null;
+}
 
 function MedRow({ m }: { m: Medication }) {
   const { getsFree, setBuy } = useBuyChoice();
@@ -24,14 +33,16 @@ function MedRow({ m }: { m: Medication }) {
         <span className="text-[15px] text-muted">
           {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
         </span>
-        {m.freeAt?.includes("ubs") ? (
-          <span className="text-[14px] font-bold text-brand">Também grátis na UBS</span>
+        {freeWhere(m) ? (
+          <span className="text-[14px] font-bold text-brand">{freeWhere(m)}</span>
         ) : null}
         {m.highCost ? (
-          <span className="text-[14px] font-bold text-warn">Alto Custo: precisa de laudo (LME)</span>
+          <span className="text-[14px] font-bold text-warn">
+            Pode ser grátis no Alto Custo, com laudo do médico
+          </span>
         ) : null}
       </div>
-      {m.freeInFarmaciaPopular ? (
+      {isFree(m) ? (
         <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(free) => setBuy(m.id, !free)} />
       ) : (
         <span className="whitespace-nowrap font-bold">
@@ -107,7 +118,7 @@ export function MedsView() {
       {free.length > 0 ? (
         <Group
           icon={<GiftIcon size={22} className="text-brand" />}
-          title="Grátis no Farmácia Popular"
+          title="Grátis"
           meds={free}
           link={{ href: "/family/onde-pegar", label: "Ver onde pegar" }}
         />
@@ -127,7 +138,7 @@ export function MedsView() {
         {data.medications.length === 0 ? "Foto da receita" : "Receita nova"}
       </Link>
 
-      {data.medications.some((m) => m.freeInFarmaciaPopular) ? (
+      {data.medications.some(isFree) ? (
         <p className="text-[15px] leading-snug text-muted">
           Prefere comprar um remédio que sai grátis? Toque em Comprar e ele entra na conta da família.
         </p>

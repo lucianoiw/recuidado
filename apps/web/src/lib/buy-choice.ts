@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { Medication } from "./api";
+import { isFree, type Medication } from "./api";
 
 const KEY = "recuidado:buy-choice";
 const listeners = new Set<() => void>();
@@ -40,7 +40,7 @@ export function useBuyChoice() {
   };
 
   /** True when the family will get this medication for free. */
-  const getsFree = (m: Medication) => m.freeInFarmaciaPopular && !chosen.has(m.id);
+  const getsFree = (m: Medication) => isFree(m) && !chosen.has(m.id);
 
   return { getsFree, setBuy };
 }
