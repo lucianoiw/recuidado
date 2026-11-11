@@ -5,7 +5,7 @@
 services:
   asterisk:
     build:
-      context: ../../infra/asterisk
+      context: .
     network_mode: host
     environment:
       - SIP_DOMAIN=${SIP_DOMAIN:-voz.recuidado.com.br}
