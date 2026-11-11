@@ -59,6 +59,16 @@ export const envSchema = z.object({
     (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
     z.boolean(),
   ),
+  // On boot, bring the demo family to its fixed story (3 medicines, times, stock, a week of history). "false" turns it off.
+  DEMO_SEED_ENABLED: z.preprocess(
+    (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
+    z.boolean(),
+  ),
+  // Scheduled doses of the demo family also call its phone. Off: only the demo run button calls.
+  DEMO_SCHEDULED_CALLS: z.preprocess(
+    (v) => v === true || v === 'true',
+    z.boolean(),
+  ),
   // Seconds a demo run holds the button: a second press in this time follows the same run.
   DEMO_RUN_LOCK_SECONDS: z.coerce.number().int().positive().default(240),
   // Seconds after the demo reminder before the call.
