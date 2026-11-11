@@ -2,6 +2,17 @@
 
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
+import {
+  AlertIcon,
+  Card,
+  DoseList,
+  DoseRow,
+  ScreenHeader,
+  StatusPill,
+  buttonClass,
+  cn,
+  type DoseStatus as RowStatus,
+} from "@/components/ui";
 import { formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
 
 const ME_KEY = "recuidado:caregiver";
@@ -28,20 +39,22 @@ function subscribeMe(listener: () => void) {
   return () => meListeners.delete(listener);
 }
 
-function statusLabel(d: Dose, now: number): { text: string; tone: string } {
+function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
   if (d.status === "taken") {
-    return {
-      text: `Tomou${d.confirmedVia === "voice" ? " (por ligação)" : ""}${
-        d.confirmedAt ? ` às ${formatTime(d.confirmedAt)}` : ""
-      }`,
-      tone: "text-teal-700",
-    };
+    const via = d.confirmedVia === "voice" ? " por ligação" : "";
+    const at = d.confirmedAt ? ` ${formatTime(d.confirmedAt)}` : "";
+    return { status: "taken", text: `Tomou${via}${at}` };
   }
-  if (d.status === "missed") return { text: "Não confirmou", tone: "text-red-700 font-medium" };
-  if (new Date(d.scheduledAt).getTime() <= now) {
-    return { text: "Aguardando confirmação", tone: "text-amber-700" };
-  }
-  return { text: "Agendado", tone: "text-zinc-500" };
+  if (d.status === "missed") return { status: "missed", text: "Não tomou" };
+  if (new Date(d.scheduledAt).getTime() <= now) return { status: "pending", text: "Esperando" };
+  return { status: "upcoming", text: "Mais tarde" };
+}
+
+const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+function doseName(d: Dose): string {
+  // Keep "50 mg" on one line.
+  return [d.medicationName, d.strength?.replace(/ /g, "\u00a0")].filter(Boolean).join(" ");
 }
 
 export function FamilyView() {
@@ -67,79 +80,149 @@ export function FamilyView() {
     return () => clearInterval(timer);
   }, [load]);
 
-  if (error) return <p className="text-zinc-600">Sem conexão com o servidor.</p>;
-  if (!data) return <p className="text-zinc-600">Carregando...</p>;
+  if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
+  if (!data) return <p className="text-muted">Carregando...</p>;
 
   const caregiver = data.caregivers.find((c) => c.id === me);
+  const patientName = data.patient.name.split(" ")[0];
+  const missed = data.today.filter((d) => d.status === "missed");
+  const monthlyCents = data.medications.reduce((sum, m) => sum + m.monthlyCostCents, 0);
+  const shareCents = data.caregivers.length > 0 ? Math.ceil(monthlyCents / data.caregivers.length) : 0;
+  const taken = data.today.filter((d) => d.status === "taken").length;
 
   return (
-    <div className="flex flex-col gap-8">
-      <section>
-        <h2 className="text-lg font-semibold">Doses de hoje da {data.patient.name}</h2>
+    <>
+      <ScreenHeader
+        audience="family"
+        eyebrow={caregiver ? `Olá, ${caregiver.name.split(" ")[0]}` : undefined}
+        title={`${patientName} hoje`}
+      />
+
+      {missed.map((d) => (
+        <Card key={d.id} tone="danger" className="flex flex-col gap-2.5" role="alert">
+          <p className="flex items-center gap-2 font-bold text-danger">
+            <AlertIcon size={22} strokeWidth={2.4} />
+            Dose não confirmada
+          </p>
+          <p className="leading-snug">
+            {doseName(d)} das {formatTime(d.scheduledAt)}.
+            {d.familyAlertedAt ? ` Avisamos a família às ${formatTime(d.familyAlertedAt)}.` : ""}
+          </p>
+        </Card>
+      ))}
+
+      <section className="flex flex-col gap-2">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-[19px] font-bold">Doses de hoje</h2>
+          {data.today.length > 0 ? (
+            <span className="text-[15px] text-muted">
+              {taken} de {data.today.length} tomadas
+            </span>
+          ) : null}
+        </div>
         {data.today.length === 0 ? (
-          <p className="mt-2 text-zinc-600">Nenhuma dose hoje.</p>
+          <Card>
+            <p className="text-muted">Nenhuma dose hoje.</p>
+          </Card>
         ) : (
-          <ul className="mt-3 flex flex-col gap-2">
+          <DoseList>
             {data.today.map((d) => {
-              const s = statusLabel(d, now);
+              const s = rowStatus(d, now);
               return (
-                <li key={d.id} className="flex justify-between gap-4 rounded-lg border border-zinc-200 p-3">
-                  <span>
-                    <span className="font-medium">{formatTime(d.scheduledAt)}</span> {d.medicationName}{" "}
-                    {d.strength}
-                  </span>
-                  <span className={`text-right text-sm ${s.tone}`}>{s.text}</span>
-                </li>
+                <DoseRow
+                  key={d.id}
+                  name={doseName(d)}
+                  time={formatTime(d.scheduledAt)}
+                  status={s.status}
+                  statusText={s.text}
+                />
               );
             })}
-          </ul>
+          </DoseList>
         )}
       </section>
 
-      <section>
-        <h2 className="text-lg font-semibold">Remédios</h2>
+      <section className="flex flex-col gap-2">
+        <h2 className="text-[19px] font-bold">Remédios do mês</h2>
         {data.medications.length === 0 ? (
-          <p className="mt-2 text-zinc-600">Nenhum remédio cadastrado ainda.</p>
+          <Card>
+            <p className="text-muted">Nenhum remédio cadastrado ainda.</p>
+          </Card>
         ) : (
-          <ul className="mt-3 flex flex-col gap-2">
+          <ul className="flex flex-col rounded-card bg-surface px-4 py-1">
             {data.medications.map((m) => (
-              <li key={m.id} className="rounded-lg border border-zinc-200 p-3">
-                <p className="font-medium">
-                  {m.name} {m.strength}
-                </p>
-                <p className="text-sm text-zinc-600">
-                  {m.times.length > 0 ? `Horários: ${m.times.join(", ")}` : "Sem horário definido"}
-                  {m.freeInFarmaciaPopular ? " · Grátis no Farmácia Popular" : ""}
-                </p>
+              <li
+                key={m.id}
+                className="flex items-center justify-between gap-3 border-b border-line-soft py-3.5 last:border-b-0"
+              >
+                <div className="flex min-w-0 flex-col">
+                  <span className="font-semibold">{[m.name, m.strength?.replace(/ /g, "\u00a0")].filter(Boolean).join(" ")}</span>
+                  <span className="text-[15px] text-muted">
+                    {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
+                  </span>
+                </div>
+                {m.freeInFarmaciaPopular ? (
+                  <StatusPill tone="ok">Grátis</StatusPill>
+                ) : (
+                  <span className="whitespace-nowrap font-bold">{brl.format(m.monthlyCostCents / 100)}</span>
+                )}
               </li>
             ))}
           </ul>
         )}
+        {data.medications.some((m) => m.freeInFarmaciaPopular) ? (
+          <p className="text-[15px] leading-snug text-muted">
+            Grátis: retire no Farmácia Popular com a receita e o documento da {patientName}.
+          </p>
+        ) : null}
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold">Alertas no celular</h2>
-        <p className="text-sm text-zinc-600">
-          Se a {data.patient.name} não confirmar um remédio, avisamos você por notificação.
+      {monthlyCents > 0 && data.caregivers.length > 0 ? (
+        <Card className="flex flex-col gap-3">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-[19px] font-bold">Conta da família</h2>
+            <span className="text-[19px] font-bold">{brl.format(monthlyCents / 100)}</span>
+          </div>
+          <ul className="flex flex-col gap-2">
+            {data.caregivers.map((c) => (
+              <li key={c.id} className="flex items-center justify-between">
+                <span>{c.name.split(" ")[0]}</span>
+                <span className="font-semibold">{brl.format(shareCents / 100)}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : null}
+
+      <Card className="flex flex-col gap-3">
+        <h2 className="text-[19px] font-bold">Alertas no celular</h2>
+        <p className="text-[15px] leading-snug text-muted">
+          Se a {patientName} não confirmar um remédio, avisamos você por notificação.
         </p>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {data.caregivers.map((c) => (
             <button
               key={c.id}
               type="button"
+              aria-pressed={c.id === me}
               onClick={() => writeMe(c.id)}
-              className={`rounded-full border px-4 py-2 text-sm ${
-                c.id === me ? "border-teal-700 bg-teal-50 text-teal-800" : "border-zinc-300"
-              }`}
+              className={cn(
+                buttonClass({ variant: c.id === me ? "primary" : "secondary" }),
+                "w-auto min-h-11 rounded-full px-4 text-[15px]",
+              )}
             >
-              Sou {c.name}
+              Sou {c.name.split(" ")[0]}
             </button>
           ))}
         </div>
         {caregiver ? (
-          <EnableNotifications key={caregiver.id} memberId={caregiver.id} label={`Ativar alertas para ${caregiver.name}`} />
+          <EnableNotifications
+            key={caregiver.id}
+            memberId={caregiver.id}
+            label={`Ativar alertas para ${caregiver.name.split(" ")[0]}`}
+          />
         ) : null}
-      </section>
-    </div>
+      </Card>
+    </>
   );
 }
