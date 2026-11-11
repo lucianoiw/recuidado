@@ -354,3 +354,41 @@ export async function deleteFamilyData(caregiverId: string): Promise<void> {
   const res = await fetch(`${API_URL}/privacy/family?caregiverId=${caregiverId}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para apagar os dados."));
 }
+
+export type TriState = "yes" | "no" | "unknown";
+
+/** A voice call to a pharmacy asking stock, price and Farmácia Popular. */
+export interface PharmacyInquiry {
+  id: string;
+  pharmacyName: string;
+  status: "calling" | "answered" | "unclear" | "no_answer" | "failed";
+  medications: { medicationId: string; name: string; strength: string | null }[];
+  answers: {
+    medication: string;
+    available: TriState;
+    /** Price of one box said on the phone. Reference, not an offer. */
+    priceCents: number | null;
+    package?: string;
+    farmaciaPopular: TriState;
+  }[];
+  note: string | null;
+  /** The call went through a recorded menu (keys pressed). */
+  usedPhoneMenu: boolean;
+  transcript: { speaker: "assistant" | "patient"; text: string }[];
+  durationSeconds: number | null;
+  createdAt: string;
+  finishedAt: string | null;
+}
+
+/** "Perguntar à farmácia": the voice agent calls the pharmacy about these medicines. */
+export async function askPharmacy(medicationIds: string[]): Promise<PharmacyInquiry> {
+  const res = await send("POST", withFamily("/pharmacy-inquiries"), { medicationIds }, "Não deu para ligar agora.");
+  return res.json();
+}
+
+/** The family's most recent pharmacy call, or null. */
+export async function getLatestPharmacyInquiry(): Promise<PharmacyInquiry | null> {
+  const res = await fetch(`${API_URL}${withFamily("/pharmacy-inquiries/latest")}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return ((await res.json()) as { inquiry: PharmacyInquiry | null }).inquiry;
+}

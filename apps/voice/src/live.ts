@@ -7,6 +7,13 @@ import {
   doseTool,
   type ReminderContext,
 } from "./prompt.js";
+import {
+  buildPharmacyDelegateInstructions,
+  buildPharmacyLiveInstructions,
+  keypadTool,
+  pharmacyTool,
+  type PharmacyContext,
+} from "./pharmacy-prompt.js";
 
 const API_BASE = "https://api.openai.com/v1";
 
@@ -32,7 +39,6 @@ export class LiveClient {
   }
 
   buildSessionRequest(destination: string, ctx: ReminderContext) {
-    const { sip } = this.config;
     return {
       session: {
         model: this.config.liveModel,
@@ -56,27 +62,63 @@ export class LiveClient {
           },
         },
       },
-      transport: {
-        type: "sip",
-        destination,
-        trunk: {
-          provider_url: sip.providerUrl,
-          auth: { type: "digest", username: sip.username, password: sip.password },
-          caller_number: sip.callerNumber,
-        },
+      transport: this.sipTransport(destination),
+    };
+  }
+
+  private sipTransport(destination: string) {
+    const { sip } = this.config;
+    return {
+      type: "sip",
+      destination,
+      trunk: {
+        provider_url: sip.providerUrl,
+        auth: { type: "digest", username: sip.username, password: sip.password },
+        caller_number: sip.callerNumber,
       },
     };
+  }
+
+  /** A call to a pharmacy: no greeting input, the other side speaks first. Two tools: keypad and answer. */
+  buildPharmacySessionRequest(destination: string, ctx: PharmacyContext) {
+    return {
+      session: {
+        model: this.config.liveModel,
+        instructions: buildPharmacyLiveInstructions(ctx),
+        audio: { output: { voice: this.config.liveVoice } },
+        delegation: {
+          type: "responses",
+          responses: {
+            model: this.config.delegateModel,
+            instructions: buildPharmacyDelegateInstructions(ctx),
+            tools: [keypadTool, pharmacyTool],
+            tool_choice: "required",
+            parallel_tool_calls: false,
+          },
+        },
+      },
+      transport: this.sipTransport(destination),
+    };
+  }
+
+  /** Places a call to a pharmacy. Not idempotent, like createSipCall. */
+  createPharmacySipCall(destination: string, ctx: PharmacyContext): Promise<string> {
+    return this.createSession(this.buildPharmacySessionRequest(destination, ctx));
   }
 
   /**
    * Places the outbound call. Not idempotent: every successful request dials again,
    * so callers must not retry blindly on timeouts.
    */
-  async createSipCall(destination: string, ctx: ReminderContext): Promise<string> {
+  createSipCall(destination: string, ctx: ReminderContext): Promise<string> {
+    return this.createSession(this.buildSessionRequest(destination, ctx));
+  }
+
+  private async createSession(request: unknown): Promise<string> {
     const res = await fetch(`${API_BASE}/live/sessions`, {
       method: "POST",
       headers: this.headers(),
-      body: JSON.stringify(this.buildSessionRequest(destination, ctx)),
+      body: JSON.stringify(request),
     });
     const body = await res.text();
     if (!res.ok) throw new LiveApiError(`Create session failed with ${res.status}`, res.status, body);

@@ -6,6 +6,7 @@ import { PageTitle } from "@/components/page-title";
 import { isFree } from "@/lib/api";
 import { formatDistance, mapsUrl, pharmacies } from "@/lib/pharmacies";
 import { useBuyChoice } from "@/lib/buy-choice";
+import { PharmacyCallCard } from "./pharmacy-call-card";
 import { useMe } from "@/lib/me";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
@@ -95,6 +96,8 @@ export function BuyView() {
               </StatusPill>
             </section>
           ) : null}
+
+          <PharmacyCallCard medications={paid} />
 
           <section className="flex flex-col gap-2">
             <h2 className="text-[18px] font-extrabold">Farmácias perto dela</h2>

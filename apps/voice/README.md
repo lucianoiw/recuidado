@@ -86,3 +86,24 @@ node apps/voice/dist/cli.js 11912345678 Maria "Losartana 50 mg"
 2. Set the variables listed in the root `.env.example` (voice section).
 3. Open `5061/tcp` and `10000-10200/udp` on the VPS firewall.
 4. Nvoip needs balance and a caller ID (virtual number) on the SIP user before any call completes.
+
+## Pharmacy call ("Perguntar à farmácia")
+
+`POST /pharmacy-calls` (same token)
+`{ "inquiryId": "…", "phone": "11912345678", "medications": [{ "name": "Losartana", "dose": "50 mg" }] }`
+→ `202 { "callId": "live_…" }`. At most 3 medicines. The number must be listed one by one in
+`CALL_ALLOWED_NUMBERS`: `*` does not cover pharmacies, because a pharmacy is a third party. The API
+only ever sends `PHARMACY_CALL_PHONE`, a phone the team controls.
+
+Script (`pharmacy-prompt.ts`): the assistant waits for the other side to speak. If nobody speaks in 4 s
+it opens. First line: "Oi, bom dia! Aqui é a assistente virtual da Recuidado, ligando em nome de uma
+família. Vocês têm Losartana 50 mg?". For each medicine it asks stock, price of one box and Farmácia
+Popular, then records with `record_pharmacy_answer` and says "Muito obrigada, tchau!". It never buys,
+reserves or gives personal data.
+
+Recorded menus (URA): the delegated model calls `press_phone_keys` and the service sends one
+`transport.dtmf.send` per key over the sideband (300 ms apart). Only 0-9, `*` and `#`, up to 8 keys.
+Asterisk passes the tones to Nvoip as RFC 4733 (`dtmf_mode=rfc4733` on both legs).
+
+Result posted to `{API_URL}/pharmacy-inquiries/:inquiryId/voice-result`:
+`{ sessionId, outcome: "answered | unclear | no_answer | failed", items: [{ medication, available, priceCents, package, farmaciaPopular }], note, keysPressed, transcript, durationSeconds, endReason }`.
