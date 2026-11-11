@@ -5,7 +5,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Recuidado",
-  description: "Cuida do remédio do idoso junto com a família.",
+  description: "O remédio de quem você ama, cuidado pela família toda.",
+  appleWebApp: { capable: true, title: "Recuidado", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

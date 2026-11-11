@@ -60,7 +60,7 @@ export function PatientView() {
   }
   if (!data) return <p className="text-[24px] text-muted">Carregando...</p>;
 
-  const firstName = data.patient.name.split(" ")[0];
+  const patientName = data.patient.name;
   // The dose to confirm: the earliest one not taken whose time has come.
   const due = data.today.find(
     (d) => d.status !== "taken" && new Date(d.scheduledAt).getTime() <= now,
@@ -89,9 +89,9 @@ export function PatientView() {
           <span className="flex size-36 items-center justify-center rounded-full bg-brand text-white">
             <CheckIcon size={84} aria-hidden={false} role="img" aria-label="Confirmado" />
           </span>
-          <h1 className="text-[40px] font-bold leading-tight">Pronto, {firstName}!</h1>
+          <h1 className="text-[40px] font-bold leading-tight">Pronto, {patientName}!</h1>
           <p className="text-[26px] leading-snug">
-            Anotei o remédio das {formatTime(justTaken.scheduledAt)}.
+            Anotei {doseName(justTaken)} das {formatTime(justTaken.scheduledAt)}.
             {names.length > 0 ? (
               <>
                 <br />
@@ -116,7 +116,7 @@ export function PatientView() {
 
   return (
     <>
-      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={`${greeting()}, ${firstName}`} />
+      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={`${greeting()}, ${patientName}`} />
 
       {due ? (
         <Card className="flex flex-col gap-5 border-2 border-line px-4 py-6" aria-live="polite">

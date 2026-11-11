@@ -1,0 +1,110 @@
+{
+ "source": "CNES e Painel do Farmácia Popular, Ministério da Saúde (packages/data/seed/pharmacies.json)",
+ "center": {
+  "name": "Bela Vista",
+  "lat": -23.5636,
+  "lng": -46.6534
+ },
+ "pharmacies": [
+  {
+   "cnes": "4754328",
+   "name": "Drogasil 175 Sp Paulista 1",
+   "address": "Av Paulista, 989",
+   "district": "Bela Vista",
+   "distanceKm": 0.24,
+   "lat": -23.565479,
+   "lng": -46.652193,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "4755170",
+   "name": "Raia 734 Sp Paulista E",
+   "address": "Avenida Paulista, 2073",
+   "district": "Bela Vista",
+   "distanceKm": 0.28,
+   "lat": -23.5643483,
+   "lng": -46.6560053,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "4345495",
+   "name": "Raia 0006 Sp Paulista A",
+   "address": "Avenida Paulista, 807",
+   "district": "Bela Vista",
+   "distanceKm": 0.31,
+   "lat": -23.5664173,
+   "lng": -46.6533878,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "4282086",
+   "name": "Drogasil Ds0025 Brigadeiro",
+   "address": "Avenida Brigadeiro Luis Antonio, 2064",
+   "district": "Bela Vista",
+   "distanceKm": 0.36,
+   "lat": -23.5659726,
+   "lng": -46.6509327,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "4756177",
+   "name": "Drogasil 591 Sp Bela Vista 4",
+   "address": "Rua Cincinato Braga, 306",
+   "district": "Bela Vista",
+   "distanceKm": 0.72,
+   "lat": -23.5681165,
+   "lng": -46.6483684,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "4745914",
+   "name": "Drogasil 178 Sp Paulista 2",
+   "address": "Avenida Paulista, 2064",
+   "district": "Bela Vista",
+   "distanceKm": 0.86,
+   "lat": -23.557899,
+   "lng": -46.659135,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "9677844",
+   "name": "Farmacias Pague Menos 203",
+   "address": "Alameda Itu, 1048",
+   "district": "Jardins",
+   "distanceKm": 0.97,
+   "lat": -23.5611003,
+   "lng": -46.6624785,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "4359275",
+   "name": "Raia 412 Sp Jd Paulista B",
+   "address": "Alameda Lorena, 264",
+   "district": "Jardim Paulista",
+   "distanceKm": 1.01,
+   "lat": -23.5696646,
+   "lng": -46.6607974,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "9601406",
+   "name": "Drogaria Sao Paulo Dsp271 Pamplona Ii",
+   "address": "Rua Pamplona, 1613",
+   "district": "Jardim Paul Ista",
+   "distanceKm": 1.02,
+   "lat": -23.570506159887007,
+   "lng": -46.66003533361991,
+   "fpAccredited": true
+  },
+  {
+   "cnes": "0819239",
+   "name": "Raia 0078 Sp Cerq Cesar B",
+   "address": "Rua Padre Joao Manoel, 241",
+   "district": "Cerqueira Cesar",
+   "distanceKm": 1.06,
+   "lat": -23.5607984,
+   "lng": -46.6633691,
+   "fpAccredited": true
+  }
+ ]
+}

@@ -42,5 +42,5 @@ export function DoseRow({
 }
 
 export function DoseList({ children }: { children: ReactNode }) {
-  return <ul className="flex flex-col rounded-card bg-surface px-4 py-1">{children}</ul>;
+  return <ul className="flex flex-col rounded-card border border-line-soft bg-surface px-4 py-1">{children}</ul>;
 }

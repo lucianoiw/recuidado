@@ -1,8 +1,12 @@
 export { BottomNav, type NavItem } from "./bottom-nav";
 export { Button, buttonClass, type ButtonSize, type ButtonVariant } from "./button";
 export { Card } from "./card";
+export { ChipGroup, Segmented } from "./chips";
 export { cn } from "./cn";
 export { DoseList, DoseRow, type DoseStatus } from "./dose-row";
+export { Field, SelectField, inputClass } from "./field";
 export * from "./icons";
+export { Logo } from "./logo";
 export { Screen, ScreenHeader } from "./screen";
 export { StatusPill, type StatusTone } from "./status-pill";
+export { TopBar } from "./top-bar";

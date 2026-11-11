@@ -47,3 +47,24 @@ body {
   outline: 4px solid var(--color-ink);
   outline-offset: 3px;
 }
+
+/* Splash on the welcome page: shows the mark, then fades out. */
+@keyframes splash-out {
+  0%,
+  70% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.splash {
+  animation: splash-out 1.6s ease-in forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash {
+    animation-duration: 0.01s;
+  }
+}
