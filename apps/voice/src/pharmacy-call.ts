@@ -46,6 +46,8 @@ export interface PharmacyCallOptions {
   openingWaitMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
+  /** Pause before introducing when the second model already hears a person. */
+  introduceConfidentMs?: number;
   /** Silence after a menu before the service picks the key. */
   menuPauseMs?: number;
   /** Pause between two DTMF keys. */
@@ -97,6 +99,13 @@ export function sideByRule(utterance: string, sinceKey: string): OtherSide | nul
   if (HOLD.test(utterance)) return "hold";
   if (WAIT.test(utterance)) return "person_wait";
   return null;
+}
+
+/** Every key a menu offered, in the order heard. */
+export function menuKeys(menu: string): string[] {
+  return [...menu.matchAll(OPTION)]
+    .map((m) => (/^\d$/.test(m[2]) ? m[2] : (DIGIT_WORDS[m[2].toLowerCase()] ?? null)))
+    .filter((k): k is string => k !== null);
 }
 
 /** The key for the best option of a recorded menu, or null when none fits. */
@@ -177,6 +186,7 @@ export class PharmacyCall {
   private readonly gate: VoiceGate;
   /** What the other side is doing now, by the word rules or the second model. */
   private side?: OtherSide;
+  private sideSource?: Classification["source"];
   private readonly classifications: Classification[] = [];
   private answeredAt = 0;
   /** The other side's current utterance, for the word rules (a pause starts a new one). */
@@ -284,8 +294,7 @@ export class PharmacyCall {
           // A person (not a menu) is talking: the assistant must say who it is before anything else.
           // Wait until they pause, so the start of a recorded menu is not taken for a person.
           if (this.introTimer) clearTimeout(this.introTimer);
-          this.introTimer = setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 2500);
-          this.timers.push(this.introTimer);
+          this.armIntroduction();
         }
         this.checkVoicemail();
         if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(1000);
@@ -320,15 +329,34 @@ export class PharmacyCall {
 
   private chooseFromMenu() {
     if (!this.menuPending || this.answer || this.hangupRequested || this.finished) return;
-    const key = menuChoice(this.otherSideSinceKey()) ?? this.suggestedKey ?? null;
+    const heard = this.otherSideSinceKey();
+    if (this.side === "person" && this.sideSource === "decisions") {
+      // The second model hears a person now (often the attendant right after the tail of the menu): no key.
+      this.log("menu words, but a person is talking: no key");
+      this.menuPending = false;
+      this.introduceIfNeeded(true);
+      return;
+    }
+    const byRule = menuChoice(heard);
+    // The second model's key only when the menu actually offered it and it still hears a menu.
+    const bySecond =
+      this.side === "menu" && this.suggestedKey && menuKeys(heard).includes(this.suggestedKey) ? this.suggestedKey : null;
+    const key = byRule ?? bySecond;
     if (!key) {
+      if (this.side === "menu" && this.sideSource === "decisions" && Date.now() - this.lastInputAt < 3000) {
+        // Still a menu, and its options are not all out yet: wait for more.
+        this.log("menu without a usable option yet, waiting");
+        this.menuTimer = setTimeout(() => this.chooseFromMenu(), this.opts.menuPauseMs ?? 1500);
+        this.timers.push(this.menuTimer);
+        return;
+      }
       // A word like "tecle" with no options is not a menu (often the tail of the last one): treat it as a person.
       this.log("no menu option fits, leaving it to the model");
       this.menuPending = false;
       this.introduceIfNeeded(true);
       return;
     }
-    this.log(`menu option chosen ${menuChoice(this.otherSideSinceKey()) ? "by rule" : "by the second model"}: ${key}`);
+    this.log(`menu option chosen ${byRule ? "by rule" : "by the second model"}: ${key}`);
     this.sendKeys(`menu_${this.keysPressed.length}`, [key]);
   }
 
@@ -525,6 +553,18 @@ export class PharmacyCall {
     else this.transcript.push({ speaker, text: delta });
   }
 
+  /**
+   * Introduce once the person pauses. Shorter when the second model already hears a person: a person
+   * who said "Farmácia X, boa tarde" waits for an answer, and silence makes them hang up or say it again.
+   */
+  private armIntroduction() {
+    if (this.introTimer) clearTimeout(this.introTimer);
+    const confident = this.side === "person" && this.sideSource === "decisions";
+    const ms = confident ? (this.opts.introduceConfidentMs ?? 1200) : (this.opts.introduceAfterMs ?? 2500);
+    this.introTimer = setTimeout(() => this.introduceIfNeeded(), ms);
+    this.timers.push(this.introTimer);
+  }
+
   private startUtterance() {
     this.utterance = "";
     this.utteranceStartOrder = this.inputOrder;
@@ -574,6 +614,7 @@ export class PharmacyCall {
       this.classifications.push({ side, source, latencyMs, atMs: this.answeredAt ? Date.now() - this.answeredAt : 0 });
     }
     this.side = side;
+    this.sideSource = source;
     if (!changed) return;
     switch (side) {
       case "menu":
@@ -604,6 +645,7 @@ export class PharmacyCall {
         // Before the introduction the AI stays muted: the introduction unmutes it once the person pauses.
         // A menu often opens like a person ("Bem-vindo à Farmácia X"), so one early verdict is not enough.
         if (this.introduced) void this.gate.unmute();
+        else if (!this.menuPending) this.armIntroduction();
         break;
       case "closed":
         this.closed = true;
