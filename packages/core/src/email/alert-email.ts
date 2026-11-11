@@ -1,5 +1,5 @@
 // The e-mail a caregiver gets for a family alert. Table layout with inline styles, which every mail client
-// reads (Gmail drops <style> blocks and web fonts). Same colors as the app (apps/web globals.css).
+// reads (Gmail drops <style> blocks and web fonts). Same colors as the app (apps/app globals.css).
 
 export type AlertEmailKind = 'dose_missed' | 'unwell' | 'low_stock' | 'emergency' | 'emergency_call' | 'check_in';
 

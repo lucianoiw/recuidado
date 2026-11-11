@@ -57,7 +57,7 @@ export function authorizePage({ client, hidden = {}, error, fatal }: AuthorizePa
 <details class="card"${error ? " open" : ""}><summary class="small">Cadastrou a sua própria família? Conecte pelo link do convite</summary>
 <form method="post" action="/authorize">${fields}
   <label for="invite" style="margin-top:12px">Link do convite da família</label>
-  <input id="invite" name="invite" placeholder="https://recuidado.com.br/...?f=..." autocomplete="off">
+  <input id="invite" name="invite" placeholder="https://app.recuidado.com.br/...?f=..." autocomplete="off">
   <button class="secondary" name="action" value="family">Conectar esta família</button>
 </form></details>`,
   );

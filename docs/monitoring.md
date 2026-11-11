@@ -54,4 +54,4 @@ Sem o token, nada é enviado e os logs continuam só no stdout.
 
 - `packages/telemetry`: cliente comum de api e voice (eventos, exceções, `$ai_generation` e exportador de logs OTLP).
 - `apps/api/src/telemetry`: logger do Nest, log de acesso e filtro de exceções.
-- `apps/web/src/instrumentation-client.ts` e `apps/web/src/lib/analytics.ts`.
+- `apps/app/src/instrumentation-client.ts` e `apps/app/src/lib/analytics.ts`.
