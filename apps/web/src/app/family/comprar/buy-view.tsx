@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { CartIcon, ChevronLeftIcon, InfoIcon, StatusPill } from "@/components/ui";
+import { CartIcon, ChevronLeftIcon, InfoIcon, NavigationIcon, StatusPill } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { isFree } from "@/lib/api";
+import { formatDistance, mapsUrl, pharmacies } from "@/lib/pharmacies";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { useMe } from "@/lib/me";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
@@ -34,7 +35,7 @@ export function BuyView() {
         <ChevronLeftIcon size={22} />
         <span className="sr-only">Voltar</span>
       </Link>
-      <PageTitle title="Comprar à parte" subtitle="O que a família vai comprar todo mês" />
+      <PageTitle title="Onde comprar e dividir" subtitle="O que não sai grátis e a família compra todo mês" />
 
       {paid.length === 0 ? (
         <section className="flex flex-col items-center gap-2 rounded-card border border-line-soft bg-surface p-6 text-center">
@@ -94,6 +95,32 @@ export function BuyView() {
               </StatusPill>
             </section>
           ) : null}
+
+          <section className="flex flex-col gap-2">
+            <h2 className="text-[18px] font-extrabold">Farmácias perto dela</h2>
+            <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+              {pharmacies.slice(0, 3).map((p) => (
+                <li key={p.cnes} className="flex flex-col gap-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">
+                  <div className="flex items-start justify-between gap-3">
+                    <b className="leading-snug">{p.name}</b>
+                    <span className="whitespace-nowrap text-[15px] font-bold text-muted">
+                      {formatDistance(p.distanceKm)}
+                    </span>
+                  </div>
+                  <span className="text-[15px] leading-snug text-muted">{p.address}</span>
+                  <a
+                    href={mapsUrl(p)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl border-[1.5px] border-ink px-3.5 text-[15px] font-bold text-ink no-underline"
+                  >
+                    <NavigationIcon size={18} />
+                    Como chegar
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
 
           <p className="flex items-start gap-2 text-[15px] leading-snug text-muted">
             <InfoIcon size={18} className="mt-0.5 shrink-0" />

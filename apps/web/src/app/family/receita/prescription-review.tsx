@@ -179,7 +179,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
             href="/family/comprar"
             className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
           >
-            Ver preços e dividir
+            Onde comprar e dividir
             <ChevronRightIcon size={20} />
           </Link>
         </section>

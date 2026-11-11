@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import { Button, Card, CheckIcon, ClockIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
 import { captureError, identifyMember, track } from "@/lib/analytics";
+import { PatientWelcome, usePatientReady } from "./patient-welcome";
 import { callName, confirmDose, formatTime, getFamily, telHref, type Dose, type FamilyOverview } from "@/lib/api";
 
 function todayLabel(): string {
@@ -49,6 +50,7 @@ export function PatientView() {
   const [now, setNow] = useState(0);
   const [busy, setBusy] = useState(false);
   const [justTaken, setJustTaken] = useState<Dose[] | null>(null);
+  const ready = usePatientReady();
 
   const load = useCallback(() => {
     getFamily().then(
@@ -74,7 +76,8 @@ export function PatientView() {
   if (error) {
     return <p className="text-[24px] text-muted">Sem conexão. Tente de novo em instantes.</p>;
   }
-  if (!data) return <p className="text-[24px] text-muted">Carregando...</p>;
+  if (!data || ready === null) return <p className="text-[24px] text-muted">Carregando...</p>;
+  if (!ready) return <PatientWelcome data={data} />;
 
   const patientName = callName(data.patient);
   // Doses at the same time are taken together: the earliest time whose doses are not taken yet.

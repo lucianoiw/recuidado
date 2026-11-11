@@ -146,7 +146,7 @@ export function MedsView() {
           icon={<CartIcon size={22} className="text-warn" />}
           title="Para comprar"
           meds={paid}
-          link={{ href: "/family/comprar", label: "Ver preços e dividir" }}
+          link={{ href: "/family/comprar", label: "Onde comprar e dividir" }}
           onEdit={setEditing}
         />
       ) : null}
@@ -160,7 +160,7 @@ export function MedsView() {
 
       {data.medications.length > 0 ? (
         <p className="text-[15px] leading-snug text-muted">
-          Toque no nome de um remédio para mudar a dose, o horário ou parar. Prefere comprar um que pode sair grátis? Toque em Comprar.
+          Toque no nome de um remédio para mudar a dose, o horário ou parar. Remédio que não sai grátis fica em Para comprar: toque em Onde comprar e dividir.
         </p>
       ) : null}
 
