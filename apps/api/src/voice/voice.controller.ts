@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { z } from 'zod';
 import { VoiceTokenGuard } from './voice-token.guard.js';
 import { VoiceCallService, type VoiceResult } from './voice.service.js';
@@ -40,6 +41,8 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   return parsed.data;
 }
 
+// Only apps/voice calls these, with the shared token.
+@SkipThrottle()
 @Controller()
 @UseGuards(VoiceTokenGuard)
 export class VoiceController {

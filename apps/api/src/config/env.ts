@@ -38,6 +38,8 @@ export const envSchema = z.object({
   PRESCRIPTION_LIMIT_PER_IP: z.coerce.number().int().nonnegative().default(10),
   PRESCRIPTION_LIMIT_PER_FAMILY: z.coerce.number().int().nonnegative().default(10),
   PRESCRIPTION_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(100),
+  // Requests per minute from one IP, for every route (health check excluded). 0 turns it off.
+  RATE_LIMIT_PER_MINUTE: z.coerce.number().int().nonnegative().default(300),
   // Reverse proxies in front of the API (Traefik in Coolify), so the client IP comes from X-Forwarded-For.
   TRUST_PROXY_HOPS: z.coerce.number().int().nonnegative().default(1),
   // Web Push (VAPID). Without the keys, pushes are skipped and only logged.
