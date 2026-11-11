@@ -181,8 +181,6 @@ export function MonthSummary() {
         Levar o resumo para a consulta
       </button>
       <p className="-mt-2 text-center text-[13px] text-muted">Um PDF com as doses do mês. O app não avalia a saúde dela.</p>
-
-      <h2 className="mt-2 text-[20px] font-extrabold">Avisos</h2>
     </>
   );
 }
