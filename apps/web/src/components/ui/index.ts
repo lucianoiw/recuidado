@@ -8,5 +8,6 @@ export { Field, SelectField, inputClass } from "./field";
 export * from "./icons";
 export { Logo } from "./logo";
 export { Screen, ScreenHeader } from "./screen";
+export { Sheet } from "./sheet";
 export { StatusPill, type StatusTone } from "./status-pill";
 export { TopBar } from "./top-bar";

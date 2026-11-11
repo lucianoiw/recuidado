@@ -23,7 +23,8 @@ function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
     return { status: "taken", text: `Tomou${via}${at}` };
   }
   if (d.status === "missed") return { status: "missed", text: "Não tomou" };
-  if (new Date(d.scheduledAt).getTime() <= now) return { status: "pending", text: "Esperando" };
+  if (new Date(d.scheduledAt).getTime() <= now)
+    return { status: "pending", text: "Esperando" };
   return { status: "upcoming", text: "Mais tarde" };
 }
 
@@ -44,7 +45,15 @@ export function FamilyView() {
   if (!data) return <p className="text-muted">Carregando...</p>;
 
   const name = data.patient.name;
-  const missed = data.today.filter((d) => d.status === "missed");
+  // One alert per time: doses at the same time are taken together.
+  const missedByTime = new Map<string, Dose[]>();
+  for (const d of data.today.filter((x) => x.status === "missed")) {
+    missedByTime.set(d.scheduledAt, [
+      ...(missedByTime.get(d.scheduledAt) ?? []),
+      d,
+    ]);
+  }
+  const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
   const free = data.medications.filter((m) => m.freeInFarmaciaPopular).length;
 
@@ -70,31 +79,45 @@ export function FamilyView() {
         </Link>
       </header>
 
-      {missed.map((d) => (
-        <section
-          key={d.id}
-          role="alert"
-          className="flex flex-col gap-3 rounded-card border-[1.5px] border-danger bg-danger-soft p-4"
-        >
-          <div className="flex items-start gap-2.5">
-            <AlertIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-danger" />
-            <div className="flex flex-col gap-0.5">
-              <b className="text-danger">
-                Não confirmou {medLabel(d.medicationName, d.strength)} das {formatTime(d.scheduledAt)}
-              </b>
-              <span className="text-[15px] leading-snug">
-                {d.familyAlertedAt
-                  ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}. Vale ligar para ela.`
-                  : "Vale ligar para ela."}
-              </span>
+      {missed.map((group) => {
+        const d = group[0];
+        const names = group.map((x) => medLabel(x.medicationName, x.strength));
+        return (
+          <section
+            key={d.scheduledAt}
+            role="alert"
+            className="flex flex-col gap-3 rounded-card border-[1.5px] border-danger bg-danger-soft p-4"
+          >
+            <div className="flex items-start gap-2.5">
+              <AlertIcon
+                size={22}
+                strokeWidth={2.4}
+                className="mt-0.5 shrink-0 text-danger"
+              />
+              <div className="flex flex-col gap-0.5">
+                <b className="text-danger">
+                  Não confirmou {names.length > 1 ? "os remédios" : names[0]}{" "}
+                  das {formatTime(d.scheduledAt)}
+                </b>
+                {names.length > 1 ? (
+                  <span className="text-[15px] font-semibold">
+                    {names.join(", ")}
+                  </span>
+                ) : null}
+                <span className="text-[15px] leading-snug">
+                  {d.familyAlertedAt
+                    ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}. Vale ligar para ela.`
+                    : "Vale ligar para ela."}
+                </span>
+              </div>
             </div>
-          </div>
-          <a href="tel:" className={buttonClass({ variant: "danger" })}>
-            <PhoneIcon size={20} />
-            Ligar para ela
-          </a>
-        </section>
-      ))}
+            <a href="tel:" className={buttonClass({ variant: "danger" })}>
+              <PhoneIcon size={20} />
+              Ligar para ela
+            </a>
+          </section>
+        );
+      })}
 
       <section className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between">
@@ -107,7 +130,9 @@ export function FamilyView() {
         </div>
         {data.today.length === 0 ? (
           <Card className="flex flex-col gap-3">
-            <p className="text-muted">Nenhuma dose hoje. Comece pela foto da receita.</p>
+            <p className="text-muted">
+              Nenhuma dose hoje. Comece pela foto da receita.
+            </p>
             <Link href="/family/receita" className={buttonClass()}>
               <CameraIcon size={22} />
               Foto da receita
@@ -134,7 +159,9 @@ export function FamilyView() {
       {data.medications.length > 0 ? (
         <section className="grid grid-cols-2 gap-3">
           <Card className="flex flex-col gap-0.5">
-            <span className="text-[14px] text-muted">Grátis no Farmácia Popular</span>
+            <span className="text-[14px] text-muted">
+              Grátis no Farmácia Popular
+            </span>
             <span className="text-[26px] font-extrabold text-brand">
               {free} de {data.medications.length}
             </span>
@@ -159,7 +186,9 @@ export function FamilyView() {
         </span>
         <span className="flex flex-1 flex-col">
           <b>Receita nova</b>
-          <span className="text-[15px] text-muted">Tire a foto e a IA atualiza os horários</span>
+          <span className="text-[15px] text-muted">
+            Tire a foto e a IA atualiza os horários
+          </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />
       </Link>

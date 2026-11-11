@@ -68,3 +68,19 @@ body {
     animation-duration: 0.01s;
   }
 }
+
+/* Bottom sheet slide-in. */
+dialog.sheet[open] {
+  animation: sheet-in 0.22s ease-out;
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.sheet[open] {
+    animation: none;
+  }
+}

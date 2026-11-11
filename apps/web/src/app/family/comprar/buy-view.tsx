@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CartIcon, ChevronLeftIcon, InfoIcon, StatusPill } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
+import { useBuyChoice } from "@/lib/buy-choice";
 import { useMe } from "@/lib/me";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
@@ -13,11 +14,12 @@ function initial(name: string) {
 export function BuyView() {
   const { data, error } = useFamily();
   const [me] = useMe();
+  const { getsFree } = useBuyChoice();
 
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
 
-  const paid = data.medications.filter((m) => !m.freeInFarmaciaPopular);
+  const paid = data.medications.filter((m) => !getsFree(m));
   const totalCents = paid.reduce((sum, m) => sum + m.monthlyCostCents, 0);
   const people = data.caregivers.length;
   const shareCents = people > 0 ? Math.ceil(totalCents / people) : 0;
@@ -31,7 +33,7 @@ export function BuyView() {
         <ChevronLeftIcon size={22} />
         <span className="sr-only">Voltar</span>
       </Link>
-      <PageTitle title="Comprar à parte" subtitle="O que não sai grátis no Farmácia Popular" />
+      <PageTitle title="Comprar à parte" subtitle="O que a família vai comprar todo mês" />
 
       {paid.length === 0 ? (
         <section className="flex flex-col items-center gap-2 rounded-card border border-line-soft bg-surface p-6 text-center">
@@ -53,6 +55,7 @@ export function BuyView() {
                   <span className="font-bold">{medLabel(m.name, m.strength)}</span>
                   <span className="text-[15px] text-muted">
                     {m.times.length} {m.times.length === 1 ? "vez" : "vezes"} ao dia
+                    {m.freeInFarmaciaPopular ? ". Sai grátis, mas vocês escolheram comprar" : ""}
                   </span>
                 </div>
                 <span className="whitespace-nowrap font-bold">

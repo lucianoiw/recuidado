@@ -12,7 +12,6 @@ import {
   GiftIcon,
   PencilIcon,
   PlusIcon,
-  StatusPill,
   TopBar,
   XIcon,
   buttonClass,
@@ -26,6 +25,8 @@ import {
   type FamilyOverview,
   type ReadItem,
 } from "@/lib/api";
+import { FreeOrBuy } from "@/components/free-or-buy";
+import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel } from "@/lib/use-family";
 
 interface Draft {
@@ -177,9 +178,10 @@ function TimeChips({
 }
 
 function Result({ family, count }: { family: FamilyOverview | null; count: number }) {
+  const { getsFree, setBuy } = useBuyChoice();
   const meds = family?.medications ?? [];
   const free = meds.filter((m) => m.freeInFarmaciaPopular);
-  const paid = meds.filter((m) => !m.freeInFarmaciaPopular);
+  const paid = meds.filter((m) => !getsFree(m));
   return (
     <>
       <div className="flex flex-col items-center gap-3 pt-4 text-center">
@@ -209,13 +211,13 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
         <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
           <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-extrabold">
             <GiftIcon size={20} className="text-brand" />
-            Grátis
+            Grátis, se quiser pegar
           </h2>
           <ul className="px-4 py-1">
             {free.map((m) => (
-              <li key={m.id} className="flex items-center justify-between gap-3 py-2.5">
+              <li key={m.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5">
                 <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
-                <StatusPill tone="ok">Grátis</StatusPill>
+                <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
               </li>
             ))}
           </ul>
@@ -240,7 +242,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
               <li key={m.id} className="flex items-center justify-between gap-3 py-2.5">
                 <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
                 <b className="whitespace-nowrap">
-                  {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : ""}
+                  {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : "Comprar"}
                 </b>
               </li>
             ))}
@@ -253,6 +255,13 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
             <ChevronRightIcon size={20} />
           </Link>
         </section>
+      ) : null}
+
+      {free.length > 0 ? (
+        <p className="text-[15px] leading-snug text-muted">
+          Prefere comprar? Toque em Comprar e o remédio entra na conta da família. Dá para mudar
+          depois em Remédios.
+        </p>
       ) : null}
 
       <Link href="/family" className={cn(buttonClass(), "mt-auto")}>

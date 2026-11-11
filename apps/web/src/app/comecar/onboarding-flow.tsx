@@ -11,6 +11,7 @@ import {
   InfoIcon,
   PlusIcon,
   SelectField,
+  Sheet,
   StatusPill,
   TopBar,
   buttonClass,
@@ -226,22 +227,24 @@ function InviteStep({
 }) {
   const [name, setName] = useState("");
   const [relation, setRelation] = useState<Relation | null>(null);
-  const [adding, setAdding] = useState(data.invites.length === 0);
-  const [copied, setCopied] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  async function copy(who: string) {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/family`);
+      setCopied(who);
+    } catch {}
+  }
 
   function add() {
-    if (!name.trim()) return;
-    setData((d) => ({ ...d, invites: [...d.invites, { name: name.trim(), relation }] }));
+    const who = name.trim();
+    if (!who) return;
+    setData((d) => ({ ...d, invites: [...d.invites, { name: who, relation }] }));
     setName("");
     setRelation(null);
     setAdding(false);
-  }
-
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/family`);
-      setCopied(true);
-    } catch {}
+    void copy(who);
   }
 
   const me = data.caregiver;
@@ -268,28 +271,36 @@ function InviteStep({
           </li>
         ))}
       </ul>
-      {adding ? (
-        <div className="flex flex-col gap-4 rounded-card border border-line-soft bg-surface p-4">
-          <Field label="Nome" value={name} onValue={setName} />
-          <SelectField<Relation> label={`Quem é para a ${nickname}?`} options={RELATIONS} value={relation} onValue={setRelation} />
-          <Button variant="secondary" onClick={add} disabled={!name.trim()}>
-            Adicionar
-          </Button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setAdding(true)}
-          className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#8c8578] font-bold"
-        >
-          <PlusIcon size={20} />
-          Chamar mais alguém
-        </button>
-      )}
-      <button type="button" onClick={copy} className={buttonClass({ variant: "secondary" })}>
-        <CopyIcon size={20} />
-        {copied ? "Link copiado" : "Copiar link do convite"}
+      <button
+        type="button"
+        onClick={() => setAdding(true)}
+        className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#8c8578] font-bold"
+      >
+        <PlusIcon size={20} />
+        Chamar mais alguém
       </button>
+      {copied ? (
+        <p aria-live="polite" className="flex items-center gap-2 text-[15px] font-bold text-brand">
+          <CheckIcon size={18} strokeWidth={2.6} />
+          Convite de {copied} copiado. Cole na conversa com a pessoa.
+        </p>
+      ) : null}
+      <Sheet open={adding} onClose={() => setAdding(false)} title="Chamar mais alguém">
+        <Field label="Nome" value={name} onValue={setName} autoComplete="off" />
+        <SelectField<Relation>
+          label={`Quem é para a ${nickname}?`}
+          options={RELATIONS}
+          value={relation}
+          onValue={setRelation}
+        />
+        <p className="text-[15px] leading-snug text-muted">
+          Depois de adicionar, o link do convite fica copiado. É só colar na conversa com a pessoa.
+        </p>
+        <Button onClick={add} disabled={!name.trim()}>
+          <CopyIcon size={20} />
+          Adicionar e copiar convite
+        </Button>
+      </Sheet>
       <p className="flex gap-2.5 rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
         <InfoIcon size={22} className="shrink-0 text-brand" />
         Mande o link para quem você chamou. A pessoa abre e já acompanha a {nickname}.

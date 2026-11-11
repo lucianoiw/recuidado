@@ -7,16 +7,18 @@ import {
   ChevronRightIcon,
   GiftIcon,
   PinIcon,
-  StatusPill,
   buttonClass,
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
+import { FreeOrBuy } from "@/components/free-or-buy";
 import type { Medication } from "@/lib/api";
+import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
 function MedRow({ m }: { m: Medication }) {
+  const { getsFree, setBuy } = useBuyChoice();
   return (
-    <li className="flex items-center justify-between gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0">
+    <li className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">
       <div className="flex min-w-0 flex-col">
         <span className="font-bold">{medLabel(m.name, m.strength)}</span>
         <span className="text-[15px] text-muted">
@@ -24,7 +26,7 @@ function MedRow({ m }: { m: Medication }) {
         </span>
       </div>
       {m.freeInFarmaciaPopular ? (
-        <StatusPill tone="ok">Grátis</StatusPill>
+        <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(free) => setBuy(m.id, !free)} />
       ) : (
         <span className="whitespace-nowrap font-bold">
           {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : "Comprar"}
@@ -71,12 +73,13 @@ function Group({
 
 export function MedsView() {
   const { data, error } = useFamily();
+  const { getsFree } = useBuyChoice();
 
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
 
-  const free = data.medications.filter((m) => m.freeInFarmaciaPopular);
-  const paid = data.medications.filter((m) => !m.freeInFarmaciaPopular);
+  const free = data.medications.filter(getsFree);
+  const paid = data.medications.filter((m) => !getsFree(m));
 
   return (
     <>
@@ -107,7 +110,7 @@ export function MedsView() {
       {paid.length > 0 ? (
         <Group
           icon={<CartIcon size={22} className="text-warn" />}
-          title="Precisa comprar"
+          title="Para comprar"
           meds={paid}
           link={{ href: "/family/comprar", label: "Ver preços e dividir" }}
         />
@@ -117,6 +120,12 @@ export function MedsView() {
         <CameraIcon size={22} />
         {data.medications.length === 0 ? "Foto da receita" : "Receita nova"}
       </Link>
+
+      {data.medications.some((m) => m.freeInFarmaciaPopular) ? (
+        <p className="text-[15px] leading-snug text-muted">
+          Prefere comprar um remédio que sai grátis? Toque em Comprar e ele entra na conta da família.
+        </p>
+      ) : null}
 
       {free.length > 0 ? (
         <p className="flex items-start gap-2 text-[15px] leading-snug text-muted">
