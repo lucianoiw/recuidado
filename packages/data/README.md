@@ -126,3 +126,7 @@ Names follow the API conventions (English, snake_case). Suggested for
 - `pharmacies` (cnes pk, cnpj, name, street, number, district, postal_code, city, state, lat, lng, opening_hours, fp_accredited boolean null)
 - `sus_units` (cnes pk, kind 'ubs' | 'ceaf_pharmacy', name, street, number, district, postal_code, lat, lng, opening_hours, offers)
 - `free_access` (loose_match_key pk, loose_key, name, farmacia_popular, ubs, ubs_restricted, ceaf, ceaf_group, ceaf_drug, match_keys)
+
+## Medicine search (autocomplete)
+
+`searchMedicines(q, limit)` searches the CMED list (`seed/cmed-pmc.csv.gz`, every medicine with a regulated price in Brazil) by brand name and by active ingredient. Each query word must start a word of the name or of the ingredient; numbers ("losartana 50") filter the strengths. Generic names come first, then brands. Each strength carries `freeAt` and `highCost` from `findFreeAccess`. The API exposes it as `GET /medications/search?q=`.
