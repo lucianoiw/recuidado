@@ -1,5 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { z } from 'zod';
 import { FamilyService } from './family.service.js';
+import { buyChoiceBody, onboardingBody } from './onboarding.schema.js';
+
+function parse<T>(schema: z.ZodType<T>, body: unknown): T {
+  const result = schema.safeParse(body);
+  if (!result.success) throw new BadRequestException(z.prettifyError(result.error));
+  return result.data;
+}
 
 @Controller('family')
 export class FamilyController {
@@ -9,5 +28,30 @@ export class FamilyController {
   @Get()
   overview() {
     return this.family.overview();
+  }
+
+  /** Sign-up answers saved by one caregiver (the id this device keeps). */
+  @Get('onboarding')
+  getOnboarding(@Query('caregiverId', new ParseUUIDPipe()) caregiverId: string) {
+    return this.family.getOnboarding(caregiverId);
+  }
+
+  /** Saves the sign-up steps. Returns the caregiver id for this device to keep. */
+  @Put('onboarding')
+  saveOnboarding(@Body() body: unknown) {
+    return this.family.saveOnboarding(parse(onboardingBody, body));
+  }
+
+  @Post('members/:id/join')
+  @HttpCode(204)
+  async join(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.family.join(id);
+  }
+
+  /** "Pegar grátis" or "Comprar" for a medication that is free in Farmácia Popular. */
+  @Put('medications/:id/buy-choice')
+  @HttpCode(204)
+  async setBuyChoice(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: unknown) {
+    await this.family.setBuyChoice(id, parse(buyChoiceBody, body).buy);
   }
 }

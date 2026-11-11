@@ -13,7 +13,7 @@ import {
   buttonClass,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
-import { formatTime, type Dose } from "@/lib/api";
+import { callName, formatTime, type Dose } from "@/lib/api";
 import { medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
@@ -44,7 +44,7 @@ export function FamilyView() {
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
 
-  const name = data.patient.name;
+  const name = callName(data.patient);
   // One alert per time: doses at the same time are taken together.
   const missedByTime = new Map<string, Dose[]>();
   for (const d of data.today.filter((x) => x.status === "missed")) {

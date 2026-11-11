@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
@@ -48,7 +48,7 @@ export class VoiceCallService {
     const [row] = await this.db
       .select({
         status: doses.status,
-        patientName: members.name,
+        patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         phone: members.phone,
         medication: medications.name,
         strength: medications.strength,

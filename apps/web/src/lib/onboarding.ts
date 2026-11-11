@@ -1,5 +1,8 @@
-// Onboarding answers. The API has no sign-up endpoint yet, so the demo keeps
-// them in this browser only; the family shown afterwards is the API demo family.
+// Onboarding answers. Saved in the API (PUT /family/onboarding) into the demo family;
+// this device keeps only the caregiver id (lib/me.ts).
+
+import { maskCep, maskPhone } from "./masks";
+import type { OnboardingRecord } from "./api";
 
 export const RELATIONS = [
   "Filho(a)",
@@ -27,19 +30,26 @@ export const emptyOnboarding: Onboarding = {
   invites: [],
 };
 
-const KEY = "recuidado:onboarding";
-
-export function loadOnboarding(): Onboarding | null {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? { ...emptyOnboarding, ...(JSON.parse(raw) as Onboarding) } : null;
-  } catch {
-    return null;
-  }
+function asRelation(v: string | null): Relation | null {
+  return (RELATIONS as readonly string[]).includes(v ?? "") ? (v as Relation) : null;
 }
 
-export function saveOnboarding(data: Onboarding): void {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(data));
-  } catch {}
+/** API record to form values (masked phone, CEP and dd/mm/aaaa). */
+export function fromRecord(r: OnboardingRecord): Onboarding {
+  const [y, m, d] = r.patient.birth.split("-");
+  return {
+    caregiver: {
+      name: r.caregiver.name,
+      phone: maskPhone(r.caregiver.phone),
+      relation: asRelation(r.caregiver.relation),
+      relationOther: r.caregiver.relationOther,
+    },
+    patient: {
+      ...r.patient,
+      phone: maskPhone(r.patient.phone),
+      cep: maskCep(r.patient.cep),
+      birth: d ? `${d}/${m}/${y}` : "",
+    },
+    invites: r.invites.map((i) => ({ name: i.name, relation: asRelation(i.relation) })),
+  };
 }

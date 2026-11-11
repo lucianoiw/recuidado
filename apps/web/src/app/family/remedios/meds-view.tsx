@@ -11,7 +11,7 @@ import {
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { FreeOrBuy } from "@/components/free-or-buy";
-import type { Medication } from "@/lib/api";
+import { callName, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
@@ -91,7 +91,7 @@ export function MedsView() {
     <>
       <PageTitle
         title="Remédios"
-        subtitle={`${data.medications.length} na receita de ${data.patient.name}`}
+        subtitle={`${data.medications.length} na receita de ${callName(data.patient)}`}
       />
 
       {data.medications.length === 0 ? (
@@ -136,7 +136,7 @@ export function MedsView() {
       {free.length > 0 ? (
         <p className="flex items-start gap-2 text-[15px] leading-snug text-muted">
           <PinIcon size={18} className="mt-0.5 shrink-0" />
-          Para retirar grátis, leve a receita e um documento com foto de {data.patient.name}.
+          Para retirar grátis, leve a receita e um documento com foto de {callName(data.patient)}.
         </p>
       ) : null}
     </>
