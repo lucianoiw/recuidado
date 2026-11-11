@@ -92,6 +92,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
     "Set taken=true only if she clearly said she already took the medicine (all of them, when there are several).",
     "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
     "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false only if she says she is fine.",
+    "Set emergency=true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, or she asks for urgent help. The family gets a phone call. Otherwise false.",
     "Put what she said about how she feels, and any other relevant detail (ran out of medicine), in note, in Portuguese, close to her own words.",
     "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
   ].join("\n");
@@ -107,9 +108,13 @@ export const doseTool = {
     properties: {
       taken: { type: "boolean", description: "true if she confirmed she took the medicines" },
       feels_unwell: { type: "boolean", description: "true if she said she is not feeling well" },
+      emergency: {
+        type: "boolean",
+        description: "true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, or she asks for urgent help",
+      },
       note: { type: "string", description: "What she said about how she feels and other relevant detail, in Portuguese, or empty" },
     },
-    required: ["taken", "feels_unwell", "note"],
+    required: ["taken", "feels_unwell", "emergency", "note"],
     additionalProperties: false,
   },
 };

@@ -4,6 +4,7 @@ import { toE164 } from "./phone.js";
 import { greetingLine, type ReminderContext } from "./prompt.js";
 import { GreetingCache } from "./greeting-cache.js";
 import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.js";
+import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
 
@@ -80,6 +81,26 @@ export class CallService {
           this.log(`greeting recorded for later calls (${(audio.length / 48_000).toFixed(1)} s)`);
         }
       },
+    });
+    return { sessionId, call };
+  }
+
+  /** Calls a family member with an urgent message. Same allowlist as reminder calls. */
+  async startAlert(phone: string, message: string): Promise<{ sessionId: string; call: AlertCall }> {
+    const destination = toE164(phone);
+    if (!isAllowed(this.config, destination)) {
+      throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
+    }
+    const sessionId = await this.live.createAlertSipCall(destination, message);
+    this.log(`alert call created ${sessionId}`);
+    const socket = this.live.attach(sessionId);
+    const call = new AlertCall({
+      sessionId,
+      message,
+      socket,
+      hangup: () => this.live.hangup(sessionId),
+      maxCallMs: 60_000,
+      log: this.log,
     });
     return { sessionId, call };
   }

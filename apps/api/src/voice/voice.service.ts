@@ -26,6 +26,8 @@ export interface VoiceResult {
   confirmed: boolean;
   note?: string | null;
   feelsUnwell?: boolean | null;
+  /** Fall, chest pain, shortness of breath or fainting: the caregivers also get a phone call. */
+  emergency?: boolean | null;
   transcript?: { speaker: 'assistant' | 'patient'; text: string }[];
   durationSeconds?: number | null;
   endReason?: string | null;
@@ -171,8 +173,19 @@ export class VoiceCallService {
     if (!dose) throw new NotFoundException('Dose não encontrada.');
     const saved = await this.saveCall(doseId, result);
     if (saved && result.feelsUnwell) {
-      await this.alertUnwell(doseId, result.note);
-      telemetry.capture('patient_reported_unwell', { dose_id: doseId, call_id: result.sessionId, demo: dose.demo }, dose.patientId);
+      await this.alertUnwell(doseId, result.note, Boolean(result.emergency));
+      telemetry.capture(
+        'patient_reported_unwell',
+        { dose_id: doseId, call_id: result.sessionId, demo: dose.demo, emergency: Boolean(result.emergency) },
+        dose.patientId,
+      );
+    }
+    if (saved && result.emergency) {
+      try {
+        await this.callCaregivers(doseId, result.note);
+      } catch (error) {
+        telemetry.captureException(error, { step: 'emergency_call', dose_id: doseId });
+      }
     }
     const props = { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome, demo: dose.demo };
     // Confirmed in the app while the phone was ringing: the app wins.
@@ -234,7 +247,40 @@ export class VoiceCallService {
   }
 
   /** She said she is not well: tell the caregivers right away, with her words. */
-  private async alertUnwell(doseId: string, note?: string | null): Promise<void> {
+  /**
+   * Emergency reported on the call: phones up to two caregivers with a short recorded-style message.
+   * Only numbers in the voice CALL_ALLOWED_NUMBERS get through; the push already went out either way.
+   */
+  private async callCaregivers(doseId: string, note?: string | null): Promise<void> {
+    const voiceUrl = this.config.get<string>('VOICE_URL');
+    const token = this.config.get<string>('VOICE_API_TOKEN');
+    if (!voiceUrl || !token) return;
+    const [patient] = await this.db
+      .select({ name: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .innerJoin(members, eq(medications.patientId, members.id))
+      .where(eq(doses.id, doseId));
+    if (!patient) return;
+    const caregivers = await this.db
+      .select({ id: members.id, phone: members.phone })
+      .from(members)
+      .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver')));
+    const said = note?.trim() ? ` disse agora na ligação do remédio: "${note.trim().slice(0, 200)}"` : ' disse agora na ligação do remédio que não está bem';
+    const message = `Olá, aqui é a assistente virtual da Recuidado. ${patient.name}${said}. Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.`;
+    for (const c of caregivers.filter((m) => m.phone).slice(0, 2)) {
+      const res = await fetch(new URL('/alert-calls', voiceUrl), {
+        method: 'POST',
+        headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ doseId, phone: c.phone, message }),
+      });
+      const outcome = res.ok ? 'requested' : res.status === 403 ? 'number_not_allowed' : `error_${res.status}`;
+      telemetry.capture('emergency_call', { dose_id: doseId, outcome }, c.id);
+      this.logger.log(`Dose ${doseId}: emergency call to a caregiver ${outcome}.`);
+    }
+  }
+
+  private async alertUnwell(doseId: string, note?: string | null, emergency = false): Promise<void> {
     const [row] = await this.db
       .select({ patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
       .from(doses)
@@ -245,7 +291,7 @@ export class VoiceCallService {
     const said = note?.trim() ? `Ela disse: "${note.trim()}".` : 'Ela disse que não está bem.';
     const { sent } = await this.alerts.notifyCaregivers(row.familyId, {
       kind: 'unwell',
-      title: `${row.patientName} não está se sentindo bem`,
+      title: emergency ? `Urgente: ${row.patientName} pode precisar de ajuda` : `${row.patientName} não está se sentindo bem`,
       body: `${said} Vale ligar para ela.`,
       url: '/family',
       doseId,

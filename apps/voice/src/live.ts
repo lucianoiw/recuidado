@@ -8,6 +8,7 @@ import {
   doseTool,
   type ReminderContext,
 } from "./prompt.js";
+import { buildAlertInstructions } from "./alert-call.js";
 import {
   buildPharmacyDelegateInstructions,
   buildPharmacyLiveInstructions,
@@ -112,6 +113,23 @@ export class LiveClient {
       },
       transport: this.sipTransport(destination),
     };
+  }
+
+  /** A one-way urgent message to a family member: no tools, no delegation. */
+  buildAlertSessionRequest(destination: string, message: string) {
+    return {
+      session: {
+        model: this.config.liveModel,
+        instructions: buildAlertInstructions(message),
+        audio: { output: { voice: this.config.liveVoice } },
+      },
+      transport: this.sipTransport(destination),
+    };
+  }
+
+  /** Places an alert call. Not idempotent, like createSipCall. */
+  createAlertSipCall(destination: string, message: string): Promise<string> {
+    return this.createSession(this.buildAlertSessionRequest(destination, message));
   }
 
   /** Places a call to a pharmacy. Not idempotent, like createSipCall. */

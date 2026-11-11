@@ -63,6 +63,11 @@ The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and,
    1 s after she stops talking. Without a goodbye it asks for it once and hangs up after 8 s of
    silence. If the answer is not recorded 12 s after the goodbye, it hangs up anyway.
 
+If she reports a possible emergency (fall, chest pain, shortness of breath, fainting), the result has
+`emergency: true`; the API pushes an urgent alert and calls up to two caregivers through
+`POST /alert-calls` `{ phone, message, doseId? }`, a one-way call that reads the message and hangs up
+2.5 s after "tchau". Same `CALL_ALLOWED_NUMBERS` allowlist.
+
 If she asks who is calling: "É a Recuidado, assistente virtual do lembrete do remédio." A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
 call as `no_answer`.
 
