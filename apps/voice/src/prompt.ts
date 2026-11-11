@@ -52,6 +52,11 @@ export function emergencyLine(ctx: ReminderContext): string {
   return `Eu vou avisar a sua família agora. Se achar necessário, ligue para o SAMU, 192. Vou desligar para deixar a sua linha livre, e daqui a pouco eu ligo de novo. Tchau, ${ctx.patientName}!`;
 }
 
+/** Said on the call back when she is still not well. */
+export function checkInUnwellLine(ctx: ReminderContext): string {
+  return `Vou avisar a sua família de novo. Se achar necessário, ligue para o SAMU, 192. ${goodbyeLine(ctx)}`;
+}
+
 /** The call back after an emergency: how is she now. Nothing about the medicine. */
 function buildCheckInInstructions(ctx: ReminderContext): string {
   return [
@@ -60,7 +65,7 @@ function buildCheckInInstructions(ctx: ReminderContext): string {
     `Call the person by this name: "${ctx.patientName}".`,
     "You already greeted her, said that her family was told, and asked how she is now. Listen to her answer.",
     `If she is better or someone is with her, say one short warm sentence, then exactly "${goodbyeLine(ctx)}", and delegate once at the same time.`,
-    `If she is still unwell or alone, say exactly "Vou avisar a sua família de novo. Se achar necessário, ligue para o SAMU, 192." then "${goodbyeLine(ctx)}", and delegate once at the same time.`,
+    `If she is still unwell or alone, say exactly "${checkInUnwellLine(ctx)}", and delegate once at the same time.`,
     "As soon as she answers, delegate first, then speak. Never say anything after the goodbye (no \"já faço isso\").",
     "Do not ask about the medicine. Do not ask anything else.",
     "You are an AI. If she asks, say honestly that you are a virtual assistant. Never pretend to be human.",

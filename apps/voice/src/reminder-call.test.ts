@@ -355,3 +355,33 @@ test("emergency: says SAMU, frees the line and promises the call back; the call 
   assert.doesNotMatch(buildLiveInstructions(back), /já tomou/);
   assert.match(buildDelegateInstructions(back), /taken=false/);
 });
+
+test("emergency recorded without the SAMU line: asks for it, and only the goodbye after it ends the call", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "e1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e2", delta: "Oi, Maria! Como a senhora está?" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "e3", delta: "Caí no banheiro." });
+  socket.emitEvent({
+    type: "response.event",
+    event_id: "e_tool",
+    event: {
+      type: "response.output_item.done",
+      item: {
+        type: "function_call",
+        name: "record_dose_answer",
+        call_id: "call_e",
+        arguments: JSON.stringify({ taken: false, feels_unwell: true, emergency: true, note: "Caí no banheiro" }),
+      },
+    },
+  });
+  const ask = socket.sent.find((m) => m.event_id === "emergency_call_e");
+  assert.match(String(ask?.content), /SAMU, 192/);
+  // The model's own short goodbye does not end the call before the SAMU line.
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e4", delta: "Já volto. Obrigada, tchau, Maria!" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Eu vou avisar a sua família agora. Se achar necessário, ligue para o SAMU, 192." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e6", delta: " Tchau, Maria!" });
+  const result = await call.result;
+  assert.equal(result.emergency, true);
+  assert.equal(result.endReason, "hung_up_after_goodbye");
+  assert.match(result.transcript.map((l) => l.text).join(" "), /SAMU/);
+});
