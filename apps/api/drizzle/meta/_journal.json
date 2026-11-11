@@ -71,6 +71,20 @@
       "when": 1794403214143,
       "tag": "0009_zippy_terror",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794403306848,
+      "tag": "0010_melted_dreaming_celestial",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794403410774,
+      "tag": "0011_ancient_nehzno",
+      "breakpoints": true
     }
   ]
 }

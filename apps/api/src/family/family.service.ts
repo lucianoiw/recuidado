@@ -17,6 +17,7 @@ import { StockService } from '../stock/stock.service.js';
 import { seedDemoFamily } from './demo-seed.js';
 import { highCostStatus, todayInSaoPaulo, type HighCostStatus } from './high-cost.js';
 import type { HighCostBody, MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
+import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
 export const DEMO_FAMILY = 'Família Demo';
@@ -191,9 +192,13 @@ export class FamilyService implements OnApplicationBootstrap {
       medications: meds.map(
         ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, ...med }) => {
           const access = freeAccessOf(activeIngredient ?? med.name, med.strength);
+          const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
           return {
             ...med,
             ...access,
+            // Saved price, else the CMED ceiling of the cheapest pack for a month of doses.
+            monthlyCostCents: monthlyCostOf(med.monthlyCostCents, price),
+            price,
             // Pills left and days they last; null when the family has not counted them.
             stock: stock.get(med.id) ?? null,
             // Where the family is in the Alto Custo path, for the reminders.

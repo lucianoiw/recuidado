@@ -59,6 +59,19 @@ export interface Medication {
   stock?: Stock | null;
   /** Where the family is in the Alto Custo path; null when it is not in the list. */
   highCostPath?: HighCostStatus | null;
+  /** CMED ceiling price (PMC, São Paulo); null when the list has no match. */
+  price?: MedicationPrice | null;
+}
+
+export interface MedicationPrice {
+  /** Cheapest presentation on the CMED list, for a month of doses. Null without fixed times. */
+  monthlyCents: number | null;
+  monthlyMaxCents: number | null;
+  packCents: number;
+  unitsPerPack: number;
+  product: string;
+  /** "2026-11-09": publication date of the CMED list. */
+  listDate: string | null;
 }
 
 export interface HighCostItem {
@@ -353,4 +366,106 @@ export function exportDataUrl(caregiverId: string): string {
 export async function deleteFamilyData(caregiverId: string): Promise<void> {
   const res = await fetch(`${API_URL}/privacy/family?caregiverId=${caregiverId}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para apagar os dados."));
+}
+
+export type TriState = "yes" | "no" | "unknown";
+
+/** A voice call to a pharmacy asking stock, price and Farmácia Popular. */
+export interface PharmacyInquiry {
+  id: string;
+  pharmacyName: string;
+  status: "calling" | "answered" | "unclear" | "no_answer" | "failed";
+  medications: { medicationId: string; name: string; strength: string | null }[];
+  answers: {
+    medication: string;
+    available: TriState;
+    /** Price of one box said on the phone. Reference, not an offer. */
+    priceCents: number | null;
+    package?: string;
+    farmaciaPopular: TriState;
+  }[];
+  note: string | null;
+  /** The call went through a recorded menu (keys pressed). */
+  usedPhoneMenu: boolean;
+  transcript: { speaker: "assistant" | "patient"; text: string }[];
+  durationSeconds: number | null;
+  createdAt: string;
+  finishedAt: string | null;
+}
+
+/** "Perguntar à farmácia": the voice agent calls the pharmacy about these medicines. */
+export async function askPharmacy(medicationIds: string[]): Promise<PharmacyInquiry> {
+  const res = await send("POST", withFamily("/pharmacy-inquiries"), { medicationIds }, "Não deu para ligar agora.");
+  return res.json();
+}
+
+/** The family's most recent pharmacy call, or null. */
+export async function getLatestPharmacyInquiry(): Promise<PharmacyInquiry | null> {
+  const res = await fetch(`${API_URL}${withFamily("/pharmacy-inquiries/latest")}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return ((await res.json()) as { inquiry: PharmacyInquiry | null }).inquiry;
+}
+
+export interface MonthItem {
+  id: string;
+  name: string;
+  strength: string | null;
+  monthlyCents: number;
+  free: boolean;
+  freeAt: string[];
+  highCost: boolean;
+  priced: boolean;
+}
+
+export type PixKeyType = "cpf" | "phone" | "email" | "random";
+
+export interface MonthShare {
+  memberId: string;
+  name: string;
+  amountCents: number;
+  /** Buys the medicines and receives the others' shares. */
+  isReceiver: boolean;
+  paid: boolean;
+  paidAt: string | null;
+  /** Pix "copia e cola" to pay the receiver; null for the receiver or without a key. */
+  pix: string | null;
+}
+
+/** GET /family/month: savings, cost, split and doses of the current month. */
+export interface MonthSummary {
+  month: string;
+  /** "novembro de 2026" */
+  label: string;
+  savedCents: number;
+  costCents: number;
+  highCostPotentialCents: number;
+  saved: MonthItem[];
+  toBuy: MonthItem[];
+  /** Medicines to buy without a price. */
+  unpriced: number;
+  /** "2026-11-09": publication date of the CMED list the prices come from. */
+  priceListDate: string | null;
+  split: {
+    receiver: { id: string; name: string; keyType: PixKeyType; pixKey: string } | null;
+    /** The demo family: its Pix key is fictitious. */
+    demoPix: boolean;
+    shares: MonthShare[];
+  };
+  doses: { total: number; taken: number; missed: number; pending: number; byVoice: number };
+}
+
+export async function getMonth(): Promise<MonthSummary> {
+  const res = await fetch(`${API_URL}${withFamily("/family/month")}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+/** Marks a caregiver's share of this month as paid or not. */
+export async function setSharePaid(memberId: string, paid: boolean): Promise<void> {
+  await send("PUT", withFamily(`/family/shares/${memberId}/paid`), { paid }, "Não deu para salvar.");
+}
+
+/** Saves who receives the Pix (null removes the key). */
+export async function setPixKey(memberId: string, pix: { type: PixKeyType; key: string } | null): Promise<void> {
+  await send("PUT", withFamily(`/family/members/${memberId}/pix`), { pix }, "Não deu para salvar a chave Pix.");
 }

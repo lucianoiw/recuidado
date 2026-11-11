@@ -5,6 +5,7 @@ import { loadConfig, type VoiceConfig } from "./config.js";
 import { CallService, NumberNotAllowedError } from "./call-service.js";
 import type { CallResult, ReminderCall } from "./reminder-call.js";
 import type { Medication } from "./prompt.js";
+import type { PharmacyCall, PharmacyCallResult } from "./pharmacy-call.js";
 
 // Events, exceptions and logs go to PostHog; logs also stay on stdout.
 const telemetry = telemetryFromEnv("voice");
@@ -69,6 +70,30 @@ function parseCallRequest(body: unknown) {
   const patientId = typeof b.patientId === "string" && b.patientId ? b.patientId : undefined;
   return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds };
 }
+
+/** Body of POST /pharmacy-calls. At most 3 medicines, so the call stays short. */
+function parsePharmacyCallRequest(body: unknown) {
+  const b = (body ?? {}) as Record<string, unknown>;
+  if (typeof b.inquiryId !== "string" || !b.inquiryId) throw new Error("inquiryId is required");
+  if (typeof b.phone !== "string" || !b.phone) throw new Error("phone is required");
+  const list = Array.isArray(b.medications) ? b.medications : [];
+  const medications: Medication[] = list
+    .map((m) => (typeof m === "string" ? { name: m } : (m as Medication)))
+    .filter((m) => typeof m?.name === "string" && m.name.trim().length > 0)
+    .map((m) => ({ name: m.name.trim(), dose: typeof m.dose === "string" && m.dose.trim() ? m.dose.trim() : undefined }));
+  if (medications.length === 0) throw new Error("medications must have at least one item");
+  if (medications.length > 3) throw new Error("at most 3 medications per call");
+  const familyId = typeof b.familyId === "string" && b.familyId ? b.familyId : undefined;
+  return { inquiryId: b.inquiryId, familyId, phone: b.phone, medications };
+}
+
+interface PharmacyCallRecord {
+  inquiryId: string;
+  call: PharmacyCall;
+  result?: PharmacyCallResult;
+}
+
+const pharmacyCalls = new Map<string, PharmacyCallRecord>();
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
@@ -146,6 +171,71 @@ const server = createServer(async (req, res) => {
         telemetry.capture("call_start_failed", { dose_id: input.doseId, error: (err as Error).message }, distinctId);
         return json(res, 502, { error: "failed to start call" });
       }
+    }
+
+    if (req.method === "POST" && url.pathname === "/pharmacy-calls") {
+      let input;
+      try {
+        input = parsePharmacyCallRequest(await readJson(req));
+      } catch (err) {
+        return json(res, 400, { error: (err as Error).message });
+      }
+      const distinctId = input.familyId ?? telemetry.systemId;
+      const props = { inquiry_id: input.inquiryId, medications: input.medications.length };
+      try {
+        const { sessionId, call } = await service.startPharmacy(input);
+        const record: PharmacyCallRecord = { inquiryId: input.inquiryId, call };
+        pharmacyCalls.set(sessionId, record);
+        telemetry.capture("pharmacy_call_started", { ...props, call_id: sessionId }, distinctId);
+        void call.result.then(async (result) => {
+          record.result = result;
+          telemetry.info(`pharmacy call ${sessionId} ended: ${result.outcome}`, { inquiry_id: input.inquiryId });
+          telemetry.capture(
+            "pharmacy_call_ended",
+            {
+              ...props,
+              call_id: sessionId,
+              outcome: result.outcome,
+              items_with_price: result.items.filter((i) => i.priceCents != null).length,
+              keys_pressed: result.keysPressed.length,
+              duration_seconds: result.durationSeconds,
+              end_reason: result.endReason,
+              error: result.error,
+            },
+            distinctId,
+          );
+          telemetry.llmGeneration({
+            traceId: sessionId,
+            spanName: "pharmacy_call",
+            provider: "openai",
+            model: config.liveModel,
+            latencySeconds: result.durationSeconds ?? 0,
+            output: [{ role: "assistant", content: `outcome=${result.outcome}` }],
+            isError: result.outcome === "failed",
+            error: result.error,
+            distinctId,
+            properties: { inquiry_id: input.inquiryId, outcome: result.outcome },
+          });
+          await service.reportPharmacy(input.inquiryId, result);
+        });
+        return json(res, 202, { callId: sessionId });
+      } catch (err) {
+        if (err instanceof NumberNotAllowedError) {
+          telemetry.warn(`pharmacy call refused: ${err.message}`, { inquiry_id: input.inquiryId });
+          telemetry.capture("pharmacy_call_refused", { ...props, reason: "number_not_allowed" }, distinctId);
+          return json(res, 403, { error: err.message });
+        }
+        telemetry.error(`failed to start pharmacy call: ${(err as Error).message}`, { inquiry_id: input.inquiryId });
+        telemetry.captureException(err, { inquiry_id: input.inquiryId }, distinctId);
+        return json(res, 502, { error: "failed to start call" });
+      }
+    }
+
+    const pharmacyMatch = url.pathname.match(/^\/pharmacy-calls\/([^/]+)$/);
+    if (req.method === "GET" && pharmacyMatch) {
+      const record = pharmacyCalls.get(decodeURIComponent(pharmacyMatch[1]));
+      if (!record) return json(res, 404, { error: "not found" });
+      return json(res, 200, { inquiryId: record.inquiryId, status: record.call.status, result: record.result });
     }
 
     const match = url.pathname.match(/^\/calls\/([^/]+)$/);
