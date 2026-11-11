@@ -175,10 +175,15 @@ Uma conversa curta e calorosa, feita para uma pessoa idosa ao telefone.
 O agente não só lembra: ele executa no mundo real. Liga para a farmácia, pergunta e traz a resposta como dado.
 
 - **Roteiro.** Espera o outro lado falar. A primeira frase para uma pessoa é sempre "Aqui é a assistente virtual da Recuidado, ligando em nome de uma família". Pergunta, para até 3 remédios, estoque, preço da caixa e Farmácia Popular. Nunca compra, reserva ou passa dado pessoal.
-- **Menu de teclas (URA).** O GPT-Live envia DTMF pelo SIP (evento `transport.dtmf.send` no sideband). A IA ouve o menu e chama a ferramenta `press_phone_keys`; o serviço de voz manda uma tecla por evento e o Asterisk repassa para a Nvoip (RFC 4733). A resposta é gravada pela ferramenta `record_pharmacy_answer`.
+- **Menu de teclas (URA).** O GPT-Live envia DTMF pelo SIP (evento `transport.dtmf.send` no sideband): uma tecla por evento, e o Asterisk repassa para a Nvoip (RFC 4733). Quem escolhe a tecla é o nosso código: ele lê a transcrição do menu e, quando o menu faz uma pausa, aperta a opção de preço e estoque (ou atendente, ou remédios). A ferramenta `press_phone_keys` do modelo fica como reserva para menus que a regra não entende.
+- **Resposta gravada em duas camadas.** O modelo deve dizer o tchau e, ao mesmo tempo, chamar `record_pharmacy_answer`. Se a ligação termina sem esse registro, o Claude (Sonnet 5.5) lê a transcrição e preenche estoque, preço da caixa e Farmácia Popular, sem calcular nem chutar preço. Enquanto ele lê (cerca de 4 s), o card continua em "ligando".
 - **Comparação com a CMED.** O preço dito por telefone é comparado ao teto da CMED por comprimido ("Dentro do teto" ou "Acima do teto"). A tela diz que preço por telefone é referência, não oferta.
 - **Sem ligar para terceiros.** Só disca `PHARMACY_CALL_PHONE`, que precisa estar listado um a um na whitelist (`*` não vale para farmácia). O Asterisk atende `+5500000000000` (DDD 00 não existe) com uma URA de teste: menu com voz sintética e uma atendente gravada. Assim a demo mostra a ligação inteira, com teclas, sem incomodar uma farmácia de verdade. As ligações para farmácia contam nos mesmos limites diários.
-- **Achados do primeiro teste real (11/11).** A IA apertou 2 no menu, chegou na atendente e gravou "tem, R$ 18,90, caixa com 30, sai pelo Farmácia Popular" em 55 s. Dois erros vistos na transcrição e corrigidos: ela falou com o menu gravado e, como a atendente falou primeiro, pulou a frase de assistente virtual.
+- **Achados de 8 ligações reais à URA de teste (11/11).** O modelo de voz é instável com menus e ferramentas, então cada falha virou uma regra no nosso código:
+  - Ela falou com o menu gravado e, quando a atendente falou primeiro, pulou a frase de assistente virtual. Agora o código detecta o menu e manda a apresentação quando uma pessoa fala e faz uma pausa.
+  - Em uma ligação ela disse "Opção 2" em voz alta em vez de apertar a tecla, e o menu repetiu por 177 s. Em outra, apertou a tecla errada. Agora a tecla é escolhida por regra (palavras "preço", "estoque", "atendente").
+  - Nas três últimas ligações ela se despediu sem chamar a ferramenta de registro, e a atendente desligou. A leitura da transcrição pelo Claude recuperou a resposta certa nas duas em que já existia.
+  - Resultado final (8ª ligação): menu, tecla 2, apresentação, pergunta, resposta "tem, R$ 32,50, caixa com 30, sai pelo Farmácia Popular" e tchau, em 46 s.
 
 ## Resultados medidos
 
@@ -186,7 +191,7 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
 | --- | --- | --- |
 | Leitura de receita (3 receitas sintéticas, uma manuscrita) | 3 de 3 corretas, de 12 a 16 s cada, cerca de US$ 0,06 por receita | `pnpm prescription:eval` |
 | Ligação de voz | Ligação real ponta a ponta para um celular, com confirmação da dose por voz | `POST /demo/missed-dose` na API |
-| Ligação para a farmácia com URA | Ligação real ao menu de teste: tecla 2 por DTMF, estoque, preço e Farmácia Popular gravados, 55 s | Botão "Perguntar à farmácia" em `/family/comprar` |
+| Ligação para a farmácia com URA | Ligação real ao menu de teste: tecla 2 por DTMF escolhida por regra, estoque, preço e Farmácia Popular gravados, 46 s (8ª ligação) | Botão "Perguntar à farmácia" em `/family/comprar` |
 | Qualidade do código | Lint, testes e build em todos os pacotes a cada push | [CI](https://github.com/lucianoiw/recuidado/actions/workflows/ci.yml) |
 
 ## Monitoria
