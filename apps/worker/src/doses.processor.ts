@@ -1,10 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import type { Job } from 'bullmq';
-import { MAX_CHECK_INS, VoiceCallService } from '../voice/voice.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
-import { DOSES_QUEUE, type DoseJob } from '../doses/doses.queue.js';
-import { DosesService } from '../doses/doses.service.js';
+import { type DoseJob, DOSES_QUEUE, DosesService, MAX_CHECK_INS, telemetry, VoiceCallService } from '@recuidado/core';
 
 /** The only worker of the doses queue: every job kind goes through here. */
 @Processor(DOSES_QUEUE)

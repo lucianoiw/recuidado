@@ -10,6 +10,7 @@ COPY apps/api/package.json apps/api/
 COPY packages/prescription-reader packages/prescription-reader
 COPY packages/data packages/data
 COPY packages/telemetry packages/telemetry
+COPY packages/core packages/core
 RUN pnpm install --frozen-lockfile --filter @recuidado/api...
 COPY apps/api apps/api
 RUN pnpm --filter @recuidado/api build \

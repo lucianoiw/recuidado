@@ -16,11 +16,8 @@ import {
   type ReadPrescriptionResult,
 } from '@recuidado/prescription-reader';
 import { and, eq } from 'drizzle-orm';
-import { DB, type Database } from '../db/db.module.js';
-import { families, medications, members } from '../db/schema.js';
+import { type Database, DB, DosesService, families, medications, members, telemetry } from '@recuidado/core';
 import { DEMO_FAMILY, DEMO_READ_ONLY } from '../family/family.service.js';
-import { DosesService } from '../doses/doses.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
 import type { ConfirmPrescriptionBody } from './confirm.schema.js';
 
 @Injectable()

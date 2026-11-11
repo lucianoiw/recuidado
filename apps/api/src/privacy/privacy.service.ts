@@ -9,26 +9,22 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { and, asc, eq, inArray, isNull, lt, sql } from 'drizzle-orm';
-import { DB, type Database } from '../db/db.module.js';
 import {
   alerts,
   costShares,
+  type Database,
+  DB,
   doses,
   families,
   medications,
   members,
   pushSubscriptions,
+  telemetry,
   voiceCalls,
-} from '../db/schema.js';
+} from '@recuidado/core';
 import { DEMO_FAMILY, DEMO_READ_ONLY } from '../family/family.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** True when the patient may get reminder calls: she (or the family for her) consented, or it is the demo family. */
-export function mayContact(consentAt: Date | null, familyName: string): boolean {
-  return consentAt !== null || familyName === DEMO_FAMILY;
-}
 
 /** LGPD: patient consent, data export, family deletion and transcript retention. */
 @Injectable()

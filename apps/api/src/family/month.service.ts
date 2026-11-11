@@ -6,9 +6,7 @@ import {
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { and, asc, eq, gte, lt, ne } from 'drizzle-orm';
-import { DB, type Database } from '../db/db.module.js';
-import { costShares, doses, medications, members } from '../db/schema.js';
-import { localDate, localDateTime } from '../doses/time.js';
+import { costShares, type Database, DB, doses, localDate, localDateTime, medications, members } from '@recuidado/core';
 import { FamilyService, freeAccessOf } from './family.service.js';
 import { normalizePixKey, pixCopyPaste, pixKeyType, type PixKeyType } from './pix.js';
 import { cmedPriceOf, monthlyCostOf } from './pricing.js';

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { EmailService } from './email.service.js';
+import { EmailService } from '@recuidado/core';
 
 @Module({
   providers: [EmailService],

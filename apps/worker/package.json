@@ -1,0 +1,35 @@
+{
+  "name": "@recuidado/worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Recuidado worker: runs the doses queue (reminders, voice calls, check-ins, family alerts). No HTTP.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json && (tsc -p tsconfig.build.json --watch --preserveWatchOutput & TELEMETRY_SERVICE=worker node --watch dist/main.js)",
+    "start": "node dist/main.js",
+    "lint": "oxlint --type-aware src/",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/bullmq": "^12.0.1",
+    "@nestjs/common": "^12.0.1",
+    "@nestjs/config": "^12.1.1",
+    "@nestjs/core": "^12.0.1",
+    "@recuidado/core": "workspace:*",
+    "bullmq": "^6.7.3",
+    "ioredis": "^6.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "oxlint": "^1.58.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.2"
+  }
+}

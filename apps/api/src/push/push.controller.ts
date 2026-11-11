@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { z } from 'zod';
-import { PushService } from './push.service.js';
+import { PushService } from '@recuidado/core';
 
 const subscribeBody = z.object({
   memberId: z.uuid(),

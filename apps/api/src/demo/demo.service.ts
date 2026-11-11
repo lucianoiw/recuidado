@@ -3,11 +3,18 @@ import { ConflictException, Inject, Injectable, Logger, NotFoundException, Servi
 import { ConfigService } from '@nestjs/config';
 import type { Job, Queue } from 'bullmq';
 import { asc, desc, eq } from 'drizzle-orm';
-import { DB, type Database } from '../db/db.module.js';
-import { doses, medications, voiceCalls } from '../db/schema.js';
-import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
+import {
+  type Database,
+  DB,
+  type DoseJob,
+  doseJobId,
+  doses,
+  DOSES_QUEUE,
+  medications,
+  telemetry,
+  voiceCalls,
+} from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
 import { demoSteps, type JobInfo, type JobState } from './demo.steps.js';
 
 const KEEP_FINISHED = { removeOnComplete: { age: 24 * 3600 }, removeOnFail: { age: 24 * 3600 } };

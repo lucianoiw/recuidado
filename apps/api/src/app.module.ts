@@ -4,9 +4,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { Redis } from 'ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { validateEnv } from './config/env.js';
+import { DbModule, telemetry, validateEnv } from '@recuidado/core';
 import { BillingModule } from './billing/billing.module.js';
-import { DbModule } from './db/db.module.js';
 import { DemoModule } from './demo/demo.module.js';
 import { DosesModule } from './doses/doses.module.js';
 import { FamilyModule } from './family/family.module.js';
@@ -17,7 +16,6 @@ import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { PrivacyModule } from './privacy/privacy.module.js';
 import { VoiceModule } from './voice/voice.module.js';
-import { telemetry } from './telemetry/telemetry.js';
 
 @Module({
   imports: [

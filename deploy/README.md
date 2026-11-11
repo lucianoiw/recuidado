@@ -6,7 +6,7 @@ Coolify project "Recuidado", branch `main`, server 82.25.75.144. One resource pe
 | --- | --- | --- | --- |
 | `recuidado/web` | Dockerfile | `/apps/web/Dockerfile` | https://recuidado.com.br:3000, https://www.recuidado.com.br:3000 |
 | `recuidado/api` | Dockerfile | `/apps/api/Dockerfile` | https://api.recuidado.com.br:4000 |
-| `recuidado/worker` | Dockerfile | `/apps/api/Dockerfile.worker` | none (no HTTP) |
+| `recuidado/worker` | Dockerfile | `/apps/worker/Dockerfile` | none (no HTTP) |
 | `recuidado/voice` | Dockerfile | `/apps/voice/Dockerfile` | https://voz.recuidado.com.br:5000 |
 | `recuidado/mcp` | Dockerfile | `/apps/mcp/Dockerfile` | https://mcp.recuidado.com.br:7000 |
 | `recuidado/asterisk` | Docker Compose (Base Directory `/deploy/asterisk`) | `/docker-compose.yml` | host network (5061/tcp, 10000-10200/udp) |
@@ -16,7 +16,7 @@ Coolify project "Recuidado", branch `main`, server 82.25.75.144. One resource pe
 Dockerfile resources use Base Directory `/` (build context is the repo root). Asterisk uses `/deploy/asterisk`, because Coolify resolves the compose build context from the base directory.
 
 - `api`: `DATABASE_URL` and `REDIS_URL` use the internal URLs of the Coolify databases. Migrations run on boot.
-- `worker`: its own entrypoint (`apps/api/src/worker/main.ts`, `Dockerfile.worker`), no HTTP server. It consumes the doses queue (BullMQ on Redis) and schedules the hourly dose planner; the api only serves HTTP, migrates and seeds the demo family. They share the services in `apps/api/src`, so both resources deploy on every push to main. Variables the queue jobs use (DATABASE_URL, REDIS_URL, VOICE_*, VAPID_*, DOSE_*, EMERGENCY_*, CALL_*, LOW_STOCK_DAYS, POSTHOG_*, RESEND_API_KEY, EMAIL_FROM, DEMO_ALERT_EMAILS) go on both. Health check: a heartbeat file the worker touches every 30 s.
+- `worker`: its own app (`apps/worker`, own package.json and Dockerfile), no HTTP server. It consumes the doses queue (BullMQ on Redis) and schedules the hourly dose planner; the api only serves HTTP, migrates and seeds the demo family. Code both need (env, schema, queue, dose/voice/alert/push/e-mail/stock services) lives in `packages/core`; the api has nothing of the worker and the worker nothing of the api. Both resources deploy on every push to main. Variables the queue jobs use (DATABASE_URL, REDIS_URL, VOICE_*, VAPID_*, DOSE_*, EMERGENCY_*, CALL_*, LOW_STOCK_DAYS, POSTHOG_*, RESEND_API_KEY, EMAIL_FROM, DEMO_ALERT_EMAILS) go on both. Health check: a heartbeat file the worker touches every 30 s.
 - `api` and `web`: Web Push uses one VAPID key pair. `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` on api; the same public key as `NEXT_PUBLIC_VAPID_PUBLIC_KEY` on web, marked as build variable (Next inlines it at build time).
 - `voice`: keeps the domain `voz.recuidado.com.br` so Traefik issues the certificate that `asterisk` reads from `/data/coolify/proxy/acme.json`. Give it a longer stop grace period so a call in progress is not cut.
 - `voice`: custom Docker options `-v recuidado-greetings:/data/greetings`, so the recorded call greetings survive redeploys.

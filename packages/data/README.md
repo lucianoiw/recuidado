@@ -119,7 +119,7 @@ are missing.
 ## Proposed tables
 
 Names follow the API conventions (English, snake_case). Suggested for
-`apps/api/src/db/schema.ts`:
+`packages/core/src/db/schema.ts`:
 
 - `pfpb_free_items` (id, indication, name, active_ingredients text[], match_key, ingredient_key, reference_month)
 - `pfpb_free_item_eans` (ean pk, item_id fk, product)

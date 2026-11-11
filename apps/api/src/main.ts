@@ -6,8 +6,7 @@ import { corsOrigins } from './cors.js';
 import { runMigrations } from './db/migrate.js';
 import { accessLog } from './telemetry/access-log.middleware.js';
 import { TelemetryExceptionFilter } from './telemetry/exception.filter.js';
-import { TelemetryLogger } from './telemetry/telemetry.logger.js';
-import { telemetry } from './telemetry/telemetry.js';
+import { telemetry, TelemetryLogger } from '@recuidado/core';
 
 async function bootstrap() {
   // Only the API migrates; the worker never touches the schema.

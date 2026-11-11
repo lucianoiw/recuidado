@@ -21,9 +21,7 @@
     "dev": "nest start --watch",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
-    "dev:worker": "nest start --watch --entryFile worker/main",
-    "start:worker": "node dist/worker/main"
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.8.0",
@@ -34,6 +32,7 @@
     "@nestjs/platform-express": "^12.0.1",
     "@nestjs/terminus": "^12.1.0",
     "@nestjs/throttler": "^6.7.1",
+    "@recuidado/core": "workspace:*",
     "@recuidado/data": "workspace:*",
     "@recuidado/prescription-reader": "workspace:*",
     "@recuidado/telemetry": "workspace:*",
@@ -43,9 +42,7 @@
     "ioredis": "^6.0.0",
     "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
-    "resend": "6.38.0",
     "rxjs": "^7.8.1",
-    "web-push": "4.0.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -57,7 +54,6 @@
     "@types/node": "^24.0.0",
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.0.0",
-    "@types/web-push": "^3.6.4",
     "@vitest/coverage-v8": "^4.1.2",
     "drizzle-kit": "^0.31.11",
     "oxlint": "^1.58.0",

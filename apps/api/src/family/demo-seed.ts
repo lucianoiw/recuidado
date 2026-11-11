@@ -1,7 +1,15 @@
 import { and, eq, inArray, isNull } from 'drizzle-orm';
-import type { Database } from '../db/db.module.js';
-import { alerts, doses, medications, members, voiceCalls } from '../db/schema.js';
-import { localDate, localDateTime, localTime } from '../doses/time.js';
+import {
+  alerts,
+  type Database,
+  doses,
+  localDate,
+  localDateTime,
+  localTime,
+  medications,
+  members,
+  voiceCalls,
+} from '@recuidado/core';
 
 /**
  * The fixed story of the demo family (synthetic data, Hack Brasil rule 6.9):

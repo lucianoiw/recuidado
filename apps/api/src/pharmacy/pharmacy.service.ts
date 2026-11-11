@@ -12,11 +12,8 @@ import {
 import Anthropic from '@anthropic-ai/sdk';
 import { ConfigService } from '@nestjs/config';
 import { and, desc, eq, gte, inArray } from 'drizzle-orm';
-import { DB, type Database } from '../db/db.module.js';
-import { medications, pharmacyInquiries } from '../db/schema.js';
+import { type Database, DB, medications, pharmacyInquiries, telemetry, VoiceCallService } from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
-import { VoiceCallService } from '../voice/voice.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
 import { readPharmacyTranscript } from './transcript-reader.js';
 
 /** At most this many medicines per call, so the call stays short. */

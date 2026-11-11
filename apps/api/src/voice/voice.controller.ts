@@ -12,7 +12,7 @@ import {
 import { SkipThrottle } from '@nestjs/throttler';
 import { z } from 'zod';
 import { VoiceTokenGuard } from './voice-token.guard.js';
-import { VoiceCallService, type VoiceResult } from './voice.service.js';
+import { VoiceCallService, type VoiceResult } from '@recuidado/core';
 
 const voiceResultSchema = z.object({
   sessionId: z.string(),

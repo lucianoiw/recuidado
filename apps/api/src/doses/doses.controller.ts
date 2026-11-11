@@ -1,5 +1,5 @@
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { DosesService } from './doses.service.js';
+import { DosesService } from '@recuidado/core';
 
 @Controller('doses')
 export class DosesController {
