@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeIngredient, normalizeReading, normalizeTime, toMatchKey } from "../src/normalize.ts";
+import { groupTime, normalizeIngredient, normalizeReading, normalizeTime, toMatchKey } from "../src/normalize.ts";
 import { PrescriptionReadingSchema, type PrescriptionItem, type PrescriptionReading } from "../src/schema.ts";
 
 function item(overrides: Partial<PrescriptionItem> = {}): PrescriptionItem {
@@ -126,7 +126,7 @@ describe("normalizeReading", () => {
         }),
       ]),
     ).items;
-    expect(result!.schedule.map((dose) => dose.time)).toEqual(["19:30"]);
+    expect(result!.schedule.map((dose) => dose.time)).toEqual(["20:00"]);
     expect(result!.needs_review).toBe(true);
     expect(result!.review_reason).toContain("Horário inválido");
   });
@@ -142,6 +142,81 @@ describe("normalizeReading", () => {
     const normalized = normalizeReading(reading([item({ active_ingredient: null })]));
     expect(normalized.items[0]!.needs_review).toBe(true);
     expect(normalized.warnings.length).toBeGreaterThan(0);
+  });
+});
+
+describe("grouping close times", () => {
+  it.each([
+    ["08:30", "08:00"],
+    ["07:00", "08:00"],
+    ["12:30", "12:00"],
+    ["19:00", "20:00"],
+    ["21:00", "20:00"],
+    ["14:00", "14:00"],
+    ["22:00", "22:00"],
+    ["06:00", "06:00"],
+  ])("groupTime(%s) is %s", (time, expected) => {
+    expect(groupTime(time)).toBe(expected);
+  });
+
+  it("groups doses near 08:00, 12:00 and 20:00 on those times", () => {
+    const [result] = normalizeReading(
+      reading([
+        item({
+          schedule: [
+            { time: "08:30", amount: 1, anchor: "fixed_time" },
+            { time: "12:30", amount: 1, anchor: "after_lunch" },
+            { time: "21:00", amount: 1, anchor: "night" },
+          ],
+        }),
+      ]),
+    ).items;
+    expect(result!.schedule.map((dose) => dose.time)).toEqual(["08:00", "12:00", "20:00"]);
+  });
+
+  it("keeps fasting and before-meal times apart from the meal", () => {
+    const [result] = normalizeReading(
+      reading([
+        item({
+          schedule: [
+            { time: "07:30", amount: 10, anchor: "before_breakfast" },
+            { time: "19:30", amount: 6, anchor: "before_dinner" },
+          ],
+        }),
+      ]),
+    ).items;
+    expect(result!.schedule.map((dose) => dose.time)).toEqual(["07:30", "19:30"]);
+  });
+
+  it("never merges two doses of the same medicine into one", () => {
+    const [result] = normalizeReading(
+      reading([
+        item({
+          schedule: [
+            { time: "08:00", amount: 1, anchor: "fixed_time" },
+            { time: "08:45", amount: 1, anchor: "fixed_time" },
+          ],
+        }),
+      ]),
+    ).items;
+    expect(result!.schedule.map((dose) => [dose.time, dose.amount])).toEqual([
+      ["08:00", 1],
+      ["08:45", 1],
+    ]);
+  });
+
+  it("puts with-meal and after-meal anchors on the anchor times", () => {
+    const [result] = normalizeReading(
+      reading([
+        item({
+          schedule: [
+            { time: "x", amount: 1, anchor: "after_breakfast" },
+            { time: "x", amount: 1, anchor: "dinner" },
+          ],
+        }),
+      ]),
+    ).items;
+    expect(result!.schedule.map((dose) => dose.time)).toEqual(["08:00", "20:00"]);
   });
 });
 

@@ -11,6 +11,7 @@ export {
 } from "./read-prescription.ts";
 export {
   foldText,
+  groupTime,
   monthlyUnits,
   normalizeIngredient,
   normalizeReading,
@@ -19,7 +20,14 @@ export {
   type NormalizedItem,
   type NormalizedReading,
 } from "./normalize.ts";
-export { DEFAULT_ROUTINE, INTERVAL_TIMES, TIMES_PER_DAY } from "./routine.ts";
+export {
+  ANCHOR_TIMES,
+  DEFAULT_ROUTINE,
+  GROUPING_WINDOW_MINUTES,
+  INTERVAL_TIMES,
+  TIMES_PER_DAY,
+  UNGROUPED_ANCHORS,
+} from "./routine.ts";
 export {
   PrescriptionItemSchema,
   PrescriptionReadingSchema,

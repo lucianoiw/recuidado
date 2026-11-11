@@ -32,13 +32,15 @@ Main fields per item (full schema in `src/schema.ts`):
 | `active_ingredient` | `"cloridrato de metformina"` | Display, lookup |
 | `strength` | `{ "value": 850, "unit": "mg" }` | Lookup |
 | `match_key` | `"metformina 850 mg"` | Join with Farmácia Popular and CMED (`toMatchKey`) |
-| `schedule` | `[{ "time": "08:30", "amount": 1, "anchor": "after_breakfast" }]` | Reminders |
+| `schedule` | `[{ "time": "08:00", "amount": 1, "anchor": "after_breakfast" }]` | Reminders |
 | `frequency.as_needed` | `true` for "se dor" | No reminder |
 | `duration.continuous` | `true` for "uso contínuo" | Monthly plan |
 | `monthly_units` | `60` | Monthly cost |
 | `needs_review`, `review_reason` | `true`, `"Dose ilegível"` | Family confirmation |
 
-Meal cues ("após o café", "à noite") and intervals ("12/12h") become clock times through the routine table in `src/routine.ts` (breakfast 08:00, lunch 12:00, dinner 19:00, night 21:00, bedtime 22:00). The same table is sent to the model and used by the code, so both agree.
+Meal cues ("após o café", "à noite") and intervals ("12/12h") become clock times through the routine table in `src/routine.ts` (breakfast 08:00, lunch 12:00, dinner and night 20:00, bedtime 22:00). The same table is sent to the model and used by the code, so both agree.
+
+Close doses share one reminder: any time within 60 minutes of 08:00, 12:00 or 20:00 moves to that time (08:30 becomes 08:00, 21:00 becomes 20:00). Fasting and before-meal doses (`before_breakfast`, `before_lunch`, `before_dinner`, `wake_up`) keep their time, and two doses of the same medicine are never merged into one. The family still reviews every time before confirming.
 
 ## Synthetic fixtures
 

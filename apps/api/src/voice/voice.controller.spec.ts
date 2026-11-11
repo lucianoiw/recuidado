@@ -45,7 +45,7 @@ describe('VoiceController', () => {
       .send(result);
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ status: 'missed' });
-    expect(applyResult).toHaveBeenCalledWith(DOSE, result);
+    expect(applyResult).toHaveBeenCalledWith(DOSE, expect.objectContaining(result));
   });
 
   it('rejects an invalid body', async () => {

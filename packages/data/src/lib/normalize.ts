@@ -40,12 +40,12 @@ export interface Strength {
   unit: string;
 }
 
-const UNIT_ALIASES: Record<string, string> = { "µg": "mcg", ug: "mcg", u: "ui", "u/ml": "ui/ml" };
+const UNIT_ALIASES: Record<string, string> = { "µg": "mcg", "μg": "mcg", ug: "mcg", u: "ui", "u/ml": "ui/ml" };
 
 // Number (with "," or "." decimals) followed by a unit and an optional "/denominator".
 // A number right after "x" is a pack quantity ("X 40 G"), not a strength.
 const STRENGTH_PATTERN =
-  /(?<!\bx\s{0,3}|[\d.,])(\d+(?:[.,]\d+)?)\s*(mcg|µg|ug|mg|g|ui|u|meq|%)(?:\s*\/\s*(ml|g|dose|jato|gota|actuacao|acionamento))?(?![a-z])/gi;
+  /(?<!\bx\s{0,3}|[\d.,])(\d+(?:[.,]\d+)?)\s*(mcg|µg|μg|ug|mg|g|ui|u|meq|%)(?:\s*\/\s*(ml|g|dose|jato|gota|actuacao|acionamento))?(?![a-z])/gi;
 
 /** Every strength written in a text, in order: "10 MG/G + 0,443 MG/G CREM" -> [10 mg/g, 0.443 mg/g]. */
 export function parseStrengths(text: string): Strength[] {
@@ -110,4 +110,37 @@ export function parseUnitsPerPack(presentation: string): number | null {
   const perBlister = Number(last[1]);
   const blisters = folded.match(/\bct\s+(\d+)\s+(bl|str|env|cart)\b/);
   return blisters ? perBlister * Number(blisters[1]) : perBlister;
+}
+
+/**
+ * Salt-free, order-free key to join lists written in different styles:
+ * "dipropionato de beclometasona" and "beclometasona, dipropionato" both give
+ * "beclometasona"; "levodopa + benserazida" gives "benserazida + levodopa".
+ */
+export function looseKey(ingredients: string[]): string | null {
+  const names = ingredients
+    .map((name) =>
+      normalizeIngredient(name.split(",")[0]!)
+        .replace(/\b[a-z]+(ato|eto|ito) de\b/g, " ")
+        // "insulina análoga glargina" = "insulina glargina"; the Farmácia Popular writes NPH as "insulina humana".
+        .replace(/\banaloga\b/g, " ")
+        .replace(/\b(insulina humana) nph\b/g, "$1")
+        .replace(/\s+/g, " ")
+        .trim(),
+    )
+    .filter(Boolean)
+    .sort();
+  return names.length > 0 ? names.join(" + ") : null;
+}
+
+/** looseKey plus the strengths in order: "beclometasona 50 mcg", "benserazida + levodopa 50 mg + 200 mg". */
+export function looseMatchKey(ingredients: string[], strengths: Strength[]): string | null {
+  const key = looseKey(ingredients);
+  if (!key) return null;
+  if (strengths.length === 0) return key;
+  // "100 mcg/dose" and "100 mcg" are the same inhaler strength.
+  const format = (strength: Strength) => formatStrength(strength).replace(/\/(dose|jato|acionamento|actuacao)$/, "");
+  if (ingredients.length === 1) return `${key} ${format(strengths[0]!)}`;
+  const sorted = strengths.map(format).sort();
+  return `${key} ${sorted.join(" + ")}`;
 }

@@ -1,0 +1,5718 @@
+{
+  "source": {
+    "name": "Componente Especializado da Assistência Farmacêutica (CEAF), grupos 1A, 1B e 2, a partir da REMEME da SESA/ES",
+    "url": "https://farmaciacidada.es.gov.br/media/Arquivos/Componente%20Especializado/REMEME/REMEME_17.0_jan.2026.pdf",
+    "about": "https://www.gov.br/saude/pt-br/composicao/sectics/daf/ceaf",
+    "fetched_at": "2026-11-11T03:35:03.609Z"
+  },
+  "items": [
+    {
+      "ingredient": "abatacepte",
+      "active_ingredients": [
+        "abatacepte"
+      ],
+      "presentation": "injetável, 125 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 125,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "abatacepte 125 mg",
+      "ingredient_key": "abatacepte",
+      "loose_key": "abatacepte",
+      "loose_match_key": "abatacepte 125 mg"
+    },
+    {
+      "ingredient": "abatacepte",
+      "active_ingredients": [
+        "abatacepte"
+      ],
+      "presentation": "injetável, 250 mg frasco-",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "abatacepte 250 mg",
+      "ingredient_key": "abatacepte",
+      "loose_key": "abatacepte",
+      "loose_match_key": "abatacepte 250 mg"
+    },
+    {
+      "ingredient": "acetazolamida",
+      "active_ingredients": [
+        "acetazolamida"
+      ],
+      "presentation": "comprimido 250mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acetazolamida 250 mg",
+      "ingredient_key": "acetazolamida",
+      "loose_key": "acetazolamida",
+      "loose_match_key": "acetazolamida 250 mg"
+    },
+    {
+      "ingredient": "ácido nicotínico",
+      "active_ingredients": [
+        "ácido nicotínico"
+      ],
+      "presentation": "comprimido de liberação prolongada 500 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido nicotinico 500 mg",
+      "ingredient_key": "acido nicotinico",
+      "loose_key": "acido nicotinico",
+      "loose_match_key": "acido nicotinico 500 mg"
+    },
+    {
+      "ingredient": "ácido ursodesoxicólico",
+      "active_ingredients": [
+        "ácido ursodesoxicólico"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido ursodesoxicolico 50 mg",
+      "ingredient_key": "acido ursodesoxicolico",
+      "loose_key": "acido ursodesoxicolico",
+      "loose_match_key": "acido ursodesoxicolico 50 mg"
+    },
+    {
+      "ingredient": "ácido ursodesoxicólico",
+      "active_ingredients": [
+        "ácido ursodesoxicólico"
+      ],
+      "presentation": "comprimido 150 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido ursodesoxicolico 150 mg",
+      "ingredient_key": "acido ursodesoxicolico",
+      "loose_key": "acido ursodesoxicolico",
+      "loose_match_key": "acido ursodesoxicolico 150 mg"
+    },
+    {
+      "ingredient": "ácido ursodesoxicólico",
+      "active_ingredients": [
+        "ácido ursodesoxicólico"
+      ],
+      "presentation": "comprimido 300 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido ursodesoxicolico 300 mg",
+      "ingredient_key": "acido ursodesoxicolico",
+      "loose_key": "acido ursodesoxicolico",
+      "loose_match_key": "acido ursodesoxicolico 300 mg"
+    },
+    {
+      "ingredient": "ácido zoledrônico",
+      "active_ingredients": [
+        "ácido zoledrônico"
+      ],
+      "presentation": "injetável, 5 mg/100mL frasco",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido zoledronico 5 mg",
+      "ingredient_key": "acido zoledronico",
+      "loose_key": "acido zoledronico",
+      "loose_match_key": "acido zoledronico 5 mg"
+    },
+    {
+      "ingredient": "acitretina",
+      "active_ingredients": [
+        "acitretina"
+      ],
+      "presentation": "cápsula 10 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acitretina 10 mg",
+      "ingredient_key": "acitretina",
+      "loose_key": "acitretina",
+      "loose_match_key": "acitretina 10 mg"
+    },
+    {
+      "ingredient": "acitretina",
+      "active_ingredients": [
+        "acitretina"
+      ],
+      "presentation": "cápsula 25 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acitretina 25 mg",
+      "ingredient_key": "acitretina",
+      "loose_key": "acitretina",
+      "loose_match_key": "acitretina 25 mg"
+    },
+    {
+      "ingredient": "adalimumabe",
+      "active_ingredients": [
+        "adalimumabe"
+      ],
+      "presentation": "injetável, 40mg frasco ampola (uso pediátrico)",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "adalimumabe 40 mg",
+      "ingredient_key": "adalimumabe",
+      "loose_key": "adalimumabe",
+      "loose_match_key": "adalimumabe 40 mg"
+    },
+    {
+      "ingredient": "adalimumabe",
+      "active_ingredients": [
+        "adalimumabe"
+      ],
+      "presentation": "injetável, 40 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "adalimumabe 40 mg",
+      "ingredient_key": "adalimumabe",
+      "loose_key": "adalimumabe",
+      "loose_match_key": "adalimumabe 40 mg"
+    },
+    {
+      "ingredient": "alentuzumabe",
+      "active_ingredients": [
+        "alentuzumabe"
+      ],
+      "presentation": "injetável, 10mg/mL frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "alentuzumabe 10 mg/ml",
+      "ingredient_key": "alentuzumabe",
+      "loose_key": "alentuzumabe",
+      "loose_match_key": "alentuzumabe 10 mg/ml"
+    },
+    {
+      "ingredient": "alfaalglicosidase",
+      "active_ingredients": [
+        "alfaalglicosidase"
+      ],
+      "presentation": "injetável, frasco-ampola com 50 mg de pó liofilizado",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "alfaalglicosidase 50 mg",
+      "ingredient_key": "alfaalglicosidase",
+      "loose_key": "alfaalglicosidase",
+      "loose_match_key": "alfaalglicosidase 50 mg"
+    },
+    {
+      "ingredient": "alfacerliponase",
+      "active_ingredients": [
+        "alfacerliponase"
+      ],
+      "presentation": "solução para infusão, 30mg/mL frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "alfacerliponase 30 mg/ml",
+      "ingredient_key": "alfacerliponase",
+      "loose_key": "alfacerliponase",
+      "loose_match_key": "alfacerliponase 30 mg/ml"
+    },
+    {
+      "ingredient": "alfadornase",
+      "active_ingredients": [
+        "alfadornase"
+      ],
+      "presentation": "solução para inalação, 1mg/mL ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "alfadornase 1 mg/ml",
+      "ingredient_key": "alfadornase",
+      "loose_key": "alfadornase",
+      "loose_match_key": "alfadornase 1 mg/ml"
+    },
+    {
+      "ingredient": "alfaelosulfase",
+      "active_ingredients": [
+        "alfaelosulfase"
+      ],
+      "presentation": "injetável, 1mg/mL frasco de 5mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "alfaelosulfase 1 mg/ml",
+      "ingredient_key": "alfaelosulfase",
+      "loose_key": "alfaelosulfase",
+      "loose_match_key": "alfaelosulfase 1 mg/ml"
+    },
+    {
+      "ingredient": "alfaepoetina",
+      "active_ingredients": [
+        "alfaepoetina"
+      ],
+      "presentation": "injetável, 1.000 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfaepoetina 1 ui",
+      "ingredient_key": "alfaepoetina",
+      "loose_key": "alfaepoetina",
+      "loose_match_key": "alfaepoetina 1 ui"
+    },
+    {
+      "ingredient": "alfaepoetina",
+      "active_ingredients": [
+        "alfaepoetina"
+      ],
+      "presentation": "injetável, 2.000 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfaepoetina 2 ui",
+      "ingredient_key": "alfaepoetina",
+      "loose_key": "alfaepoetina",
+      "loose_match_key": "alfaepoetina 2 ui"
+    },
+    {
+      "ingredient": "alfaepoetina",
+      "active_ingredients": [
+        "alfaepoetina"
+      ],
+      "presentation": "injetável, 3.000 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 3,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfaepoetina 3 ui",
+      "ingredient_key": "alfaepoetina",
+      "loose_key": "alfaepoetina",
+      "loose_match_key": "alfaepoetina 3 ui"
+    },
+    {
+      "ingredient": "alfaepoetina",
+      "active_ingredients": [
+        "alfaepoetina"
+      ],
+      "presentation": "injetável, 4.000 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 4,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfaepoetina 4 ui",
+      "ingredient_key": "alfaepoetina",
+      "loose_key": "alfaepoetina",
+      "loose_match_key": "alfaepoetina 4 ui"
+    },
+    {
+      "ingredient": "alfaepoetina",
+      "active_ingredients": [
+        "alfaepoetina"
+      ],
+      "presentation": "injetável, 10.000 UI frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfaepoetina 10 ui",
+      "ingredient_key": "alfaepoetina",
+      "loose_key": "alfaepoetina",
+      "loose_match_key": "alfaepoetina 10 ui"
+    },
+    {
+      "ingredient": "alfagalsidase",
+      "active_ingredients": [
+        "alfagalsidase"
+      ],
+      "presentation": "injetável, 1mg/mL frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "alfagalsidase 1 mg/ml",
+      "ingredient_key": "alfagalsidase",
+      "loose_key": "alfagalsidase",
+      "loose_match_key": "alfagalsidase 1 mg/ml"
+    },
+    {
+      "ingredient": "alfainterferona 2b",
+      "active_ingredients": [
+        "alfainterferona 2b"
+      ],
+      "presentation": "injetável, 3.000.000 UI frasco ampola",
+      "group": "1B",
+      "strengths": [],
+      "match_key": "alfainterferona 2b",
+      "ingredient_key": "alfainterferona 2b",
+      "loose_key": "alfainterferona 2b",
+      "loose_match_key": "alfainterferona 2b"
+    },
+    {
+      "ingredient": "alfainterferona 2b",
+      "active_ingredients": [
+        "alfainterferona 2b"
+      ],
+      "presentation": "injetável, 5.000.000 UI frasco ampola",
+      "group": "1B",
+      "strengths": [],
+      "match_key": "alfainterferona 2b",
+      "ingredient_key": "alfainterferona 2b",
+      "loose_key": "alfainterferona 2b",
+      "loose_match_key": "alfainterferona 2b"
+    },
+    {
+      "ingredient": "alfainterferona 2b",
+      "active_ingredients": [
+        "alfainterferona 2b"
+      ],
+      "presentation": "injetável, 10.000.000 UI frasco ampola",
+      "group": "1B",
+      "strengths": [],
+      "match_key": "alfainterferona 2b",
+      "ingredient_key": "alfainterferona 2b",
+      "loose_key": "alfainterferona 2b",
+      "loose_match_key": "alfainterferona 2b"
+    },
+    {
+      "ingredient": "alfataliglicerase",
+      "active_ingredients": [
+        "alfataliglicerase"
+      ],
+      "presentation": "injetável, 200 UI frasco- ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfataliglicerase 200 ui",
+      "ingredient_key": "alfataliglicerase",
+      "loose_key": "alfataliglicerase",
+      "loose_match_key": "alfataliglicerase 200 ui"
+    },
+    {
+      "ingredient": "alfavelaglicerase",
+      "active_ingredients": [
+        "alfavelaglicerase"
+      ],
+      "presentation": "injetável, 400 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "alfavelaglicerase 400 ui",
+      "ingredient_key": "alfavelaglicerase",
+      "loose_key": "alfavelaglicerase",
+      "loose_match_key": "alfavelaglicerase 400 ui"
+    },
+    {
+      "ingredient": "alfavestronidase",
+      "active_ingredients": [
+        "alfavestronidase"
+      ],
+      "presentation": "injetável, 2mg/mL frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "alfavestronidase 2 mg/ml",
+      "ingredient_key": "alfavestronidase",
+      "loose_key": "alfavestronidase",
+      "loose_match_key": "alfavestronidase 2 mg/ml"
+    },
+    {
+      "ingredient": "amantadina",
+      "active_ingredients": [
+        "amantadina"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "amantadina 100 mg",
+      "ingredient_key": "amantadina",
+      "loose_key": "amantadina",
+      "loose_match_key": "amantadina 100 mg"
+    },
+    {
+      "ingredient": "ambrisentana",
+      "active_ingredients": [
+        "ambrisentana"
+      ],
+      "presentation": "comprimido 5 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ambrisentana 5 mg",
+      "ingredient_key": "ambrisentana",
+      "loose_key": "ambrisentana",
+      "loose_match_key": "ambrisentana 5 mg"
+    },
+    {
+      "ingredient": "ambrisentana",
+      "active_ingredients": [
+        "ambrisentana"
+      ],
+      "presentation": "comprimido 10mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ambrisentana 10 mg",
+      "ingredient_key": "ambrisentana",
+      "loose_key": "ambrisentana",
+      "loose_match_key": "ambrisentana 10 mg"
+    },
+    {
+      "ingredient": "atorvastatina",
+      "active_ingredients": [
+        "atorvastatina"
+      ],
+      "presentation": "comprimido 10mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atorvastatina 10 mg",
+      "ingredient_key": "atorvastatina",
+      "loose_key": "atorvastatina",
+      "loose_match_key": "atorvastatina 10 mg"
+    },
+    {
+      "ingredient": "atorvastatina",
+      "active_ingredients": [
+        "atorvastatina"
+      ],
+      "presentation": "comprimido 20mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atorvastatina 20 mg",
+      "ingredient_key": "atorvastatina",
+      "loose_key": "atorvastatina",
+      "loose_match_key": "atorvastatina 20 mg"
+    },
+    {
+      "ingredient": "atorvastatina",
+      "active_ingredients": [
+        "atorvastatina"
+      ],
+      "presentation": "comprimido 40 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atorvastatina 40 mg",
+      "ingredient_key": "atorvastatina",
+      "loose_key": "atorvastatina",
+      "loose_match_key": "atorvastatina 40 mg"
+    },
+    {
+      "ingredient": "atorvastatina",
+      "active_ingredients": [
+        "atorvastatina"
+      ],
+      "presentation": "comprimido 80 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 80,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atorvastatina 80 mg",
+      "ingredient_key": "atorvastatina",
+      "loose_key": "atorvastatina",
+      "loose_match_key": "atorvastatina 80 mg"
+    },
+    {
+      "ingredient": "azatioprina",
+      "active_ingredients": [
+        "azatioprina"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "azatioprina 50 mg",
+      "ingredient_key": "azatioprina",
+      "loose_key": "azatioprina",
+      "loose_match_key": "azatioprina 50 mg"
+    },
+    {
+      "ingredient": "baricitinibe",
+      "active_ingredients": [
+        "baricitinibe"
+      ],
+      "presentation": "comprimido 2 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "baricitinibe 2 mg",
+      "ingredient_key": "baricitinibe",
+      "loose_key": "baricitinibe",
+      "loose_match_key": "baricitinibe 2 mg"
+    },
+    {
+      "ingredient": "baricitinibe",
+      "active_ingredients": [
+        "baricitinibe"
+      ],
+      "presentation": "comprimido 4 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 4,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "baricitinibe 4 mg",
+      "ingredient_key": "baricitinibe",
+      "loose_key": "baricitinibe",
+      "loose_match_key": "baricitinibe 4 mg"
+    },
+    {
+      "ingredient": "beclometasona + formoterol + glicopirrônio (dipropionato de beclometasona + fumarato de formoterol + brometo de",
+      "active_ingredients": [
+        "beclometasona",
+        "formoterol",
+        "glicopirrônio"
+      ],
+      "presentation": "solução aerossol para inalação oral de 100 μ g + 6 μg + 12,5 μg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 6,
+          "unit": "mcg"
+        },
+        {
+          "value": 12.5,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "beclometasona + formoterol + glicopirronio",
+      "ingredient_key": "beclometasona + formoterol + glicopirronio",
+      "loose_key": "beclometasona + formoterol + glicopirronio",
+      "loose_match_key": "beclometasona + formoterol + glicopirronio 12.5 mcg + 6 mcg"
+    },
+    {
+      "ingredient": "betagalsidase",
+      "active_ingredients": [
+        "betagalsidase"
+      ],
+      "presentation": "injetável, 35mg frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 35,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "betagalsidase 35 mg",
+      "ingredient_key": "betagalsidase",
+      "loose_key": "betagalsidase",
+      "loose_match_key": "betagalsidase 35 mg"
+    },
+    {
+      "ingredient": "betainterferona 1a",
+      "active_ingredients": [
+        "betainterferona 1a"
+      ],
+      "presentation": "injetável, 6.000.000 UI (22 mcg) seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 22,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "betainterferona 1a 22 mcg",
+      "ingredient_key": "betainterferona 1a",
+      "loose_key": "betainterferona 1a",
+      "loose_match_key": "betainterferona 1a 22 mcg"
+    },
+    {
+      "ingredient": "betainterferona 1a",
+      "active_ingredients": [
+        "betainterferona 1a"
+      ],
+      "presentation": "injetável, 6.000.000 UI (30 mcg) frasco ampola, seringa preenchida ou caneta preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "betainterferona 1a 30 mcg",
+      "ingredient_key": "betainterferona 1a",
+      "loose_key": "betainterferona 1a",
+      "loose_match_key": "betainterferona 1a 30 mcg"
+    },
+    {
+      "ingredient": "betainterferona 1a",
+      "active_ingredients": [
+        "betainterferona 1a"
+      ],
+      "presentation": "injetável, 12.000.000 UI (44 mcg) seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 44,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "betainterferona 1a 44 mcg",
+      "ingredient_key": "betainterferona 1a",
+      "loose_key": "betainterferona 1a",
+      "loose_match_key": "betainterferona 1a 44 mcg"
+    },
+    {
+      "ingredient": "betainterferona 1b",
+      "active_ingredients": [
+        "betainterferona 1b"
+      ],
+      "presentation": "injetável, 9.600.000 UI (300mcg) frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "betainterferona 1b 300 mcg",
+      "ingredient_key": "betainterferona 1b",
+      "loose_key": "betainterferona 1b",
+      "loose_match_key": "betainterferona 1b 300 mcg"
+    },
+    {
+      "ingredient": "bezafibrato",
+      "active_ingredients": [
+        "bezafibrato"
+      ],
+      "presentation": "comprimido 200 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "bezafibrato 200 mg",
+      "ingredient_key": "bezafibrato",
+      "loose_key": "bezafibrato",
+      "loose_match_key": "bezafibrato 200 mg"
+    },
+    {
+      "ingredient": "bezafibrato",
+      "active_ingredients": [
+        "bezafibrato"
+      ],
+      "presentation": "comprimido de desintegração lenta 400 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "bezafibrato 400 mg",
+      "ingredient_key": "bezafibrato",
+      "loose_key": "bezafibrato",
+      "loose_match_key": "bezafibrato 400 mg"
+    },
+    {
+      "ingredient": "bimatoprosta",
+      "active_ingredients": [
+        "bimatoprosta"
+      ],
+      "presentation": "solução oftálmica, 0,3mg/mL (0,03%) frasco 3mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.3,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.03,
+          "unit": "%"
+        }
+      ],
+      "match_key": "bimatoprosta 0.3 mg/ml",
+      "ingredient_key": "bimatoprosta",
+      "loose_key": "bimatoprosta",
+      "loose_match_key": "bimatoprosta 0.3 mg/ml"
+    },
+    {
+      "ingredient": "biotina",
+      "active_ingredients": [
+        "biotina"
+      ],
+      "presentation": "cápsula 2,5mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "biotina 2.5 mg",
+      "ingredient_key": "biotina",
+      "loose_key": "biotina",
+      "loose_match_key": "biotina 2.5 mg"
+    },
+    {
+      "ingredient": "bosentana",
+      "active_ingredients": [
+        "bosentana"
+      ],
+      "presentation": "comprimido revestido 62,5 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 62.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "bosentana 62.5 mg",
+      "ingredient_key": "bosentana",
+      "loose_key": "bosentana",
+      "loose_match_key": "bosentana 62.5 mg"
+    },
+    {
+      "ingredient": "bosentana",
+      "active_ingredients": [
+        "bosentana"
+      ],
+      "presentation": "comprimido revestido 125mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 125,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "bosentana 125 mg",
+      "ingredient_key": "bosentana",
+      "loose_key": "bosentana",
+      "loose_match_key": "bosentana 125 mg"
+    },
+    {
+      "ingredient": "brimonidina",
+      "active_ingredients": [
+        "brimonidina"
+      ],
+      "presentation": "solução oftálmica, 2 mg/mL frasco com 5mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "brimonidina 2 mg/ml",
+      "ingredient_key": "brimonidina",
+      "loose_key": "brimonidina",
+      "loose_match_key": "brimonidina 2 mg/ml"
+    },
+    {
+      "ingredient": "brinzolamida",
+      "active_ingredients": [
+        "brinzolamida"
+      ],
+      "presentation": "solução oftálmica, 10 mg/ml (1%) frasco com 5 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "brinzolamida 10 mg/ml",
+      "ingredient_key": "brinzolamida",
+      "loose_key": "brinzolamida",
+      "loose_match_key": "brinzolamida 10 mg/ml"
+    },
+    {
+      "ingredient": "budesonida",
+      "active_ingredients": [
+        "budesonida"
+      ],
+      "presentation": "cápsula inalante ou pó inalante ou aerossol bucal 200 mcg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "budesonida 200 mcg",
+      "ingredient_key": "budesonida",
+      "loose_key": "budesonida",
+      "loose_match_key": "budesonida 200 mcg"
+    },
+    {
+      "ingredient": "budesonida",
+      "active_ingredients": [
+        "budesonida"
+      ],
+      "presentation": "cápsula inalante 400 mcg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "budesonida 400 mcg",
+      "ingredient_key": "budesonida",
+      "loose_key": "budesonida",
+      "loose_match_key": "budesonida 400 mcg"
+    },
+    {
+      "ingredient": "budesonida",
+      "active_ingredients": [
+        "budesonida"
+      ],
+      "presentation": "cápsula inalante ou pó inalante, 12 + 400 mcg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "budesonida 400 mcg",
+      "ingredient_key": "budesonida",
+      "loose_key": "budesonida",
+      "loose_match_key": "budesonida 400 mcg"
+    },
+    {
+      "ingredient": "burosumabe",
+      "active_ingredients": [
+        "burosumabe"
+      ],
+      "presentation": "injetável, 10 mg/mL frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "burosumabe 10 mg/ml",
+      "ingredient_key": "burosumabe",
+      "loose_key": "burosumabe",
+      "loose_match_key": "burosumabe 10 mg/ml"
+    },
+    {
+      "ingredient": "burosumabe",
+      "active_ingredients": [
+        "burosumabe"
+      ],
+      "presentation": "injetável, 20 mg/mL frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "burosumabe 20 mg/ml",
+      "ingredient_key": "burosumabe",
+      "loose_key": "burosumabe",
+      "loose_match_key": "burosumabe 20 mg/ml"
+    },
+    {
+      "ingredient": "burosumabe",
+      "active_ingredients": [
+        "burosumabe"
+      ],
+      "presentation": "injetável, 30 mg/mL frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "burosumabe 30 mg/ml",
+      "ingredient_key": "burosumabe",
+      "loose_key": "burosumabe",
+      "loose_match_key": "burosumabe 30 mg/ml"
+    },
+    {
+      "ingredient": "cabergolina",
+      "active_ingredients": [
+        "cabergolina"
+      ],
+      "presentation": "comprimido 0,5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cabergolina 0.5 mg",
+      "ingredient_key": "cabergolina",
+      "loose_key": "cabergolina",
+      "loose_match_key": "cabergolina 0.5 mg"
+    },
+    {
+      "ingredient": "calcipotriol",
+      "active_ingredients": [
+        "calcipotriol"
+      ],
+      "presentation": "pomada, 50 mcg/g (0,005%) bisnaga 30g",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mcg/g"
+        },
+        {
+          "value": 0.005,
+          "unit": "%"
+        },
+        {
+          "value": 30,
+          "unit": "g"
+        }
+      ],
+      "match_key": "calcipotriol 50 mcg/g",
+      "ingredient_key": "calcipotriol",
+      "loose_key": "calcipotriol",
+      "loose_match_key": "calcipotriol 50 mcg/g"
+    },
+    {
+      "ingredient": "calcitonina",
+      "active_ingredients": [
+        "calcitonina"
+      ],
+      "presentation": "spray nasal, 200 UI/dose frasco",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "ui/dose"
+        }
+      ],
+      "match_key": "calcitonina 200 ui/dose",
+      "ingredient_key": "calcitonina",
+      "loose_key": "calcitonina",
+      "loose_match_key": "calcitonina 200 ui"
+    },
+    {
+      "ingredient": "calcitriol",
+      "active_ingredients": [
+        "calcitriol"
+      ],
+      "presentation": "cápsula 0,25 mcg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 0.25,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "calcitriol 0.25 mcg",
+      "ingredient_key": "calcitriol",
+      "loose_key": "calcitriol",
+      "loose_match_key": "calcitriol 0.25 mcg"
+    },
+    {
+      "ingredient": "certolizumabe pegol",
+      "active_ingredients": [
+        "certolizumabe pegol"
+      ],
+      "presentation": "injetável, 200 mg/mL seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "certolizumabe pegol 200 mg/ml",
+      "ingredient_key": "certolizumabe pegol",
+      "loose_key": "certolizumabe pegol",
+      "loose_match_key": "certolizumabe pegol 200 mg/ml"
+    },
+    {
+      "ingredient": "ciclofosfamida",
+      "active_ingredients": [
+        "ciclofosfamida"
+      ],
+      "presentation": "Comprimido 50 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciclofosfamida 50 mg",
+      "ingredient_key": "ciclofosfamida",
+      "loose_key": "ciclofosfamida",
+      "loose_match_key": "ciclofosfamida 50 mg"
+    },
+    {
+      "ingredient": "ciclofosfamida",
+      "active_ingredients": [
+        "ciclofosfamida"
+      ],
+      "presentation": "cápsula 10 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciclofosfamida 10 mg",
+      "ingredient_key": "ciclofosfamida",
+      "loose_key": "ciclofosfamida",
+      "loose_match_key": "ciclofosfamida 10 mg"
+    },
+    {
+      "ingredient": "ciclofosfamida",
+      "active_ingredients": [
+        "ciclofosfamida"
+      ],
+      "presentation": "cápsula 25 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciclofosfamida 25 mg",
+      "ingredient_key": "ciclofosfamida",
+      "loose_key": "ciclofosfamida",
+      "loose_match_key": "ciclofosfamida 25 mg"
+    },
+    {
+      "ingredient": "ciclosporina",
+      "active_ingredients": [
+        "ciclosporina"
+      ],
+      "presentation": "cápsula 50 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciclosporina 50 mg",
+      "ingredient_key": "ciclosporina",
+      "loose_key": "ciclosporina",
+      "loose_match_key": "ciclosporina 50 mg"
+    },
+    {
+      "ingredient": "ciclosporina",
+      "active_ingredients": [
+        "ciclosporina"
+      ],
+      "presentation": "solução oral, 100 mg/ml frasco de 50 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "ciclosporina 100 mg/ml",
+      "ingredient_key": "ciclosporina",
+      "loose_key": "ciclosporina",
+      "loose_match_key": "ciclosporina 100 mg/ml"
+    },
+    {
+      "ingredient": "cinacalcete",
+      "active_ingredients": [
+        "cinacalcete"
+      ],
+      "presentation": "cápsula 100 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cinacalcete 100 mg",
+      "ingredient_key": "cinacalcete",
+      "loose_key": "cinacalcete",
+      "loose_match_key": "cinacalcete 100 mg"
+    },
+    {
+      "ingredient": "cinacalcete",
+      "active_ingredients": [
+        "cinacalcete"
+      ],
+      "presentation": "comprimidos 30 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cinacalcete 30 mg",
+      "ingredient_key": "cinacalcete",
+      "loose_key": "cinacalcete",
+      "loose_match_key": "cinacalcete 30 mg"
+    },
+    {
+      "ingredient": "cinacalcete",
+      "active_ingredients": [
+        "cinacalcete"
+      ],
+      "presentation": "comprimidos 60 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cinacalcete 60 mg",
+      "ingredient_key": "cinacalcete",
+      "loose_key": "cinacalcete",
+      "loose_match_key": "cinacalcete 60 mg"
+    },
+    {
+      "ingredient": "ciprofibrato",
+      "active_ingredients": [
+        "ciprofibrato"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciprofibrato 100 mg",
+      "ingredient_key": "ciprofibrato",
+      "loose_key": "ciprofibrato",
+      "loose_match_key": "ciprofibrato 100 mg"
+    },
+    {
+      "ingredient": "ciproterona",
+      "active_ingredients": [
+        "ciproterona"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciproterona 50 mg",
+      "ingredient_key": "ciproterona",
+      "loose_key": "ciproterona",
+      "loose_match_key": "ciproterona 50 mg"
+    },
+    {
+      "ingredient": "cladribina",
+      "active_ingredients": [
+        "cladribina"
+      ],
+      "presentation": "comprimidos 10mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cladribina 10 mg",
+      "ingredient_key": "cladribina",
+      "loose_key": "cladribina",
+      "loose_match_key": "cladribina 10 mg"
+    },
+    {
+      "ingredient": "clobazam",
+      "active_ingredients": [
+        "clobazam"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clobazam 10 mg",
+      "ingredient_key": "clobazam",
+      "loose_key": "clobazam",
+      "loose_match_key": "clobazam 10 mg"
+    },
+    {
+      "ingredient": "clobazam",
+      "active_ingredients": [
+        "clobazam"
+      ],
+      "presentation": "comprimido 20 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clobazam 20 mg",
+      "ingredient_key": "clobazam",
+      "loose_key": "clobazam",
+      "loose_match_key": "clobazam 20 mg"
+    },
+    {
+      "ingredient": "clobetasol",
+      "active_ingredients": [
+        "clobetasol"
+      ],
+      "presentation": "creme 0,5mg/g, bisnaga 30 g",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg/g"
+        },
+        {
+          "value": 30,
+          "unit": "g"
+        }
+      ],
+      "match_key": "clobetasol 0.5 mg/g",
+      "ingredient_key": "clobetasol",
+      "loose_key": "clobetasol",
+      "loose_match_key": "clobetasol 0.5 mg/g"
+    },
+    {
+      "ingredient": "clobetasol",
+      "active_ingredients": [
+        "clobetasol"
+      ],
+      "presentation": "solução capilar, 0,5 mg/g frasco 50g",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg/g"
+        },
+        {
+          "value": 50,
+          "unit": "g"
+        }
+      ],
+      "match_key": "clobetasol 0.5 mg/g",
+      "ingredient_key": "clobetasol",
+      "loose_key": "clobetasol",
+      "loose_match_key": "clobetasol 0.5 mg/g"
+    },
+    {
+      "ingredient": "clopidogrel",
+      "active_ingredients": [
+        "clopidogrel"
+      ],
+      "presentation": "comprimido 75 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clopidogrel 75 mg",
+      "ingredient_key": "clopidogrel",
+      "loose_key": "clopidogrel",
+      "loose_match_key": "clopidogrel 75 mg"
+    },
+    {
+      "ingredient": "cloroquina",
+      "active_ingredients": [
+        "cloroquina"
+      ],
+      "presentation": "comprimido 150mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cloroquina 150 mg",
+      "ingredient_key": "cloroquina",
+      "loose_key": "cloroquina",
+      "loose_match_key": "cloroquina 150 mg"
+    },
+    {
+      "ingredient": "clozapina",
+      "active_ingredients": [
+        "clozapina"
+      ],
+      "presentation": "comprimido 25 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clozapina 25 mg",
+      "ingredient_key": "clozapina",
+      "loose_key": "clozapina",
+      "loose_match_key": "clozapina 25 mg"
+    },
+    {
+      "ingredient": "clozapina",
+      "active_ingredients": [
+        "clozapina"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clozapina 100 mg",
+      "ingredient_key": "clozapina",
+      "loose_key": "clozapina",
+      "loose_match_key": "clozapina 100 mg"
+    },
+    {
+      "ingredient": "codeína",
+      "active_ingredients": [
+        "codeína"
+      ],
+      "presentation": "comprimido 30 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "codeina 30 mg",
+      "ingredient_key": "codeina",
+      "loose_key": "codeina",
+      "loose_match_key": "codeina 30 mg"
+    },
+    {
+      "ingredient": "codeína",
+      "active_ingredients": [
+        "codeína"
+      ],
+      "presentation": "comprimido 60 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "codeina 60 mg",
+      "ingredient_key": "codeina",
+      "loose_key": "codeina",
+      "loose_match_key": "codeina 60 mg"
+    },
+    {
+      "ingredient": "codeína",
+      "active_ingredients": [
+        "codeína"
+      ],
+      "presentation": "solução oral, 3 mg/mL frasco de 120 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 3,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "codeina 3 mg/ml",
+      "ingredient_key": "codeina",
+      "loose_key": "codeina",
+      "loose_match_key": "codeina 3 mg/ml"
+    },
+    {
+      "ingredient": "codeína",
+      "active_ingredients": [
+        "codeína"
+      ],
+      "presentation": "injetável, 30 mg/mL ampola de 2 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "codeina 30 mg/ml",
+      "ingredient_key": "codeina",
+      "loose_key": "codeina",
+      "loose_match_key": "codeina 30 mg/ml"
+    },
+    {
+      "ingredient": "colistimetato sódico",
+      "active_ingredients": [
+        "colistimetato sódico"
+      ],
+      "presentation": "pó para solução injetável ou inalatória, 80 mg (1 milhão de UI)",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 80,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "colistimetato 80 mg",
+      "ingredient_key": "colistimetato",
+      "loose_key": "colistimetato",
+      "loose_match_key": "colistimetato 80 mg"
+    },
+    {
+      "ingredient": "colistimetato sódico",
+      "active_ingredients": [
+        "colistimetato sódico"
+      ],
+      "presentation": "pó para solução injetável ou inalatória, 160 mg (2 milhão de UI)",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 160,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "colistimetato 160 mg",
+      "ingredient_key": "colistimetato",
+      "loose_key": "colistimetato",
+      "loose_match_key": "colistimetato 160 mg"
+    },
+    {
+      "ingredient": "danazol",
+      "active_ingredients": [
+        "danazol"
+      ],
+      "presentation": "cápsula 100 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "danazol 100 mg",
+      "ingredient_key": "danazol",
+      "loose_key": "danazol",
+      "loose_match_key": "danazol 100 mg"
+    },
+    {
+      "ingredient": "danazol",
+      "active_ingredients": [
+        "danazol"
+      ],
+      "presentation": "cápsula 200 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "danazol 200 mg",
+      "ingredient_key": "danazol",
+      "loose_key": "danazol",
+      "loose_match_key": "danazol 200 mg"
+    },
+    {
+      "ingredient": "dapagliflozina",
+      "active_ingredients": [
+        "dapagliflozina"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "dapagliflozina 10 mg",
+      "ingredient_key": "dapagliflozina",
+      "loose_key": "dapagliflozina",
+      "loose_match_key": "dapagliflozina 10 mg"
+    },
+    {
+      "ingredient": "de pilocarpina)",
+      "active_ingredients": [
+        "pilocarpina"
+      ],
+      "presentation": "solução oftálmica, 20 mg/mL (2%) frasco",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "pilocarpina 20 mg/ml",
+      "ingredient_key": "pilocarpina",
+      "loose_key": "pilocarpina",
+      "loose_match_key": "pilocarpina 20 mg/ml"
+    },
+    {
+      "ingredient": "deferasirox",
+      "active_ingredients": [
+        "deferasirox"
+      ],
+      "presentation": "comprimido 125 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 125,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "deferasirox 125 mg",
+      "ingredient_key": "deferasirox",
+      "loose_key": "deferasirox",
+      "loose_match_key": "deferasirox 125 mg"
+    },
+    {
+      "ingredient": "deferasirox",
+      "active_ingredients": [
+        "deferasirox"
+      ],
+      "presentation": "comprimido 250 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "deferasirox 250 mg",
+      "ingredient_key": "deferasirox",
+      "loose_key": "deferasirox",
+      "loose_match_key": "deferasirox 250 mg"
+    },
+    {
+      "ingredient": "deferasirox",
+      "active_ingredients": [
+        "deferasirox"
+      ],
+      "presentation": "comprimido 500 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "deferasirox 500 mg",
+      "ingredient_key": "deferasirox",
+      "loose_key": "deferasirox",
+      "loose_match_key": "deferasirox 500 mg"
+    },
+    {
+      "ingredient": "deferiprona",
+      "active_ingredients": [
+        "deferiprona"
+      ],
+      "presentation": "comprimido 500 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "deferiprona 500 mg",
+      "ingredient_key": "deferiprona",
+      "loose_key": "deferiprona",
+      "loose_match_key": "deferiprona 500 mg"
+    },
+    {
+      "ingredient": "desferroxamina",
+      "active_ingredients": [
+        "desferroxamina"
+      ],
+      "presentation": "injetável, 500 mg frasco ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "desferroxamina 500 mg",
+      "ingredient_key": "desferroxamina",
+      "loose_key": "desferroxamina",
+      "loose_match_key": "desferroxamina 500 mg"
+    },
+    {
+      "ingredient": "desmopressina (acetato de desmopressina)",
+      "active_ingredients": [
+        "desmopressina"
+      ],
+      "presentation": "comprimido 0,1 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "desmopressina 0.1 mg",
+      "ingredient_key": "desmopressina",
+      "loose_key": "desmopressina",
+      "loose_match_key": "desmopressina 0.1 mg"
+    },
+    {
+      "ingredient": "desmopressina (acetato de desmopressina)",
+      "active_ingredients": [
+        "desmopressina"
+      ],
+      "presentation": "comprimido 0,2 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "desmopressina 0.2 mg",
+      "ingredient_key": "desmopressina",
+      "loose_key": "desmopressina",
+      "loose_match_key": "desmopressina 0.2 mg"
+    },
+    {
+      "ingredient": "desmopressina (acetato de desmopressina)",
+      "active_ingredients": [
+        "desmopressina"
+      ],
+      "presentation": "aplicação nasal, 0,1 mg/mL frasco de 2,5 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "desmopressina 0.1 mg/ml",
+      "ingredient_key": "desmopressina",
+      "loose_key": "desmopressina",
+      "loose_match_key": "desmopressina 0.1 mg/ml"
+    },
+    {
+      "ingredient": "donepezila",
+      "active_ingredients": [
+        "donepezila"
+      ],
+      "presentation": "comprimido 5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "donepezila 5 mg",
+      "ingredient_key": "donepezila",
+      "loose_key": "donepezila",
+      "loose_match_key": "donepezila 5 mg"
+    },
+    {
+      "ingredient": "donepezila",
+      "active_ingredients": [
+        "donepezila"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "donepezila 10 mg",
+      "ingredient_key": "donepezila",
+      "loose_key": "donepezila",
+      "loose_match_key": "donepezila 10 mg"
+    },
+    {
+      "ingredient": "dorzolamida",
+      "active_ingredients": [
+        "dorzolamida"
+      ],
+      "presentation": "solução oftálmica, 20 mg/mL frasco com 5mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "dorzolamida 20 mg/ml",
+      "ingredient_key": "dorzolamida",
+      "loose_key": "dorzolamida",
+      "loose_match_key": "dorzolamida 20 mg/ml"
+    },
+    {
+      "ingredient": "eculizumabe",
+      "active_ingredients": [
+        "eculizumabe"
+      ],
+      "presentation": "injetável, 300 mg seringa preenchida injetável, 300mg frasco- ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "eculizumabe 300 mg",
+      "ingredient_key": "eculizumabe",
+      "loose_key": "eculizumabe",
+      "loose_match_key": "eculizumabe 300 mg"
+    },
+    {
+      "ingredient": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "active_ingredients": [
+        "eexacaftor/tezacaftor/ ivacaftor",
+        "ivacaftor"
+      ],
+      "presentation": "comprimido 100mg/50mg/75mg + 150mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        },
+        {
+          "value": 75,
+          "unit": "mg"
+        },
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "ingredient_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "loose_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "loose_match_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor 100 mg + 150 mg + 50 mg + 75 mg"
+    },
+    {
+      "ingredient": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "active_ingredients": [
+        "eexacaftor/tezacaftor/ ivacaftor",
+        "ivacaftor"
+      ],
+      "presentation": "comprimido 50mg/25mg/37,5mg + 75mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        },
+        {
+          "value": 37.5,
+          "unit": "mg"
+        },
+        {
+          "value": 75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "ingredient_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "loose_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor",
+      "loose_match_key": "eexacaftor/tezacaftor/ ivacaftor + ivacaftor 25 mg + 37.5 mg + 50 mg + 75 mg"
+    },
+    {
+      "ingredient": "eltrombopague olamina",
+      "active_ingredients": [
+        "eltrombopague olamina"
+      ],
+      "presentation": "comprimido 25 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "eltrombopague olamina 25 mg",
+      "ingredient_key": "eltrombopague olamina",
+      "loose_key": "eltrombopague olamina",
+      "loose_match_key": "eltrombopague olamina 25 mg"
+    },
+    {
+      "ingredient": "eltrombopague olamina",
+      "active_ingredients": [
+        "eltrombopague olamina"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "eltrombopague olamina 50 mg",
+      "ingredient_key": "eltrombopague olamina",
+      "loose_key": "eltrombopague olamina",
+      "loose_match_key": "eltrombopague olamina 50 mg"
+    },
+    {
+      "ingredient": "enoxaparina sódica",
+      "active_ingredients": [
+        "enoxaparina sódica"
+      ],
+      "presentation": "injetável, 40 mg/0,4mL seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "enoxaparina 40 mg",
+      "ingredient_key": "enoxaparina",
+      "loose_key": "enoxaparina",
+      "loose_match_key": "enoxaparina 40 mg"
+    },
+    {
+      "ingredient": "enoxaparina sódica",
+      "active_ingredients": [
+        "enoxaparina sódica"
+      ],
+      "presentation": "injetável, 60 mg/0,6mL seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "enoxaparina 60 mg",
+      "ingredient_key": "enoxaparina",
+      "loose_key": "enoxaparina",
+      "loose_match_key": "enoxaparina 60 mg"
+    },
+    {
+      "ingredient": "entacapona",
+      "active_ingredients": [
+        "entacapona"
+      ],
+      "presentation": "comprimido 200 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "entacapona 200 mg",
+      "ingredient_key": "entacapona",
+      "loose_key": "entacapona",
+      "loose_match_key": "entacapona 200 mg"
+    },
+    {
+      "ingredient": "etanercepte",
+      "active_ingredients": [
+        "etanercepte"
+      ],
+      "presentation": "injetável, 25 mg frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etanercepte 25 mg",
+      "ingredient_key": "etanercepte",
+      "loose_key": "etanercepte",
+      "loose_match_key": "etanercepte 25 mg"
+    },
+    {
+      "ingredient": "etanercepte",
+      "active_ingredients": [
+        "etanercepte"
+      ],
+      "presentation": "injetável, 50 mg frasco ampola ou seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etanercepte 50 mg",
+      "ingredient_key": "etanercepte",
+      "loose_key": "etanercepte",
+      "loose_match_key": "etanercepte 50 mg"
+    },
+    {
+      "ingredient": "etofibrato",
+      "active_ingredients": [
+        "etofibrato"
+      ],
+      "presentation": "cápsula 500 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etofibrato 500 mg",
+      "ingredient_key": "etofibrato",
+      "loose_key": "etofibrato",
+      "loose_match_key": "etofibrato 500 mg"
+    },
+    {
+      "ingredient": "etossuximida",
+      "active_ingredients": [
+        "etossuximida"
+      ],
+      "presentation": "Solução oral, 50 mg/mL frasco com 120 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "etossuximida 50 mg/ml",
+      "ingredient_key": "etossuximida",
+      "loose_key": "etossuximida",
+      "loose_match_key": "etossuximida 50 mg/ml"
+    },
+    {
+      "ingredient": "everolimo",
+      "active_ingredients": [
+        "everolimo"
+      ],
+      "presentation": "comprimido 0,5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "everolimo 0.5 mg",
+      "ingredient_key": "everolimo",
+      "loose_key": "everolimo",
+      "loose_match_key": "everolimo 0.5 mg"
+    },
+    {
+      "ingredient": "everolimo",
+      "active_ingredients": [
+        "everolimo"
+      ],
+      "presentation": "comprimido 0,75 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "everolimo 0.75 mg",
+      "ingredient_key": "everolimo",
+      "loose_key": "everolimo",
+      "loose_match_key": "everolimo 0.75 mg"
+    },
+    {
+      "ingredient": "everolimo",
+      "active_ingredients": [
+        "everolimo"
+      ],
+      "presentation": "comprimido 1 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "everolimo 1 mg",
+      "ingredient_key": "everolimo",
+      "loose_key": "everolimo",
+      "loose_match_key": "everolimo 1 mg"
+    },
+    {
+      "ingredient": "fenofibrato",
+      "active_ingredients": [
+        "fenofibrato"
+      ],
+      "presentation": "cápsula 200 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fenofibrato 200 mg",
+      "ingredient_key": "fenofibrato",
+      "loose_key": "fenofibrato",
+      "loose_match_key": "fenofibrato 200 mg"
+    },
+    {
+      "ingredient": "fenofibrato",
+      "active_ingredients": [
+        "fenofibrato"
+      ],
+      "presentation": "cápsula de liberação retardada 250 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fenofibrato 250 mg",
+      "ingredient_key": "fenofibrato",
+      "loose_key": "fenofibrato",
+      "loose_match_key": "fenofibrato 250 mg"
+    },
+    {
+      "ingredient": "fenoterol",
+      "active_ingredients": [
+        "fenoterol"
+      ],
+      "presentation": "aerossol, 100 mcg/dose -",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mcg/dose"
+        }
+      ],
+      "match_key": "fenoterol 100 mcg/dose",
+      "ingredient_key": "fenoterol",
+      "loose_key": "fenoterol",
+      "loose_match_key": "fenoterol 100 mcg"
+    },
+    {
+      "ingredient": "filgrastim",
+      "active_ingredients": [
+        "filgrastim"
+      ],
+      "presentation": "injetável, 300 mcg frasco- ampola ou seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "filgrastim 300 mcg",
+      "ingredient_key": "filgrastim",
+      "loose_key": "filgrastim",
+      "loose_match_key": "filgrastim 300 mcg"
+    },
+    {
+      "ingredient": "fingolimode",
+      "active_ingredients": [
+        "fingolimode"
+      ],
+      "presentation": "cápsula 0,5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fingolimode 0.5 mg",
+      "ingredient_key": "fingolimode",
+      "loose_key": "fingolimode",
+      "loose_match_key": "fingolimode 0.5 mg"
+    },
+    {
+      "ingredient": "fluconazol",
+      "active_ingredients": [
+        "fluconazol"
+      ],
+      "presentation": "cápsula inalante ou pó inalante, 6 + 200 mcg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "fluconazol 200 mcg",
+      "ingredient_key": "fluconazol",
+      "loose_key": "fluconazol",
+      "loose_match_key": "fluconazol 200 mcg"
+    },
+    {
+      "ingredient": "fludrocortisona",
+      "active_ingredients": [
+        "fludrocortisona"
+      ],
+      "presentation": "comprimido 0,1 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 0.1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fludrocortisona 0.1 mg",
+      "ingredient_key": "fludrocortisona",
+      "loose_key": "fludrocortisona",
+      "loose_match_key": "fludrocortisona 0.1 mg"
+    },
+    {
+      "ingredient": "fluticasona + umeclidínio + vilanterol (furoato de fluticasona + brometo de umeclidínio + trifenatato de",
+      "active_ingredients": [
+        "fluticasona",
+        "umeclidínio",
+        "vilanterol"
+      ],
+      "presentation": "pó para solução oral, 100 mcg + 62,5 mcg + 25 mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mcg"
+        },
+        {
+          "value": 62.5,
+          "unit": "mcg"
+        },
+        {
+          "value": 25,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "fluticasona 100 mcg + umeclidinio 62.5 mcg + vilanterol 25 mcg",
+      "ingredient_key": "fluticasona + umeclidinio + vilanterol",
+      "loose_key": "fluticasona + umeclidinio + vilanterol",
+      "loose_match_key": "fluticasona + umeclidinio + vilanterol 100 mcg + 25 mcg + 62.5 mcg"
+    },
+    {
+      "ingredient": "formoterol",
+      "active_ingredients": [
+        "formoterol"
+      ],
+      "presentation": "cápsula inalante ou pó inalante 12 mcg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 12,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "formoterol 12 mcg",
+      "ingredient_key": "formoterol",
+      "loose_key": "formoterol",
+      "loose_match_key": "formoterol 12 mcg"
+    },
+    {
+      "ingredient": "fumarato de Dimetila",
+      "active_ingredients": [
+        "fumarato de dimetila"
+      ],
+      "presentation": "cápsula 120 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 120,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "dimetila 120 mg",
+      "ingredient_key": "dimetila",
+      "loose_key": "dimetila",
+      "loose_match_key": "dimetila 120 mg"
+    },
+    {
+      "ingredient": "fumarato de Dimetila",
+      "active_ingredients": [
+        "fumarato de dimetila"
+      ],
+      "presentation": "cápsula 240 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 240,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "dimetila 240 mg",
+      "ingredient_key": "dimetila",
+      "loose_key": "dimetila",
+      "loose_match_key": "dimetila 240 mg"
+    },
+    {
+      "ingredient": "gabapentina",
+      "active_ingredients": [
+        "gabapentina"
+      ],
+      "presentation": "cápsula 300 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "gabapentina 300 mg",
+      "ingredient_key": "gabapentina",
+      "loose_key": "gabapentina",
+      "loose_match_key": "gabapentina 300 mg"
+    },
+    {
+      "ingredient": "gabapentina",
+      "active_ingredients": [
+        "gabapentina"
+      ],
+      "presentation": "cápsula 400 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "gabapentina 400 mg",
+      "ingredient_key": "gabapentina",
+      "loose_key": "gabapentina",
+      "loose_match_key": "gabapentina 400 mg"
+    },
+    {
+      "ingredient": "galantamina",
+      "active_ingredients": [
+        "galantamina"
+      ],
+      "presentation": "cápsula de liberação prolongada 8 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 8,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "galantamina 8 mg",
+      "ingredient_key": "galantamina",
+      "loose_key": "galantamina",
+      "loose_match_key": "galantamina 8 mg"
+    },
+    {
+      "ingredient": "galantamina",
+      "active_ingredients": [
+        "galantamina"
+      ],
+      "presentation": "cápsula de liberação prolongada 16 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 16,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "galantamina 16 mg",
+      "ingredient_key": "galantamina",
+      "loose_key": "galantamina",
+      "loose_match_key": "galantamina 16 mg"
+    },
+    {
+      "ingredient": "galantamina",
+      "active_ingredients": [
+        "galantamina"
+      ],
+      "presentation": "cápsula de liberação prolongada 24 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 24,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "galantamina 24 mg",
+      "ingredient_key": "galantamina",
+      "loose_key": "galantamina",
+      "loose_match_key": "galantamina 24 mg"
+    },
+    {
+      "ingredient": "galsulfase",
+      "active_ingredients": [
+        "galsulfase"
+      ],
+      "presentation": "injetável, 5 mg Frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "galsulfase 5 mg",
+      "ingredient_key": "galsulfase",
+      "loose_key": "galsulfase",
+      "loose_match_key": "galsulfase 5 mg"
+    },
+    {
+      "ingredient": "genfibrozila",
+      "active_ingredients": [
+        "genfibrozila"
+      ],
+      "presentation": "comprimido 600 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "genfibrozila 600 mg",
+      "ingredient_key": "genfibrozila",
+      "loose_key": "genfibrozila",
+      "loose_match_key": "genfibrozila 600 mg"
+    },
+    {
+      "ingredient": "genfibrozila",
+      "active_ingredients": [
+        "genfibrozila"
+      ],
+      "presentation": "comprimido 900 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 900,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "genfibrozila 900 mg",
+      "ingredient_key": "genfibrozila",
+      "loose_key": "genfibrozila",
+      "loose_match_key": "genfibrozila 900 mg"
+    },
+    {
+      "ingredient": "glatirâmer",
+      "active_ingredients": [
+        "glatirâmer"
+      ],
+      "presentation": "injetável, 20 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "glatiramer 20 mg",
+      "ingredient_key": "glatiramer",
+      "loose_key": "glatiramer",
+      "loose_match_key": "glatiramer 20 mg"
+    },
+    {
+      "ingredient": "glatirâmer",
+      "active_ingredients": [
+        "glatirâmer"
+      ],
+      "presentation": "injetável, 40 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "glatiramer 40 mg",
+      "ingredient_key": "glatiramer",
+      "loose_key": "glatiramer",
+      "loose_match_key": "glatiramer 40 mg"
+    },
+    {
+      "ingredient": "golimumabe",
+      "active_ingredients": [
+        "golimumabe"
+      ],
+      "presentation": "injetável, 50 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "golimumabe 50 mg",
+      "ingredient_key": "golimumabe",
+      "loose_key": "golimumabe",
+      "loose_match_key": "golimumabe 50 mg"
+    },
+    {
+      "ingredient": "gosserrelina",
+      "active_ingredients": [
+        "gosserrelina"
+      ],
+      "presentation": "injetável, 3,60 mg seringa preenchida",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 3.6,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "gosserrelina 3.6 mg",
+      "ingredient_key": "gosserrelina",
+      "loose_key": "gosserrelina",
+      "loose_match_key": "gosserrelina 3.6 mg"
+    },
+    {
+      "ingredient": "gosserrelina",
+      "active_ingredients": [
+        "gosserrelina"
+      ],
+      "presentation": "injetável, 10,80 mg seringa preenchida",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 10.8,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "gosserrelina 10.8 mg",
+      "ingredient_key": "gosserrelina",
+      "loose_key": "gosserrelina",
+      "loose_match_key": "gosserrelina 10.8 mg"
+    },
+    {
+      "ingredient": "hidroxicloroquina",
+      "active_ingredients": [
+        "hidroxicloroquina"
+      ],
+      "presentation": "comprimido 400 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "hidroxicloroquina 400 mg",
+      "ingredient_key": "hidroxicloroquina",
+      "loose_key": "hidroxicloroquina",
+      "loose_match_key": "hidroxicloroquina 400 mg"
+    },
+    {
+      "ingredient": "hidroxiureia",
+      "active_ingredients": [
+        "hidroxiureia"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "hidroxiureia 100 mg",
+      "ingredient_key": "hidroxiureia",
+      "loose_key": "hidroxiureia",
+      "loose_match_key": "hidroxiureia 100 mg"
+    },
+    {
+      "ingredient": "hidroxiureia",
+      "active_ingredients": [
+        "hidroxiureia"
+      ],
+      "presentation": "cápsula 500 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "hidroxiureia 500 mg",
+      "ingredient_key": "hidroxiureia",
+      "loose_key": "hidroxiureia",
+      "loose_match_key": "hidroxiureia 500 mg"
+    },
+    {
+      "ingredient": "idursulfase",
+      "active_ingredients": [
+        "idursulfase"
+      ],
+      "presentation": "injetável, 2 mg/ml frasco ampola 3mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "idursulfase 2 mg/ml",
+      "ingredient_key": "idursulfase",
+      "loose_key": "idursulfase",
+      "loose_match_key": "idursulfase 2 mg/ml"
+    },
+    {
+      "ingredient": "iloprosta",
+      "active_ingredients": [
+        "iloprosta"
+      ],
+      "presentation": "solução para nebulização, 10 mcg/mL ampola 1 ml",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mcg/ml"
+        }
+      ],
+      "match_key": "iloprosta 10 mcg/ml",
+      "ingredient_key": "iloprosta",
+      "loose_key": "iloprosta",
+      "loose_match_key": "iloprosta 10 mcg/ml"
+    },
+    {
+      "ingredient": "imiglucerase",
+      "active_ingredients": [
+        "imiglucerase"
+      ],
+      "presentation": "injetável, 400 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "imiglucerase 400 ui",
+      "ingredient_key": "imiglucerase",
+      "loose_key": "imiglucerase",
+      "loose_match_key": "imiglucerase 400 ui"
+    },
+    {
+      "ingredient": "imunoglobulina antivaricela zoster",
+      "active_ingredients": [
+        "imunoglobulina antivaricela zoster"
+      ],
+      "presentation": "injetável, 0,5 g frasco",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "g"
+        }
+      ],
+      "match_key": "imunoglobulina antivaricela zoster 0.5 g",
+      "ingredient_key": "imunoglobulina antivaricela zoster",
+      "loose_key": "imunoglobulina antivaricela zoster",
+      "loose_match_key": "imunoglobulina antivaricela zoster 0.5 g"
+    },
+    {
+      "ingredient": "imunoglobulina antivaricela zoster",
+      "active_ingredients": [
+        "imunoglobulina antivaricela zoster"
+      ],
+      "presentation": "injetável, 1,0 g frasco",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "g"
+        }
+      ],
+      "match_key": "imunoglobulina antivaricela zoster 1 g",
+      "ingredient_key": "imunoglobulina antivaricela zoster",
+      "loose_key": "imunoglobulina antivaricela zoster",
+      "loose_match_key": "imunoglobulina antivaricela zoster 1 g"
+    },
+    {
+      "ingredient": "imunoglobulina humana",
+      "active_ingredients": [
+        "imunoglobulina humana"
+      ],
+      "presentation": "injetável, 2,5 g frasco",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "g"
+        }
+      ],
+      "match_key": "imunoglobulina humana 2.5 g",
+      "ingredient_key": "imunoglobulina humana",
+      "loose_key": "imunoglobulina humana",
+      "loose_match_key": "imunoglobulina humana 2.5 g"
+    },
+    {
+      "ingredient": "imunoglobulina humana",
+      "active_ingredients": [
+        "imunoglobulina humana"
+      ],
+      "presentation": "injetável, 5,0 g frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "g"
+        }
+      ],
+      "match_key": "imunoglobulina humana 5 g",
+      "ingredient_key": "imunoglobulina humana",
+      "loose_key": "imunoglobulina humana",
+      "loose_match_key": "imunoglobulina humana 5 g"
+    },
+    {
+      "ingredient": "infliximabe",
+      "active_ingredients": [
+        "infliximabe"
+      ],
+      "presentation": "injetável, 100mg frasco- ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "infliximabe 100 mg",
+      "ingredient_key": "infliximabe",
+      "loose_key": "infliximabe",
+      "loose_match_key": "infliximabe 100 mg"
+    },
+    {
+      "ingredient": "infliximabe",
+      "active_ingredients": [
+        "infliximabe"
+      ],
+      "presentation": "insulina Degludeca, 100 UI/mL caneta (uso em crianças entre 1 e 2 anos)",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "infliximabe 100 ui/ml",
+      "ingredient_key": "infliximabe",
+      "loose_key": "infliximabe",
+      "loose_match_key": "infliximabe 100 ui/ml"
+    },
+    {
+      "ingredient": "insulina análoga de ação prolongada (insulina glargina)",
+      "active_ingredients": [
+        "insulina glargina"
+      ],
+      "presentation": "insulina Glargina, 100 UI/mL tubete 3 mL + caneta reutilizável (uso em pacientes acima 2 anos)",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina glargina 100 ui/ml",
+      "ingredient_key": "insulina glargina",
+      "loose_key": "insulina glargina",
+      "loose_match_key": "insulina glargina 100 ui/ml"
+    },
+    {
+      "ingredient": "insulina análoga de ação rápida",
+      "active_ingredients": [
+        "insulina asparte"
+      ],
+      "presentation": "insulina Asparte, 100 UI/mL caneta (uso em crianças de 1 e 3 anos)",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina asparte 100 ui/ml",
+      "ingredient_key": "insulina asparte",
+      "loose_key": "insulina asparte",
+      "loose_match_key": "insulina asparte 100 ui/ml"
+    },
+    {
+      "ingredient": "insulina análoga de ação rápida",
+      "active_ingredients": [
+        "insulina lispro"
+      ],
+      "presentation": "insulina Lispro, 100 UI/mL caneta (uso em pacientes acima 3 anos)",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina lispro 100 ui/ml",
+      "ingredient_key": "insulina lispro",
+      "loose_key": "insulina lispro",
+      "loose_match_key": "insulina lispro 100 ui/ml"
+    },
+    {
+      "ingredient": "isotretinoína",
+      "active_ingredients": [
+        "isotretinoína"
+      ],
+      "presentation": "cápsula 10 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isotretinoina 10 mg",
+      "ingredient_key": "isotretinoina",
+      "loose_key": "isotretinoina",
+      "loose_match_key": "isotretinoina 10 mg"
+    },
+    {
+      "ingredient": "isotretinoína",
+      "active_ingredients": [
+        "isotretinoína"
+      ],
+      "presentation": "cápsula 20 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isotretinoina 20 mg",
+      "ingredient_key": "isotretinoina",
+      "loose_key": "isotretinoina",
+      "loose_match_key": "isotretinoina 20 mg"
+    },
+    {
+      "ingredient": "Ivacaftor",
+      "active_ingredients": [
+        "ivacaftor"
+      ],
+      "presentation": "frasco comprimido 150mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ivacaftor 150 mg",
+      "ingredient_key": "ivacaftor",
+      "loose_key": "ivacaftor",
+      "loose_match_key": "ivacaftor 150 mg"
+    },
+    {
+      "ingredient": "lamotrigina",
+      "active_ingredients": [
+        "lamotrigina"
+      ],
+      "presentation": "comprimido 25 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lamotrigina 25 mg",
+      "ingredient_key": "lamotrigina",
+      "loose_key": "lamotrigina",
+      "loose_match_key": "lamotrigina 25 mg"
+    },
+    {
+      "ingredient": "lamotrigina",
+      "active_ingredients": [
+        "lamotrigina"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lamotrigina 50 mg",
+      "ingredient_key": "lamotrigina",
+      "loose_key": "lamotrigina",
+      "loose_match_key": "lamotrigina 50 mg"
+    },
+    {
+      "ingredient": "lamotrigina",
+      "active_ingredients": [
+        "lamotrigina"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lamotrigina 100 mg",
+      "ingredient_key": "lamotrigina",
+      "loose_key": "lamotrigina",
+      "loose_match_key": "lamotrigina 100 mg"
+    },
+    {
+      "ingredient": "lanreotida",
+      "active_ingredients": [
+        "lanreotida"
+      ],
+      "presentation": "injetável, 60 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lanreotida 60 mg",
+      "ingredient_key": "lanreotida",
+      "loose_key": "lanreotida",
+      "loose_match_key": "lanreotida 60 mg"
+    },
+    {
+      "ingredient": "lanreotida",
+      "active_ingredients": [
+        "lanreotida"
+      ],
+      "presentation": "injetável, 90 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 90,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lanreotida 90 mg",
+      "ingredient_key": "lanreotida",
+      "loose_key": "lanreotida",
+      "loose_match_key": "lanreotida 90 mg"
+    },
+    {
+      "ingredient": "lanreotida",
+      "active_ingredients": [
+        "lanreotida"
+      ],
+      "presentation": "injetável, 120 mg seringa preenchida",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 120,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lanreotida 120 mg",
+      "ingredient_key": "lanreotida",
+      "loose_key": "lanreotida",
+      "loose_match_key": "lanreotida 120 mg"
+    },
+    {
+      "ingredient": "laronidase",
+      "active_ingredients": [
+        "laronidase"
+      ],
+      "presentation": "injetável, 0,58 mg/mL frasco com 5 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.58,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "laronidase 0.58 mg/ml",
+      "ingredient_key": "laronidase",
+      "loose_key": "laronidase",
+      "loose_match_key": "laronidase 0.58 mg/ml"
+    },
+    {
+      "ingredient": "latanoprosta",
+      "active_ingredients": [
+        "latanoprosta"
+      ],
+      "presentation": "solução oftálmica, 0,05mg/mL frasco 2,5mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.05,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "latanoprosta 0.05 mg/ml",
+      "ingredient_key": "latanoprosta",
+      "loose_key": "latanoprosta",
+      "loose_match_key": "latanoprosta 0.05 mg/ml"
+    },
+    {
+      "ingredient": "leflunomida",
+      "active_ingredients": [
+        "leflunomida"
+      ],
+      "presentation": "comprimido 20 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "leflunomida 20 mg",
+      "ingredient_key": "leflunomida",
+      "loose_key": "leflunomida",
+      "loose_match_key": "leflunomida 20 mg"
+    },
+    {
+      "ingredient": "leuprorrelina",
+      "active_ingredients": [
+        "leuprorrelina"
+      ],
+      "presentation": "injetável, 3,75 mg frasco ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 3.75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "leuprorrelina 3.75 mg",
+      "ingredient_key": "leuprorrelina",
+      "loose_key": "leuprorrelina",
+      "loose_match_key": "leuprorrelina 3.75 mg"
+    },
+    {
+      "ingredient": "leuprorrelina",
+      "active_ingredients": [
+        "leuprorrelina"
+      ],
+      "presentation": "injetável, 45 mg frasco ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 45,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "leuprorrelina 45 mg",
+      "ingredient_key": "leuprorrelina",
+      "loose_key": "leuprorrelina",
+      "loose_match_key": "leuprorrelina 45 mg"
+    },
+    {
+      "ingredient": "levetiracetam",
+      "active_ingredients": [
+        "levetiracetam"
+      ],
+      "presentation": "solução oral, 100mg/mL frasco 100 ou 150mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "levetiracetam 100 mg/ml",
+      "ingredient_key": "levetiracetam",
+      "loose_key": "levetiracetam",
+      "loose_match_key": "levetiracetam 100 mg/ml"
+    },
+    {
+      "ingredient": "levetiracetam",
+      "active_ingredients": [
+        "levetiracetam"
+      ],
+      "presentation": "comprimido 250mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levetiracetam 250 mg",
+      "ingredient_key": "levetiracetam",
+      "loose_key": "levetiracetam",
+      "loose_match_key": "levetiracetam 250 mg"
+    },
+    {
+      "ingredient": "levetiracetam",
+      "active_ingredients": [
+        "levetiracetam"
+      ],
+      "presentation": "comprimido 500mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levetiracetam 500 mg",
+      "ingredient_key": "levetiracetam",
+      "loose_key": "levetiracetam",
+      "loose_match_key": "levetiracetam 500 mg"
+    },
+    {
+      "ingredient": "levetiracetam",
+      "active_ingredients": [
+        "levetiracetam"
+      ],
+      "presentation": "comprimido 750mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 750,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levetiracetam 750 mg",
+      "ingredient_key": "levetiracetam",
+      "loose_key": "levetiracetam",
+      "loose_match_key": "levetiracetam 750 mg"
+    },
+    {
+      "ingredient": "levetiracetam",
+      "active_ingredients": [
+        "levetiracetam"
+      ],
+      "presentation": "comprimido 1000mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1000,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levetiracetam 1000 mg",
+      "ingredient_key": "levetiracetam",
+      "loose_key": "levetiracetam",
+      "loose_match_key": "levetiracetam 1000 mg"
+    },
+    {
+      "ingredient": "memantina",
+      "active_ingredients": [
+        "memantina"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "memantina 10 mg",
+      "ingredient_key": "memantina",
+      "loose_key": "memantina",
+      "loose_match_key": "memantina 10 mg"
+    },
+    {
+      "ingredient": "mepolizumabe",
+      "active_ingredients": [
+        "mepolizumabe"
+      ],
+      "presentation": "solução injetável, 40mg/0,4mL caneta",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "mepolizumabe 40 mg",
+      "ingredient_key": "mepolizumabe",
+      "loose_key": "mepolizumabe",
+      "loose_match_key": "mepolizumabe 40 mg"
+    },
+    {
+      "ingredient": "mepolizumabe",
+      "active_ingredients": [
+        "mepolizumabe"
+      ],
+      "presentation": "solução injetável, 100mgmL caneta",
+      "group": "1B",
+      "strengths": [],
+      "match_key": "mepolizumabe",
+      "ingredient_key": "mepolizumabe",
+      "loose_key": "mepolizumabe",
+      "loose_match_key": "mepolizumabe"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "comprimido 400 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "mesalazina 400 mg",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 400 mg"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "comprimido de liberação",
+      "group": "2",
+      "strengths": [],
+      "match_key": "mesalazina",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "comprimido 800 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 800,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "mesalazina 800 mg",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 800 mg"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "enema retal, 10 mg/mL frasco com 100 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "mesalazina 10 mg/ml",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 10 mg/ml"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "sachê 2g",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "g"
+        }
+      ],
+      "match_key": "mesalazina 2 g",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 2 g"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "supositório 250 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "mesalazina 250 mg",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 250 mg"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "supositório 500 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "mesalazina 500 mg",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 500 mg"
+    },
+    {
+      "ingredient": "mesalazina",
+      "active_ingredients": [
+        "mesalazina"
+      ],
+      "presentation": "supositório 1000 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 1000,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "mesalazina 1000 mg",
+      "ingredient_key": "mesalazina",
+      "loose_key": "mesalazina",
+      "loose_match_key": "mesalazina 1000 mg"
+    },
+    {
+      "ingredient": "metadona",
+      "active_ingredients": [
+        "metadona"
+      ],
+      "presentation": "comprimido 5 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metadona 5 mg",
+      "ingredient_key": "metadona",
+      "loose_key": "metadona",
+      "loose_match_key": "metadona 5 mg"
+    },
+    {
+      "ingredient": "metadona",
+      "active_ingredients": [
+        "metadona"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metadona 10 mg",
+      "ingredient_key": "metadona",
+      "loose_key": "metadona",
+      "loose_match_key": "metadona 10 mg"
+    },
+    {
+      "ingredient": "metadona",
+      "active_ingredients": [
+        "metadona"
+      ],
+      "presentation": "injetável, 10 mg/mL ampola 1 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "metadona 10 mg/ml",
+      "ingredient_key": "metadona",
+      "loose_key": "metadona",
+      "loose_match_key": "metadona 10 mg/ml"
+    },
+    {
+      "ingredient": "metilprednisolona",
+      "active_ingredients": [
+        "metilprednisolona"
+      ],
+      "presentation": "injetável, 500 mg frasco ampola",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metilprednisolona 500 mg",
+      "ingredient_key": "metilprednisolona",
+      "loose_key": "metilprednisolona",
+      "loose_match_key": "metilprednisolona 500 mg"
+    },
+    {
+      "ingredient": "metotrexato",
+      "active_ingredients": [
+        "metotrexato"
+      ],
+      "presentation": "comprimido 2,5 mg comprimido 2,5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "mg"
+        },
+        {
+          "value": 2.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metotrexato 2.5 mg",
+      "ingredient_key": "metotrexato",
+      "loose_key": "metotrexato",
+      "loose_match_key": "metotrexato 2.5 mg"
+    },
+    {
+      "ingredient": "metotrexato",
+      "active_ingredients": [
+        "metotrexato"
+      ],
+      "presentation": "injetável, 25 mg/mL ampola de 2 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "metotrexato 25 mg/ml",
+      "ingredient_key": "metotrexato",
+      "loose_key": "metotrexato",
+      "loose_match_key": "metotrexato 25 mg/ml"
+    },
+    {
+      "ingredient": "micofenolato de mofetila",
+      "active_ingredients": [
+        "micofenolato de mofetila"
+      ],
+      "presentation": "comprimido 500 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "micofenolato de mofetila 500 mg",
+      "ingredient_key": "micofenolato de mofetila",
+      "loose_key": "mofetila",
+      "loose_match_key": "mofetila 500 mg"
+    },
+    {
+      "ingredient": "micofenolato de sodio",
+      "active_ingredients": [
+        "micofenolato de sodio"
+      ],
+      "presentation": "comprimido 180 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 180,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "micofenolato de sodio 180 mg",
+      "ingredient_key": "micofenolato de sodio",
+      "loose_key": "sodio",
+      "loose_match_key": "sodio 180 mg"
+    },
+    {
+      "ingredient": "micofenolato de sodio",
+      "active_ingredients": [
+        "micofenolato de sodio"
+      ],
+      "presentation": "comprimido 360 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 360,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "micofenolato de sodio 360 mg",
+      "ingredient_key": "micofenolato de sodio",
+      "loose_key": "sodio",
+      "loose_match_key": "sodio 360 mg"
+    },
+    {
+      "ingredient": "miglustate",
+      "active_ingredients": [
+        "miglustate"
+      ],
+      "presentation": "cápsula 100 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "miglustate 100 mg",
+      "ingredient_key": "miglustate",
+      "loose_key": "miglustate",
+      "loose_match_key": "miglustate 100 mg"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "cápsula de liberação controlada 30 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "morfina 30 mg",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 30 mg"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "cápsula de liberação controlada 60 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "morfina 60 mg",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 60 mg"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "cápsula de liberação controlada 100 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "morfina 100 mg",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 100 mg"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "morfina 10 mg",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 10 mg"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "comprimido 30 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "morfina 30 mg",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 30 mg"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "injetável, 10 mg/mL ampola de 1 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "morfina 10 mg/ml",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 10 mg/ml"
+    },
+    {
+      "ingredient": "morfina",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "presentation": "solução oral, 10 mg/mL frasco de 60 mL",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "morfina 10 mg/ml",
+      "ingredient_key": "morfina",
+      "loose_key": "morfina",
+      "loose_match_key": "morfina 10 mg/ml"
+    },
+    {
+      "ingredient": "naproxeno",
+      "active_ingredients": [
+        "naproxeno"
+      ],
+      "presentation": "Comprimido 250mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "naproxeno 250 mg",
+      "ingredient_key": "naproxeno",
+      "loose_key": "naproxeno",
+      "loose_match_key": "naproxeno 250 mg"
+    },
+    {
+      "ingredient": "naproxeno",
+      "active_ingredients": [
+        "naproxeno"
+      ],
+      "presentation": "Comprimido 500mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "naproxeno 500 mg",
+      "ingredient_key": "naproxeno",
+      "loose_key": "naproxeno",
+      "loose_match_key": "naproxeno 500 mg"
+    },
+    {
+      "ingredient": "natalizumabe",
+      "active_ingredients": [
+        "natalizumabe"
+      ],
+      "presentation": "injetável, 20 mg/mL frasco ampola com 15 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "natalizumabe 20 mg/ml",
+      "ingredient_key": "natalizumabe",
+      "loose_key": "natalizumabe",
+      "loose_match_key": "natalizumabe 20 mg/ml"
+    },
+    {
+      "ingredient": "nusinersena",
+      "active_ingredients": [
+        "nusinersena"
+      ],
+      "presentation": "injetável, 2,4 mg/mL frasco- ampola com 5 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2.4,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "nusinersena 2.4 mg/ml",
+      "ingredient_key": "nusinersena",
+      "loose_key": "nusinersena",
+      "loose_match_key": "nusinersena 2.4 mg/ml"
+    },
+    {
+      "ingredient": "octreotida",
+      "active_ingredients": [
+        "octreotida"
+      ],
+      "presentation": "injetável, 0,1 mg/mL ampola com 1 mL",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 0.1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "octreotida 0.1 mg/ml",
+      "ingredient_key": "octreotida",
+      "loose_key": "octreotida",
+      "loose_match_key": "octreotida 0.1 mg/ml"
+    },
+    {
+      "ingredient": "octreotida",
+      "active_ingredients": [
+        "octreotida"
+      ],
+      "presentation": "injetável, 10 mg frasco- ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "octreotida 10 mg",
+      "ingredient_key": "octreotida",
+      "loose_key": "octreotida",
+      "loose_match_key": "octreotida 10 mg"
+    },
+    {
+      "ingredient": "octreotida",
+      "active_ingredients": [
+        "octreotida"
+      ],
+      "presentation": "injetável, 20 mg frasco- ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "octreotida 20 mg",
+      "ingredient_key": "octreotida",
+      "loose_key": "octreotida",
+      "loose_match_key": "octreotida 20 mg"
+    },
+    {
+      "ingredient": "octreotida",
+      "active_ingredients": [
+        "octreotida"
+      ],
+      "presentation": "injetável, 30 mg frasco- ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "octreotida 30 mg",
+      "ingredient_key": "octreotida",
+      "loose_key": "octreotida",
+      "loose_match_key": "octreotida 30 mg"
+    },
+    {
+      "ingredient": "olanzapina",
+      "active_ingredients": [
+        "olanzapina"
+      ],
+      "presentation": "comprimido 5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "olanzapina 5 mg",
+      "ingredient_key": "olanzapina",
+      "loose_key": "olanzapina",
+      "loose_match_key": "olanzapina 5 mg"
+    },
+    {
+      "ingredient": "olanzapina",
+      "active_ingredients": [
+        "olanzapina"
+      ],
+      "presentation": "comprimido 10 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "olanzapina 10 mg",
+      "ingredient_key": "olanzapina",
+      "loose_key": "olanzapina",
+      "loose_match_key": "olanzapina 10 mg"
+    },
+    {
+      "ingredient": "omalizumabe",
+      "active_ingredients": [
+        "omalizumabe"
+      ],
+      "presentation": "injetável, 150 mg seringa preenchida",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "omalizumabe 150 mg",
+      "ingredient_key": "omalizumabe",
+      "loose_key": "omalizumabe",
+      "loose_match_key": "omalizumabe 150 mg"
+    },
+    {
+      "ingredient": "onasemnogeno abeparvoveque",
+      "active_ingredients": [
+        "onasemnogeno abeparvoveque"
+      ],
+      "presentation": "13 injetável, 2,0 x 10 gv/mL",
+      "group": "1A",
+      "strengths": [],
+      "match_key": "onasemnogeno abeparvoveque",
+      "ingredient_key": "onasemnogeno abeparvoveque",
+      "loose_key": "onasemnogeno abeparvoveque",
+      "loose_match_key": "onasemnogeno abeparvoveque"
+    },
+    {
+      "ingredient": "pamidronato",
+      "active_ingredients": [
+        "pamidronato"
+      ],
+      "presentation": "injetável, 60 mg frasco ampola",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pamidronato 60 mg",
+      "ingredient_key": "pamidronato",
+      "loose_key": "pamidronato",
+      "loose_match_key": "pamidronato 60 mg"
+    },
+    {
+      "ingredient": "pancreatina",
+      "active_ingredients": [
+        "pancreatina"
+      ],
+      "presentation": "cápsula 10.000UI",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "pancreatina 10 ui",
+      "ingredient_key": "pancreatina",
+      "loose_key": "pancreatina",
+      "loose_match_key": "pancreatina 10 ui"
+    },
+    {
+      "ingredient": "pancreatina",
+      "active_ingredients": [
+        "pancreatina"
+      ],
+      "presentation": "cápsula 25.000UI",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "pancreatina 25 ui",
+      "ingredient_key": "pancreatina",
+      "loose_key": "pancreatina",
+      "loose_match_key": "pancreatina 25 ui"
+    },
+    {
+      "ingredient": "paricalcitol",
+      "active_ingredients": [
+        "paricalcitol"
+      ],
+      "presentation": "injetável, 5 mcg/mL ampola com 1 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mcg/ml"
+        }
+      ],
+      "match_key": "paricalcitol 5 mcg/ml",
+      "ingredient_key": "paricalcitol",
+      "loose_key": "paricalcitol",
+      "loose_match_key": "paricalcitol 5 mcg/ml"
+    },
+    {
+      "ingredient": "pasireotida",
+      "active_ingredients": [
+        "pasireotida"
+      ],
+      "presentation": "injetável, 40mg frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pasireotida 40 mg",
+      "ingredient_key": "pasireotida",
+      "loose_key": "pasireotida",
+      "loose_match_key": "pasireotida 40 mg"
+    },
+    {
+      "ingredient": "pasireotida",
+      "active_ingredients": [
+        "pasireotida"
+      ],
+      "presentation": "injetável, 60mg frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pasireotida 60 mg",
+      "ingredient_key": "pasireotida",
+      "loose_key": "pasireotida",
+      "loose_match_key": "pasireotida 60 mg"
+    },
+    {
+      "ingredient": "penicilamina",
+      "active_ingredients": [
+        "penicilamina"
+      ],
+      "presentation": "cápsula 250 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "penicilamina 250 mg",
+      "ingredient_key": "penicilamina",
+      "loose_key": "penicilamina",
+      "loose_match_key": "penicilamina 250 mg"
+    },
+    {
+      "ingredient": "piridostigmina",
+      "active_ingredients": [
+        "piridostigmina"
+      ],
+      "presentation": "comprimido 60 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "piridostigmina 60 mg",
+      "ingredient_key": "piridostigmina",
+      "loose_key": "piridostigmina",
+      "loose_match_key": "piridostigmina 60 mg"
+    },
+    {
+      "ingredient": "pramipexol (dicloridrato de pramipexol)",
+      "active_ingredients": [
+        "pramipexol"
+      ],
+      "presentation": "comprimido 0,125 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.125,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pramipexol 0.125 mg",
+      "ingredient_key": "pramipexol",
+      "loose_key": "pramipexol",
+      "loose_match_key": "pramipexol 0.125 mg"
+    },
+    {
+      "ingredient": "pramipexol (dicloridrato de pramipexol)",
+      "active_ingredients": [
+        "pramipexol"
+      ],
+      "presentation": "comprimido 0,25 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pramipexol 0.25 mg",
+      "ingredient_key": "pramipexol",
+      "loose_key": "pramipexol",
+      "loose_match_key": "pramipexol 0.25 mg"
+    },
+    {
+      "ingredient": "pramipexol (dicloridrato de pramipexol)",
+      "active_ingredients": [
+        "pramipexol"
+      ],
+      "presentation": "comprimido 1 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pramipexol 1 mg",
+      "ingredient_key": "pramipexol",
+      "loose_key": "pramipexol",
+      "loose_match_key": "pramipexol 1 mg"
+    },
+    {
+      "ingredient": "pravastatina",
+      "active_ingredients": [
+        "pravastatina"
+      ],
+      "presentation": "comprimido 10mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pravastatina 10 mg",
+      "ingredient_key": "pravastatina",
+      "loose_key": "pravastatina",
+      "loose_match_key": "pravastatina 10 mg"
+    },
+    {
+      "ingredient": "pravastatina",
+      "active_ingredients": [
+        "pravastatina"
+      ],
+      "presentation": "comprimido 20mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pravastatina 20 mg",
+      "ingredient_key": "pravastatina",
+      "loose_key": "pravastatina",
+      "loose_match_key": "pravastatina 20 mg"
+    },
+    {
+      "ingredient": "pravastatina",
+      "active_ingredients": [
+        "pravastatina"
+      ],
+      "presentation": "comprimido 40 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pravastatina 40 mg",
+      "ingredient_key": "pravastatina",
+      "loose_key": "pravastatina",
+      "loose_match_key": "pravastatina 40 mg"
+    },
+    {
+      "ingredient": "primidona",
+      "active_ingredients": [
+        "primidona"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "primidona 100 mg",
+      "ingredient_key": "primidona",
+      "loose_key": "primidona",
+      "loose_match_key": "primidona 100 mg"
+    },
+    {
+      "ingredient": "primidona",
+      "active_ingredients": [
+        "primidona"
+      ],
+      "presentation": "comprimido 250 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "primidona 250 mg",
+      "ingredient_key": "primidona",
+      "loose_key": "primidona",
+      "loose_match_key": "primidona 250 mg"
+    },
+    {
+      "ingredient": "quetiapina",
+      "active_ingredients": [
+        "quetiapina"
+      ],
+      "presentation": "comprimido 25 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "quetiapina 25 mg",
+      "ingredient_key": "quetiapina",
+      "loose_key": "quetiapina",
+      "loose_match_key": "quetiapina 25 mg"
+    },
+    {
+      "ingredient": "quetiapina",
+      "active_ingredients": [
+        "quetiapina"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "quetiapina 100 mg",
+      "ingredient_key": "quetiapina",
+      "loose_key": "quetiapina",
+      "loose_match_key": "quetiapina 100 mg"
+    },
+    {
+      "ingredient": "quetiapina",
+      "active_ingredients": [
+        "quetiapina"
+      ],
+      "presentation": "comprimido 200 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "quetiapina 200 mg",
+      "ingredient_key": "quetiapina",
+      "loose_key": "quetiapina",
+      "loose_match_key": "quetiapina 200 mg"
+    },
+    {
+      "ingredient": "quetiapina",
+      "active_ingredients": [
+        "quetiapina"
+      ],
+      "presentation": "comprimido 300 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "quetiapina 300 mg",
+      "ingredient_key": "quetiapina",
+      "loose_key": "quetiapina",
+      "loose_match_key": "quetiapina 300 mg"
+    },
+    {
+      "ingredient": "raloxifeno (cloridrato de raloxifeno)",
+      "active_ingredients": [
+        "raloxifeno"
+      ],
+      "presentation": "comprimido 60 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "raloxifeno 60 mg",
+      "ingredient_key": "raloxifeno",
+      "loose_key": "raloxifeno",
+      "loose_match_key": "raloxifeno 60 mg"
+    },
+    {
+      "ingredient": "rasagilina",
+      "active_ingredients": [
+        "rasagilina"
+      ],
+      "presentation": "comprimido 1 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rasagilina 1 mg",
+      "ingredient_key": "rasagilina",
+      "loose_key": "rasagilina",
+      "loose_match_key": "rasagilina 1 mg"
+    },
+    {
+      "ingredient": "ravulizumabe",
+      "active_ingredients": [
+        "ravulizumabe"
+      ],
+      "presentation": "injetável, 100mg/mL frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "ravulizumabe 100 mg/ml",
+      "ingredient_key": "ravulizumabe",
+      "loose_key": "ravulizumabe",
+      "loose_match_key": "ravulizumabe 100 mg/ml"
+    },
+    {
+      "ingredient": "riluzol",
+      "active_ingredients": [
+        "riluzol"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "riluzol 50 mg",
+      "ingredient_key": "riluzol",
+      "loose_key": "riluzol",
+      "loose_match_key": "riluzol 50 mg"
+    },
+    {
+      "ingredient": "risanquizumabe",
+      "active_ingredients": [
+        "risanquizumabe"
+      ],
+      "presentation": "solução injetável, 150mg/mL frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "risanquizumabe 150 mg/ml",
+      "ingredient_key": "risanquizumabe",
+      "loose_key": "risanquizumabe",
+      "loose_match_key": "risanquizumabe 150 mg/ml"
+    },
+    {
+      "ingredient": "risdiplam",
+      "active_ingredients": [
+        "risdiplam"
+      ],
+      "presentation": "pó para solução oral 0,75mg/mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.75,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "risdiplam 0.75 mg/ml",
+      "ingredient_key": "risdiplam",
+      "loose_key": "risdiplam",
+      "loose_match_key": "risdiplam 0.75 mg/ml"
+    },
+    {
+      "ingredient": "risedronato",
+      "active_ingredients": [
+        "risedronato"
+      ],
+      "presentation": "comprimido 35 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 35,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "risedronato 35 mg",
+      "ingredient_key": "risedronato",
+      "loose_key": "risedronato",
+      "loose_match_key": "risedronato 35 mg"
+    },
+    {
+      "ingredient": "risperidona",
+      "active_ingredients": [
+        "risperidona"
+      ],
+      "presentation": "comprimido 1 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "risperidona 1 mg",
+      "ingredient_key": "risperidona",
+      "loose_key": "risperidona",
+      "loose_match_key": "risperidona 1 mg"
+    },
+    {
+      "ingredient": "risperidona",
+      "active_ingredients": [
+        "risperidona"
+      ],
+      "presentation": "comprimido 2 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "risperidona 2 mg",
+      "ingredient_key": "risperidona",
+      "loose_key": "risperidona",
+      "loose_match_key": "risperidona 2 mg"
+    },
+    {
+      "ingredient": "risperidona",
+      "active_ingredients": [
+        "risperidona"
+      ],
+      "presentation": "comprimido 3 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 3,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "risperidona 3 mg",
+      "ingredient_key": "risperidona",
+      "loose_key": "risperidona",
+      "loose_match_key": "risperidona 3 mg"
+    },
+    {
+      "ingredient": "risperidona",
+      "active_ingredients": [
+        "risperidona"
+      ],
+      "presentation": "solução oral, 1mg/mL frasco com 30 mL",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "risperidona 1 mg/ml",
+      "ingredient_key": "risperidona",
+      "loose_key": "risperidona",
+      "loose_match_key": "risperidona 1 mg/ml"
+    },
+    {
+      "ingredient": "rituximabe",
+      "active_ingredients": [
+        "rituximabe"
+      ],
+      "presentation": "injetável, 10 mg/mL frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "rituximabe 10 mg/ml",
+      "ingredient_key": "rituximabe",
+      "loose_key": "rituximabe",
+      "loose_match_key": "rituximabe 10 mg/ml"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "cápsula 1,5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rivastigmina 1.5 mg",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 1.5 mg"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "cápsula 3 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 3,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rivastigmina 3 mg",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 3 mg"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "cápsula 4,5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 4.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rivastigmina 4.5 mg",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 4.5 mg"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "cápsula 6 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 6,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rivastigmina 6 mg",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 6 mg"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "solução oral, 2mg/mL frasco com 120 mL",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "rivastigmina 2 mg/ml",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 2 mg/ml"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "adesivo transdérmico 9 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 9,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rivastigmina 9 mg",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 9 mg"
+    },
+    {
+      "ingredient": "rivastigmina",
+      "active_ingredients": [
+        "rivastigmina"
+      ],
+      "presentation": "adesivo transdérmico 18 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 18,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rivastigmina 18 mg",
+      "ingredient_key": "rivastigmina",
+      "loose_key": "rivastigmina",
+      "loose_match_key": "rivastigmina 18 mg"
+    },
+    {
+      "ingredient": "romosozumabe",
+      "active_ingredients": [
+        "romosozumabe"
+      ],
+      "presentation": "injetável, 90 mg/mL seringa",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 90,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "romosozumabe 90 mg/ml",
+      "ingredient_key": "romosozumabe",
+      "loose_key": "romosozumabe",
+      "loose_match_key": "romosozumabe 90 mg/ml"
+    },
+    {
+      "ingredient": "sacarato de hidróxido férrico",
+      "active_ingredients": [
+        "sacarato de hidróxido férrico"
+      ],
+      "presentation": "injetável, 20 mg/mL frasco com 5 mL",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "sacarato de hidroxido ferrico 20 mg/ml",
+      "ingredient_key": "sacarato de hidroxido ferrico",
+      "loose_key": "hidroxido ferrico",
+      "loose_match_key": "hidroxido ferrico 20 mg/ml"
+    },
+    {
+      "ingredient": "sacubitril valsartana sódica",
+      "active_ingredients": [
+        "sacubitril valsartana sódica"
+      ],
+      "presentation": "comprimido 50mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sacubitril valsartana 50 mg",
+      "ingredient_key": "sacubitril valsartana",
+      "loose_key": "sacubitril valsartana",
+      "loose_match_key": "sacubitril valsartana 50 mg"
+    },
+    {
+      "ingredient": "sacubitril valsartana sódica",
+      "active_ingredients": [
+        "sacubitril valsartana sódica"
+      ],
+      "presentation": "comprimido 100mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sacubitril valsartana 100 mg",
+      "ingredient_key": "sacubitril valsartana",
+      "loose_key": "sacubitril valsartana",
+      "loose_match_key": "sacubitril valsartana 100 mg"
+    },
+    {
+      "ingredient": "sacubitril valsartana sódica",
+      "active_ingredients": [
+        "sacubitril valsartana sódica"
+      ],
+      "presentation": "comprimido 200mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sacubitril valsartana 200 mg",
+      "ingredient_key": "sacubitril valsartana",
+      "loose_key": "sacubitril valsartana",
+      "loose_match_key": "sacubitril valsartana 200 mg"
+    },
+    {
+      "ingredient": "sapropterina (dicloridrato de sapropterina)",
+      "active_ingredients": [
+        "sapropterina"
+      ],
+      "presentation": "comprimido solúvel 100 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sapropterina 100 mg",
+      "ingredient_key": "sapropterina",
+      "loose_key": "sapropterina",
+      "loose_match_key": "sapropterina 100 mg"
+    },
+    {
+      "ingredient": "secuquinumabe",
+      "active_ingredients": [
+        "secuquinumabe"
+      ],
+      "presentation": "injetável, 150mg/mL caneta aplicadora com 1 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "secuquinumabe 150 mg/ml",
+      "ingredient_key": "secuquinumabe",
+      "loose_key": "secuquinumabe",
+      "loose_match_key": "secuquinumabe 150 mg/ml"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 200mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 200 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 200 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 400mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 400 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 400 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 600mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 600 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 600 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 800mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 800,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 800 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 800 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 1000mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1000,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 1000 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 1000 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 1200mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1200,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 1200 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 1200 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 1400mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1400,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 1400 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 1400 mcg"
+    },
+    {
+      "ingredient": "selexipague",
+      "active_ingredients": [
+        "selexipague"
+      ],
+      "presentation": "comprimido 1600mcg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 1600,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "selexipague 1600 mcg",
+      "ingredient_key": "selexipague",
+      "loose_key": "selexipague",
+      "loose_match_key": "selexipague 1600 mcg"
+    },
+    {
+      "ingredient": "sevelamer (cloridrato de sevelâmer)",
+      "active_ingredients": [
+        "sevelamer"
+      ],
+      "presentation": "comprimido 800 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 800,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sevelamer 800 mg",
+      "ingredient_key": "sevelamer",
+      "loose_key": "sevelamer",
+      "loose_match_key": "sevelamer 800 mg"
+    },
+    {
+      "ingredient": "sildenafila",
+      "active_ingredients": [
+        "sildenafila"
+      ],
+      "presentation": "comprimido 20 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sildenafila 20 mg",
+      "ingredient_key": "sildenafila",
+      "loose_key": "sildenafila",
+      "loose_match_key": "sildenafila 20 mg"
+    },
+    {
+      "ingredient": "sildenafila",
+      "active_ingredients": [
+        "sildenafila"
+      ],
+      "presentation": "comprimido 25 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sildenafila 25 mg",
+      "ingredient_key": "sildenafila",
+      "loose_key": "sildenafila",
+      "loose_match_key": "sildenafila 25 mg"
+    },
+    {
+      "ingredient": "sildenafila",
+      "active_ingredients": [
+        "sildenafila"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sildenafila 50 mg",
+      "ingredient_key": "sildenafila",
+      "loose_key": "sildenafila",
+      "loose_match_key": "sildenafila 50 mg"
+    },
+    {
+      "ingredient": "sirolimo",
+      "active_ingredients": [
+        "sirolimo"
+      ],
+      "presentation": "drágea 1 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sirolimo 1 mg",
+      "ingredient_key": "sirolimo",
+      "loose_key": "sirolimo",
+      "loose_match_key": "sirolimo 1 mg"
+    },
+    {
+      "ingredient": "sirolimo",
+      "active_ingredients": [
+        "sirolimo"
+      ],
+      "presentation": "drágea 2 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sirolimo 2 mg",
+      "ingredient_key": "sirolimo",
+      "loose_key": "sirolimo",
+      "loose_match_key": "sirolimo 2 mg"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 4 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 4,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 4 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 4 ui"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 12 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 12,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 12 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 12 ui"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 15 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 15,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 15 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 15 ui"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 16 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 16,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 16 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 16 ui"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 18 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 18,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 18 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 18 ui"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 24 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 24,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 24 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 24 ui"
+    },
+    {
+      "ingredient": "somatropina",
+      "active_ingredients": [
+        "somatropina"
+      ],
+      "presentation": "injetável, 30 UI frasco ampola injetável, imunoglobulinas que neutralizam, no mínimo, 1,5 dose mínima mortal",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "somatropina 30 ui",
+      "ingredient_key": "somatropina",
+      "loose_key": "somatropina",
+      "loose_match_key": "somatropina 30 ui"
+    },
+    {
+      "ingredient": "sulfassalazina",
+      "active_ingredients": [
+        "sulfassalazina"
+      ],
+      "presentation": "comprimido 500 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sulfassalazina 500 mg",
+      "ingredient_key": "sulfassalazina",
+      "loose_key": "sulfassalazina",
+      "loose_match_key": "sulfassalazina 500 mg"
+    },
+    {
+      "ingredient": "tacrolimo",
+      "active_ingredients": [
+        "tacrolimo"
+      ],
+      "presentation": "cápsula 1 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tacrolimo 1 mg",
+      "ingredient_key": "tacrolimo",
+      "loose_key": "tacrolimo",
+      "loose_match_key": "tacrolimo 1 mg"
+    },
+    {
+      "ingredient": "tacrolimo",
+      "active_ingredients": [
+        "tacrolimo"
+      ],
+      "presentation": "cápsula 5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tacrolimo 5 mg",
+      "ingredient_key": "tacrolimo",
+      "loose_key": "tacrolimo",
+      "loose_match_key": "tacrolimo 5 mg"
+    },
+    {
+      "ingredient": "tafamidis",
+      "active_ingredients": [
+        "tafamidis"
+      ],
+      "presentation": "pomada de 0,3 mg/g ou 1 mg/g cápsula 61 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.3,
+          "unit": "mg/g"
+        },
+        {
+          "value": 1,
+          "unit": "mg/g"
+        },
+        {
+          "value": 61,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tafamidis 0.3 mg/g",
+      "ingredient_key": "tafamidis",
+      "loose_key": "tafamidis",
+      "loose_match_key": "tafamidis 0.3 mg/g"
+    },
+    {
+      "ingredient": "tafamidis meglumina",
+      "active_ingredients": [
+        "tafamidis meglumina"
+      ],
+      "presentation": "cápsula 20 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tafamidis meglumina 20 mg",
+      "ingredient_key": "tafamidis meglumina",
+      "loose_key": "tafamidis meglumina",
+      "loose_match_key": "tafamidis meglumina 20 mg"
+    },
+    {
+      "ingredient": "teriflunomida",
+      "active_ingredients": [
+        "teriflunomida"
+      ],
+      "presentation": "comprimido 14 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 14,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "teriflunomida 14 mg",
+      "ingredient_key": "teriflunomida",
+      "loose_key": "teriflunomida",
+      "loose_match_key": "teriflunomida 14 mg"
+    },
+    {
+      "ingredient": "timolol (maleato de timolol)",
+      "active_ingredients": [
+        "timolol"
+      ],
+      "presentation": "solução oftálmica, 5mg/mL (0,5%) frasco",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.5,
+          "unit": "%"
+        }
+      ],
+      "match_key": "timolol 5 mg/ml",
+      "ingredient_key": "timolol",
+      "loose_key": "timolol",
+      "loose_match_key": "timolol 5 mg/ml"
+    },
+    {
+      "ingredient": "tiotrópio + olodaterol",
+      "active_ingredients": [
+        "tiotrópio",
+        "olodaterol"
+      ],
+      "presentation": "solução inalatória, (2,5mcg + 2,5mcg)/dose frasco com 60 doses",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "mcg"
+        },
+        {
+          "value": 2.5,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "tiotropio 2.5 mcg + olodaterol 2.5 mcg",
+      "ingredient_key": "olodaterol + tiotropio",
+      "loose_key": "olodaterol + tiotropio",
+      "loose_match_key": "olodaterol + tiotropio 2.5 mcg + 2.5 mcg"
+    },
+    {
+      "ingredient": "tobramicina",
+      "active_ingredients": [
+        "tobramicina"
+      ],
+      "presentation": "solução para inalação, 300mg frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tobramicina 300 mg",
+      "ingredient_key": "tobramicina",
+      "loose_key": "tobramicina",
+      "loose_match_key": "tobramicina 300 mg"
+    },
+    {
+      "ingredient": "tocilizumabe",
+      "active_ingredients": [
+        "tocilizumabe"
+      ],
+      "presentation": "injetável, 20 mg/mL frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "tocilizumabe 20 mg/ml",
+      "ingredient_key": "tocilizumabe",
+      "loose_key": "tocilizumabe",
+      "loose_match_key": "tocilizumabe 20 mg/ml"
+    },
+    {
+      "ingredient": "tofacitinibe",
+      "active_ingredients": [
+        "tofacitinibe"
+      ],
+      "presentation": "comprimido 5 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tofacitinibe 5 mg",
+      "ingredient_key": "tofacitinibe",
+      "loose_key": "tofacitinibe",
+      "loose_match_key": "tofacitinibe 5 mg"
+    },
+    {
+      "ingredient": "topiramato",
+      "active_ingredients": [
+        "topiramato"
+      ],
+      "presentation": "comprimido 25 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "topiramato 25 mg",
+      "ingredient_key": "topiramato",
+      "loose_key": "topiramato",
+      "loose_match_key": "topiramato 25 mg"
+    },
+    {
+      "ingredient": "topiramato",
+      "active_ingredients": [
+        "topiramato"
+      ],
+      "presentation": "comprimido 50 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "topiramato 50 mg",
+      "ingredient_key": "topiramato",
+      "loose_key": "topiramato",
+      "loose_match_key": "topiramato 50 mg"
+    },
+    {
+      "ingredient": "topiramato",
+      "active_ingredients": [
+        "topiramato"
+      ],
+      "presentation": "comprimido 100 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "topiramato 100 mg",
+      "ingredient_key": "topiramato",
+      "loose_key": "topiramato",
+      "loose_match_key": "topiramato 100 mg"
+    },
+    {
+      "ingredient": "toxina botulínica tipo A",
+      "active_ingredients": [
+        "toxina botulínica tipo a"
+      ],
+      "presentation": "injetável, 100 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "toxina botulinica tipo a 100 ui",
+      "ingredient_key": "toxina botulinica tipo a",
+      "loose_key": "toxina botulinica tipo a",
+      "loose_match_key": "toxina botulinica tipo a 100 ui"
+    },
+    {
+      "ingredient": "toxina botulínica tipo A",
+      "active_ingredients": [
+        "toxina botulínica tipo a"
+      ],
+      "presentation": "injetável, 500 UI frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "toxina botulinica tipo a 500 ui",
+      "ingredient_key": "toxina botulinica tipo a",
+      "loose_key": "toxina botulinica tipo a",
+      "loose_match_key": "toxina botulinica tipo a 500 ui"
+    },
+    {
+      "ingredient": "travoprosta",
+      "active_ingredients": [
+        "travoprosta"
+      ],
+      "presentation": "solução oftálmica, 0,04 mg/mL frasco com 2,5 mL",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 0.04,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "travoprosta 0.04 mg/ml",
+      "ingredient_key": "travoprosta",
+      "loose_key": "travoprosta",
+      "loose_match_key": "travoprosta 0.04 mg/ml"
+    },
+    {
+      "ingredient": "trientina",
+      "active_ingredients": [
+        "trientina"
+      ],
+      "presentation": "cápsula 250 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "trientina 250 mg",
+      "ingredient_key": "trientina",
+      "loose_key": "trientina",
+      "loose_match_key": "trientina 250 mg"
+    },
+    {
+      "ingredient": "triexifenidil (cloridrato de triexifenidil)",
+      "active_ingredients": [
+        "triexifenidil"
+      ],
+      "presentation": "comprimido 5 mg",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "triexifenidil 5 mg",
+      "ingredient_key": "triexifenidil",
+      "loose_key": "triexifenidil",
+      "loose_match_key": "triexifenidil 5 mg"
+    },
+    {
+      "ingredient": "triptorrelina",
+      "active_ingredients": [
+        "triptorrelina"
+      ],
+      "presentation": "injetável, 3,75 mg frasco ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 3.75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "triptorrelina 3.75 mg",
+      "ingredient_key": "triptorrelina",
+      "loose_key": "triptorrelina",
+      "loose_match_key": "triptorrelina 3.75 mg"
+    },
+    {
+      "ingredient": "triptorrelina",
+      "active_ingredients": [
+        "triptorrelina"
+      ],
+      "presentation": "injetável, 11,25 mg frasco ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 11.25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "triptorrelina 11.25 mg",
+      "ingredient_key": "triptorrelina",
+      "loose_key": "triptorrelina",
+      "loose_match_key": "triptorrelina 11.25 mg"
+    },
+    {
+      "ingredient": "triptorrelina",
+      "active_ingredients": [
+        "triptorrelina"
+      ],
+      "presentation": "injetável, 22,5 mg frasco ampola",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 22.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "triptorrelina 22.5 mg",
+      "ingredient_key": "triptorrelina",
+      "loose_key": "triptorrelina",
+      "loose_match_key": "triptorrelina 22.5 mg"
+    },
+    {
+      "ingredient": "umeclidínio + vilaterol",
+      "active_ingredients": [
+        "umeclidínio",
+        "vilaterol"
+      ],
+      "presentation": "pó para inalação oral, (62,5mcg + 25mcg)/dose frasco com 60 doses",
+      "group": "1B",
+      "strengths": [
+        {
+          "value": 62.5,
+          "unit": "mcg"
+        },
+        {
+          "value": 25,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "umeclidinio 62.5 mcg + vilaterol 25 mcg",
+      "ingredient_key": "umeclidinio + vilaterol",
+      "loose_key": "umeclidinio + vilaterol",
+      "loose_match_key": "umeclidinio + vilaterol 25 mcg + 62.5 mcg"
+    },
+    {
+      "ingredient": "upadacitinibe",
+      "active_ingredients": [
+        "upadacitinibe"
+      ],
+      "presentation": "comprimidos revestido de liberação prolongada, 15 mg comprimidos revestido de",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 15,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "upadacitinibe 15 mg",
+      "ingredient_key": "upadacitinibe",
+      "loose_key": "upadacitinibe",
+      "loose_match_key": "upadacitinibe 15 mg"
+    },
+    {
+      "ingredient": "ustequinumabe",
+      "active_ingredients": [
+        "ustequinumabe"
+      ],
+      "presentation": "liberação prolongada, 15 mg injetável, 45mg frasco ampola",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 15,
+          "unit": "mg"
+        },
+        {
+          "value": 45,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ustequinumabe 15 mg",
+      "ingredient_key": "ustequinumabe",
+      "loose_key": "ustequinumabe",
+      "loose_match_key": "ustequinumabe 15 mg"
+    },
+    {
+      "ingredient": "vedolizumabe",
+      "active_ingredients": [
+        "vedolizumabe"
+      ],
+      "presentation": "injetável, 300mg frasco",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "vedolizumabe 300 mg",
+      "ingredient_key": "vedolizumabe",
+      "loose_key": "vedolizumabe",
+      "loose_match_key": "vedolizumabe 300 mg"
+    },
+    {
+      "ingredient": "vigabatrina",
+      "active_ingredients": [
+        "vigabatrina"
+      ],
+      "presentation": "comprimido 500 mg",
+      "group": "2",
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "vigabatrina 500 mg",
+      "ingredient_key": "vigabatrina",
+      "loose_key": "vigabatrina",
+      "loose_match_key": "vigabatrina 500 mg"
+    },
+    {
+      "ingredient": "ziprasidona",
+      "active_ingredients": [
+        "ziprasidona"
+      ],
+      "presentation": "cápsula 40 mg",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ziprasidona 40 mg",
+      "ingredient_key": "ziprasidona",
+      "loose_key": "ziprasidona",
+      "loose_match_key": "ziprasidona 40 mg"
+    },
+    {
+      "ingredient": "ziprasidona",
+      "active_ingredients": [
+        "ziprasidona"
+      ],
+      "presentation": "cápsula 80 mg HINSG : Hospital Infantil Nossa Senhora da Glória, CEAF: Medicamento do Componente Especializado da Assistência Farmacêutica padronizado pelo Ministério da Saúde, OBS : Nesta versão, temos disponíveis: CESAF (RENAME) = 242 medicamentos/insumos; ii) CEAF (RENAME) = 262 medicamentos/fórmula nutricional, sendo Grupo 1A = 134; Grupo 1B =",
+      "group": "1A",
+      "strengths": [
+        {
+          "value": 80,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ziprasidona 80 mg",
+      "ingredient_key": "ziprasidona",
+      "loose_key": "ziprasidona",
+      "loose_match_key": "ziprasidona 80 mg"
+    }
+  ]
+}
