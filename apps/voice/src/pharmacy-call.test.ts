@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
-import { PharmacyCall, spokenChoice, toCents } from "./pharmacy-call.js";
+import { PharmacyCall, menuChoice, spokenChoice, toCents } from "./pharmacy-call.js";
 import type { SidebandSocket } from "./reminder-call.js";
 import { isAllowedPharmacy } from "./call-service.js";
 import { buildPharmacyLiveInstructions, pharmacyOpening, pharmacyTool } from "./pharmacy-prompt.js";
@@ -39,6 +39,7 @@ function setup(openingWaitMs = 60_000) {
     openingWaitMs,
     keyGapMs: 1,
     introduceAfterMs: 5,
+    menuPauseMs: 60_000,
     goodbyeMs: 5,
     goodbyeTailMs: 5,
     closeGraceMs: 5,
@@ -251,4 +252,36 @@ test("does not introduce itself to a menu that arrives in pieces", async () => {
   assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
   await call.endCall();
   await call.result;
+});
+
+test("picks the menu option by rule", () => {
+  const menu = "Bem-vindo a Farmácia Pate. Para receita medicamentos tecle1. Para preçoestoque de remédios, tecle 2 Para outros assuntos, tecle9";
+  assert.equal(menuChoice(menu), "2");
+  assert.equal(menuChoice("Para falar com um atendente, digite zero. Para delivery, digite um."), "0");
+  assert.equal(menuChoice("Para delivery, tecle 1. Para trabalhe conosco, tecle 2."), null);
+});
+
+test("presses the menu key itself after the menu pauses", async () => {
+  const socket = new FakeSocket();
+  const call = new PharmacyCall({
+    sessionId: "live_menu",
+    context,
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    openingWaitMs: 60_000,
+    introduceAfterMs: 60_000,
+    menuPauseMs: 5,
+    keyGapMs: 1,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para receita, tecle 1. Para preço e estoque, tecle 2." });
+  await new Promise((r) => setTimeout(r, 20));
+  assert.deepEqual(socket.sent.filter((e) => e.type === "transport.dtmf.send").map((e) => e.event), ["2"]);
+  // The model asking for the same key right after is dropped.
+  socket.emitEvent(fnCall("k9", "press_phone_keys", { keys: "2" }));
+  assert.equal(socket.sent.filter((e) => e.type === "transport.dtmf.send").length, 1);
+  await call.endCall();
+  assert.deepEqual((await call.result).keysPressed, ["2"]);
 });

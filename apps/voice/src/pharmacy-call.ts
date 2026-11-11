@@ -42,6 +42,8 @@ export interface PharmacyCallOptions {
   openingWaitMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
+  /** Silence after a menu before the service picks the key. */
+  menuPauseMs?: number;
   /** Pause between two DTMF keys. */
   keyGapMs?: number;
   /** After the answer is recorded, hang up after this much silence without a goodbye. */
@@ -59,6 +61,23 @@ const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "sessio
 const KEYS = /^[0-9*#]{1,8}$/;
 /** A recorded menu asking for a key. */
 const MENU = /\b(tecle|digite|pressione|disque)\b/i;
+/** Menu options worth choosing, best first: prices and stock, then a person, then medicines. */
+const WANTED = [/pre[çc]o|estoque/i, /atendente|atendimento|balc[ãa]o|falar com/i, /rem[ée]dio|medicamento/i];
+const OPTION = /([^.]*?)(?:tecle|digite|pressione|disque)\s*(\d|zero|um|dois|tr[êe]s|quatro|cinco|seis|sete|oito|nove)\b/gi;
+
+/** The key for the best option of a recorded menu, or null when none fits. */
+export function menuChoice(menu: string): string | null {
+  const options = [...menu.matchAll(OPTION)].map((m) => ({
+    label: m[1],
+    key: /^\d$/.test(m[2]) ? m[2] : (DIGIT_WORDS[m[2].toLowerCase()] ?? null),
+  }));
+  for (const wanted of WANTED) {
+    const hit = options.find((o) => o.key && wanted.test(o.label));
+    if (hit) return hit.key;
+  }
+  return null;
+}
+
 const DIGIT_WORDS: Record<string, string> = {
   zero: "0", um: "1", dois: "2", "três": "3", tres: "3", quatro: "4", cinco: "5", seis: "6", sete: "7", oito: "8", nove: "9",
 };
@@ -103,6 +122,9 @@ export class PharmacyCall {
   private assistantSinceMenu = "";
   /** The opening ("assistente virtual da Recuidado") was said or requested. */
   private introduced = false;
+  private menuTimer?: NodeJS.Timeout;
+  /** When the last key was sent, to drop a late duplicate from the model. */
+  private lastKeyAt = 0;
   /** Transcript length when the last key was pressed. */
   private transcriptAtKey = 0;
   private error?: string;
@@ -190,12 +212,13 @@ export class PharmacyCall {
       case "session.input_transcript.delta":
         if (event.delta) this.heardOtherSide = true;
         this.appendTranscript("patient", String(event.delta ?? ""));
-        if (MENU.test(this.otherSideSinceKey()) && !this.answer && !this.menuPending && this.keysPressed.length === 0) {
+        if (MENU.test(this.otherSideSinceKey()) && !this.answer) {
+          if (!this.menuPending) this.assistantSinceMenu = "";
           this.menuPending = true;
-          this.assistantSinceMenu = "";
-        } else if (MENU.test(this.transcript.at(-1)?.text ?? "") && !this.answer) {
-          this.menuPending = true;
-          this.assistantSinceMenu = "";
+          // Choose the key ourselves once the menu stops talking for a moment.
+          if (this.menuTimer) clearTimeout(this.menuTimer);
+          this.menuTimer = setTimeout(() => this.chooseFromMenu(), this.opts.menuPauseMs ?? 1500);
+          this.timers.push(this.menuTimer);
         } else if (event.delta && !this.menuPending) {
           // A person (not a menu) is talking: the assistant must say who it is before anything else.
           this.timers.push(setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 2500));
@@ -226,6 +249,17 @@ export class PharmacyCall {
         this.log("live error", event.error);
         break;
     }
+  }
+
+  private chooseFromMenu() {
+    if (!this.menuPending || this.answer || this.hangupRequested || this.finished) return;
+    const key = menuChoice(this.otherSideSinceKey());
+    if (!key) {
+      this.log("no menu option fits, leaving it to the model");
+      return;
+    }
+    this.log(`menu option chosen by rule: ${key}`);
+    this.sendKeys(`menu_${this.keysPressed.length}`, [key]);
   }
 
   private introduceIfNeeded() {
@@ -279,7 +313,10 @@ export class PharmacyCall {
 
   private pressKeys(callId: string, keys: unknown) {
     const valid = typeof keys === "string" && KEYS.test(keys.trim());
-    if (valid) {
+    if (valid && Date.now() - this.lastKeyAt < 6000) {
+      // The service already chose this menu by rule; a second key would answer the next menu.
+      this.log(`model key ${String(keys)} ignored, a key was just sent`);
+    } else if (valid) {
       this.sendKeys(callId, [...(keys as string).trim()]);
     } else {
       this.log("invalid keypad request", keys);
@@ -289,6 +326,8 @@ export class PharmacyCall {
 
   private sendKeys(id: string, digits: string[]) {
     this.menuPending = false;
+    this.lastKeyAt = Date.now();
+    if (this.menuTimer) clearTimeout(this.menuTimer);
     this.transcriptAtKey = this.transcript.length;
     this.assistantSinceMenu = "";
     const gap = this.opts.keyGapMs ?? 300;
