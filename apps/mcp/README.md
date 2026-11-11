@@ -2,7 +2,7 @@
 
 MCP server over the Recuidado API. Any MCP client (Claude, ChatGPT, Cursor, an agent) can read the care plan, follow today's doses, confirm a dose, read the family alerts and check where a medicine is free.
 
-Endpoint: `https://mcp.recuidado.com.br/mcp` (Streamable HTTP, stateless). Serves 2026-07-28 clients and falls back to 2025-era clients.
+Endpoint: `https://mcp.recuidado.com.br` (Streamable HTTP, stateless). `/mcp` also works (the first published URL). Serves 2026-07-28 clients and falls back to 2025-era clients.
 
 | Tool | What it does | API call |
 | --- | --- | --- |
@@ -27,6 +27,7 @@ Code with PKCE S256, access token for 30 days, refresh token for a year. Everyth
 - Separate service over the public API, not a module inside `apps/api`: no conflict with the API work, and the MCP sees exactly what the web app sees.
 - MCP TypeScript SDK v2 (`@modelcontextprotocol/server` 2.4, spec 2026-07-28) with `createMcpHandler`: stateless, one server per request, and the 2025-era fallback still serves older clients (tested with the v1 SDK client).
 - All MCP traffic reaches the API from one IP, so it shares the API limit of `RATE_LIMIT_PER_MINUTE` (300). Enough for the demo.
+- MCP at the root URL, like the Send to Myself server where Claude shows the app icon; `/mcp` stays as an alias.
 - Icons: `serverInfo.icons` plus `/favicon.ico`, `/favicon.svg` and `/icon-512.png`, the same art as the web app.
 - Siri (searched on 11/11/2026): no reliable source shows Siri in iOS 27 accepting a remote MCP server; third-party access to Siri goes through App Intents in an installed app. Closest options: an Apple Shortcut calling the API, or the Claude or ChatGPT app by voice with this connector.
 
@@ -41,6 +42,6 @@ Variables: `API_URL`, `MCP_PUBLIC_URL` and `MCP_AUTH_SECRET` (required in produc
 
 ## Connect
 
-- Claude (claude.ai or desktop): Settings, Connectors, Add custom connector, URL `https://mcp.recuidado.com.br/mcp`, then Autorizar.
-- Claude Code: `claude mcp add --transport http recuidado https://mcp.recuidado.com.br/mcp`
+- Claude (claude.ai or desktop): Settings, Connectors, Add custom connector, URL `https://mcp.recuidado.com.br`, then Autorizar.
+- Claude Code: `claude mcp add --transport http recuidado https://mcp.recuidado.com.br`
 - Inspector: `npx @modelcontextprotocol/inspector` and open the same URL.
