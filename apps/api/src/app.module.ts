@@ -13,6 +13,7 @@ import { MedicationsModule } from './medications/medications.module.js';
 import { HealthController } from './health/health.controller.js';
 import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
+import { PrivacyModule } from './privacy/privacy.module.js';
 import { VoiceModule } from './voice/voice.module.js';
 import { telemetry } from './telemetry/telemetry.js';
 
@@ -50,6 +51,7 @@ import { telemetry } from './telemetry/telemetry.js';
     MedicationsModule,
     PushModule,
     PrescriptionsModule,
+    PrivacyModule,
     VoiceModule,
   ],
   controllers: [HealthController],

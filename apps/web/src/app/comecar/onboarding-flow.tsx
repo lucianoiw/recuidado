@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -67,7 +68,7 @@ export function OnboardingFlow() {
   const p = data.patient;
   const valid: Record<number, boolean> = {
     1: c.name.trim().length > 1 && isPhone(c.phone) && c.relation !== null && (c.relation !== "Outro" || c.relationOther.trim() !== ""),
-    2: p.name.trim().length > 1 && isPhone(p.phone) && isDate(p.birth) && isCep(p.cep) && cepOk,
+    2: p.name.trim().length > 1 && isPhone(p.phone) && isDate(p.birth) && isCep(p.cep) && cepOk && p.consent,
     3: true,
   };
 
@@ -187,6 +188,33 @@ export function OnboardingFlow() {
                 </button>
               ))}
             </fieldset>
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked={p.consent}
+              aria-invalid={tried && !p.consent}
+              onClick={() => patch("patient", { consent: !p.consent })}
+              className={cn(
+                "flex items-start gap-3 rounded-2xl bg-surface p-3.5 text-left",
+                p.consent ? "border-2 border-brand bg-[#f2f8f6]" : tried ? "border-2 border-danger" : "border-[1.5px] border-line-soft",
+              )}
+            >
+              <span
+                className={cn(
+                  "mt-0.5 flex size-[22px] shrink-0 items-center justify-center rounded-md",
+                  p.consent ? "bg-brand text-white" : "border-2 border-[#8c8578]",
+                )}
+              >
+                {p.consent ? <CheckIcon size={16} strokeWidth={3} /> : null}
+              </span>
+              <span className="text-[15px] leading-snug">
+                Conversei com {nickname} e ela aceita receber lembretes e ligações de uma assistente virtual, e que a
+                família veja se ela tomou o remédio. Ela também confirma isso no app dela.
+              </span>
+            </button>
+            <Link href="/privacidade" className="text-[15px] font-bold text-brand">
+              Como cuidamos dos dados dela
+            </Link>
           </div>
         </>
       ) : null}

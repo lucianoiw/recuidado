@@ -14,7 +14,8 @@ if (token) {
       capture_exceptions: true,
       capture_performance: { web_vitals: true, network_timing: true },
       enable_recording_console_log: true,
-      session_recording: { maskAllInputs: true },
+      // LGPD: names, medicines and phones on screen are health data. Replays show layout and clicks only.
+      session_recording: { maskAllInputs: true, maskTextSelector: "*" },
       // Sends the session id to the API so its logs and errors link to this replay.
       tracing_headers: [new URL(API_URL).hostname],
       logs: {

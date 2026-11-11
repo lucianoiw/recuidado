@@ -1,12 +1,16 @@
 "use client";
 
-import { callName, joinFamily } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { callName, deleteFamilyData, exportDataUrl, joinFamily, type Member } from "@/lib/api";
+import { track } from "@/lib/analytics";
+import { clearFamilyId } from "@/lib/family-id";
 import { CopyLinkButton } from "@/components/copy-button";
 import { EnableNotifications } from "@/components/enable-notifications";
 import Link from "next/link";
-import { BellIcon, CheckIcon, StatusPill, buttonClass, cn } from "@/components/ui";
+import { BellIcon, Button, CheckIcon, StatusPill, buttonClass, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
-import { useMe } from "@/lib/me";
+import { clearMe, useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
 
 function firstName(name: string) {
@@ -102,6 +106,105 @@ export function CircleView() {
           Celular de {patient}
         </Link>
       </section>
+
+      <YourData isDemo={Boolean(data.isDemo)} caregiver={caregiver} patient={patient} consent={data.patient} />
     </>
+  );
+}
+
+function consentText(p: Member, patient: string): string {
+  if (p.consentSource === "patient") return `${patient} aceitou no app dela.`;
+  if (p.consentSource === "caregiver") return `A família disse que ${patient} aceitou. Ela confirma no primeiro acesso ao app dela.`;
+  return `${patient} ainda não aceitou. Sem o aceite dela, o Recuidado não liga.`;
+}
+
+/** LGPD rights: consent status, privacy notice, export and delete. */
+function YourData({
+  isDemo,
+  caregiver,
+  patient,
+  consent,
+}: {
+  isDemo: boolean;
+  caregiver: Member | undefined;
+  patient: string;
+  consent: Member;
+}) {
+  const router = useRouter();
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const owner = caregiver && !caregiver.invited;
+
+  async function remove() {
+    if (!caregiver) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await deleteFamilyData(caregiver.id);
+      track("family_deleted");
+      clearMe();
+      clearFamilyId();
+      router.replace("/");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Não deu para apagar os dados.");
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
+      <h2 className="text-[18px] font-extrabold">Seus dados</h2>
+      {isDemo ? null : <p className="text-[15px] leading-snug text-muted">{consentText(consent, patient)}</p>}
+      <Link href="/privacidade" className={buttonClass({ variant: "secondary" })}>
+        Como cuidamos dos dados
+      </Link>
+      {isDemo ? (
+        <p className="text-[15px] leading-snug text-muted">
+          Esta é a família de demonstração, com dados fictícios. Ela não pode ser baixada nem apagada.
+        </p>
+      ) : !owner ? (
+        <p className="text-[15px] leading-snug text-muted">
+          Quem fez o cadastro pode baixar ou apagar os dados da família aqui.
+        </p>
+      ) : (
+        <>
+          <a
+            href={exportDataUrl(caregiver.id)}
+            download="recuidado-dados.json"
+            onClick={() => track("family_export_clicked")}
+            className={buttonClass({ variant: "secondary" })}
+          >
+            Baixar todos os dados
+          </a>
+          {confirming ? (
+            <div className="flex flex-col gap-2.5 rounded-2xl border-2 border-danger p-3.5" role="alertdialog">
+              <p className="text-[15px] font-semibold leading-snug">
+                Apagar {patient}, a família, os remédios, as doses e as ligações? Não tem volta.
+              </p>
+              <Button variant="danger" onClick={remove} disabled={busy}>
+                {busy ? "Apagando..." : "Sim, apagar tudo"}
+              </Button>
+              <Button variant="secondary" onClick={() => setConfirming(false)} disabled={busy}>
+                Cancelar
+              </Button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirming(true)}
+              className="py-2 text-center text-[15px] font-bold text-danger"
+            >
+              Apagar a família e todos os dados
+            </button>
+          )}
+          {error ? (
+            <p className="text-[15px] font-semibold text-danger" role="alert">
+              {error}
+            </p>
+          ) : null}
+        </>
+      )}
+    </section>
   );
 }
