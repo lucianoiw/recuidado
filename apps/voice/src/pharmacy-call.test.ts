@@ -38,6 +38,7 @@ function setup(openingWaitMs = 60_000) {
     maxCallMs: 60_000,
     openingWaitMs,
     keyGapMs: 1,
+    introduceAfterMs: 5,
     goodbyeMs: 5,
     goodbyeTailMs: 5,
     closeGraceMs: 5,
@@ -132,7 +133,10 @@ test("does not open over the other side", async () => {
   socket.emitEvent({ type: "transport.answered", event_id: "a1" });
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Alô?" });
   await new Promise((r) => setTimeout(r, 20));
-  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  // No "silent" opening; only the one introduction for the person who answered.
+  const sent = socket.sent.filter((e) => e.type === "session.commentary.append").map((e) => String(e.event_id));
+  assert.equal(sent.filter((id) => id.startsWith("opening_")).length, 0);
+  assert.ok(sent.length <= 1);
   await call.endCall();
   await call.result;
 });
@@ -209,4 +213,28 @@ test("reads the option the assistant said", () => {
   assert.equal(spokenChoice("Opção 2."), "2");
   assert.equal(spokenChoice("vou teclar dois"), "2");
   assert.equal(spokenChoice("Oi, boa tarde!"), null);
+});
+
+test("asks for the introduction when a person talks and the assistant has not said who it is", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia, boa tarde." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Um momento." });
+  await new Promise((r) => setTimeout(r, 30));
+  const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.equal(intro.length, 1);
+  assert.match(intro[0].content, /assistente virtual da Recuidado/);
+  await call.endCall();
+  await call.result;
+});
+
+test("does not repeat the introduction once said", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Pois não?" });
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  await call.endCall();
+  await call.result;
 });
