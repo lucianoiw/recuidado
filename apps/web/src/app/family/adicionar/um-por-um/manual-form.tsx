@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { afterMedsHref } from "@/components/patient-link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MedSearch } from "@/components/med-search";
@@ -43,7 +44,7 @@ export function ManualForm() {
       setTimes(["08:00"]);
       setUnits("");
       setTried(false);
-      if (!another) router.push("/family/remedios");
+      if (!another) router.push(afterMedsHref("/family/remedios"));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Não deu para salvar.");
     } finally {
