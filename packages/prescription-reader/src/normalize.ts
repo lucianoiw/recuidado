@@ -1,4 +1,11 @@
-import { DEFAULT_ROUTINE, INTERVAL_TIMES, TIMES_PER_DAY } from "./routine.ts";
+import {
+  ANCHOR_TIMES,
+  DEFAULT_ROUTINE,
+  GROUPING_WINDOW_MINUTES,
+  INTERVAL_TIMES,
+  TIMES_PER_DAY,
+  UNGROUPED_ANCHORS,
+} from "./routine.ts";
 import type { PrescriptionItem, PrescriptionReading, ScheduledDose, Strength } from "./schema.ts";
 
 /** Salt and form words removed to build a join key against public drug lists. */
@@ -53,6 +60,42 @@ export function normalizeTime(raw: string): string | null {
   const minutes = match[2] ? Number(match[2]) : 0;
   if (hours > 23 || minutes > 59) return null;
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function toMinutes(time: string): number {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours! * 60 + minutes!;
+}
+
+/**
+ * Moves a time to the nearest anchor time (08:00, 12:00, 20:00) when it is within
+ * the grouping window, so close doses share one reminder. Other times are kept.
+ */
+export function groupTime(time: string): string {
+  const minutes = toMinutes(time);
+  let best: { anchor: string; distance: number } | null = null;
+  for (const anchor of ANCHOR_TIMES) {
+    const distance = Math.abs(toMinutes(anchor) - minutes);
+    if (distance <= GROUPING_WINDOW_MINUTES && (!best || distance < best.distance)) best = { anchor, distance };
+  }
+  return best ? best.anchor : time;
+}
+
+/**
+ * Groups doses on anchor times, except fasting or before-meal doses. A dose is
+ * never merged into another dose of the same medicine: if grouping would make two
+ * doses share a time, the dose keeps its written time (no dose is ever summed).
+ */
+function groupSchedule(schedule: ScheduledDose[]): ScheduledDose[] {
+  const taken = new Set(schedule.map((dose) => dose.time));
+  return schedule.map((dose) => {
+    if (UNGROUPED_ANCHORS.has(dose.anchor)) return dose;
+    const grouped = groupTime(dose.time);
+    if (grouped === dose.time || taken.has(grouped)) return dose;
+    taken.delete(dose.time);
+    taken.add(grouped);
+    return { ...dose, time: grouped };
+  });
 }
 
 /** Times used when the model returned no schedule for a scheduled item. */
@@ -112,7 +155,7 @@ export function normalizeReading(reading: PrescriptionReading): NormalizedReadin
       if (time) validSchedule.push({ ...dose, time });
       else reviewReasons.push(`Horário inválido descartado: "${dose.time}".`);
     }
-    item.schedule = sortByTime(validSchedule);
+    item.schedule = sortByTime(groupSchedule(validSchedule));
 
     if (item.schedule.length === 0 && !item.frequency.as_needed) {
       const times = defaultTimes(item.frequency);
