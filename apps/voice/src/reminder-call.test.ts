@@ -145,3 +145,14 @@ test("records that she is not feeling well", async () => {
   assert.equal(result.feelsUnwell, true);
   assert.equal(result.note, "Estou com tontura");
 });
+
+test("voicemail greeting ends the call as no answer", async () => {
+  const { socket, call, hangups } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "v1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "v2", delta: "A pessoa não está disponível. Grave a sua " });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "v3", delta: "mensagem após o sinal." });
+  const result = await call.result;
+  assert.equal(result.outcome, "no_answer");
+  assert.equal(result.endReason, "voicemail");
+  assert.equal(hangups(), 1);
+});
