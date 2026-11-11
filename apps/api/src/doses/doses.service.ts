@@ -138,7 +138,7 @@ export class DosesService implements OnApplicationBootstrap {
     const { caregivers, sent } = await this.alerts.notifyCaregivers(dose.familyId, {
       kind: 'dose_missed',
       title: `${dose.patientName} não confirmou o remédio`,
-      body: `${dose.medicationLabel} das ${localTime(dose.scheduledAt)}. Vale ligar para ela.`,
+      body: `${dose.medicationLabel} das ${localTime(dose.scheduledAt)}. Vale ligar para ${dose.gender === 'male' ? 'ele' : 'ela'}.`,
       url: '/family',
       doseId,
     });
@@ -231,6 +231,7 @@ export class DosesService implements OnApplicationBootstrap {
         strength: medications.strength,
         patientId: members.id,
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
+        gender: members.gender,
         familyId: members.familyId,
       })
       .from(doses)

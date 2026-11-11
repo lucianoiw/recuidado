@@ -227,7 +227,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
     `Your only job is to record the patient's answer by calling ${DOSE_TOOL_NAME}.`,
     "Set taken=true only if she clearly said she already took the medicine (all of them, when there are several).",
     "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
-    "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false only if she says she is fine.",
+    "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false if she says she is fine, or if she gives no complaint at all (\"tô aguardando\", \"tô aqui\", \"normal\", a question back): only a complaint counts.",
     "Set emergency=true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, too weak to stand up, or she asks for urgent help. The family gets a phone call. Tiredness alone is not an emergency. Otherwise false.",
     "Put what she said about how she feels, and any other relevant detail (ran out of medicine), in note, in Portuguese, close to her own words.",
     "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",

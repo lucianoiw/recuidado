@@ -54,6 +54,14 @@ export function patientWords(result: Pick<VoiceResult, 'transcript' | 'note'>): 
   return words ? words.slice(0, 200) : undefined;
 }
 
+/** Her words inside quotes, without the final period, so a sentence never ends in '."."'. */
+export function quoted(words: string): string {
+  return `"${words.trim().replace(/[.\s]+$/, '')}"`;
+}
+
+/** "ela" or "ele", for text the family reads or hears. */
+export const pronoun = (gender?: 'female' | 'male' | null) => (gender === 'male' ? 'ele' : 'ela');
+
 export type CaregiverCallReason = 'emergency' | 'still_unwell' | 'no_answer';
 
 /** What the first contact hears: her own words and a request to call her. */
@@ -63,11 +71,11 @@ export function caregiverMessage(
   words?: string,
   gender: 'female' | 'male' = 'female',
 ): string {
-  const she = gender === 'male' ? 'ele' : 'ela';
+  const she = pronoun(gender);
   const intro = 'Olá, aqui é a assistente virtual da Recuidado.';
   const end = `Por favor, entre em contato com ${she} agora. Se for grave, ligue para o SAMU, 192.`;
   if (reason === 'no_answer') return `${intro} Liguei de novo para ${name} e ${she} não atendeu. ${end}`;
-  const said = words ? `: "${words}"` : ' que não está bem';
+  const said = words ? `: ${quoted(words)}` : ' que não está bem';
   if (reason === 'still_unwell') return `${intro} Liguei de novo para ${name} e ${she} disse${said}. ${end}`;
   return `${intro} Liguei para ${name} para saber sobre o medicamento, e ${she} disse${said}. ${end}`;
 }
@@ -225,7 +233,8 @@ export class VoiceCallService {
     if (!dose) throw new NotFoundException('Dose não encontrada.');
     const saved = await this.saveCall(doseId, result);
     if (saved && result.feelsUnwell) {
-      await this.alertUnwell(doseId, result.note, Boolean(result.emergency));
+      // Her own words from the transcript; the model's note can be a summary in the third person.
+      await this.alertUnwell(doseId, patientWords(result), Boolean(result.emergency));
       telemetry.capture(
         'patient_reported_unwell',
         { dose_id: doseId, call_id: result.sessionId, demo: dose.demo, emergency: Boolean(result.emergency) },
@@ -351,32 +360,39 @@ export class VoiceCallService {
     const answered = result.outcome !== 'no_answer' && result.outcome !== 'failed';
     const words = patientWords(result);
     if (answered && result.feelsUnwell === false && !result.emergency) {
-      await this.notifyFamily(doseId, (name) => ({
+      await this.notifyFamily(doseId, (name, she) => ({
         title: `${name} disse que está melhor`,
-        body: words ? `Na ligação de volta, ela disse: "${words}".` : 'Na ligação de volta, ela disse que está melhor.',
+        body: words ? `Na ligação de volta, ${she} disse: ${quoted(words)}.` : `Na ligação de volta, ${she} disse que está melhor.`,
       }));
       this.logger.log(`Dose ${doseId}: she is better after ${done} call back(s); stopping.`);
       return;
     }
     if (!answered) {
-      await this.notifyFamily(doseId, (name) => ({
+      await this.notifyFamily(doseId, (name, she) => ({
         title: `${name} não atendeu a ligação de volta`,
-        body: 'Vale ligar para ela.',
+        body: `Vale ligar para ${she}.`,
       }));
     }
     await this.safeCallCaregivers(doseId, answered ? 'still_unwell' : 'no_answer', words);
     if (done < MAX_CHECK_INS) await this.scheduleCheckIn(doseId, done + 1);
   }
 
-  private async notifyFamily(doseId: string, text: (name: string) => { title: string; body: string }): Promise<void> {
+  private async notifyFamily(
+    doseId: string,
+    text: (name: string, she: string) => { title: string; body: string },
+  ): Promise<void> {
     const [row] = await this.db
-      .select({ patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
+      .select({
+        patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
+        familyId: members.familyId,
+        gender: members.gender,
+      })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
       .where(eq(doses.id, doseId));
     if (!row) return;
-    await this.alerts.notifyCaregivers(row.familyId, { kind: 'check_in', url: '/family/avisos', doseId, ...text(row.patientName) });
+    await this.alerts.notifyCaregivers(row.familyId, { kind: 'check_in', url: '/family/avisos', doseId, ...text(row.patientName, pronoun(row.gender)) });
   }
 
   private async safeCallCaregivers(doseId: string, reason: CaregiverCallReason, words?: string): Promise<void> {
@@ -434,19 +450,25 @@ export class VoiceCallService {
     }
   }
 
-  private async alertUnwell(doseId: string, note?: string | null, emergency = false): Promise<void> {
+  private async alertUnwell(doseId: string, words?: string | null, emergency = false): Promise<void> {
     const [row] = await this.db
-      .select({ patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
+      .select({
+        patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
+        familyId: members.familyId,
+        gender: members.gender,
+      })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
       .where(eq(doses.id, doseId));
     if (!row) return;
-    const said = note?.trim() ? `Ela disse: "${note.trim()}".` : 'Ela disse que não está bem.';
+    const she = pronoun(row.gender);
+    const She = she === 'ele' ? 'Ele' : 'Ela';
+    const said = words?.trim() ? `${She} disse: ${quoted(words)}.` : `${She} disse que não está bem.`;
     const { sent } = await this.alerts.notifyCaregivers(row.familyId, {
       kind: emergency ? 'emergency' : 'unwell',
       title: emergency ? `Urgente: ${row.patientName} pode precisar de ajuda` : `${row.patientName} não está se sentindo bem`,
-      body: `${said} Vale ligar para ela.`,
+      body: `${said} Vale ligar para ${she}.`,
       url: '/family',
       doseId,
     });
