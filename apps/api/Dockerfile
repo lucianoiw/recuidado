@@ -9,6 +9,7 @@ COPY apps/api/package.json apps/api/
 # Workspace libraries used by the api. Their "prepare" script builds dist/ on install.
 COPY packages/prescription-reader packages/prescription-reader
 COPY packages/data packages/data
+COPY packages/telemetry packages/telemetry
 RUN pnpm install --frozen-lockfile --filter @recuidado/api...
 COPY apps/api apps/api
 RUN pnpm --filter @recuidado/api build \

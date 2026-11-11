@@ -4,6 +4,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { sendNotification, WebPushError } from 'web-push';
 import { DB, type Database } from '../db/db.module.js';
 import { pushSubscriptions } from '../db/schema.js';
+import { telemetry } from '../telemetry/telemetry.js';
 
 /** What the service worker (apps/web/public/sw.js) reads from a push. */
 export interface PushPayload {
@@ -42,6 +43,7 @@ export class PushService {
       .insert(pushSubscriptions)
       .values(values)
       .onConflictDoUpdate({ target: pushSubscriptions.endpoint, set: values });
+    telemetry.capture('push_subscribed', { push_service: URL.parse(sub.endpoint)?.host }, memberId);
   }
 
   async unsubscribe(endpoint: string): Promise<void> {

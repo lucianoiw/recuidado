@@ -17,6 +17,7 @@ import {
   buttonClass,
   cn,
 } from "@/components/ui";
+import { captureError, track } from "@/lib/analytics";
 import { lookupCep, type CepLookup } from "@/lib/cep";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
@@ -84,12 +85,14 @@ export function OnboardingFlow() {
         const { caregiverId } = await saveOnboarding({ caregiverId: readMe(), ...data });
         setMe(caregiverId);
       } catch (e) {
+        captureError(e, { screen: "onboarding", step });
         setSaveError(e instanceof Error ? e.message : "Não deu para salvar o cadastro.");
         return;
       } finally {
         setSaving(false);
       }
     }
+    track("onboarding_step_completed", { step, total: TOTAL });
     if (step < TOTAL) setStep(step + 1);
     else router.push("/family/receita");
   }

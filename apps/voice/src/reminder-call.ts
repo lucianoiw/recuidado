@@ -42,6 +42,8 @@ export interface ReminderCallOptions {
   /** Time to wait for session.closed after hanging up. */
   closeGraceMs?: number;
   log?: (msg: string, extra?: unknown) => void;
+  /** Called when the call starts ringing or is answered. */
+  onStatusChange?: (status: CallStatus) => void;
 }
 
 /** High-frequency events left out of the log. */
@@ -118,11 +120,15 @@ export class ReminderCall {
     }
     switch (event.type) {
       case "transport.ringing":
-        if (this.status === "dialing") this.status = "ringing";
+        if (this.status === "dialing") {
+          this.status = "ringing";
+          this.opts.onStatusChange?.("ringing");
+        }
         break;
       case "transport.answered":
         this.status = "answered";
         this.answered = true;
+        this.opts.onStatusChange?.("answered");
         this.send({
           type: "session.commentary.append",
           event_id: `greeting_${this.opts.sessionId}`,

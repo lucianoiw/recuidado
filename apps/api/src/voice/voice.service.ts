@@ -12,6 +12,8 @@ import { and, eq, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
+import { minutesSince } from '../doses/time.js';
+import { telemetry } from '../telemetry/telemetry.js';
 
 /** Body that apps/voice posts to /doses/:id/voice-result. */
 export interface VoiceResult {
@@ -48,6 +50,7 @@ export class VoiceCallService {
     const [row] = await this.db
       .select({
         status: doses.status,
+        patientId: members.id,
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         phone: members.phone,
         medication: medications.name,
@@ -72,6 +75,7 @@ export class VoiceCallService {
       headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
       body: JSON.stringify({
         doseId,
+        patientId: row.patientId,
         phone: row.phone,
         patientName: row.patientName,
         medications: [{ name: row.medication, dose: row.strength ?? undefined }],
@@ -81,19 +85,39 @@ export class VoiceCallService {
       throw new Error(`Voice service answered ${res.status}: ${await res.text()}`);
     }
     const body = (await res.json()) as { callId: string };
+    telemetry.capture(
+      'dose_call_requested',
+      { dose_id: doseId, call_id: body.callId, medication: row.medication },
+      row.patientId,
+    );
     this.logger.log(`Calling patient of dose ${doseId} (${body.callId}).`);
     return body;
   }
 
   /** Records the call outcome. A dose not confirmed by voice alerts the family right away. */
   async applyResult(doseId: string, result: VoiceResult): Promise<'taken' | 'missed' | 'ignored'> {
-    const [dose] = await this.db.select({ status: doses.status }).from(doses).where(eq(doses.id, doseId));
+    const [dose] = await this.db
+      .select({ status: doses.status, scheduledAt: doses.scheduledAt, patientId: medications.patientId })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .where(eq(doses.id, doseId));
     if (!dose) throw new NotFoundException('Dose não encontrada.');
     await this.saveCall(doseId, result);
+    const props = { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome };
     // Confirmed in the app while the phone was ringing: the app wins.
-    if (dose.status === 'taken') return 'ignored';
+    if (dose.status === 'taken') {
+      telemetry.capture('dose_voice_result', { ...props, applied: 'ignored' }, dose.patientId);
+      return 'ignored';
+    }
 
     if (result.confirmed) {
+      telemetry.capture('dose_voice_result', { ...props, applied: 'taken' }, dose.patientId);
+      telemetry.capture(
+        'dose_confirmed',
+        { dose_id: doseId, via: 'voice', call_id: result.sessionId, minutes_since_scheduled: minutesSince(dose.scheduledAt) },
+        dose.patientId,
+      );
+      this.logger.log(`Dose ${doseId} confirmed by voice (${result.sessionId}).`);
       await this.db
         .update(doses)
         .set({ status: 'taken', confirmedVia: 'voice', confirmedAt: new Date() })
@@ -107,6 +131,7 @@ export class VoiceCallService {
       .set({ status: 'missed' })
       .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
     await this.alertNow(doseId);
+    telemetry.capture('dose_voice_result', { ...props, applied: 'missed' }, dose.patientId);
     this.logger.log(`Dose ${doseId} not confirmed by voice (${result.outcome}); alerting family.`);
     return 'missed';
   }
