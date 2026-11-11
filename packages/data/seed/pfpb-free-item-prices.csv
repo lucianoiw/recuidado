@@ -1,0 +1,40 @@
+item_id,match_key,indication,matched_by,cmed_presentations,pmc_region_min,pmc_region_median,pmc_region_max,per_unit_median,cheapest_presentation
+estradiol-5-mg-enantato-de-noretisterona-50-mg,estradiol 5 mg + enantato de noretisterona 50 mg,ANTICONCEPÇÃO,ean,8,28.16,36.7,49.02,,ENANTATO DE NORETISTERONA + VALERATO DE ESTRADIOL (50+ 5) MG/ML SOL INJ CT AMP VD AMB X 1 ML
+etinilestradiol-0-03-mg-levonorgestrel-0-15-mg,etinilestradiol 0.03 mg + levonorgestrel 0.15 mg,ANTICONCEPÇÃO,ean,14,8.59,15.66,49.17,0.5452,"LEVONORGESTREL + ETINILESTRADIOL (0,15 + 0,03) MG COM REV CT BL CALEND AL PLAS PVC TRANS X 21"
+medroxiprogesterona-150-mg,medroxiprogesterona 150 mg,ANTICONCEPÇÃO,ean,6,34.71,44.605,70.01,,CONTRACEP 150 MG/ML SUS INJ CT AMP VD INC X 1 ML
+noretisterona-0-35-mg,noretisterona 0.35 mg,ANTICONCEPÇÃO,ean,2,11.22,13.745,16.27,0.3927,"NORETISTERONA 0,35 MG COM CT BL AL PLAS TRANS X 35"
+brometo-de-ipratropio-0-02-mg,brometo de ipratropio 0.02 mg,ASMA,ean,1,43.36,43.36,43.36,,ATROVENT 20 MCG/DOSE AER DOSIF CT FR AÇO INOX X 10 ML + BOCAL
+brometo-de-ipratropio-0-25-mg,brometo de ipratropio 0.25 mg,ASMA,ean,12,12.98,19.645,32.34,,"BROMETO DE IPRATRÓPIO 0,25 MG/ML SOL INAL CT FR VD AMB GOT X 20 ML"
+dipropionato-de-beclometasona-200-mcg,dipropionato de beclometasona 200 mcg,ASMA,ean,4,57.24,65.33,82.57,0.2967,DIPROPIONATO DE BECLOMETASONA 200 MCG/DOSE SOL AER INAL OR CT FR AL X 200 ACIONAMENTOS + BOMB
+dipropionato-de-beclometasona-250-mcg,dipropionato de beclometasona 250 mcg,ASMA,ean,5,68.24,77.19,81.42,,DIPROPIONATO DE BECLOMETASONA 250 MCG/DOSE SOL AER CT TB AL + DISPOSITIVO ORAL X 200 DOSES
+dipropionato-de-beclometasona-50-mcg,dipropionato de beclometasona 50 mcg,ASMA,ean,4,35,39.92,50.45,0.1814,DIPROPIONATO DE BECLOMETASONA 50 MCG/DOSE SOL AER INAL OR CT FR AL X 200 ACIONAMENTOS + BOMB
+salbutamol-100-mcg,salbutamol 100 mcg,ASMA,ean,7,34.98,51.72,57.74,0.2662,SULFATO DE SALBUTAMOL 100 MCG SUS AER INAL OR CT TB AL X 200 ACION + INAL
+salbutamol-5-mg,salbutamol 5 mg,ASMA,ean,1,24.89,24.89,24.89,,AEROLIN 5 MG/ML SOL P/NEBUL CT FR VD AMB X 10 ML
+glibenclamida-5-mg,glibenclamida 5 mg,DIABETES,ean,15,13.8,15.71,30.89,0.5233,GLICONIL 5 MG COM CT  BL AL PLAS PVC TRANS X 30
+insulina-humana-100-ui-ml,insulina humana 100 ui/ml,DIABETES,ean,7,35.54,90.05,222.36,35.557,NOVOLIN N 100 UI/ML SUS INJ CT 1 CAR VD TRANS X 3 ML X 1 SIST APLIC PLAS (FLEXPEN)
+insulina-humana-regular-100-ui-ml,insulina humana regular 100 ui/ml,DIABETES,ean,11,34.17,89.62,222.36,35.557,WOSULIN R 100 UI/ML SOL INJ CX CARP VD INC X 3 ML
+metformina-500-mg,metformina 500 mg,DIABETES,ean,19,10.32,18.79,61.95,0.607,GLIFAGE 500 MG COM REV CT BL AL PLAS TRANS  X 10
+metformina-500-mg-acao-prolongada,metformina 500 mg,DIABETES,ean,17,2.56,12.87,25.73,0.4067,CLORIDRATO DE METFORMINA 500 MG COM LIB PROL CT BL AL PLAS OPC X 10
+metformina-850-mg,metformina 850 mg,DIABETES,ean,22,13.88,25.58,83.31,0.8075,GLIFAGE 850 MG COM REV CT BL AL PLAS TRANS X 10
+dapagliflozina-10-mg,dapagliflozina 10 mg,DIABETES MELLITUS + DOENÇA CARDIOVASCULAR,ean,41,34.18,146.45,241.85,5.2297,DAPAGLIFLOZINA 10 MG COM REV CT BL AL/AL X 7
+sinvastatina-10-mg,sinvastatina 10 mg,DISLIPIDEMIA,ean,20,6.35,31.215,209.27,1.0449,SINVASTATINA 10 MG COM REV CT BL AL PLAS OPC X 10
+sinvastatina-20-mg,sinvastatina 20 mg,DISLIPIDEMIA,ean,29,13.3,42.81,209.27,1.834,SINVASTATINA 20 MG COM REV CT BL AL PLAS OPC X 10
+sinvastatina-40-mg,sinvastatina 40 mg,DISLIPIDEMIA,ean,34,21.5,70.73,417.52,2.605,SINVASTATINA 40 MG COM REV CT BL AL PLAS OPC X 10
+benserazida-25-mg-levodopa-100-mg,benserazida 25 mg + levodopa 100 mg,DOENÇA DE PARKINSON,ean,8,19.09,83.315,134.08,2.0718,EKSON (100 + 25) MG COM CT FR VD AMB X 10
+carbidopa-25-mg-levodopa-250-mg,carbidopa 25 mg + levodopa 250 mg,DOENÇA DE PARKINSON,ean,4,55.25,58.26,91.25,1.942,CARBIDOPA + LEVODOPA (25 + 250) MG COM CT BL AL AL X 30
+timolol-2-5-mg,timolol 2.5 mg,GLAUCOMA,ean,1,12.82,12.82,12.82,,"MALEATO DE TIMOLOL 2,5 MG/ML SOL OFT CT FR GOT PLAS OPC X 5 ML"
+timolol-5-mg,timolol 5 mg,GLAUCOMA,ean,12,13.65,15.26,85.68,,MALEATO DE TIMOLOL 5 MG/ML SOL OFT CT FR PLAS TRANS GOT X 5 ML
+anlodipino-5-mg,anlodipino 5 mg,HIPERTENSÃO,ean,54,14.67,61.5,239.99,2.0497,BESILATO DE ANLODIPINO 5 MG COM CT BL AL PLAS PVC OPC X 30
+atenolol-25-mg,atenolol 25 mg,HIPERTENSÃO,ean,23,7.21,26.09,49.59,0.7337,ATENOLOL 25 MG COM CT BL AL PLAS PVC/PVDC TRANS X 30
+captopril-25-mg,captopril 25 mg,HIPERTENSÃO,ean,29,9.35,21.53,72.78,0.6407,CAPTOPRIL 25 MG COM CT BL AL PLAS OPC X 15
+enalapril-10-mg,enalapril 10 mg,HIPERTENSÃO,ean,21,9.46,33.45,136.75,1.115,MALEATO DE ENALAPRIL 10 MG COM CT ENV AL X 30
+espironolactona-25-mg,espironolactona 25 mg,HIPERTENSÃO,ean,7,28.33,29.14,48.15,0.9713,ESPIRONOLACTONA 25 MG COM CT BL AL PLAS TRANS X 30
+furosemida-40-mg,furosemida 40 mg,HIPERTENSÃO,ean,28,8.77,21.495,52.75,0.4401,FUROSEMIDA 40 MG COM CT BL AL PLAS PVC AMB X 20
+hidroclorotiazida-25-mg,hidroclorotiazida 25 mg,HIPERTENSÃO,ean,17,5.84,9.84,16.36,0.3287,HIDROMED 25 MG COM CT BL AL PLAS PVC TRANS X 20
+losartana-50-mg,losartana 50 mg,HIPERTENSÃO,ean,43,4.01,42.47,165.79,1.4157,LOSARTANA POTÁSSICA 50 MG COM REV CT BL AL PLAS OPC X 7
+metoprolol-25-mg,metoprolol 25 mg,HIPERTENSÃO,ean,20,13.49,26.89,114.02,1.2666,EMPROL XR 25 MG COM REV LIB PROL CT BL AL PLAS TRANS X 10
+propranolol-40-mg,propranolol 40 mg,HIPERTENSÃO,ean,17,5.44,10.1,22.33,0.3293,CLORIDRATO DE PROPRANOLOL 40 MG COM CT BL AL PLAS INC X 30
+alendronato-de-sodio-70-mg,alendronato de sodio 70 mg,OSTEOPOROSE,ean,21,21.17,81.92,211.91,20.48,ALENDRONATO DE SÓDIO 70 MG COM REV CT BL AL/AL X 4
+budesonida-32-mcg,budesonida 32 mcg,RINITE,ean,9,16.64,31.5,48.06,0.2699,BUSONID 32 MCG SUS SPR NAS CT FR SPR PLAS PP OPC X 60 ACION
+budesonida-50-mcg,budesonida 50 mcg,RINITE,ean,3,12.2,48.85,83.63,,BUSONID 50 MCG/DOSE SUS AQUOSA NAS CT FR PLAS OPC X 3 ML(60 DOSES)
+dipropionato-de-beclometasona-0-05-mg,dipropionato de beclometasona 0.05 mg,RINITE,ean,3,62.79,85.36,94.97,0.4549,CLENIL 50 MCG SUS SPR NAS CT FR SPR PLAS PET AMB X 130 ACION
