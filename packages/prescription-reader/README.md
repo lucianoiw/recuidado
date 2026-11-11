@@ -57,7 +57,7 @@ Close doses share one reminder: any time within 60 minutes of 08:00, 12:00 or 20
 ## Scripts
 
 - `pnpm test`: unit tests (no API calls).
-- `pnpm eval`: reads every fixture with the real API and compares with `expected.json`. Costs a few cents.
+- `pnpm eval`: reads every fixture with the real API and compares with `expected.json`. Costs a few cents. Without a local key, `pnpm eval --api https://api.recuidado.com.br` sends the images to the published API instead.
 - `pnpm read <file>`: prints the JSON for one prescription.
 
 ## In the api
