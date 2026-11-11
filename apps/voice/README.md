@@ -9,7 +9,7 @@ alerts the family when `confirmed` is false.
 api ──POST /calls──▶ voice ──POST /v1/live/sessions (SIP)──▶ OpenAI GPT-Live
                        ▲                                        │ SIP over TLS, SRTP, Opus
                        │ sideband WebSocket (events, tool call) ▼
-                       │                                    Asterisk (infra/asterisk)
+                       │                                    Asterisk (deploy/asterisk)
 api ◀─POST /doses/:id/voice-result─┘                            │ SIP, G.711
                                                               Nvoip ──▶ patient's phone
 ```
