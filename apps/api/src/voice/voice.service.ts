@@ -275,7 +275,7 @@ export class VoiceCallService {
   }
 
   /**
-   * Emergency reported on the call: phones up to two caregivers with a short recorded-style message.
+   * Emergency reported on the call: phones the family's first contact with a short recorded-style message.
    * Only numbers in the voice CALL_ALLOWED_NUMBERS get through; the push already went out either way.
    */
   private async callCaregivers(doseId: string, note?: string | null): Promise<void> {
@@ -292,13 +292,12 @@ export class VoiceCallService {
     const caregivers = await this.db
       .select({ id: members.id, phone: members.phone })
       .from(members)
-      .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver')));
+      .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver')))
+      .orderBy(members.createdAt);
     const said = note?.trim() ? ` disse agora na ligação do remédio: "${note.trim().slice(0, 200)}"` : ' disse agora na ligação do remédio que não está bem';
     const message = `Olá, aqui é a assistente virtual da Recuidado. ${patient.name}${said}. Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.`;
-    // One call per phone: two caregivers may share a number.
-    const seen = new Set<string>();
-    const targets = caregivers.filter((m) => m.phone && !seen.has(m.phone) && seen.add(m.phone));
-    for (const c of targets.slice(0, 2)) {
+    // Only the first contact (the caregiver registered first) gets the call: calling everyone causes alarm.
+    for (const c of caregivers.filter((m) => m.phone).slice(0, 1)) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',
         headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
