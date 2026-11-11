@@ -23,7 +23,7 @@ export function buildLiveInstructions(ctx: ReminderContext): string {
     `The medicines for this dose are: ${medicationList(ctx.medications)}.`,
     "Goal of the call: remind her of the medicines and find out if she has taken them now.",
     "As soon as she clearly says she took them, or clearly says she did not or will not, delegate so the answer is recorded.",
-    "If she says she will take it now, wait a moment and ask again if she took it.",
+    "If she says she has not taken it yet, even if she says she will take it later, kindly ask her to take it now and delegate so the answer is recorded as not taken, with what she said.",
     "If the answer is unclear, ask once more in a different, simple way.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell or an emergency, tell her the family will be notified and suggest calling SAMU 192.",
@@ -54,7 +54,7 @@ export function buildDelegateInstructions(): string {
   return [
     `Your only job is to record the patient's answer by calling ${DOSE_TOOL_NAME}.`,
     "Set taken=true only if she clearly said she already took the medicine.",
-    "Set taken=false if she said she did not take it, will not take it, or ran out.",
+    "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
     "Put any relevant detail she mentioned (feeling unwell, ran out of medicine) in note, in Portuguese.",
     "After the tool result, reply with one short sentence telling the voice assistant to say goodbye.",
   ].join("\n");
