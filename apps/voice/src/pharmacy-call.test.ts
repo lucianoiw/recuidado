@@ -56,6 +56,7 @@ function setup(openingWaitMs = 60_000) {
     openingWaitMs,
     keyGapMs: 1,
     introduceAfterMs: 5,
+    introduceConfidentMs: 5,
     menuPauseMs: 60_000,
     goodbyeMs: 5,
     goodbyeTailMs: 5,
@@ -456,7 +457,7 @@ test("closed pharmacy: hangs up with no answer and a note", async () => {
   assert.match(result.note ?? "", /fechada/);
 });
 
-test("a menu only the second model recognizes is answered with its key", async () => {
+test("an option only the second model understands is chosen by it", async () => {
   const socket = new FakeSocket();
   new PharmacyCall({
     sessionId: "live_pharmacy",
@@ -471,7 +472,7 @@ test("a menu only the second model recognizes is answered with its key", async (
     keyGapMs: 1,
   });
   socket.emitEvent({ type: "transport.answered", event_id: "a1" });
-  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Diga o nome do setor ou fale com a farmácia." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para receitas, tecle 1. Para falar com o farmacêutico, tecle 3." });
   socket.emitEvent(decision("d1", "i1", "menu", "3"));
   await tick();
   const keys = socket.sent.filter((e) => e.type === "transport.dtmf.send").map((e) => e.event);
@@ -487,4 +488,47 @@ test("a late Decisions answer about an older utterance is ignored", async () => 
   socket.emitEvent(decision("d1", "i1", "hold"));
   await tick();
   assert.equal(gate.last, "heard");
+});
+
+function quickMenuCall() {
+  const socket = new FakeSocket();
+  const gate = new FakeGate();
+  new PharmacyCall({
+    sessionId: "live_pharmacy",
+    context,
+    socket,
+    gate,
+    hangup: async () => {},
+    maxCallMs: 60_000,
+    openingWaitMs: 60_000,
+    introduceAfterMs: 30,
+    introduceConfidentMs: 30,
+    menuPauseMs: 30,
+    keyGapMs: 1,
+  });
+  return { socket, gate };
+}
+const keysSent = (socket: FakeSocket) => socket.sent.filter((e) => e.type === "transport.dtmf.send").map((e) => e.event);
+
+test("the tail of the menu after the key, then the attendant: no second key, the AI introduces itself", async () => {
+  const { socket, gate } = quickMenuCall();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para preço e estoque de remédios, tecle 2." });
+  await new Promise((r) => setTimeout(r, 60));
+  assert.deepEqual(keysSent(socket), ["2"]);
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Tecle 9. Farmácia Teste, boa tarde." });
+  socket.emitEvent(decision("d2", "i2", "person", "2"));
+  await new Promise((r) => setTimeout(r, 120));
+  assert.deepEqual(keysSent(socket), ["2"]);
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 1);
+  assert.equal(gate.last, "heard");
+});
+
+test("a key the menu did not offer is never pressed, even if the second model suggests it", async () => {
+  const { socket } = quickMenuCall();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Bem-vindo. Para receitas, digite" });
+  socket.emitEvent(decision("d1", "i1", "menu", "0"));
+  await new Promise((r) => setTimeout(r, 60));
+  assert.deepEqual(keysSent(socket), []);
 });
