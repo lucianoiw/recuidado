@@ -11,7 +11,7 @@ import {
   CartIcon,
   CheckIcon,
   ChevronRightIcon,
-  GiftIcon,
+  FreeIcon,
   PencilIcon,
   TopBar,
   buttonClass,
@@ -141,7 +141,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
       {free.length > 0 ? (
         <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
           <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-extrabold">
-            <GiftIcon size={20} className="text-brand" />
+            <FreeIcon size={20} className="text-brand" />
             Grátis, se quiser pegar
           </h2>
           <ul className="px-4 py-1">
