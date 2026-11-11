@@ -1,3 +1,4 @@
+import { runsApi } from '../role.js';
 import {
   BadRequestException,
   Inject,
@@ -51,6 +52,7 @@ export class MonthService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
+    if (!runsApi()) return;
     await this.ensureDemoReceiver();
   }
 

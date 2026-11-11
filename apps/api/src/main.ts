@@ -4,13 +4,15 @@ import helmet from 'helmet';
 import { AppModule } from './app.module.js';
 import { corsOrigins } from './cors.js';
 import { runMigrations } from './db/migrate.js';
+import { appRole, runsApi } from './role.js';
 import { accessLog } from './telemetry/access-log.middleware.js';
 import { TelemetryExceptionFilter } from './telemetry/exception.filter.js';
 import { TelemetryLogger } from './telemetry/telemetry.logger.js';
 import { telemetry } from './telemetry/telemetry.js';
 
 async function bootstrap() {
-  if (process.env.DATABASE_URL) {
+  // Only the API migrates, so two containers never run the same migration at once.
+  if (process.env.DATABASE_URL && runsApi()) {
     await runMigrations(process.env.DATABASE_URL);
   }
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -25,7 +27,7 @@ async function bootstrap() {
   app.useGlobalFilters(new TelemetryExceptionFilter(app.getHttpAdapter()));
   app.enableShutdownHooks();
   await app.listen(Number(process.env.PORT ?? 4000), '0.0.0.0');
-  telemetry.capture('service_started', { telemetry: telemetry.enabled });
+  telemetry.capture('service_started', { telemetry: telemetry.enabled, role: appRole() });
 }
 
 try {

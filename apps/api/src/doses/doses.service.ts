@@ -1,3 +1,4 @@
+import { runsApi } from '../role.js';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
   Inject,
@@ -34,6 +35,7 @@ export class DosesService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
+    if (!runsApi()) return;
     // Hourly safety net, plus one run on every boot.
     await this.queue.upsertJobScheduler(
       'plan-doses',

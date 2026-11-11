@@ -6,6 +6,7 @@ Coolify project "Recuidado", branch `main`, server 82.25.75.144. One resource pe
 | --- | --- | --- | --- |
 | `recuidado/web` | Dockerfile | `/apps/web/Dockerfile` | https://recuidado.com.br:3000, https://www.recuidado.com.br:3000 |
 | `recuidado/api` | Dockerfile | `/apps/api/Dockerfile` | https://api.recuidado.com.br:4000 |
+| `recuidado/worker` | Dockerfile | `/apps/api/Dockerfile` | none (port 4000 for the health check) |
 | `recuidado/voice` | Dockerfile | `/apps/voice/Dockerfile` | https://voz.recuidado.com.br:5000 |
 | `recuidado/mcp` | Dockerfile | `/apps/mcp/Dockerfile` | https://mcp.recuidado.com.br:7000 |
 | `recuidado/asterisk` | Docker Compose (Base Directory `/deploy/asterisk`) | `/docker-compose.yml` | host network (5061/tcp, 10000-10200/udp) |
@@ -15,6 +16,7 @@ Coolify project "Recuidado", branch `main`, server 82.25.75.144. One resource pe
 Dockerfile resources use Base Directory `/` (build context is the repo root). Asterisk uses `/deploy/asterisk`, because Coolify resolves the compose build context from the base directory.
 
 - `api`: `DATABASE_URL` and `REDIS_URL` use the internal URLs of the Coolify databases. Migrations run on boot.
+- `api` and `worker`: same image, same variables, `APP_ROLE=api` on api and `APP_ROLE=worker` on worker. The api serves HTTP, migrates and runs the boot tasks (demo family); the worker only consumes the doses queue (BullMQ on Redis). A new variable of the API goes on both. Without `APP_ROLE`, one process does both (local development).
 - `api` and `web`: Web Push uses one VAPID key pair. `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` on api; the same public key as `NEXT_PUBLIC_VAPID_PUBLIC_KEY` on web, marked as build variable (Next inlines it at build time).
 - `voice`: keeps the domain `voz.recuidado.com.br` so Traefik issues the certificate that `asterisk` reads from `/data/coolify/proxy/acme.json`. Give it a longer stop grace period so a call in progress is not cut.
 - `voice`: custom Docker options `-v recuidado-greetings:/data/greetings`, so the recorded call greetings survive redeploys.

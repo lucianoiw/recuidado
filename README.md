@@ -50,6 +50,7 @@ flowchart LR
   subgraph app [Recuidado]
     W[apps/web<br/>Next.js 16 PWA]
     A[apps/api<br/>NestJS 12]
+    Q[worker<br/>mesma imagem da API]
     V[apps/voice<br/>agente de voz]
     X[apps/mcp<br/>servidor MCP]
     K[Asterisk<br/>ponte SIP]
@@ -71,6 +72,10 @@ flowchart LR
   W --> A
   A --> P
   A --> R
+  R --> Q
+  Q --> P
+  Q -- push --> M
+  Q -- pede ligação --> V
   A --> C
   A -- push --> M
   A -- pede ligação --> V
@@ -88,6 +93,7 @@ flowchart LR
 | --- | --- | --- |
 | `apps/web` | App instalável (PWA). A família cadastra a Dona Maria, lê a receita e acompanha as doses. A Dona Maria vê o remédio da hora e confirma com um toque. | Next.js 16, React 19, Tailwind 4, Web Push |
 | `apps/api` | Família, remédios, doses, leitura de receita e escalonamento. Agenda lembrete, ligação e aviso em uma fila. | NestJS 12, PostgreSQL, Drizzle, Redis, BullMQ |
+| worker (`apps/api` com `APP_ROLE=worker`) | Executa a fila na hora certa: lembrete, ligação, segunda ligação, aviso à família, ligação de volta. Separado da API para um não derrubar o outro, o deploy da API não parar a fila e cada um escalar sozinho. Os jobs ficam no Redis, então sobrevivem a reinício. É a mesma imagem da API, com outro papel, para não duplicar código. | NestJS 12, BullMQ |
 | `apps/voice` | Liga para a Dona Maria, conversa por voz e devolve o resultado para a API. | OpenAI GPT-Live por SIP, Asterisk, Nvoip |
 | `apps/mcp` | Servidor MCP sobre a API: qualquer assistente de IA consulta o plano, as doses, os avisos e onde o remédio é grátis. | MCP TypeScript SDK v2, Streamable HTTP |
 | `packages/prescription-reader` | Leitura de receita (inclusive manuscrita) com saída estruturada. | Claude Opus 5.5 |
