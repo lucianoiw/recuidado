@@ -14,9 +14,9 @@
     "node": ">=22"
   },
   "scripts": {
-    "read": "tsx src/cli.ts",
+    "read": "tsx --env-file-if-exists=../../.env src/cli.ts",
     "fixtures:render": "tsx scripts/render-fixtures.ts",
-    "eval": "tsx scripts/eval.ts",
+    "eval": "tsx --env-file-if-exists=../../.env scripts/eval.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

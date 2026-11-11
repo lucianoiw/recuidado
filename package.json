@@ -12,6 +12,8 @@
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
     "db:up": "docker compose -f docker-compose.dev.yml up -d",
-    "db:down": "docker compose -f docker-compose.dev.yml down"
+    "db:down": "docker compose -f docker-compose.dev.yml down",
+    "prescription:eval": "pnpm --filter @recuidado/prescription-reader eval",
+    "prescription:read": "pnpm --filter @recuidado/prescription-reader read"
   }
 }
