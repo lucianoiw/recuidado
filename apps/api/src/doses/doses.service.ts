@@ -12,8 +12,9 @@ import { and, asc, eq, gte, lt, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, medications, members } from '../db/schema.js';
 import { PushService } from '../push/push.service.js';
+import { telemetry } from '../telemetry/telemetry.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from './doses.queue.js';
-import { localDate, localDateTime, localTime, upcomingDoseTimes } from './time.js';
+import { localDate, localDateTime, localTime, minutesSince, upcomingDoseTimes } from './time.js';
 
 const KEEP_FINISHED = { removeOnComplete: { age: 7 * 24 * 3600 }, removeOnFail: { age: 7 * 24 * 3600 } };
 
@@ -88,12 +89,19 @@ export class DosesService implements OnApplicationBootstrap {
     const dose = await this.getDetails(doseId);
     if (!dose || dose.status !== 'pending') return;
 
-    await this.push.sendToMembers([dose.patientId], {
+    const delivered = await this.push.sendToMembers([dose.patientId], {
       title: 'Hora do remédio',
       body: `${dose.medicationLabel}. Toque para confirmar que tomou.`,
       url: '/patient',
       doseId,
     });
+
+    telemetry.capture(
+      'dose_reminder_sent',
+      { dose_id: doseId, medication: dose.medicationLabel, channel: 'push', pushes_delivered: delivered },
+      dose.patientId,
+    );
+    this.logger.log(`Reminder for dose ${doseId} sent (${delivered} pushes).`);
 
     const minute = 60 * 1000;
     const callAfter = this.config.getOrThrow<number>('DOSE_CALL_AFTER_MINUTES') * minute;
@@ -135,6 +143,13 @@ export class DosesService implements OnApplicationBootstrap {
       },
     );
     await this.db.update(doses).set({ familyAlertedAt: new Date() }).where(eq(doses.id, doseId));
+    const props = {
+      dose_id: doseId,
+      medication: dose.medicationLabel,
+      minutes_since_scheduled: minutesSince(dose.scheduledAt),
+    };
+    telemetry.capture('dose_missed', props, dose.patientId);
+    telemetry.capture('family_alerted', { ...props, caregivers: caregivers.length, pushes_delivered: sent }, dose.patientId);
     this.logger.log(`Family alerted for dose ${doseId} (${sent} pushes).`);
   }
 
@@ -146,6 +161,20 @@ export class DosesService implements OnApplicationBootstrap {
       .where(eq(doses.id, doseId))
       .returning({ id: doses.id });
     if (!dose) throw new NotFoundException('Dose não encontrada.');
+    const details = await this.getDetails(doseId);
+    if (details) {
+      telemetry.capture(
+        'dose_confirmed',
+        {
+          dose_id: doseId,
+          via: 'app',
+          medication: details.medicationLabel,
+          minutes_since_scheduled: minutesSince(details.scheduledAt),
+        },
+        details.patientId,
+      );
+    }
+    this.logger.log(`Dose ${doseId} confirmed in the app.`);
     for (const kind of ['call', 'alert-family'] as const) {
       await (await this.queue.getJob(doseJobId(kind, doseId)))?.remove();
     }

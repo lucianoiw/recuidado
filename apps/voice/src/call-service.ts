@@ -2,7 +2,7 @@ import type { VoiceConfig } from "./config.js";
 import { LiveClient } from "./live.js";
 import { toE164 } from "./phone.js";
 import type { ReminderContext } from "./prompt.js";
-import { ReminderCall, type CallResult } from "./reminder-call.js";
+import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.js";
 
 export interface StartCallInput extends ReminderContext {
   phone: string;
@@ -25,7 +25,7 @@ export class CallService {
     this.live = new LiveClient(config);
   }
 
-  async start(input: StartCallInput): Promise<StartedCall> {
+  async start(input: StartCallInput, onStatusChange?: (status: CallStatus) => void): Promise<StartedCall> {
     const destination = toE164(input.phone);
     if (!this.config.allowedNumbers.has(destination)) {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
@@ -42,6 +42,7 @@ export class CallService {
       hangup: () => this.live.hangup(sessionId),
       maxCallMs: this.config.maxCallSeconds * 1000,
       log: this.log,
+      onStatusChange,
     });
     return { sessionId, call };
   }

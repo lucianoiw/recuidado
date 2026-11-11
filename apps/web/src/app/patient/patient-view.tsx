@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import { Button, Card, CheckIcon, ClockIcon, PillIcon, ScreenHeader } from "@/components/ui";
+import { captureError, identifyMember, track } from "@/lib/analytics";
 import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
 
 function todayLabel(): string {
@@ -52,11 +53,15 @@ export function PatientView() {
   const load = useCallback(() => {
     getFamily().then(
       (d) => {
+        identifyMember(d.patient.id, "patient", d.familyId);
         setData(d);
         setNow(Date.now());
         setError(false);
       },
-      () => setError(true),
+      (e) => {
+        captureError(e, { screen: "patient" });
+        setError(true);
+      },
     );
   }, []);
 
@@ -88,6 +93,7 @@ export function PatientView() {
     setBusy(true);
     try {
       await Promise.all(doses.map((d) => confirmDose(d.id)));
+      track("dose_confirm_tapped", { doses: doses.length, medications: doses.map((d) => d.medicationName).join(", ") });
       setJustTaken(doses);
       load();
     } finally {

@@ -33,6 +33,7 @@
     "@nestjs/terminus": "^12.1.0",
     "@recuidado/data": "workspace:*",
     "@recuidado/prescription-reader": "workspace:*",
+    "@recuidado/telemetry": "workspace:*",
     "bullmq": "^6.7.3",
     "drizzle-orm": "^0.45.4",
     "ioredis": "^6.0.0",

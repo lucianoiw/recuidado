@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bullmq';
-import { Module } from '@nestjs/common';
+import { Module, type OnApplicationShutdown } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnv } from './config/env.js';
@@ -10,6 +10,7 @@ import { HealthController } from './health/health.controller.js';
 import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { VoiceModule } from './voice/voice.module.js';
+import { telemetry } from './telemetry/telemetry.js';
 
 @Module({
   imports: [
@@ -36,4 +37,9 @@ import { VoiceModule } from './voice/voice.module.js';
   ],
   controllers: [HealthController],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationShutdown {
+  /** Sends buffered events and logs before the container stops. */
+  async onApplicationShutdown() {
+    await telemetry.shutdown();
+  }
+}

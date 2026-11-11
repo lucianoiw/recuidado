@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import Anthropic from '@anthropic-ai/sdk';
 import {
   Inject,
@@ -7,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+  DEFAULT_MODEL,
+  PrescriptionReadError,
   readPrescription,
   type PrescriptionInput,
   type ReadPrescriptionResult,
@@ -15,6 +18,7 @@ import { and, eq } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { medications, members } from '../db/schema.js';
 import { DosesService } from '../doses/doses.service.js';
+import { telemetry } from '../telemetry/telemetry.js';
 import type { ConfirmPrescriptionBody } from './confirm.schema.js';
 
 @Injectable()
@@ -28,8 +32,53 @@ export class PrescriptionsService {
   ) {}
 
   /** Reads a prescription photo or PDF and returns structured, normalized data. */
-  parse(input: PrescriptionInput): Promise<ReadPrescriptionResult> {
-    return readPrescription(input, { client: this.getClient() });
+  async parse(input: PrescriptionInput): Promise<ReadPrescriptionResult> {
+    const client = this.getClient();
+    const traceId = randomUUID();
+    const started = performance.now();
+    const kind = input.mediaType === 'application/pdf' ? 'PDF' : 'foto';
+    const base = {
+      traceId,
+      spanName: 'prescription_read',
+      provider: 'anthropic',
+      // The image itself is not sent to PostHog, only what it was.
+      input: [{ role: 'user', content: `[${kind} da receita, ${Math.round(input.data.byteLength / 1024)} KB]` }],
+      properties: { media_type: input.mediaType, bytes: input.data.byteLength },
+    };
+    try {
+      const result = await readPrescription(input, { client });
+      const latencySeconds = (performance.now() - started) / 1000;
+      telemetry.llmGeneration({
+        ...base,
+        model: result.model,
+        latencySeconds,
+        inputTokens: result.usage.input_tokens,
+        outputTokens: result.usage.output_tokens,
+        output: [{ role: 'assistant', content: JSON.stringify(result.reading) }],
+      });
+      telemetry.capture('prescription_read', {
+        $ai_trace_id: traceId,
+        model: result.model,
+        items: result.reading.items.length,
+        latency_seconds: Math.round(latencySeconds * 10) / 10,
+        input_tokens: result.usage.input_tokens,
+        output_tokens: result.usage.output_tokens,
+      });
+      return result;
+    } catch (error) {
+      const code = error instanceof PrescriptionReadError ? error.code : 'api_error';
+      telemetry.llmGeneration({
+        ...base,
+        model: DEFAULT_MODEL,
+        latencySeconds: (performance.now() - started) / 1000,
+        isError: true,
+        error: String(error),
+        properties: { ...base.properties, error_code: code },
+      });
+      telemetry.capture('prescription_read_failed', { $ai_trace_id: traceId, error_code: code });
+      if (!(error instanceof PrescriptionReadError)) telemetry.captureException(error, { $ai_trace_id: traceId });
+      throw error;
+    }
   }
 
   /**
@@ -66,6 +115,11 @@ export class PrescriptionsService {
       if (medication.times.length > 0)
         await this.doses.scheduleForMedication(medication.id);
     }
+    telemetry.capture(
+      'prescription_confirmed',
+      { medications: saved.length, daily_doses: saved.reduce((n, m) => n + m.times.length, 0) },
+      patient.id,
+    );
     return { medications: saved };
   }
 
