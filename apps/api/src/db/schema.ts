@@ -77,6 +77,31 @@ export const pushSubscriptions = pgTable('push_subscriptions', {
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
+export const voiceCallOutcome = pgEnum('voice_call_outcome', [
+  'confirmed',
+  'not_taken',
+  'unclear',
+  'no_answer',
+  'failed',
+]);
+
+// Every reminder call made by apps/voice, kept for the family history and debugging.
+export const voiceCalls = pgTable('voice_calls', {
+  id: uuid().primaryKey().defaultRandom(),
+  doseId: uuid()
+    .notNull()
+    .references(() => doses.id, { onDelete: 'cascade' }),
+  sessionId: text().notNull().unique(),
+  outcome: voiceCallOutcome().notNull(),
+  confirmed: boolean().notNull(),
+  note: text(),
+  transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
+  durationSeconds: integer(),
+  endReason: text(),
+  error: text(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
 export const costShares = pgTable('cost_shares', {
   id: uuid().primaryKey().defaultRandom(),
   familyId: uuid()

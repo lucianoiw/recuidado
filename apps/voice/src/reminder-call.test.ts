@@ -64,6 +64,7 @@ test("confirmed dose: greets on answer, records tool call, hangs up", async () =
   assert.equal(result.outcome, "confirmed");
   assert.equal(result.confirmed, true);
   assert.equal(result.durationSeconds, 31);
+  assert.equal(result.endReason, "hung_up_after_answer");
   assert.deepEqual(result.transcript, [
     { speaker: "assistant", text: "Bom dia, Maria. Já tomou o remédio?" },
     { speaker: "patient", text: "Tomei sim." },
@@ -115,4 +116,13 @@ test("greeting follows the time in São Paulo", async () => {
   assert.equal(greetingFor(new Date("2026-11-11T12:00:00Z")), "bom dia");
   assert.equal(greetingFor(new Date("2026-11-11T18:00:00Z")), "boa tarde");
   assert.equal(greetingFor(new Date("2026-11-11T02:30:00Z")), "boa noite");
+});
+
+test("call closed by the far side keeps the Live close reason", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.closed", event_id: "c1", reason: "remote_hangup" });
+  const result = await call.result;
+  assert.equal(result.outcome, "unclear");
+  assert.equal(result.endReason, "session_closed: remote_hangup");
 });

@@ -15,6 +15,13 @@
       "when": 1794365245501,
       "tag": "0001_salty_phil_sheldon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794368036667,
+      "tag": "0002_late_lord_hawal",
+      "breakpoints": true
     }
   ]
 }

@@ -17,6 +17,8 @@ export interface CallResult {
   transcript: TranscriptLine[];
   error?: string;
   durationSeconds?: number;
+  /** Why the call ended, e.g. "session_closed: <reason>", "max_duration", "hung_up_after_answer". */
+  endReason?: string;
 }
 
 /** The parts of a WebSocket this class needs, so tests can use a fake. */
@@ -57,6 +59,7 @@ export class ReminderCall {
   private error?: string;
   private durationSeconds?: number;
   private hangupRequested = false;
+  private endReason?: string;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
   private resolveResult!: (r: CallResult) => void;
@@ -66,7 +69,10 @@ export class ReminderCall {
     this.result = new Promise((resolve) => (this.resolveResult = resolve));
     const { socket } = opts;
     socket.on("message", (data) => this.onMessage(data));
-    socket.on("close", () => this.finish());
+    socket.on("close", () => {
+      this.endReason ??= "sideband_closed";
+      this.finish();
+    });
     socket.on("error", (err) => {
       this.error ??= `sideband error: ${err.message}`;
       this.log("sideband error", err.message);
@@ -74,6 +80,7 @@ export class ReminderCall {
     this.timers.push(
       setTimeout(() => {
         this.log("max call duration reached");
+        this.endReason ??= "max_duration";
         void this.endCall();
       }, opts.maxCallMs),
     );
@@ -145,6 +152,7 @@ export class ReminderCall {
         const usage = event.usage as { seconds?: number } | undefined;
         if (typeof usage?.seconds === "number") this.durationSeconds = usage.seconds;
         this.log(`session closed: ${JSON.stringify({ ...event, usage: undefined })}`);
+        this.endReason ??= `session_closed: ${String(event.reason ?? "unknown")}`;
         this.finish();
         break;
       }
@@ -183,7 +191,12 @@ export class ReminderCall {
     });
     this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
-    this.timers.push(setTimeout(() => void this.endCall(), this.opts.goodbyeMs ?? 9000));
+    this.timers.push(
+      setTimeout(() => {
+        this.endReason ??= "hung_up_after_answer";
+        void this.endCall();
+      }, this.opts.goodbyeMs ?? 9000),
+    );
   }
 
   private appendTranscript(speaker: TranscriptLine["speaker"], delta: string) {
@@ -230,6 +243,7 @@ export class ReminderCall {
       transcript: this.transcript.map((l) => ({ ...l, text: l.text.trim() })),
       error: this.error,
       durationSeconds: this.durationSeconds,
+      endReason: this.endReason ?? (this.error ? "error" : undefined),
     });
   }
 }
