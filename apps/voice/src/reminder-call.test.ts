@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import { ReminderCall, type SidebandSocket } from "./reminder-call.js";
 import { toE164 } from "./phone.js";
-import { buildDelegateInstructions, buildLiveInstructions, goodbyeLine, greetingLine } from "./prompt.js";
+import { buildDelegateInstructions, buildLiveInstructions, goodbyeLine, greetingLine, withoutSaidOpener } from "./prompt.js";
 
 class FakeSocket extends EventEmitter implements SidebandSocket {
   sent: Record<string, unknown>[] = [];
@@ -348,11 +348,11 @@ test("alert call speaks the message and hangs up after it", async () => {
 test("emergency: tells her the family will be told and promises the call back; the call back only asks how she is", () => {
   const ctx = { patientName: "Dona Maria", medications: [{ name: "Losartana" }] };
   const live = buildLiveInstructions(ctx);
-  assert.match(live, /Entendi, Dona Maria, eu vou ligar e avisar a sua família e já te ligo de volta para saber como a senhora está, tá bom\? Até já\./);
+  assert.match(live, /Entendi\. Vou avisar a sua família e já te ligo de volta para saber como a senhora está, tá bom\? Até já\./);
   assert.match(live, /Tiredness alone is not an emergency/);
   const back = { ...ctx, checkIn: true };
-  assert.match(greetingLine(back), /de novo\. Já avisei a sua família\. Como a senhora está se sentindo agora\?/);
-  assert.equal(goodbyeLine(back), "Tchau, Dona Maria!");
+  assert.match(greetingLine(back), /de novo\. A senhora está melhor\?/);
+  assert.equal(goodbyeLine(back), "Tchau!");
   assert.doesNotMatch(buildLiveInstructions(back), /já tomou/);
   assert.match(buildDelegateInstructions(back), /taken=false/);
 });
@@ -376,10 +376,10 @@ test("emergency recorded without the family line: asks for it, and only the good
     },
   });
   const ask = socket.sent.find((m) => m.event_id === "emergency_call_e");
-  assert.match(String(ask?.content), /eu vou ligar e avisar a sua família/);
+  assert.match(String(ask?.content), /Vou avisar a sua família/);
   // The model's own short goodbye does not end the call before the SAMU line.
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e4", delta: "Já volto. Obrigada, tchau, Maria!" });
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Entendi, Maria, eu vou ligar e avisar a sua família e já te ligo de volta para saber como a senhora está, tá bom?" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e5", delta: " Entendi. Vou avisar a sua família e já te ligo de volta para saber como a senhora está, tá bom?" });
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e6", delta: " Até já." });
   const result = await call.result;
   assert.equal(result.emergency, true);
@@ -402,7 +402,7 @@ test("dose time and gender: the question names the time, and a man is \"o senhor
   const man = { patientName: "Seu João", gender: "male" as const, medications: [{ name: "Losartana" }] };
   assert.match(greetingLine(man), /Como o senhor está\?$/);
   assert.match(buildLiveInstructions(man), /address him as "o senhor"/);
-  assert.equal(notTakenLine({ ...ctx, recallLater: true }), "Tá bom, Dona Maria, daqui a pouco eu ligo para confirmar. Obrigada, tchau, Dona Maria!");
+  assert.equal(notTakenLine({ ...ctx, recallLater: true }), "Tá bom, Dona Maria, daqui a pouco eu ligo para confirmar. Obrigada, tchau!");
   assert.equal(notTakenLine({ ...ctx, recallLater: false }), recallNotTakenLine(ctx));
   const recall = { ...ctx, recall: true };
   assert.equal(greetingLine(recall), "Oi, Dona Maria! É a assistente virtual da Recuidado de novo. A senhora já tomou a Losartana das duas da tarde?");
@@ -426,4 +426,16 @@ test("not taken yet: the closing line promises the second call", async () => {
   assert.match(String(ask?.content), /daqui a pouco eu ligo para confirmar/);
   const result = await call.result;
   assert.equal(result.outcome, "not_taken");
+});
+
+test("the required line skips an opener the assistant already said", () => {
+  assert.equal(
+    withoutSaidOpener("Que bom. Vou avisar a sua família. Tchau, Dona Maria!", "Que bom."),
+    "Vou avisar a sua família. Tchau, Dona Maria!",
+  );
+  assert.equal(
+    withoutSaidOpener("Tá bom, Dona Maria, vou avisar a sua família de novo. Até já!", "Tá bom. Já vou chamar sua família."),
+    "Dona Maria, vou avisar a sua família de novo. Até já!",
+  );
+  assert.equal(withoutSaidOpener("Que bom. Vou avisar a sua família.", ""), "Que bom. Vou avisar a sua família.");
 });

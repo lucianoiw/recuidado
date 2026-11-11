@@ -4,6 +4,7 @@ import {
   buildGreeting,
   checkInBetterLine,
   checkInUnwellLine,
+  withoutSaidOpener,
   emergencyLine,
   goodbyeLine,
   greetingLine,
@@ -315,7 +316,7 @@ export class ReminderCall {
         type: "session.commentary.append",
         event_id: `emergency_${item.call_id}`,
         delegation_id: null,
-        content: `Say now, calmly and exactly: "${requiredLine}"`,
+        content: `Say now, calmly and exactly: "${withoutSaidOpener(requiredLine, this.assistantSinceGreeting)}"`,
       });
       this.armSilenceHangup();
       return;

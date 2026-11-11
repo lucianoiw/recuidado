@@ -58,7 +58,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
   return [
     "You are Recuidado, a warm assistant that calls an older adult to remind them to take their medicine.",
     "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm, warm and friendly tone, like someone who cares. Never make long introductions.",
-    `Call the person by this name: "${ctx.patientName}", and address ${p.her} as "${p.you}".`,
+    `Call the person by this name: "${ctx.patientName}", and address ${p.her} as "${p.you}". Say the name only where it is written in the lines below; never add it elsewhere.`,
     `The medicines for this dose are: ${medicationList(ctx.medications)}. Never read the list or the doses aloud. Say "remédio", never "medicamento".`,
     ...steps,
     "Do not ask anything else and do not say filler like \"vou anotar\" or \"vamos lá\".",
@@ -83,7 +83,7 @@ const NO_SOUNDS =
  */
 export function emergencyLine(ctx: ReminderContext): string {
   const p = pronouns(ctx);
-  return `Entendi, ${ctx.patientName}, eu vou ligar e avisar a sua família e já te ligo de volta para saber como ${p.you} está, tá bom? Até já.`;
+  return `Entendi. Vou avisar a sua família e já te ligo de volta para saber como ${p.you} está, tá bom? Até já.`;
 }
 
 /** First call, not taken yet: Recuidado calls again some minutes later (DOSE_RECALL_MINUTES in apps/api). */
@@ -99,17 +99,28 @@ export function recallNotTakenLine(ctx: ReminderContext): string {
 
 /** Said on the call back when she is still not well. */
 export function checkInUnwellLine(ctx: ReminderContext): string {
-  if (ctx.callBack === false) return `Tá bom, ${ctx.patientName}, vou avisar a sua família de novo. Tchau, ${ctx.patientName}!`;
-  return `Tá bom, ${ctx.patientName}, vou avisar a sua família de novo. Já te ligo de novo. Até já!`;
+  if (ctx.callBack === false) return "Vou avisar a sua família de novo. Tchau!";
+  return "Vou avisar a sua família de novo e já te ligo. Até já!";
 }
 
 /** Said on the call back when she is better or someone is with her. */
 export function checkInBetterLine(ctx: ReminderContext): string {
-  return `Que bom. Vou avisar a sua família. Espero que fique bem. Tchau, ${ctx.patientName}!`;
+  return "Que bom! Fico mais tranquila. Se cuida, tchau!";
+}
+
+/**
+ * The required line without an opener the assistant already said ("Que bom." twice, "Tá bom. ... Tá bom,"),
+ * for when the line is asked for after the assistant has started its own reply.
+ */
+export function withoutSaidOpener(line: string, said: string): string {
+  const m = /^(que bom|tá bom)[.,!]?\s+/i.exec(line);
+  if (!m || !said.toLowerCase().includes(m[1].toLowerCase())) return line;
+  const rest = line.slice(m[0].length);
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
 }
 
 /** Words that show the required line of an emergency or a call back was said. */
-export const FAMILY_LINE = /avisar (a )?sua fam[íi]lia/i;
+export const FAMILY_LINE = /avisar (a )?sua fam[íi]lia|fico mais tranquila/i;
 
 /** The call back after an emergency: how is she now. Nothing about the medicine. */
 function buildCheckInInstructions(ctx: ReminderContext): string {
@@ -117,12 +128,11 @@ function buildCheckInInstructions(ctx: ReminderContext): string {
   return [
     "You are Recuidado, a warm virtual assistant. A few minutes ago this older adult said on the phone that she might need help; her family was told. You are calling back to know how she is now.",
     "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm and warm tone.",
-    `Call the person by this name: "${ctx.patientName}", and address ${p.her} as "${p.you}".`,
-    `You already greeted ${p.her}, said that the family was told, and asked how ${p.she} is feeling now. Listen to the answer.`,
-    `If she is better or someone from the family is already with her, say exactly "${checkInBetterLine(ctx)}", and delegate once at the same time.`,
-    `If she is still not well and alone, say exactly "${checkInUnwellLine(ctx)}", and delegate once at the same time.`,
-    "Stay calm: never \"ai, meu Deus\", \"nossa\" or \"sinto muito\".",
-    "As soon as she answers, delegate first, then speak. Never say anything after the goodbye (no \"já faço isso\").",
+    `Call the person by this name: "${ctx.patientName}", and address ${p.her} as "${p.you}". Say the name only where it is written in the lines below; never add it elsewhere.`,
+    `You already greeted ${p.her} and asked if ${p.she} is better. Listen to the answer.`,
+    "As soon as she answers, say only \"Entendi.\" and delegate once at the same time. Then stop and wait: you will be told the exact line to say next. Say nothing else before it (no \"vou avisar a família\", no \"Que bom\").",
+    `The line will be "${checkInBetterLine(ctx)}" if she is better or someone from the family is with her, or "${checkInUnwellLine(ctx)}" if she is still not well.`,
+    "Stay calm: never \"ai, meu Deus\", \"nossa\" or \"sinto muito\". Never say anything after the goodbye (no \"já faço isso\").",
     "Do not ask about the medicine. Do not ask anything else.",
     "You are an AI. If she asks, say honestly that you are a virtual assistant. Never pretend to be human.",
     "Never give medical advice and never tell her what to do.",
@@ -151,7 +161,7 @@ export function greetingLine(ctx: ReminderContext, now: Date = new Date()): stri
   const p = pronouns(ctx);
   // The AI says it is an AI before anything else (transparency, LGPD art. 9 and art. 20).
   if (ctx.checkIn) {
-    return `Oi, ${ctx.patientName}! É a assistente virtual da Recuidado de novo. Já avisei a sua família. Como ${p.you} está se sentindo agora?`;
+    return `Oi, ${ctx.patientName}! É a assistente virtual da Recuidado de novo. ${p.You} está melhor?`;
   }
   if (ctx.recall) {
     return `Oi, ${ctx.patientName}! É a assistente virtual da Recuidado de novo. ${medicationQuestion(ctx, now)}`;
@@ -208,8 +218,8 @@ export function medicationNames(medications: Medication[], now: Date = new Date(
 
 /** The last line of the call, e.g. "Obrigada, tchau, Dona Maria!". */
 export function goodbyeLine(ctx: ReminderContext): string {
-  if (ctx.checkIn) return `Tchau, ${ctx.patientName}!`;
-  return `Obrigada, tchau, ${ctx.patientName}!`;
+  if (ctx.checkIn) return "Tchau!";
+  return "Obrigada, tchau!";
 }
 
 /** Backend prompt for the delegated Responses model. */
