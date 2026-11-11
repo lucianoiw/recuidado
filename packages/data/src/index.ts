@@ -15,6 +15,7 @@ export type { SusUnit } from "./fetch-sus-units.ts";
 export type { FreeAccessRow } from "./link-free-access.ts";
 export { readCsv } from "./lib/csv.ts";
 export { findFreeAccess, type FreeAccess, type FreePlace } from "./free-access.ts";
+export { searchMedicines, type MedicineKind, type MedicineResult, type MedicineStrength } from "./medicine-search.ts";
 export { buildIngredientKey, buildMatchKey, looseKey, looseMatchKey, normalizeIngredient, parseStrengths } from "./lib/normalize.ts";
 export { DEMO_REGION } from "./region.ts";
 export { SOURCES } from "./sources.ts";
