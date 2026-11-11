@@ -11,8 +11,6 @@ import { telemetry } from '../telemetry/telemetry.js';
 import { demoSteps, type JobInfo, type JobState } from './demo.steps.js';
 
 const KEEP_FINISHED = { removeOnComplete: { age: 24 * 3600 }, removeOnFail: { age: 24 * 3600 } };
-// One run at a time: a second press while a run is going follows the same run.
-const RUN_LOCK_MS = 4 * 60 * 1000;
 
 /**
  * Demo run for the jury and the video: one extra dose of the demo patient, due now,
@@ -53,9 +51,13 @@ export class DemoService {
       .insert(doses)
       .values({ medicationId: med.id, scheduledAt: now, demo: true })
       .returning({ id: doses.id });
-    this.current = { doseId: dose.id, until: now.getTime() + RUN_LOCK_MS };
-
     const second = 1000;
+    // One run at a time: a second press while a run is going follows the same run.
+    this.current = {
+      doseId: dose.id,
+      until: now.getTime() + this.config.getOrThrow<number>('DEMO_RUN_LOCK_SECONDS') * second,
+    };
+
     await this.queue.add(
       'remind',
       {

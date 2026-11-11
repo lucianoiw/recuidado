@@ -26,8 +26,10 @@ export interface Member {
   relationOther?: string | null;
   /** Invited during sign-up and has not opened the app yet. */
   pending?: boolean;
-  /** Digits only, e.g. "11987654321". */
+  /** Digits only, e.g. "11987654321". In the demo family it comes masked: "(11) •••••-4321". */
   phone?: string | null;
+  /** Has a full phone number saved, even when the API sends it masked. */
+  hasPhone?: boolean;
 }
 
 /** The name screens show for the patient: the nickname when there is one. */
@@ -153,7 +155,8 @@ async function errorMessage(res: Response, fallback: string): Promise<string> {
 export async function parsePrescription(file: File): Promise<ReadResult> {
   const form = new FormData();
   form.append("file", file);
-  const res = await fetch(`${API_URL}/prescriptions/parse`, { method: "POST", body: form });
+  // The family id lets the API count reads per family (it limits reads per day).
+  const res = await fetch(`${API_URL}${withFamily("/prescriptions/parse")}`, { method: "POST", body: form });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para ler a receita."));
   return res.json();
 }
