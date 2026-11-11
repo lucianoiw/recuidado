@@ -44,6 +44,9 @@ export interface ReminderCallOptions {
   log?: (msg: string, extra?: unknown) => void;
 }
 
+/** High-frequency events left out of the log. */
+const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
+
 type LiveEvent = { type: string; event_id?: string; [key: string]: unknown };
 
 /**
@@ -110,7 +113,7 @@ export class ReminderCall {
   }
 
   handle(event: LiveEvent) {
-    if (!String(event.type).endsWith(".delta") && event.type !== "session.usage.updated") {
+    if (!QUIET_EVENTS.has(String(event.type)) && !String(event.type).endsWith(".delta")) {
       this.log(`event ${String(event.type)}`);
     }
     switch (event.type) {
@@ -240,7 +243,10 @@ export class ReminderCall {
       outcome,
       confirmed: outcome === "confirmed",
       note: this.answer?.note,
-      transcript: this.transcript.map((l) => ({ ...l, text: l.text.trim() })),
+      // Drop sound tags such as "[mouth noise]" from the stored transcript.
+      transcript: this.transcript
+        .map((l) => ({ ...l, text: l.text.replace(/\[[^\]]*\]/g, "").replace(/\s+/g, " ").trim() }))
+        .filter((l) => l.text),
       error: this.error,
       durationSeconds: this.durationSeconds,
       endReason: this.endReason ?? (this.error ? "error" : undefined),
