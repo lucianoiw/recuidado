@@ -480,3 +480,31 @@ export async function setSharePaid(memberId: string, paid: boolean): Promise<voi
 export async function setPixKey(memberId: string, pix: { type: PixKeyType; key: string } | null): Promise<void> {
   await send("PUT", withFamily(`/family/members/${memberId}/pix`), { pix }, "Não deu para salvar a chave Pix.");
 }
+
+export interface Plan {
+  name: string;
+  priceCents: number;
+  trialDays: number;
+  /** AbacatePay is configured on the server. */
+  available: boolean;
+  isDemo: boolean;
+  /** null: free plan. */
+  status: "pending" | "active" | "cancelled" | null;
+  trialEndsAt: string | null;
+}
+
+export async function getPlan(): Promise<Plan> {
+  const res = await fetch(`${API_URL}${withFamily("/family/plan")}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+/** Opens the AbacatePay checkout of the paid plan; returns its URL. */
+export async function startPlanCheckout(): Promise<string> {
+  const res = await send("POST", withFamily("/family/plan/checkout"), {}, "Não deu para abrir o pagamento.");
+  return ((await res.json()) as { url: string }).url;
+}
+
+export async function cancelPlan(): Promise<void> {
+  await send("POST", withFamily("/family/plan/cancel"), {}, "Não deu para cancelar.");
+}

@@ -21,6 +21,15 @@ export const confirmationChannel = pgEnum('confirmation_channel', ['app', 'voice
 export const families = pgTable('families', {
   id: uuid().primaryKey().defaultRandom(),
   name: text().notNull(),
+  // Paid plan (AbacatePay subscription): reminder, emergency and pharmacy calls.
+  // null: free plan. 'pending': checkout opened, not paid. 'active': paid or in trial. 'cancelled'.
+  subscriptionStatus: text().$type<'pending' | 'active' | 'cancelled'>(),
+  // AbacatePay checkout (bill_...) that started it; webhooks find the family by it.
+  subscriptionCheckoutId: text(),
+  // AbacatePay subscription (subs_...), known after the first webhook.
+  subscriptionId: text(),
+  subscriptionTrialEndsAt: timestamp({ withTimezone: true }),
+  subscriptionUpdatedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

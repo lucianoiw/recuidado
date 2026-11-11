@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { Module, type OnApplicationShutdown } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
+import { PlanGate } from '../billing/plan-gate.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { validateEnv } from '../config/env.js';
 import { DbModule } from '../db/db.module.js';
@@ -32,7 +33,7 @@ import { DosesProcessor } from './doses.processor.js';
     BullModule.registerQueue({ name: DOSES_QUEUE }),
     DbModule,
   ],
-  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService],
+  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService, PlanGate],
 })
 export class WorkerModule implements OnApplicationShutdown {
   /** Sends buffered events and logs before the container stops. */

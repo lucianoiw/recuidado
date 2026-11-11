@@ -8,7 +8,7 @@ import { clearFamilyId } from "@/lib/family-id";
 import { CopyLinkButton } from "@/components/copy-button";
 import { EnableNotifications } from "@/components/enable-notifications";
 import Link from "next/link";
-import { BellIcon, Button, CheckIcon, PhoneIcon, StatusPill, buttonClass, cn } from "@/components/ui";
+import { BellIcon, Button, CheckIcon, ChevronRightIcon, PhoneIcon, StatusPill, buttonClass, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { clearMe, useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
@@ -100,6 +100,17 @@ export function CircleView() {
           <p className="text-[15px] font-semibold">Escolha acima quem é você.</p>
         )}
       </section>
+
+      <Link
+        href="/family/plano"
+        className="flex items-center justify-between gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+      >
+        <span className="flex flex-col">
+          <b>Plano</b>
+          <span className="text-[15px] text-muted">Ligações para quem não usa celular</span>
+        </span>
+        <ChevronRightIcon size={20} className="text-muted" />
+      </Link>
 
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
         <h2 className="text-[18px] font-extrabold">Convidar e instalar</h2>

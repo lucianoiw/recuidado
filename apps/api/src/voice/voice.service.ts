@@ -13,6 +13,7 @@ import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, pharmacyInquiries, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 import { AlertsService } from '../alerts/alerts.service.js';
+import { PlanGate } from '../billing/plan-gate.js';
 import { DEMO_FAMILY } from '../family/family.service.js';
 import { mayContact } from '../privacy/privacy.service.js';
 import { StockService } from '../stock/stock.service.js';
@@ -90,7 +91,13 @@ export class VoiceCallService {
     private readonly config: ConfigService,
     private readonly alerts: AlertsService,
     private readonly stock: StockService,
+    private readonly plan: PlanGate,
   ) {}
+
+  /** Calls are the paid part: false when this family has no active plan (never for the demo family). */
+  callsAllowed(familyId: string, isDemo: boolean): Promise<boolean> {
+    return this.plan.callsAllowed(familyId, isDemo);
+  }
 
   /**
    * Asks apps/voice to call the patient. Does nothing if the dose is no longer pending.
@@ -147,6 +154,12 @@ export class VoiceCallService {
       // LGPD: no call before she (or the family for her) agreed. Push and the family alert still work.
       telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'no_consent' }, row.patientId);
       this.logger.log(`Patient of dose ${doseId} has not consented; not calling.`);
+      return null;
+    }
+    // The call back after an emergency always goes out, even if the plan ended in between.
+    if (!checkIn && !(await this.plan.callsAllowed(row.familyId, isDemoFamily))) {
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'no_plan' }, row.patientId);
+      this.logger.log(`Family of dose ${doseId} has no paid plan; push only.`);
       return null;
     }
     const overLimit = await this.overCallLimit(row.familyId, isDemoFamily);

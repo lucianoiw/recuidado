@@ -45,6 +45,7 @@ export interface PharmacyVoiceResult {
 
 type Inquiry = typeof pharmacyInquiries.$inferSelect;
 
+const NO_PLAN_MESSAGE = 'A ligação para a farmácia faz parte do plano Recuidado Família. Ative em Família > Plano.';
 const LIMIT_MESSAGE =
   'Limite de ligações de hoje atingido. Ligações custam dinheiro, por isso há um limite por dia.';
 
@@ -98,6 +99,10 @@ export class PharmacyService {
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
       .slice(0, MAX_MEDICATIONS_PER_CALL);
 
+    if (!(await this.voice.callsAllowed(ref.familyId, ref.isDemo))) {
+      telemetry.capture('pharmacy_call_skipped', { reason: 'no_plan', demo: ref.isDemo }, ref.patientId);
+      throw new HttpException(NO_PLAN_MESSAGE, HttpStatus.PAYMENT_REQUIRED);
+    }
     const overLimit = await this.voice.overCallLimit(ref.familyId, ref.isDemo, now);
     if (overLimit) {
       telemetry.capture('pharmacy_call_skipped', { reason: overLimit, demo: ref.isDemo }, ref.patientId);

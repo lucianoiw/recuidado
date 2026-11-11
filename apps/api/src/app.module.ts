@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { Redis } from 'ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnv } from './config/env.js';
+import { BillingModule } from './billing/billing.module.js';
 import { DbModule } from './db/db.module.js';
 import { DemoModule } from './demo/demo.module.js';
 import { DosesModule } from './doses/doses.module.js';
@@ -45,6 +46,7 @@ import { telemetry } from './telemetry/telemetry.js';
         };
       },
     }),
+    BillingModule,
     DbModule,
     DemoModule,
     DosesModule,

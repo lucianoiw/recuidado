@@ -46,6 +46,16 @@ export const envSchema = z.object({
   VAPID_PUBLIC_KEY: optionalString,
   VAPID_PRIVATE_KEY: optionalString,
   VAPID_SUBJECT: z.string().default('https://recuidado.com.br'),
+  // Paid plan (AbacatePay, API v2). With the key set, families need an active plan for calls
+  // (the demo family is exempt). Without it there is no plan screen checkout and calls stay free.
+  ABACATEPAY_API_KEY: optionalString,
+  // Secret given when creating the webhook in AbacatePay (32+ characters). Webhooks without it get 401.
+  ABACATEPAY_WEBHOOK_SECRET: optionalString,
+  // Product of the plan (prod_...). Empty: found or created by externalId "recuidado-familia-mensal".
+  ABACATEPAY_PRODUCT_ID: optionalString,
+  // Plan price in cents and free trial days, used when the product is created and shown on the plan screen.
+  PLAN_PRICE_CENTS: z.coerce.number().int().positive().default(1990),
+  PLAN_TRIAL_DAYS: z.coerce.number().int().min(0).max(90).default(7),
   // Family alerts by e-mail (Resend). Without the key, e-mails are skipped and only logged.
   RESEND_API_KEY: optionalString,
   // Sender of the alert e-mails. The domain must be verified in Resend.

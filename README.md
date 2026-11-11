@@ -228,6 +228,16 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
 - **Descartado: cadastrar o caminho do menu por farmácia.** Não funciona ligando para uma farmácia qualquer, que é o que o produto precisa fazer.
 - **Proposta (em validação): duas IAs e uma trava de voz.** É o padrão do LiveKit e do Pipecat: uma segunda IA lê o que o outro lado diz e classifica (menu, espera, pessoa, "só um minuto", caixa postal, fechado), e a fala do agente fica presa até o veredito; na dúvida, pessoa ([Evalgent](https://www.evalgent.com/blog/voicemail-detection-livekit-pipecat)). No Recuidado, a segunda IA seria um gatilho de Decisions do GPT-Live (ou o Claude lendo a transcrição), e a trava fica no Asterisk, que está no meio de todo o áudio: a ação `MuteAudio` cala o que a IA fala para a farmácia sem calar o que ela ouve ([Asterisk](https://docs.asterisk.org/Latest_API/API_Documentation/AMI_Actions/MuteAudio/)). O nosso código age pela classificação: menu, espera o fim e aperta a tecla; espera, silêncio por até 3 min; "só um minuto", diz "Claro, eu aguardo" e espera; pessoa, solta a voz e se apresenta. Falta medir a latência do Decisions e testar o `MuteAudio` nessa ponte.
 
+## Plano pago (AbacatePay)
+
+O Recuidado é grátis em tudo que não custa nada a cada uso: leitura da receita, Farmácia Popular, preço CMED, divisão do custo com Pix e lembrete no celular. As ligações (lembrete, emergência e farmácia) são o único custo variável, porque cada minuto paga a linha (Nvoip) e o modelo de voz (GPT-Live). Por isso elas são o plano pago, **Recuidado Família**, R$ 19,90 por mês com 7 dias grátis. O preço é provisório até medirmos o custo por ligação.
+
+- **Assinatura recorrente de verdade**, pela API v2 da AbacatePay: um produto mensal (`cycle: MONTHLY`, `trialDays: 7`) e um checkout de assinatura hospedado por ela (`POST /v2/subscriptions/create`). O id da família vai como `externalId`.
+- **Webhook** em `POST /billing/webhook`: `subscription.completed` e `trial_started` ativam, `renewed` mantém, `cancelled` desliga. A origem é provada pelo secret do webhook, comparado em tempo constante. `payment_failed` não desliga nada, porque a AbacatePay tenta de novo e cancela sozinha quando as tentativas acabam.
+- **Bloqueio das ligações**: com `ABACATEPAY_API_KEY` configurada, o worker só liga para família com plano ativo. Sem plano, ela continua recebendo o push e a família continua sendo avisada. A ligação de volta depois de uma emergência sai mesmo se o plano acabou no meio. A Família Demo nunca é bloqueada.
+- **Só cartão no checkout**: o teste grátis da AbacatePay só existe no cartão (ela cobra R$ 0 e guarda o cartão). O Pix Automático também é aceito pela API, mas sem teste grátis.
+- **Ambiente de teste**: na demo a conta fica no Modo Teste da AbacatePay. O checkout mostra "Simular Pagamento" e aceita o cartão 4242 4242 4242 4242; nada é cobrado.
+
 ## Resultados medidos
 
 | O quê | Resultado | Como medir de novo |
