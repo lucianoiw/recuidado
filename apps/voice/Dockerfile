@@ -6,6 +6,8 @@ WORKDIR /repo
 FROM base AS build
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/voice/package.json apps/voice/
+# Workspace library used by voice. Its "prepare" script builds dist/ on install.
+COPY packages/telemetry packages/telemetry
 RUN pnpm install --frozen-lockfile --filter @recuidado/voice...
 COPY apps/voice apps/voice
 RUN pnpm --filter @recuidado/voice build \

@@ -17,7 +17,18 @@ export interface Dose {
 export interface Member {
   id: string;
   name: string;
+  /** How the family calls the patient, e.g. "Dona Maria". */
+  nickname?: string | null;
   role: "caregiver" | "patient";
+  relation?: string | null;
+  relationOther?: string | null;
+  /** Invited during sign-up and has not opened the app yet. */
+  pending?: boolean;
+}
+
+/** The name screens show for the patient: the nickname when there is one. */
+export function callName(p: Member): string {
+  return p.nickname?.trim() || p.name;
 }
 
 export interface Medication {
@@ -27,6 +38,8 @@ export interface Medication {
   times: string[];
   freeInFarmaciaPopular: boolean;
   monthlyCostCents: number;
+  /** Free in Farmácia Popular, but the family chose to buy it. */
+  buyInsteadOfFree?: boolean;
   /** Where it is free: "farmacia_popular", "ubs". Optional until the API sends it. */
   freeAt?: string[];
   /** In the state high cost program (CEAF): needs the LME form from the doctor. */
@@ -118,4 +131,46 @@ export async function confirmPrescription(patientId: string, items: ConfirmItem[
     body: JSON.stringify({ patientId, items }),
   });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para salvar."));
+}
+
+async function send(method: string, path: string, body: unknown, fallback: string): Promise<Response> {
+  const res = await fetch(`${API_URL}${path}`, {
+    method,
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(await errorMessage(res, fallback));
+  return res;
+}
+
+/** "Pegar grátis" (buy = false) or "Comprar" (buy = true). */
+export async function setBuyChoice(medicationId: string, buy: boolean): Promise<void> {
+  await send("PUT", `/family/medications/${medicationId}/buy-choice`, { buy }, "Não deu para salvar.");
+}
+
+/** An invited caregiver opened the app and picked their name. */
+export async function joinFamily(memberId: string): Promise<void> {
+  const res = await fetch(`${API_URL}/family/members/${memberId}/join`, { method: "POST" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+}
+
+/** Sign-up answers as the API stores them: phone and CEP in digits, birth as aaaa-mm-dd. */
+export interface OnboardingRecord {
+  caregiverId: string;
+  caregiver: { name: string; phone: string; relation: string | null; relationOther: string };
+  patient: { name: string; nickname: string; phone: string; birth: string; cep: string; usesPhone: boolean };
+  invites: { id: string; name: string; relation: string | null; phone?: string; joined: boolean }[];
+}
+
+/** Null when this caregiver is not in the family anymore. */
+export async function getOnboarding(caregiverId: string): Promise<OnboardingRecord | null> {
+  const res = await fetch(`${API_URL}/family/onboarding?caregiverId=${caregiverId}`, { cache: "no-store" });
+  if (res.status === 404 || res.status === 400) return null;
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+export async function saveOnboarding(body: unknown): Promise<{ caregiverId: string }> {
+  const res = await send("PUT", "/family/onboarding", body, "Não deu para salvar o cadastro.");
+  return res.json();
 }

@@ -14,6 +14,8 @@ export interface CallResult {
   /** True only when the patient said she took the medicine. */
   confirmed: boolean;
   note?: string;
+  /** True when she said she is not feeling well. */
+  feelsUnwell?: boolean;
   transcript: TranscriptLine[];
   error?: string;
   durationSeconds?: number;
@@ -42,6 +44,8 @@ export interface ReminderCallOptions {
   /** Time to wait for session.closed after hanging up. */
   closeGraceMs?: number;
   log?: (msg: string, extra?: unknown) => void;
+  /** Called when the call starts ringing or is answered. */
+  onStatusChange?: (status: CallStatus) => void;
 }
 
 /** High-frequency events left out of the log. */
@@ -57,7 +61,7 @@ export class ReminderCall {
   status: CallStatus = "dialing";
   private readonly seen = new Set<string>();
   private readonly transcript: TranscriptLine[] = [];
-  private answer?: { taken: boolean; note?: string };
+  private answer?: { taken: boolean; feelsUnwell?: boolean; note?: string };
   private answered = false;
   private error?: string;
   private durationSeconds?: number;
@@ -118,11 +122,15 @@ export class ReminderCall {
     }
     switch (event.type) {
       case "transport.ringing":
-        if (this.status === "dialing") this.status = "ringing";
+        if (this.status === "dialing") {
+          this.status = "ringing";
+          this.opts.onStatusChange?.("ringing");
+        }
         break;
       case "transport.answered":
         this.status = "answered";
         this.answered = true;
+        this.opts.onStatusChange?.("answered");
         this.send({
           type: "session.commentary.append",
           event_id: `greeting_${this.opts.sessionId}`,
@@ -172,7 +180,7 @@ export class ReminderCall {
       | undefined;
     if (item?.type !== "function_call" || item.name !== DOSE_TOOL_NAME || !item.call_id) return;
 
-    let args: { taken?: unknown; note?: unknown } = {};
+    let args: { taken?: unknown; feels_unwell?: unknown; note?: unknown } = {};
     try {
       args = JSON.parse(item.arguments ?? "{}");
     } catch {
@@ -180,7 +188,8 @@ export class ReminderCall {
     }
     const taken = args.taken === true ? true : args.taken === false ? false : undefined;
     const note = typeof args.note === "string" && args.note.trim() ? args.note.trim() : undefined;
-    if (taken !== undefined) this.answer = { taken, note };
+    const feelsUnwell = typeof args.feels_unwell === "boolean" ? args.feels_unwell : undefined;
+    if (taken !== undefined) this.answer = { taken, feelsUnwell, note };
     this.log(`dose answer recorded: taken=${String(taken)}`);
 
     this.send({
@@ -243,6 +252,7 @@ export class ReminderCall {
       outcome,
       confirmed: outcome === "confirmed",
       note: this.answer?.note,
+      feelsUnwell: this.answer?.feelsUnwell,
       // Drop sound tags such as "[mouth noise]" from the stored transcript.
       transcript: this.transcript
         .map((l) => ({ ...l, text: l.text.replace(/\[[^\]]*\]/g, "").replace(/\s+/g, " ").trim() }))

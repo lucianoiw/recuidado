@@ -16,6 +16,7 @@ import {
   cn,
   inputClass,
 } from "@/components/ui";
+import { captureError, track } from "@/lib/analytics";
 import {
   confirmPrescription,
   getFamily,
@@ -224,7 +225,9 @@ export function PrescriptionReview() {
     setStep("reading");
     setError(null);
     try {
+      track("prescription_upload_started", { media_type: file.type, kb: Math.round(file.size / 1024) });
       const { reading } = await parsePrescription(file);
+      track("prescription_reviewed", { items: reading.items.length, warnings: reading.warnings.length });
       if (!reading.is_prescription || reading.items.length === 0) {
         setError("Não encontramos remédios nessa foto. Tente uma foto mais nítida da receita.");
         setStep("pick");
@@ -234,6 +237,7 @@ export function PrescriptionReview() {
       setWarnings(reading.warnings);
       setStep("review");
     } catch (e) {
+      captureError(e, { screen: "prescription", step: "read" });
       setError(e instanceof Error ? e.message : "Não deu para ler a receita.");
       setStep("pick");
     }
@@ -259,9 +263,11 @@ export function PrescriptionReview() {
           times: d.times,
         })),
       );
+      track("prescription_saved", { items: drafts.length });
       setFamily(await getFamily().catch(() => null));
       setStep("done");
     } catch (e) {
+      captureError(e, { screen: "prescription", step: "save" });
       setError(e instanceof Error ? e.message : "Não deu para salvar.");
       setStep("review");
     }

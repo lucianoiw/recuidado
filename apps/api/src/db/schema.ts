@@ -1,5 +1,7 @@
 import {
+  type AnyPgColumn,
   boolean,
+  date,
   integer,
   jsonb,
   pgEnum,
@@ -33,6 +35,17 @@ export const members = pgTable('members', {
   role: memberRole().notNull(),
   // Patients who do not use the app get a voice call instead of a push.
   prefersVoice: boolean().notNull().default(false),
+  // How the family calls the patient, e.g. "Dona Maria". Used by screens and the voice call.
+  nickname: text(),
+  birthDate: date(),
+  // Digits only, e.g. "01310100".
+  cep: text(),
+  // Caregiver relation to the patient, one of the web RELATIONS; free text in relationOther.
+  relation: text(),
+  relationOther: text(),
+  // Set on caregivers added as an invite during onboarding; joinedAt is set when they open the app.
+  invitedById: uuid().references((): AnyPgColumn => members.id, { onDelete: 'set null' }),
+  joinedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -49,6 +62,8 @@ export const medications = pgTable('medications', {
   freeInFarmaciaPopular: boolean().notNull().default(false),
   // Reference monthly cost in cents, capped by the CMED max price.
   monthlyCostCents: integer().notNull().default(0),
+  // The family chose to buy it even though it is free in Farmácia Popular.
+  buyInsteadOfFree: boolean().notNull().default(false),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -94,6 +109,8 @@ export const voiceCalls = pgTable('voice_calls', {
   sessionId: text().notNull().unique(),
   outcome: voiceCallOutcome().notNull(),
   confirmed: boolean().notNull(),
+  // Self-reported in the call ("E a senhora, está bem?"). Not a diagnosis.
+  feelsUnwell: boolean(),
   note: text(),
   transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
   durationSeconds: integer(),

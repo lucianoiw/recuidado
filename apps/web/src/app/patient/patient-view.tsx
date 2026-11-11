@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import { Button, Card, CheckIcon, ClockIcon, PillIcon, ScreenHeader } from "@/components/ui";
-import { confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
+import { captureError, identifyMember, track } from "@/lib/analytics";
+import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
 
 function todayLabel(): string {
   const text = new Intl.DateTimeFormat("pt-BR", {
@@ -52,11 +53,15 @@ export function PatientView() {
   const load = useCallback(() => {
     getFamily().then(
       (d) => {
+        identifyMember(d.patient.id, "patient", d.familyId);
         setData(d);
         setNow(Date.now());
         setError(false);
       },
-      () => setError(true),
+      (e) => {
+        captureError(e, { screen: "patient" });
+        setError(true);
+      },
     );
   }, []);
 
@@ -71,7 +76,7 @@ export function PatientView() {
   }
   if (!data) return <p className="text-[24px] text-muted">Carregando...</p>;
 
-  const patientName = data.patient.name;
+  const patientName = callName(data.patient);
   // Doses at the same time are taken together: the earliest time whose doses are not taken yet.
   const first = data.today.find(
     (d) => d.status !== "taken" && new Date(d.scheduledAt).getTime() <= now,
@@ -88,6 +93,7 @@ export function PatientView() {
     setBusy(true);
     try {
       await Promise.all(doses.map((d) => confirmDose(d.id)));
+      track("dose_confirm_tapped", { doses: doses.length, medications: doses.map((d) => d.medicationName).join(", ") });
       setJustTaken(doses);
       load();
     } finally {

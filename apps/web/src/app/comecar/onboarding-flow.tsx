@@ -18,15 +18,17 @@ import {
   cn,
 } from "@/components/ui";
 import { QRCodeSVG } from "qrcode.react";
+import { captureError, track } from "@/lib/analytics";
 import { lookupCep, type CepLookup } from "@/lib/cep";
 import { useCanShare, useOrigin } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
+import { getOnboarding, saveOnboarding } from "@/lib/api";
+import { readMe, setMe } from "@/lib/me";
 import {
   RELATIONS,
   emptyOnboarding,
-  loadOnboarding,
-  saveOnboarding,
+  fromRecord,
   type Onboarding,
   type Relation,
 } from "@/lib/onboarding";
@@ -39,12 +41,23 @@ export function OnboardingFlow() {
   const [data, setData] = useState<Onboarding>(emptyOnboarding);
   const [tried, setTried] = useState(false);
   const [cepOk, setCepOk] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = loadOnboarding();
-    // Restore answers from an earlier visit (browser only, see lib/onboarding.ts).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (saved) setData(saved);
+    // Restore the answers this device's caregiver saved in an earlier visit.
+    const me = readMe();
+    if (!me) return;
+    let alive = true;
+    getOnboarding(me).then(
+      (r) => {
+        if (alive && r) setData(fromRecord(r));
+      },
+      () => {},
+    );
+    return () => {
+      alive = false;
+    };
   }, []);
 
   function patch<K extends keyof Onboarding>(key: K, value: Partial<Onboarding[K]>) {
@@ -60,13 +73,28 @@ export function OnboardingFlow() {
     4: true,
   };
 
-  function next() {
+  async function next() {
     if (!valid[step]) {
       setTried(true);
       return;
     }
     setTried(false);
-    saveOnboarding(data);
+    // After steps 2 and 3, caregiver and patient are complete: save in the API.
+    if (step === 2 || step === 3) {
+      setSaving(true);
+      setSaveError(null);
+      try {
+        const { caregiverId } = await saveOnboarding({ caregiverId: readMe(), ...data });
+        setMe(caregiverId);
+      } catch (e) {
+        captureError(e, { screen: "onboarding", step });
+        setSaveError(e instanceof Error ? e.message : "Não deu para salvar o cadastro.");
+        return;
+      } finally {
+        setSaving(false);
+      }
+    }
+    track("onboarding_step_completed", { step, total: TOTAL });
     if (step < TOTAL) setStep(step + 1);
     else router.push("/family/adicionar");
   }
@@ -197,8 +225,16 @@ export function OnboardingFlow() {
         </p>
       ) : null}
 
+      {saveError ? (
+        <p className="font-semibold text-danger" role="alert">
+          {saveError} Tente de novo.
+        </p>
+      ) : null}
+
       <div className="mt-auto flex flex-col gap-1.5 pt-2">
-        <Button onClick={next}>{step === TOTAL ? "Pronto, adicionar os remédios" : "Continuar"}</Button>
+        <Button onClick={next} disabled={saving}>
+          {saving ? "Salvando..." : step === TOTAL ? "Pronto, adicionar os remédios" : "Continuar"}
+        </Button>
         {step === TOTAL ? (
           <Link href="/family" className="py-3 text-center font-bold text-brand">
             Fazer depois

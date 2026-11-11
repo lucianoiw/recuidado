@@ -1,8 +1,9 @@
 "use client";
 
+import { callName, joinFamily } from "@/lib/api";
 import { CopyLinkButton } from "@/components/copy-button";
 import { EnableNotifications } from "@/components/enable-notifications";
-import { BellIcon, CheckIcon, cn } from "@/components/ui";
+import { BellIcon, CheckIcon, StatusPill, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
@@ -12,13 +13,13 @@ function firstName(name: string) {
 }
 
 export function CircleView() {
-  const { data, error } = useFamily();
+  const { data, error, reload } = useFamily();
   const [me, setMe] = useMe();
 
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
 
-  const patient = data.patient.name;
+  const patient = callName(data.patient);
   const caregiver = data.caregivers.find((c) => c.id === me);
 
   return (
@@ -36,7 +37,11 @@ export function CircleView() {
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  onClick={() => setMe(c.id)}
+                  onClick={() => {
+                    setMe(c.id);
+                    // An invited person who picks their name has joined.
+                    if (c.pending) joinFamily(c.id).then(reload, () => {});
+                  }}
                   className="flex min-h-16 w-full items-center gap-3 px-4 text-left"
                 >
                   <span
@@ -45,7 +50,15 @@ export function CircleView() {
                   >
                     {c.name.trim().charAt(0).toUpperCase()}
                   </span>
-                  <span className="flex-1 font-bold">{c.name}</span>
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <b>{c.name}</b>
+                    {c.relation ? (
+                      <span className="text-[15px] text-muted">
+                        {c.relation === "Outro" ? c.relationOther || "Outro" : c.relation}
+                      </span>
+                    ) : null}
+                  </span>
+                  {c.pending ? <StatusPill tone="warn">Convidado</StatusPill> : null}
                   <span
                     className={cn(
                       "flex size-7 items-center justify-center rounded-full",

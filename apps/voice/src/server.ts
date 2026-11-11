@@ -1,9 +1,19 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { timingSafeEqual } from "node:crypto";
+import { telemetryFromEnv } from "@recuidado/telemetry";
 import { loadConfig, type VoiceConfig } from "./config.js";
 import { CallService, NumberNotAllowedError } from "./call-service.js";
 import type { CallResult, ReminderCall } from "./reminder-call.js";
 import type { Medication } from "./prompt.js";
+
+// Events, exceptions and logs go to PostHog; logs also stay on stdout.
+const telemetry = telemetryFromEnv("voice");
+
+function log(msg: string, extra?: unknown) {
+  if (extra === undefined) return telemetry.info(msg);
+  const detail = typeof extra === "string" ? extra : JSON.stringify(extra);
+  telemetry.info(`${msg} ${detail}`);
+}
 
 interface CallRecord {
   doseId: string;
@@ -18,9 +28,9 @@ try {
 } catch (err) {
   // Stay up so the stack deploys before the secrets are set; /calls answers 503.
   configError = (err as Error).message;
-  console.error(`voice service not configured: ${configError}`);
+  telemetry.error(`voice service not configured: ${configError}`);
 }
-const service = config ? new CallService(config) : undefined;
+const service = config ? new CallService(config, log) : undefined;
 const calls = new Map<string, CallRecord>();
 
 function json(res: ServerResponse, status: number, body: unknown) {
@@ -56,7 +66,8 @@ function parseCallRequest(body: unknown) {
   if (typeof b.phone !== "string" || !b.phone) throw new Error("phone is required");
   if (typeof b.patientName !== "string" || !b.patientName.trim()) throw new Error("patientName is required");
   if (meds.length === 0) throw new Error("medications must have at least one item");
-  return { doseId: b.doseId, phone: b.phone, patientName: b.patientName.trim(), medications: meds };
+  const patientId = typeof b.patientId === "string" && b.patientId ? b.patientId : undefined;
+  return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds };
 }
 
 const server = createServer(async (req, res) => {
@@ -76,19 +87,63 @@ const server = createServer(async (req, res) => {
       } catch (err) {
         return json(res, 400, { error: (err as Error).message });
       }
+      const { patientId, ...callInput } = input;
+      const distinctId = patientId ?? telemetry.systemId;
+      const startedAt = Date.now();
+      let callId: string | undefined;
       try {
-        const { sessionId, call } = await service.start(input);
+        const { sessionId, call } = await service.start(callInput, (status) => {
+          telemetry.capture(`call_${status}`, { dose_id: input.doseId, call_id: callId }, distinctId);
+        });
+        callId = sessionId;
         const record: CallRecord = { doseId: input.doseId, call };
         calls.set(sessionId, record);
+        telemetry.capture("call_started", { dose_id: input.doseId, call_id: sessionId, model: config.liveModel, voice: config.liveVoice }, distinctId);
         void call.result.then(async (result) => {
           record.result = result;
-          console.log(`call ${sessionId} ended: ${result.outcome}`);
+          telemetry.info(`call ${sessionId} ended: ${result.outcome}`, {
+            dose_id: input.doseId,
+            call_id: sessionId,
+            outcome: result.outcome,
+            posthogDistinctId: patientId,
+          });
+          const props = {
+            dose_id: input.doseId,
+            call_id: sessionId,
+            outcome: result.outcome,
+            confirmed: result.confirmed,
+            duration_seconds: result.durationSeconds,
+            wall_seconds: Math.round((Date.now() - startedAt) / 1000),
+            transcript_turns: result.transcript.length,
+            error: result.error,
+          };
+          telemetry.capture("call_ended", props, distinctId);
+          // The voice agent shows up in LLM analytics next to the prescription reader.
+          // The transcript stays out: the API records the call in Postgres.
+          telemetry.llmGeneration({
+            traceId: sessionId,
+            spanName: "reminder_call",
+            provider: "openai",
+            model: config.liveModel,
+            latencySeconds: result.durationSeconds ?? props.wall_seconds,
+            output: [{ role: "assistant", content: `outcome=${result.outcome}` }],
+            isError: result.outcome === "failed",
+            error: result.error,
+            distinctId,
+            properties: { dose_id: input.doseId, outcome: result.outcome },
+          });
           await service.report(input.doseId, result);
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {
-        if (err instanceof NumberNotAllowedError) return json(res, 403, { error: err.message });
-        console.error("failed to start call", err);
+        if (err instanceof NumberNotAllowedError) {
+          telemetry.warn(`call refused: ${err.message}`, { dose_id: input.doseId });
+          telemetry.capture("call_refused", { dose_id: input.doseId, reason: "number_not_allowed" }, distinctId);
+          return json(res, 403, { error: err.message });
+        }
+        telemetry.error(`failed to start call: ${(err as Error).message}`, { dose_id: input.doseId });
+        telemetry.captureException(err, { dose_id: input.doseId }, distinctId);
+        telemetry.capture("call_start_failed", { dose_id: input.doseId, error: (err as Error).message }, distinctId);
         return json(res, 502, { error: "failed to start call" });
       }
     }
@@ -102,10 +157,22 @@ const server = createServer(async (req, res) => {
 
     return json(res, 404, { error: "not found" });
   } catch (err) {
-    console.error(err);
+    telemetry.error(`internal error: ${(err as Error).message}`, { path: url.pathname });
+    telemetry.captureException(err, { path: url.pathname });
     return json(res, 500, { error: "internal error" });
   }
 });
 
 const port = config?.port ?? Number(process.env.PORT ?? 5000);
-server.listen(port, () => console.log(`voice service listening on :${port}`));
+server.listen(port, () => {
+  telemetry.info(`voice service listening on :${port}`);
+  telemetry.capture("service_started", { configured: Boolean(service), telemetry: telemetry.enabled });
+});
+
+// Coolify stops the container with SIGTERM: send what is buffered first.
+for (const signal of ["SIGTERM", "SIGINT"] as const) {
+  process.once(signal, () => {
+    server.close();
+    void telemetry.shutdown().finally(() => process.exit(0));
+  });
+}
