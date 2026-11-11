@@ -2,8 +2,11 @@
   "source": {
     "name": "Ministério da Saúde, CNES (Cadastro Nacional de Estabelecimentos de Saúde), API de Dados Abertos DEMAS",
     "url": "https://apidadosabertos.saude.gov.br/cnes/estabelecimentos?codigo_tipo_unidade=43&codigo_municipio=355030&status=1",
-    "accreditation": null,
-    "fetched_at": "2026-11-11T01:18:04.064Z"
+    "accreditation": {
+      "name": "Ministério da Saúde, Painel endereço das Farmácias (Farmácia Popular)",
+      "url": "https://infoms.saude.gov.br/extensions/SEIDIGI_DEMAS_PFPB_ENDERECOS/index.html"
+    },
+    "fetched_at": "2026-11-11T03:12:47.729Z"
   },
   "region": {
     "municipality": "São Paulo",
@@ -32,7 +35,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.15,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-16"
     },
     {
@@ -50,7 +53,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.15,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -68,7 +71,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.16,
       "opening_hours": "ATENDIMENTO CONTINUO DE 24 HORAS/DIA (PLANTAO:INCLUI SABADOS, DOMINGOS E FERIADOS)",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-09-03"
     },
     {
@@ -86,7 +89,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.17,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-18"
     },
     {
@@ -104,7 +107,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.24,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -122,7 +125,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.28,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2025-11-18"
     },
     {
@@ -140,7 +143,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.31,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-08-04"
     },
     {
@@ -158,7 +161,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.32,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-09-29"
     },
     {
@@ -176,7 +179,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.36,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-04-16"
     },
     {
@@ -194,7 +197,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.36,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-04-16"
     },
     {
@@ -212,7 +215,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.42,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-18"
     },
     {
@@ -230,7 +233,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.48,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-26"
     },
     {
@@ -248,7 +251,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.59,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -266,7 +269,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.71,
       "opening_hours": "ATENDIMENTO CONTINUO DE 24 HORAS/DIA (PLANTAO:INCLUI SABADOS, DOMINGOS E FERIADOS)",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-12-20"
     },
     {
@@ -284,7 +287,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.72,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-05-14"
     },
     {
@@ -302,7 +305,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.85,
       "opening_hours": "ATENDIMENTOS NOS TURNOS DA MANHA E A TARDE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-10-23"
     },
     {
@@ -320,7 +323,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.86,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -338,7 +341,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.94,
       "opening_hours": "ATENDIMENTO SOMENTE PELA MANHA",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-18"
     },
     {
@@ -356,7 +359,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.97,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2025-09-03"
     },
     {
@@ -374,7 +377,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 0.98,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-05-14"
     },
     {
@@ -392,7 +395,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.01,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-05-14"
     },
     {
@@ -410,7 +413,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.02,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-10-20"
     },
     {
@@ -428,7 +431,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.04,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-02-05"
     },
     {
@@ -446,7 +449,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.06,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -464,7 +467,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.07,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-04-16"
     },
     {
@@ -482,7 +485,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.08,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-16"
     },
     {
@@ -500,7 +503,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.1,
       "opening_hours": "ATENDIMENTO CONTINUO DE 24 HORAS/DIA (PLANTAO:INCLUI SABADOS, DOMINGOS E FERIADOS)",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-09-03"
     },
     {
@@ -518,7 +521,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.11,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-08-13"
     },
     {
@@ -536,7 +539,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.11,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -554,7 +557,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.17,
       "opening_hours": "ATENDIMENTO CONTINUO DE 24 HORAS/DIA (PLANTAO:INCLUI SABADOS, DOMINGOS E FERIADOS)",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-02-27"
     },
     {
@@ -572,7 +575,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.17,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-08-13"
     },
     {
@@ -590,7 +593,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.19,
       "opening_hours": "ATENDIMENTO CONTINUO DE 24 HORAS/DIA (PLANTAO:INCLUI SABADOS, DOMINGOS E FERIADOS)",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-02-27"
     },
     {
@@ -608,7 +611,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.19,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2025-09-03"
     },
     {
@@ -626,7 +629,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.19,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -644,7 +647,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.2,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-10-20"
     },
     {
@@ -662,7 +665,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.2,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -680,7 +683,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.22,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -698,7 +701,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.22,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-05-14"
     },
     {
@@ -716,7 +719,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.23,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-10-31"
     },
     {
@@ -734,7 +737,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.29,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-08-13"
     },
     {
@@ -752,7 +755,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.31,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-07-07"
     },
     {
@@ -770,7 +773,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.34,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-05-08"
     },
     {
@@ -788,7 +791,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.34,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-11-03"
     },
     {
@@ -806,7 +809,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.36,
       "opening_hours": "ATENDIMENTO SOMENTE A NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-16"
     },
     {
@@ -824,7 +827,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.37,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-10-27"
     },
     {
@@ -842,7 +845,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.45,
       "opening_hours": "ATENDIMENTO CONTINUO DE 24 HORAS/DIA (PLANTAO:INCLUI SABADOS, DOMINGOS E FERIADOS)",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2025-11-18"
     },
     {
@@ -860,7 +863,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.5,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -878,7 +881,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.51,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -896,7 +899,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.51,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-16"
     },
     {
@@ -914,7 +917,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.58,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -932,7 +935,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.62,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-02-27"
     },
     {
@@ -950,7 +953,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.63,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-05"
     },
     {
@@ -968,7 +971,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.66,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-11-18"
     },
     {
@@ -986,7 +989,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.68,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-05-14"
     },
     {
@@ -1004,7 +1007,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.72,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-10-27"
     },
     {
@@ -1022,7 +1025,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.73,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-09-01"
     },
     {
@@ -1040,7 +1043,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.75,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-06-26"
     },
     {
@@ -1058,7 +1061,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.77,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-09-03"
     },
     {
@@ -1076,7 +1079,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.8,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-26"
     },
     {
@@ -1094,7 +1097,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.84,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-15"
     },
     {
@@ -1112,7 +1115,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.86,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-06-26"
     },
     {
@@ -1130,7 +1133,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.86,
       "opening_hours": "ATENDIMENTOS NOS TURNOS DA MANHA E A TARDE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2025-09-03"
     },
     {
@@ -1148,7 +1151,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.89,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": false,
       "cnes_updated_at": "2026-07-18"
     },
     {
@@ -1166,7 +1169,7 @@
       "coordinates_suspect": false,
       "distance_to_center_km": 1.91,
       "opening_hours": "ATENDIMENTO NOS TURNOS DA MANHA, TARDE E NOITE",
-      "fp_accredited": null,
+      "fp_accredited": true,
       "cnes_updated_at": "2026-07-18"
     }
   ]
