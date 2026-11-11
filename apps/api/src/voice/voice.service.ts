@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
 import { and, count, eq, gte, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
-import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
+import { doses, families, medications, members, pharmacyInquiries, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { DEMO_FAMILY } from '../family/family.service.js';
@@ -139,8 +139,13 @@ export class VoiceCallService {
   async overCallLimit(familyId: string, isDemo: boolean, now = new Date()): Promise<string | null> {
     const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const total = this.config.get<number>('CALL_DAILY_LIMIT_TOTAL') ?? 20;
+    // Pharmacy calls (PharmacyService) share the same limits.
     const [all] = await this.db.select({ n: count() }).from(doses).where(gte(doses.callRequestedAt, since));
-    if (all.n >= total) return 'daily_total_limit';
+    const [allPharmacy] = await this.db
+      .select({ n: count() })
+      .from(pharmacyInquiries)
+      .where(gte(pharmacyInquiries.createdAt, since));
+    if (all.n + allPharmacy.n >= total) return 'daily_total_limit';
     if (isDemo) return null;
     const perFamily = this.config.get<number>('CALL_DAILY_LIMIT_PER_FAMILY') ?? 3;
     const [mine] = await this.db
@@ -149,7 +154,11 @@ export class VoiceCallService {
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
       .where(and(eq(members.familyId, familyId), gte(doses.callRequestedAt, since)));
-    return mine.n >= perFamily ? 'daily_family_limit' : null;
+    const [minePharmacy] = await this.db
+      .select({ n: count() })
+      .from(pharmacyInquiries)
+      .where(and(eq(pharmacyInquiries.familyId, familyId), gte(pharmacyInquiries.createdAt, since)));
+    return mine.n + minePharmacy.n >= perFamily ? 'daily_family_limit' : null;
   }
 
   /** Records the call outcome. A dose not confirmed by voice alerts the family right away. */

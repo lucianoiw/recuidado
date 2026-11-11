@@ -11,6 +11,7 @@ import { DosesModule } from './doses/doses.module.js';
 import { FamilyModule } from './family/family.module.js';
 import { MedicationsModule } from './medications/medications.module.js';
 import { HealthController } from './health/health.controller.js';
+import { PharmacyModule } from './pharmacy/pharmacy.module.js';
 import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { PrivacyModule } from './privacy/privacy.module.js';
@@ -49,6 +50,7 @@ import { telemetry } from './telemetry/telemetry.js';
     DosesModule,
     FamilyModule,
     MedicationsModule,
+    PharmacyModule,
     PushModule,
     PrescriptionsModule,
     PrivacyModule,

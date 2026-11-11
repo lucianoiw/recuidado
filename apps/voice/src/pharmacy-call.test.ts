@@ -1,0 +1,188 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { EventEmitter } from "node:events";
+import { PharmacyCall, toCents } from "./pharmacy-call.js";
+import type { SidebandSocket } from "./reminder-call.js";
+import { isAllowedPharmacy } from "./call-service.js";
+import { buildPharmacyLiveInstructions, pharmacyOpening, pharmacyTool } from "./pharmacy-prompt.js";
+import { LiveClient } from "./live.js";
+import type { VoiceConfig } from "./config.js";
+
+class FakeSocket extends EventEmitter implements SidebandSocket {
+  sent: Record<string, unknown>[] = [];
+  closed = false;
+  send(data: string) {
+    this.sent.push(JSON.parse(data));
+  }
+  close() {
+    this.closed = true;
+  }
+  emitEvent(event: Record<string, unknown>) {
+    this.emit("message", Buffer.from(JSON.stringify(event)));
+  }
+}
+
+const context = { medications: [{ name: "Losartana", dose: "50 mg" }, { name: "Sinvastatina", dose: "20 mg" }] };
+
+function setup(openingWaitMs = 60_000) {
+  const socket = new FakeSocket();
+  let hangups = 0;
+  const call = new PharmacyCall({
+    sessionId: "live_pharmacy",
+    context,
+    socket,
+    hangup: async () => {
+      hangups++;
+      socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested", usage: { seconds: 48 } });
+    },
+    maxCallMs: 60_000,
+    openingWaitMs,
+    keyGapMs: 1,
+    goodbyeMs: 5,
+    goodbyeTailMs: 5,
+    closeGraceMs: 5,
+  });
+  return { socket, call, hangups: () => hangups };
+}
+
+function fnCall(id: string, name: string, args: unknown) {
+  return {
+    type: "response.event",
+    event_id: `ev_${id}`,
+    event: {
+      type: "response.output_item.done",
+      item: { type: "function_call", name, call_id: id, arguments: JSON.stringify(args) },
+    },
+  };
+}
+
+test("presses a menu key, then records stock and price and hangs up after the goodbye", async () => {
+  const { socket, call, hangups } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para falar com a farmácia, tecle 2." });
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "2" }));
+  await new Promise((r) => setTimeout(r, 10));
+
+  const dtmf = socket.sent.filter((e) => e.type === "transport.dtmf.send");
+  assert.deepEqual(dtmf.map((e) => e.event), ["2"]);
+  const out = socket.sent.find((e) => e.type === "response.item.create") as { item: { output: string } };
+  assert.deepEqual(JSON.parse(out.item.output), { pressed: "2", ok: true });
+
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Drogaria, bom dia." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi, bom dia! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i3", delta: "Tem sim, 18,90 a caixa com 30." });
+  socket.emitEvent(
+    fnCall("r1", "record_pharmacy_answer", {
+      items: [
+        { medication: "Losartana 50 mg", available: "yes", price_reais: 18.9, package: "caixa com 30 comprimidos", farmacia_popular: "yes" },
+        { medication: "Sinvastatina 20 mg", available: "no", price_reais: null, package: "", farmacia_popular: "unknown" },
+      ],
+      note: "",
+    }),
+  );
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: "Muito obrigada, tchau!" });
+
+  const result = await call.result;
+  assert.equal(result.outcome, "answered");
+  assert.deepEqual(result.keysPressed, ["2"]);
+  assert.deepEqual(result.items, [
+    { medication: "Losartana 50 mg", available: "yes", priceCents: 1890, package: "caixa com 30 comprimidos", farmaciaPopular: "yes" },
+    { medication: "Sinvastatina 20 mg", available: "no", priceCents: null, package: undefined, farmaciaPopular: "unknown" },
+  ]);
+  assert.equal(result.endReason, "hung_up_after_goodbye");
+  assert.equal(result.durationSeconds, 48);
+  assert.equal(hangups(), 1);
+});
+
+test("sends each digit of a longer key sequence as its own DTMF event", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "1#" }));
+  await new Promise((r) => setTimeout(r, 10));
+  assert.deepEqual(
+    socket.sent.filter((e) => e.type === "transport.dtmf.send").map((e) => e.event),
+    ["1", "#"],
+  );
+  await call.endCall();
+  assert.equal((await call.result).outcome, "unclear");
+});
+
+test("refuses keys outside the keypad", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "123.456.789-00 meu cpf" }));
+  assert.equal(socket.sent.filter((e) => e.type === "transport.dtmf.send").length, 0);
+  const out = socket.sent.find((e) => e.type === "response.item.create") as { item: { output: string } };
+  assert.equal(JSON.parse(out.item.output).ok, false);
+  await call.endCall();
+  await call.result;
+});
+
+test("opens the conversation when nobody speaks after answering", async () => {
+  const { socket, call } = setup(5);
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  await new Promise((r) => setTimeout(r, 20));
+  const opening = socket.sent.find((e) => e.type === "session.commentary.append") as { content: string } | undefined;
+  assert.ok(opening?.content.includes("assistente virtual da Recuidado"));
+  await call.endCall();
+  await call.result;
+});
+
+test("does not open over the other side", async () => {
+  const { socket, call } = setup(5);
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Alô?" });
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  await call.endCall();
+  await call.result;
+});
+
+test("voicemail ends the call as no_answer", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Deixe sua mensagem após o sinal." });
+  const result = await call.result;
+  assert.equal(result.outcome, "no_answer");
+  assert.equal(result.endReason, "voicemail");
+});
+
+test("prices", () => {
+  assert.equal(toCents(18.9), 1890);
+  assert.equal(toCents("18,90"), 1890);
+  assert.equal(toCents(null), null);
+  assert.equal(toCents(0), null);
+});
+
+test("only numbers listed one by one may be called as a pharmacy", () => {
+  const config = { allowedNumbers: new Set(["+5511912345678"]) };
+  assert.equal(isAllowedPharmacy(config, "+5511912345678"), true);
+  assert.equal(isAllowedPharmacy(config, "+5511900000000"), false);
+});
+
+test("the assistant says it is a virtual assistant in its first line", () => {
+  assert.match(pharmacyOpening(context), /assistente virtual da Recuidado/);
+  assert.match(pharmacyOpening(context), /Losartana 50 mg/);
+  assert.match(buildPharmacyLiveInstructions(context), /never pretend to be a person/);
+});
+
+test("pharmacy session has no greeting input and both tools", () => {
+  const config = {
+    openaiApiKey: "k",
+    liveModel: "gpt-live-1",
+    liveVoice: "bossa",
+    delegateModel: "gpt-6-luna",
+    sip: { providerUrl: "sips:x:5061", username: "openai", password: "p", callerNumber: "+551100000000" },
+    allowedNumbers: new Set<string>(),
+    allowAnyBrazilian: false,
+    maxCallSeconds: 150,
+    port: 0,
+    voiceApiToken: "t",
+  } satisfies VoiceConfig;
+  const req = new LiveClient(config).buildPharmacySessionRequest("+5511912345678", context);
+  assert.equal("input" in req.session, false);
+  assert.deepEqual(
+    req.session.delegation.responses.tools.map((t) => t.name),
+    ["press_phone_keys", pharmacyTool.name],
+  );
+  assert.equal(req.transport.destination, "+5511912345678");
+});
