@@ -135,6 +135,7 @@ export class PharmacyCall {
   private assistantAfterAnswer = "";
   private silenceTimer?: NodeJS.Timeout;
   private goodbyeTimer?: NodeJS.Timeout;
+  private introTimer?: NodeJS.Timeout;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
   private resolveResult!: (r: PharmacyCallResult) => void;
@@ -221,7 +222,10 @@ export class PharmacyCall {
           this.timers.push(this.menuTimer);
         } else if (event.delta && !this.menuPending) {
           // A person (not a menu) is talking: the assistant must say who it is before anything else.
-          this.timers.push(setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 2500));
+          // Wait until they pause, so the start of a recorded menu is not taken for a person.
+          if (this.introTimer) clearTimeout(this.introTimer);
+          this.introTimer = setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 2500);
+          this.timers.push(this.introTimer);
         }
         this.checkVoicemail();
         if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(1000);
@@ -360,7 +364,10 @@ export class PharmacyCall {
     this.log(`pharmacy answer recorded: ${items.length} items`);
     this.toolOutput(callId, { recorded: true });
     this.assistantAfterAnswer = "";
-    this.armSilenceHangup();
+    // The model says goodbye while the answer is recorded: if it already did, hang up shortly.
+    const lastAssistant = [...this.transcript].reverse().find((l) => l.speaker === "assistant");
+    if (lastAssistant && GOODBYE.test(lastAssistant.text)) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
+    else this.armSilenceHangup();
   }
 
   private toolOutput(callId: string, output: unknown) {

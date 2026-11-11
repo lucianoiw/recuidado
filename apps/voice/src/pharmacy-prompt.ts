@@ -35,8 +35,8 @@ export function buildPharmacyLiveInstructions(ctx: PharmacyContext, now: Date = 
     "If they say the price changes or they do not give prices by phone, accept it politely and move on.",
     "Never buy, reserve or order anything, never give a name, CPF, address or phone number, and never discuss treatment or doses. If they ask for personal data, say: \"É só uma consulta de preço, obrigada.\"",
     "If they ask who is calling, say: \"Sou a assistente virtual da Recuidado, um app que ajuda famílias a cuidar dos remédios de uma pessoa idosa.\"",
-    "When you have the answers for all medicines, or they cannot help, delegate once so the answers are recorded. Do not say filler like \"vou anotar\".",
-    `After the answers are recorded, say exactly "${PHARMACY_GOODBYE}" and stop talking.`,
+    `When you have the answers for all medicines, or they cannot help, say exactly "${PHARMACY_GOODBYE}" and, at the same time, delegate once so the answers are recorded. Always delegate before or while saying goodbye, never skip it, and do not wait for the result. Do not say filler like \"vou anotar\".`,
+    "After the goodbye, say nothing else, even when the delegated result arrives.",
   ].join("\n");
 }
 
@@ -51,7 +51,7 @@ export function buildPharmacyDelegateInstructions(ctx: PharmacyContext): string 
     "package: what the box has as they said it (for example \"caixa com 30 comprimidos\"), or empty.",
     "farmacia_popular: \"yes\" if they said it can be taken through Farmácia Popular there, \"no\" if not, \"unknown\" otherwise.",
     "note: anything else useful the family should know, in Portuguese, short, or empty.",
-    `After the ${PHARMACY_TOOL_NAME} result, reply only: Say exactly "${PHARMACY_GOODBYE}" and nothing else.`,
+    `After the ${PHARMACY_TOOL_NAME} result, reply only: Recorded. The goodbye was already said; say nothing else.`,
   ].join("\n");
 }
 
