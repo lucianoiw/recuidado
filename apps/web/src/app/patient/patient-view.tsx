@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import { Button, Card, CheckIcon, ClockIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
@@ -225,6 +226,10 @@ export function PatientView() {
       ) : null}
 
       <div className="mt-auto flex flex-col gap-3 pt-2">
+        <Link href="/patient/remedios" className={buttonClass({ variant: "secondary", size: "lg" })}>
+          <PillIcon size={26} />
+          Meus remédios
+        </Link>
         {callable ? (
           <a href={telHref(callable)!} className={buttonClass({ variant: "secondary", size: "lg" })}>
             <PhoneIcon size={26} />
