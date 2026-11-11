@@ -55,7 +55,8 @@ The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and,
    Her microphone is muted while this plays, so an "alô" does not make the model wait.
 2. A short reaction, then "A senhora já tomou a Losartana?". With three or more medicines it asks
    about "os remédios da manhã" instead of reading the list.
-3. "Obrigada, tchau, Dona Maria!". The call hangs up 2 s after the goodbye is heard. If the
+3. "Obrigada, tchau, Dona Maria!". After the goodbye it waits up to 3 s for her to say goodbye
+   back and hangs up 1 s after she stops talking. If the
    assistant stays silent for 5 s without saying goodbye, it hangs up anyway (older people often
    do not hang up themselves).
 

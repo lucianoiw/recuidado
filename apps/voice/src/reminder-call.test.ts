@@ -185,6 +185,31 @@ test("hangs up after the goodbye is spoken, not before", async () => {
   assert.equal(result.endReason, "hung_up_after_goodbye");
 });
 
+test("hangs up soon after she answers the goodbye", async () => {
+  const socket = new FakeSocket();
+  let hangups = 0;
+  const call = new ReminderCall({
+    sessionId: "live_reply",
+    context: { patientName: "Maria", medications: [{ name: "Losartana" }] },
+    socket,
+    hangup: async () => {
+      hangups++;
+      socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" });
+    },
+    maxCallMs: 60_000,
+    goodbyeTailMs: 5_000,
+    replyTailMs: 20,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "r1" });
+  socket.emitEvent(toolCall(true));
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "r2", delta: "Obrigada, tchau, Maria!" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "r3", delta: "Tchau!" });
+  const result = await call.result;
+  assert.equal(hangups, 1);
+  assert.equal(result.endReason, "hung_up_after_goodbye");
+});
+
 test("hangs up when no goodbye comes", async () => {
   const { socket, call } = setup();
   socket.emitEvent({ type: "transport.answered", event_id: "n1" });
