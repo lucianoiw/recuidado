@@ -382,7 +382,8 @@ export class VoiceCallService {
         .select({ id: members.id })
         .from(members)
         .where(and(eq(members.familyId, family.id), eq(members.role, 'caregiver')))
-        .orderBy(members.createdAt)
+        // Same pick as callCaregivers, so the demo phone is the one the emergency call goes to.
+        .orderBy(desc(members.emergencyContact), asc(members.createdAt))
         .limit(1);
       if (caregiver) await this.db.update(members).set({ phone: input.caregiverPhone }).where(eq(members.id, caregiver.id));
     }
