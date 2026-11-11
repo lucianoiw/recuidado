@@ -1,4 +1,16 @@
-import { DOSE_TOOL_NAME, FAMILY_LINE, buildGreeting, checkInBetterLine, checkInUnwellLine, emergencyLine, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
+import {
+  DOSE_TOOL_NAME,
+  FAMILY_LINE,
+  buildGreeting,
+  checkInBetterLine,
+  checkInUnwellLine,
+  emergencyLine,
+  goodbyeLine,
+  greetingLine,
+  notTakenLine,
+  recallNotTakenLine,
+  type ReminderContext,
+} from "./prompt.js";
 import { normalizeSpeech } from "./greeting-cache.js";
 
 export type CallStatus = "dialing" | "ringing" | "answered" | "ended";
@@ -68,8 +80,8 @@ export interface ReminderCallOptions {
 /** Phrases from carrier voicemail greetings. Talking to a recording helps nobody, so the call ends. */
 const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o sinal|caixa postal|caixa de mensagens/i;
 
-/** The goodbye the assistant is told to say at the end. */
-const GOODBYE = /tchau/i;
+/** The goodbye the assistant is told to say at the end ("tchau", or "até já" when it calls back soon). */
+const GOODBYE = /tchau|at[ée] j[áa]/i;
 
 /** High-frequency events left out of the log. */
 const QUIET_EVENTS = new Set([
@@ -318,9 +330,16 @@ export class ReminderCall {
       type: "session.commentary.append",
       event_id: `goodbye_${item.call_id}`,
       delegation_id: null,
-      content: `Say now, exactly: "${goodbyeLine(this.opts.context)}"`,
+      content: `Say now, exactly: "${this.closingLine(taken)}"`,
     });
     this.armSilenceHangup();
+  }
+
+  /** The last line for this answer: plain goodbye, or "daqui a pouco eu ligo para confirmar" when not taken. */
+  private closingLine(taken: boolean | undefined): string {
+    const ctx = this.opts.context;
+    if (taken !== false || ctx.checkIn) return goodbyeLine(ctx);
+    return ctx.recall ? recallNotTakenLine(ctx) : notTakenLine(ctx);
   }
 
   private armSilenceHangup() {

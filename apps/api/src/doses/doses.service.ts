@@ -173,7 +173,7 @@ export class DosesService implements OnApplicationBootstrap {
       );
     }
     this.logger.log(`Dose ${doseId} confirmed in the app.`);
-    for (const kind of ['call', 'alert-family'] as const) {
+    for (const kind of ['call', 'recall', 'alert-family'] as const) {
       await (await this.queue.getJob(doseJobId(kind, doseId)))?.remove();
     }
     await this.checkStock(doseId);

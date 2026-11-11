@@ -374,6 +374,7 @@ export class FamilyService implements OnApplicationBootstrap {
       patient: {
         name: patient.name,
         nickname: patient.nickname ?? '',
+        gender: patient.gender,
         phone: patient.phone ?? '',
         birth: patient.birthDate ?? '',
         cep: patient.cep ?? '',
@@ -403,6 +404,7 @@ export class FamilyService implements OnApplicationBootstrap {
       const patientValues = {
         name: p.name,
         nickname: p.nickname || null,
+        gender: p.gender,
         phone: p.phone,
         birthDate: p.birth,
         cep: p.cep,

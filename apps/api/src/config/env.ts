@@ -63,6 +63,9 @@ export const envSchema = z.object({
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
   // After she reports an emergency on a call, Recuidado calls her back this many minutes later.
   EMERGENCY_CHECKIN_MINUTES: z.coerce.number().int().positive().default(10),
+  // She said on the call she has not taken the dose yet: Recuidado calls once more this many minutes later
+  // before alerting the family. Not for demo run doses, which keep the two-minute flow.
+  DOSE_RECALL_MINUTES: z.coerce.number().int().positive().default(15),
   // Demo run (POST /demo/run): the whole dose flow in about two minutes. "false" turns it off.
   DEMO_RUN_ENABLED: z.preprocess(
     (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),

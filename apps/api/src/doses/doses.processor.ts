@@ -52,6 +52,14 @@ export class DosesProcessor extends WorkerHost {
         }
       case 'alert-family':
         return this.doses.alertFamily(data.doseId);
+      case 'recall':
+        try {
+          return (await this.voice.call(data.doseId, { recall: true })) ? 'called' : 'skipped';
+        } catch (error) {
+          // The family alert job still runs later.
+          telemetry.captureException(error, { job_kind: 'recall', dose_id: data.doseId });
+          return 'failed';
+        }
       case 'check-in':
         try {
           return (await this.voice.call(data.doseId, { checkIn: true, callBack: (data.attempt ?? 1) < MAX_CHECK_INS }))

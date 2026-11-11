@@ -1,10 +1,13 @@
 import type { SidebandSocket } from "./reminder-call.js";
 
-/** Builds the message read to a family member when the patient reports an emergency. */
+/** Builds the message read to a family member when the patient reports an emergency (local test path). */
 export function buildEmergencyMessage(patientName: string, note?: string): string {
-  const said = note?.trim() ? ` disse agora na ligação do remédio: "${note.trim()}"` : " disse agora na ligação do remédio que não está bem";
-  return `Olá, aqui é a assistente virtual da Recuidado. ${patientName}${said}. Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.`;
+  const said = note?.trim() ? `: "${note.trim()}"` : " que não está bem";
+  return `Olá, aqui é a assistente virtual da Recuidado. Liguei para ${patientName} para saber sobre o medicamento, e ela disse${said}. Por favor, entre em contato com ela agora. Se for grave, ligue para o SAMU, 192.`;
 }
+
+/** The message ends with the SAMU line: once it is heard, the message was delivered. */
+const MESSAGE_END = /samu|192|noventa e dois/i;
 
 /** Instructions for the one-way alert call: say the message, repeat once if asked, never advise. */
 export function buildAlertInstructions(message: string): string {
@@ -21,7 +24,7 @@ export function buildAlertInstructions(message: string): string {
 export interface AlertCallResult {
   sessionId: string;
   answered: boolean;
-  /** True when the assistant reached the end of the message ("tchau"). */
+  /** True when the assistant reached the end of the message (the SAMU line). */
   delivered: boolean;
   endReason?: string;
   error?: string;
@@ -113,7 +116,7 @@ export class AlertCall {
       }
       case "session.output_transcript.delta":
         this.spoken += String(event.delta ?? "");
-        if (/tchau/i.test(this.spoken)) {
+        if (MESSAGE_END.test(this.spoken)) {
           if (!this.delivered) this.log("alert message delivered");
           this.delivered = true;
           // Restart on every fragment: hang up once the assistant stops talking.
