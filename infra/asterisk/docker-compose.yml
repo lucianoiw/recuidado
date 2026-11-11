@@ -1,0 +1,23 @@
+# Coolify resource "recuidado/asterisk" (Docker Compose, base directory
+# /infra/asterisk). SIP bridge: GPT-Live (TLS, SRTP, Opus) <-> Nvoip (G.711).
+# Host network so RTP ports reach the internet.
+# Open 5061/tcp and 10000-10200/udp on the VPS firewall.
+services:
+  asterisk:
+    build:
+      context: .
+    network_mode: host
+    environment:
+      - SIP_DOMAIN=${SIP_DOMAIN:-voz.recuidado.com.br}
+      - PUBLIC_IP=${PUBLIC_IP:-}
+      - OPENAI_SIP_USERNAME=${OPENAI_SIP_USERNAME:-openai}
+      - OPENAI_SIP_PASSWORD=${OPENAI_SIP_PASSWORD}
+      - NVOIP_SIP_USER=${NVOIP_SIP_USER}
+      - NVOIP_SIP_PASSWORD=${NVOIP_SIP_PASSWORD}
+      - CALL_ALLOWED_NUMBERS=${CALL_ALLOWED_NUMBERS}
+      - ACME_JSON=/acme/acme.json
+    volumes:
+      # Certificate Traefik (Coolify proxy) issued for SIP_DOMAIN, through the
+      # domain set on recuidado/voice.
+      - /data/coolify/proxy/acme.json:/acme/acme.json:ro
+    restart: unless-stopped
