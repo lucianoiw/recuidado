@@ -1,0 +1,603 @@
+loose_match_key,loose_key,name,farmacia_popular,ubs,ubs_restricted,ceaf,ceaf_group,ceaf_drug,match_keys
+) + calcio + colecalciferol (vit d 1.5 mg + 400 ui + 600 mg,) + calcio + colecalciferol (vit d,carbonato de cálcio 1.500 mg (equivalente a 600 mg de Ca++) + colecalciferol (vit D3) 400 UI comprimido,false,true,false,false,,false,carbonato de calcio 1.5 mg + ) 600 mg + colecalciferol (vit d 400 ui
+) comprimido + calcio 1.25 mg + 500 mg,) comprimido + calcio,carbonato de cálcio 1.250 mg (equivalente a 500 mg de Ca++) comprimido,false,true,false,false,,false,carbonato de calcio 1.25 mg + ) comprimido 500 mg
+) solucao oral gotas + sulfato ferroso heptahidratado 125 mg/ml + 25 mg,) solucao oral gotas + sulfato ferroso heptahidratado,sulfato ferroso heptahidratado 125 mg/mL (equivalente a 25 mg de Fe++) solução oral gotas,false,true,false,false,,false,sulfato ferroso heptahidratado 125 mg/ml + ) solucao oral gotas 25 mg
+abacavir 20 mg/ml,abacavir,"abacavir, sulfato (ABC) 20 mg/mL solução oral",false,false,true,false,,false,abacavir 20 mg/ml
+abacavir 300 mg,abacavir,"abacavir, sulfato (ABC) 300 mg comprimido",false,false,true,false,,false,abacavir 300 mg
+abatacepte 125 mg,abatacepte,"abatacepte injetável, 125 mg seringa preenchida",false,false,false,true,1A,true,abatacepte 125 mg
+abatacepte 250 mg,abatacepte,"abatacepte injetável, 250 mg frasco-",false,false,false,true,1A,true,abatacepte 250 mg
+acetazolamida 250 mg,acetazolamida,acetazolamida comprimido 250mg,false,false,false,true,2,true,acetazolamida 250 mg
+aciclovir 200 mg,aciclovir,aciclovir 200 mg comprimido,false,true,false,false,,false,aciclovir 200 mg
+aciclovir 30 mg/g,aciclovir,aciclovir 30 mg/g (3%) pomada oftálmica,false,false,true,false,,false,aciclovir 30 mg/g
+aciclovir 400 mg,aciclovir,aciclovir 400 mg comprimido,false,false,true,false,,false,aciclovir 400 mg
+aciclovir 50 mg/g,aciclovir,aciclovir 50 mg/g (5%) creme,false,false,true,false,,false,aciclovir 50 mg/g
+acido acetilsalicilico 100 mg,acido acetilsalicilico,ácido acetilsalicílico 100 mg comprimido,false,true,false,false,,false,acido acetilsalicilico 100 mg
+acido folico 0.2 mg/ml,acido folico,"ácido fólico 0,2 mg/mL solução oral (gotas)",false,true,false,false,,false,acido folico 0.2 mg/ml
+acido folico 5 mg,acido folico,ácido fólico 5 mg comprimido,false,true,false,false,,false,acido folico 5 mg
+acido folinico 5 mg/ml,acido folinico,ácido folínico 5 mg/mL solução oral,false,false,true,false,,false,acido folinico 5 mg/ml
+acido nicotinico 500 mg,acido nicotinico,ácido nicotínico comprimido de liberação prolongada 500 mg,false,false,false,true,2,true,acido nicotinico 500 mg
+acido paraminossalicilico 4 g,acido paraminossalicilico,ácido paraminossalicílico 4g sachê granulado revestido,false,false,true,false,,false,acido paraminossalicilico 4 g
+acido ursodesoxicolico 150 mg,acido ursodesoxicolico,ácido ursodesoxicólico comprimido 150 mg,false,false,false,true,1B,true,acido ursodesoxicolico 150 mg
+acido ursodesoxicolico 300 mg,acido ursodesoxicolico,ácido ursodesoxicólico comprimido 300 mg,false,false,false,true,1B,true,acido ursodesoxicolico 300 mg
+acido ursodesoxicolico 50 mg,acido ursodesoxicolico,ácido ursodesoxicólico comprimido 50 mg,false,false,false,true,1B,true,acido ursodesoxicolico 50 mg
+acido zoledronico 5 mg,acido zoledronico,"ácido zoledrônico injetável, 5 mg/100mL frasco",false,false,false,true,2,true,acido zoledronico 5 mg
+acitretina 10 mg,acitretina,acitretina cápsula 10 mg,false,false,false,true,1B,true,acitretina 10 mg
+acitretina 25 mg,acitretina,acitretina cápsula 25 mg,false,false,false,true,1B,true,acitretina 25 mg
+adalimumabe 40 mg,adalimumabe,"adalimumabe injetável, 40mg frasco ampola (uso pediátrico)",false,false,false,true,1A,true,adalimumabe 40 mg
+adapaleno 1 mg/g,adapaleno,"adapaleno 1 mg/g (0,1%) gel",false,true,false,false,,false,adapaleno 1 mg/g
+albendazol 40 mg/ml,albendazol,albendazol 40 mg/mL suspensão oral,false,true,false,false,,false,albendazol 40 mg/ml
+albendazol 400 mg,albendazol,albendazol 400 mg comprimido mastigável,false,true,false,false,,false,albendazol 400 mg
+alentuzumabe 10 mg/ml,alentuzumabe,"alentuzumabe injetável, 10mg/mL frasco",false,false,false,true,1A,true,alentuzumabe 10 mg/ml
+alfaalglicosidase 50 mg,alfaalglicosidase,"alfaalglicosidase injetável, frasco-ampola com 50 mg de pó liofilizado",false,false,false,true,1A,true,alfaalglicosidase 50 mg
+alfacerliponase 30 mg/ml,alfacerliponase,"alfacerliponase solução para infusão, 30mg/mL frasco ampola",false,false,false,true,1A,true,alfacerliponase 30 mg/ml
+alfadornase 1 mg/ml,alfadornase,"alfadornase solução para inalação, 1mg/mL ampola",false,false,false,true,1A,true,alfadornase 1 mg/ml
+alfaelosulfase 1 mg/ml,alfaelosulfase,"alfaelosulfase injetável, 1mg/mL frasco de 5mL",false,false,false,true,1A,true,alfaelosulfase 1 mg/ml
+alfaepoetina 1 ui,alfaepoetina,"alfaepoetina injetável, 1.000 UI frasco ampola",false,false,false,true,1A,true,alfaepoetina 1 ui
+alfaepoetina 10 ui,alfaepoetina,"alfaepoetina injetável, 10.000 UI frasco",false,false,false,true,1A,true,alfaepoetina 10 ui
+alfaepoetina 2 ui,alfaepoetina,"alfaepoetina injetável, 2.000 UI frasco ampola",false,false,false,true,1A,true,alfaepoetina 2 ui
+alfaepoetina 3 ui,alfaepoetina,"alfaepoetina injetável, 3.000 UI frasco ampola",false,false,false,true,1A,true,alfaepoetina 3 ui
+alfaepoetina 4 ui,alfaepoetina,"alfaepoetina injetável, 4.000 UI frasco ampola",false,false,false,true,1A,true,alfaepoetina 4 ui
+alfagalsidase 1 mg/ml,alfagalsidase,"alfagalsidase injetável, 1mg/mL frasco ampola",false,false,false,true,1A,true,alfagalsidase 1 mg/ml
+alfainterferona 2b,alfainterferona 2b,"alfainterferona 2b injetável, 3.000.000 UI frasco ampola",false,false,false,true,1B,true,alfainterferona 2b
+alfapeginterferona 180 mcg,alfapeginterferona,alfapeginterferona 2A 180 mcg seringa preenchida,false,false,true,false,,false,alfapeginterferona 180 mcg
+alfataliglicerase 200 ui,alfataliglicerase,"alfataliglicerase injetável, 200 UI frasco- ampola",false,false,false,true,1A,true,alfataliglicerase 200 ui
+alfavelaglicerase 400 ui,alfavelaglicerase,"alfavelaglicerase injetável, 400 UI frasco ampola",false,false,false,true,1A,true,alfavelaglicerase 400 ui
+alfavestronidase 2 mg/ml,alfavestronidase,"alfavestronidase injetável, 2mg/mL frasco ampola",false,false,false,true,1A,true,alfavestronidase 2 mg/ml
+algestona acetofenida + estradiol 10 mg/ml + 150 mg/ml,algestona acetofenida + estradiol,algestona acetofenida 150 mg/mL + enantato de estradiol 10 mg/mL solução injetável,false,true,false,false,,false,algestona acetofenida 150 mg/ml + enantato de estradiol 10 mg/ml
+alopurinol 100 mg,alopurinol,alopurinol 100 mg comprimido,false,true,false,false,,false,alopurinol 100 mg
+amantadina 100 mg,amantadina,amantadina comprimido 100 mg,false,false,false,true,1B,true,amantadina 100 mg
+ambrisentana 10 mg,ambrisentana,ambrisentana comprimido 10mg,false,false,false,true,1B,true,ambrisentana 10 mg
+ambrisentana 5 mg,ambrisentana,ambrisentana comprimido 5 mg,false,false,false,true,1B,true,ambrisentana 5 mg
+aminoacidos + cloranfenicol + metionina + retinol 10 ui/g + 25 mg/g + 5 mg/g + 5 mg/g,aminoacidos + cloranfenicol + metionina + retinol,"cloranfenicol 5 mg/g + retinol, acetato 10.000 UI/g + aminoácidos 25 mg/g + metionina 5 mg/g pomada oftálmica",false,true,false,false,,false,cloranfenicol 5 mg/g + retinol 10 ui/g + aminoacidos 25 mg/g + metionina 5 mg/g
+amiodarona 200 mg,amiodarona,"amiodarona, cloridrato 200 mg comprimido",false,true,false,false,,false,amiodarona 200 mg
+amitriptilina 25 mg,amitriptilina,"amitriptilina, cloridrato 25 mg comprimido",false,true,false,false,,false,amitriptilina 25 mg
+amoxicilina 50 mg/ml,amoxicilina,amoxicilina 50 mg/mL pó para suspensão oral,false,true,false,false,,false,amoxicilina 50 mg/ml
+amoxicilina 500 mg,amoxicilina,amoxicilina 500 mg cápsula,false,true,false,false,,false,amoxicilina 500 mg
+anlodipino 10 mg,anlodipino,"anlodipino, besilato 10 mg comprimido",false,true,false,false,,false,anlodipino 10 mg
+anlodipino 5 mg,anlodipino,BESILATO DE ANLODIPINO 5 MG,true,true,false,false,,false,anlodipino 5 mg
+atazanavir 300 mg,atazanavir,"atazanavir, sulfato (ATV) 300 mg cápsula",false,false,true,false,,false,atazanavir 300 mg
+atenolol 25 mg,atenolol,ATENOLOL 25MG,true,false,false,false,,false,atenolol 25 mg
+atenolol 50 mg,atenolol,atenolol 50 mg comprimido,false,true,false,false,,false,atenolol 50 mg
+atorvastatina 10 mg,atorvastatina,atorvastatina 10 mg comprimido,false,false,true,true,2,true,atorvastatina 10 mg
+atorvastatina 20 mg,atorvastatina,atorvastatina comprimido 20mg,false,false,false,true,2,true,atorvastatina 20 mg
+atorvastatina 40 mg,atorvastatina,atorvastatina comprimido 40 mg,false,false,false,true,2,true,atorvastatina 40 mg
+atorvastatina 80 mg,atorvastatina,atorvastatina comprimido 80 mg,false,false,false,true,2,true,atorvastatina 80 mg
+azatioprina 50 mg,azatioprina,azatioprina comprimido 50 mg,false,false,false,true,2,true,azatioprina 50 mg
+azitromicina 40 mg/ml,azitromicina,azitromicina 40 mg/mL suspensão oral,false,true,false,false,,false,azitromicina 40 mg/ml
+azitromicina 500 mg,azitromicina,azitromicina 500 mg comprimido,false,true,false,false,,false,azitromicina 500 mg
+baricitinibe 2 mg,baricitinibe,baricitinibe comprimido 2 mg,false,false,false,true,1A,true,baricitinibe 2 mg
+baricitinibe 4 mg,baricitinibe,baricitinibe comprimido 4 mg,false,false,false,true,1A,true,baricitinibe 4 mg
+beclometasona + formoterol + glicopirronio 12.5 mcg + 6 mcg,beclometasona + formoterol + glicopirronio,"beclometasona + formoterol + glicopirrônio (dipropionato de beclometasona + fumarato de formoterol + brometo de solução aerossol para inalação oral de 100 μ g + 6 μg + 12,5 μg",false,false,false,true,1B,true,beclometasona + formoterol + glicopirronio
+beclometasona 0.05 mg,beclometasona,"DIPROPIONATO DE BECLOMETASONA 0,05 MG",true,false,false,false,,false,dipropionato de beclometasona 0.05 mg
+beclometasona 200 mcg,beclometasona,DIPROPIONATO DE BECLOMETASONA 200MCG,true,true,false,false,,false,dipropionato de beclometasona 200 mcg | beclometasona 200 mcg/dose
+beclometasona 250 mcg,beclometasona,DIPROPIONATO DE BECLOMETASONA 250MCG,true,false,false,false,,false,dipropionato de beclometasona 250 mcg
+beclometasona 50 mcg,beclometasona,DIPROPIONATO DE BECLOMETASONA 50MCG,true,true,false,false,,false,dipropionato de beclometasona 50 mcg | beclometasona 50 mcg/dose
+benserazida + levodopa 100 mg + 25 mg,benserazida + levodopa,CLORIDRATO DE BENSERAZIDA 25MG + LEVODOPA 100MG,true,false,true,false,,false,benserazida 25 mg + levodopa 100 mg | levodopa 100 mg + benserazida 25 mg
+benserazida + levodopa 200 mg + 50 mg,benserazida + levodopa,levodopa 200 mg + benserazida 50 mg comprimido,false,false,true,false,,false,levodopa 200 mg + benserazida 50 mg
+benzilpenicilina benzatina,benzilpenicilina benzatina,benzilpenicilina benzatina 1.200.000 UI pó para suspensão injetável fam,false,true,false,false,,false,benzilpenicilina benzatina
+benzilpenicilina benzatina 600 ui,benzilpenicilina benzatina,benzilpenicilina benzatina 600.000 UI pó para suspensão injetável fam,false,true,false,false,,false,benzilpenicilina benzatina 600 ui
+benzoilmetronidazol 40 mg/ml,benzoilmetronidazol,benzoilmetronidazol 40 mg/mL (equivalente a 25 mg de metronidazol) suspensão oral ou secnidazol 30 mg/mL suspensão oral,false,true,false,false,,false,benzoilmetronidazol 40 mg/ml
+betagalsidase 35 mg,betagalsidase,"betagalsidase injetável, 35mg frasco ampola",false,false,false,true,1A,true,betagalsidase 35 mg
+betainterferona 1a 22 mcg,betainterferona 1a,"betainterferona 1a injetável, 6.000.000 UI (22 mcg) seringa preenchida",false,false,false,true,1A,true,betainterferona 1a 22 mcg
+betainterferona 1a 30 mcg,betainterferona 1a,"betainterferona 1a injetável, 6.000.000 UI (30 mcg) frasco ampola, seringa preenchida ou caneta preenchida",false,false,false,true,1A,true,betainterferona 1a 30 mcg
+betainterferona 1a 44 mcg,betainterferona 1a,"betainterferona 1a injetável, 12.000.000 UI (44 mcg) seringa preenchida",false,false,false,true,1A,true,betainterferona 1a 44 mcg
+betainterferona 1b 300 mcg,betainterferona 1b,"betainterferona 1b injetável, 9.600.000 UI (300mcg) frasco ampola",false,false,false,true,1A,true,betainterferona 1b 300 mcg
+bezafibrato 200 mg,bezafibrato,bezafibrato comprimido 200 mg,false,false,false,true,2,true,bezafibrato 200 mg
+bezafibrato 400 mg,bezafibrato,bezafibrato comprimido de desintegração lenta 400 mg,false,false,false,true,2,true,bezafibrato 400 mg
+bimatoprosta 0.3 mg/ml,bimatoprosta,"bimatoprosta solução oftálmica, 0,3mg/mL (0,03%) frasco 3mL",false,false,false,true,1A,true,bimatoprosta 0.3 mg/ml
+biotina 2.5 mg,biotina,"biotina cápsula 2,5mg",false,false,false,true,1A,true,biotina 2.5 mg
+biperideno 2 mg,biperideno,"biperideno, cloridrato 2 mg comprimido",false,true,false,false,,false,biperideno 2 mg
+bosentana 125 mg,bosentana,bosentana comprimido revestido 125mg,false,false,false,true,1B,true,bosentana 125 mg
+bosentana 62.5 mg,bosentana,"bosentana comprimido revestido 62,5 mg",false,false,false,true,1B,true,bosentana 62.5 mg
+brimonidina 2 mg/ml,brimonidina,"brimonidina 2 mg/mL (0,2%) solução oftálmica",false,false,true,true,2,true,brimonidina 2 mg/ml
+brinzolamida 10 mg/ml,brinzolamida,"brinzolamida solução oftálmica, 10 mg/ml (1%) frasco com 5 mL",false,false,false,true,2,true,brinzolamida 10 mg/ml
+budesonida + formoterol 12 mcg + 400 mcg,budesonida + formoterol,formoterol 12 mcg + budesonida 400 mcg pó em cápsula para inalação,false,false,true,false,,false,formoterol 12 mcg + budesonida 400 mcg
+budesonida + formoterol 200 mcg + 6 mcg,budesonida + formoterol,formoterol 6 mcg + budesonida 200 mcg pó em cápsula para inalação,false,false,true,false,,false,formoterol 6 mcg + budesonida 200 mcg
+budesonida 200 mcg,budesonida,budesonida cápsula inalante ou pó inalante ou aerossol bucal 200 mcg,false,false,false,true,2,true,budesonida 200 mcg
+budesonida 32 mcg,budesonida,BUDESONIDA 32MCG,true,false,false,false,,true,budesonida 32 mcg
+budesonida 400 mcg,budesonida,budesonida cápsula inalante 400 mcg,false,false,false,true,2,true,budesonida 400 mcg
+budesonida 50 mcg,budesonida,BUDESONIDA 50MCG,true,false,false,false,,true,budesonida 50 mcg
+bupropiona 150 mg,bupropiona,"bupropiona, cloridrato 150 mg comprimido",false,false,true,false,,false,bupropiona 150 mg
+burosumabe 10 mg/ml,burosumabe,"burosumabe injetável, 10 mg/mL frasco",false,false,false,true,1A,true,burosumabe 10 mg/ml
+burosumabe 20 mg/ml,burosumabe,"burosumabe injetável, 20 mg/mL frasco",false,false,false,true,1A,true,burosumabe 20 mg/ml
+burosumabe 30 mg/ml,burosumabe,"burosumabe injetável, 30 mg/mL frasco",false,false,false,true,1A,true,burosumabe 30 mg/ml
+cabergolina 0.5 mg,cabergolina,"cabergolina 0,5 mg comprimido",false,false,true,true,1A,true,cabergolina 0.5 mg
+calcio 15 mg,calcio,folinato de cálcio 15 mg comprimido,false,false,true,false,,false,folinato de calcio 15 mg
+calcipotriol 50 mcg/g,calcipotriol,"calcipotriol pomada, 50 mcg/g (0,005%) bisnaga 30g",false,false,false,true,2,true,calcipotriol 50 mcg/g
+calcitonina 200 ui,calcitonina,"calcitonina spray nasal, 200 UI/dose frasco",false,false,false,true,2,true,calcitonina 200 ui/dose
+calcitriol 0.25 mcg,calcitriol,"calcitriol cápsula 0,25 mcg",false,false,false,true,2,true,calcitriol 0.25 mcg
+captopril 25 mg,captopril,CAPTOPRIL 25MG,true,true,false,false,,false,captopril 25 mg
+carbamazepina 20 mg/ml,carbamazepina,carbamazepina 20 mg/mL (2%) suspensão oral,false,true,false,false,,false,carbamazepina 20 mg/ml
+carbamazepina 200 mg,carbamazepina,carbamazepina 200 mg comprimido,false,true,false,false,,false,carbamazepina 200 mg
+carbidopa + levodopa 25 mg + 250 mg,carbidopa + levodopa,CARBIDOPA 25MG + LEVODOPA 250MG,true,false,true,false,,false,carbidopa 25 mg + levodopa 250 mg | levodopa 250 mg + carbidopa 25 mg
+carvedilol 12.5 mg,carvedilol,"carvedilol 12,5 mg comprimido",false,true,false,false,,false,carvedilol 12.5 mg
+carvedilol 6.25 mg,carvedilol,"carvedilol 6,25 mg comprimido",false,true,false,false,,false,carvedilol 6.25 mg
+cefalexina 50 mg/ml,cefalexina,cefalexina 50 mg/mL suspensão oral,false,true,false,false,,false,cefalexina 50 mg/ml
+cefalexina comprimido 500 mg,cefalexina comprimido,cefalexina comprimido 500 mg,false,true,false,false,,false,cefalexina comprimido 500 mg
+certolizumabe pegol 200 mg/ml,certolizumabe pegol,"certolizumabe pegol injetável, 200 mg/mL seringa preenchida",false,false,false,true,1A,true,certolizumabe pegol 200 mg/ml
+cetoconazol 2 %,cetoconazol,cetoconazol 2% shampoo,false,true,false,false,,false,cetoconazol 2 %
+cetoconazol 20 mg/g,cetoconazol,cetoconazol 20 mg/g (2%) creme,false,true,false,false,,false,cetoconazol 20 mg/g
+cianocobalamina (vit. b 2.5 mg/ml,cianocobalamina (vit. b,"cianocobalamina (vit. B12) 2,5 mg/mL (2.500 mcg) solução injetável",false,true,false,false,,false,cianocobalamina (vit. b 2.5 mg/ml
+ciclofosfamida 10 mg,ciclofosfamida,ciclofosfamida cápsula 10 mg,false,false,false,true,2,true,ciclofosfamida 10 mg
+ciclofosfamida 25 mg,ciclofosfamida,ciclofosfamida cápsula 25 mg,false,false,false,true,2,true,ciclofosfamida 25 mg
+ciclofosfamida 50 mg,ciclofosfamida,ciclofosfamida Comprimido 50 mg,false,false,false,true,2,true,ciclofosfamida 50 mg
+ciclosporina 100 mg/ml,ciclosporina,"ciclosporina solução oral, 100 mg/ml frasco de 50 mL",false,false,false,true,2,true,ciclosporina 100 mg/ml
+ciclosporina 50 mg,ciclosporina,ciclosporina cápsula 50 mg,false,false,false,true,2,true,ciclosporina 50 mg
+cinacalcete 100 mg,cinacalcete,cinacalcete cápsula 100 mg,false,false,false,true,2,true,cinacalcete 100 mg
+cinacalcete 30 mg,cinacalcete,cinacalcete comprimidos 30 mg,false,false,false,true,1A,true,cinacalcete 30 mg
+cinacalcete 60 mg,cinacalcete,cinacalcete comprimidos 60 mg,false,false,false,true,1A,true,cinacalcete 60 mg
+ciprofibrato 100 mg,ciprofibrato,ciprofibrato comprimido 100 mg,false,false,false,true,2,true,ciprofibrato 100 mg
+ciprofloxacino 500 mg,ciprofloxacino,"ciprofloxacino, cloridrato 500 mg comprimido",false,true,false,false,,false,ciprofloxacino 500 mg
+ciproterona 50 mg,ciproterona,ciproterona 50 mg comprimido,false,false,true,true,1B,true,ciproterona 50 mg
+cladribina 10 mg,cladribina,cladribina comprimidos 10mg,false,false,false,true,1A,true,cladribina 10 mg
+claritromicina 50 mg/ml,claritromicina,claritromicina 50 mg/mL pó para suspensão oral,false,true,false,false,,false,claritromicina 50 mg/ml
+claritromicina 500 mg,claritromicina,claritromicina 500 mg comprimido,false,true,false,false,,false,claritromicina 500 mg
+clindamicina 300 mg,clindamicina,"clindamicina, cloridrato 300 mg cápsula",false,true,false,false,,false,clindamicina 300 mg
+clobazam 10 mg,clobazam,clobazam comprimido 10 mg,false,false,false,true,2,true,clobazam 10 mg
+clobazam 20 mg,clobazam,clobazam comprimido 20 mg,false,false,false,true,2,true,clobazam 20 mg
+clobetasol 0.5 mg/g,clobetasol,"clobetasol creme 0,5mg/g, bisnaga 30 g",false,false,false,true,2,true,clobetasol 0.5 mg/g
+clofazimina + clofazimina + dapsona + rifampicina + rifampicina 150 mg + 150 mg + 300 mg + 50 mg + 50 mg,clofazimina + clofazimina + dapsona + rifampicina + rifampicina,clofazimina 150 mg + clofazimina 50 mg + rifampicina 300 mg + rifampicina 150 mg + dapsona 50 mg (multibacilar) pediátrico comprimidos em blister,false,false,true,false,,false,clofazimina 150 mg + clofazimina 50 mg + rifampicina 300 mg + rifampicina 150 mg + dapsona 50 mg
+clofazimina + clofazimina + dapsona + rifampicina 100 mg + 100 mg + 300 mg + 50 mg,clofazimina + clofazimina + dapsona + rifampicina,clofazimina 100 mg + clofazimina 50 mg + rifampicina 300 mg + dapsona 100 mg (multibacilar) adulto comprimidos em blister,false,false,true,false,,false,clofazimina 100 mg + clofazimina 50 mg + rifampicina 300 mg + dapsona 100 mg
+clofazimina 100 mg,clofazimina,clofazimina 100 mg comprimido,false,false,true,false,,false,clofazimina 100 mg
+clomipramina 25 mg,clomipramina,"clomipramina, cloridrato 25 mg comprimido",false,true,false,false,,false,clomipramina 25 mg
+clonazepam 0.5 mg,clonazepam,"clonazepam 0,5 mg comprimido",false,true,false,false,,false,clonazepam 0.5 mg
+clonazepam 2 mg,clonazepam,clonazepam 2 mg comprimido,false,true,false,false,,false,clonazepam 2 mg
+clonazepam 2.5 mg/ml,clonazepam,"clonazepam 2,5 mg/mL (0,25%) solução oral gotas",false,true,false,false,,false,clonazepam 2.5 mg/ml
+clopidogrel 75 mg,clopidogrel,clopidogrel comprimido 75 mg,false,false,false,true,2,true,clopidogrel 75 mg
+cloroquina 150 mg,cloroquina,cloroquina comprimido 150mg,false,false,false,true,2,true,cloroquina 150 mg
+clorpromazina 100 mg,clorpromazina,"clorpromazina, cloridrato 100 mg comprimido",false,true,false,false,,false,clorpromazina 100 mg
+clorpromazina 25 mg,clorpromazina,"clorpromazina, cloridrato 25 mg comprimido",false,true,false,false,,false,clorpromazina 25 mg
+clorpromazina 40 mg/ml,clorpromazina,"clorpromazina, cloridrato 40 mg/mL (4%) solução oral (gotas)",false,true,false,false,,false,clorpromazina 40 mg/ml
+clozapina 100 mg,clozapina,clozapina comprimido 100 mg,false,false,false,true,1A,true,clozapina 100 mg
+clozapina 25 mg,clozapina,clozapina comprimido 25 mg,false,false,false,true,1A,true,clozapina 25 mg
+codeina 3 mg/ml,codeina,"codeína solução oral, 3 mg/mL frasco de 120 mL",false,false,false,true,2,true,codeina 3 mg/ml
+codeina 30 mg,codeina,codeína comprimido 30 mg,false,false,false,true,2,true,codeina 30 mg
+codeina 30 mg/ml,codeina,"codeína injetável, 30 mg/mL ampola de 2 mL",false,false,false,true,2,true,codeina 30 mg/ml
+codeina 60 mg,codeina,codeína comprimido 60 mg,false,false,false,true,2,true,codeina 60 mg
+colecalciferol (vitamina d 1000 ui/gota,colecalciferol (vitamina d,colecalciferol (vitamina D3) 1000 UI/gota solução oral,false,true,false,false,,false,colecalciferol (vitamina d 1000 ui/gota
+colecalciferol + retinol 10 ui/ml + 50 ui/ml,colecalciferol + retinol,"retinol, acetato (vit. A) 50.000 UI/mL + colecalciferol (vit. D) 10.000 UI/mL solução oral gotas",false,true,false,false,,false,retinol 50 ui/ml + colecalciferol 10 ui/ml
+colecalciferol pomada + oxido de zinco + retinol 250 mg/g,colecalciferol pomada + oxido de zinco + retinol,óxido de zinco 150 a 250 mg/g + retinol (vit. A) + colecalciferol pomada,false,true,false,false,,false,oxido de zinco + retinol + colecalciferol pomada
+colistimetato 160 mg,colistimetato,"colistimetato sódico pó para solução injetável ou inalatória, 160 mg (2 milhão de UI)",false,false,false,true,1A,true,colistimetato 160 mg
+colistimetato 80 mg,colistimetato,"colistimetato sódico pó para solução injetável ou inalatória, 80 mg (1 milhão de UI)",false,false,false,true,1A,true,colistimetato 80 mg
+comprimido + sulfato ferroso heptahidratado equivalente a 40 mg,comprimido + sulfato ferroso heptahidratado equivalente a,sulfato ferroso heptahidratado equivalente a 40 mg de Fe++ comprimido,false,true,false,false,,false,sulfato ferroso heptahidratado equivalente a + comprimido
+cynara scolymus l. 48 mg,cynara scolymus l.,Cynara scolymus L. (alcachofra) 24 a 48 mg derivados de ácido cafeoilquínico expressos em ácido clorogênico,false,false,true,false,,false,cynara scolymus l. 48 mg
+daclatasvir 60 mg,daclatasvir,daclatasvir 60 mg comprimido,false,false,true,false,,false,daclatasvir 60 mg
+danazol 100 mg,danazol,danazol cápsula 100 mg,false,false,false,true,1B,true,danazol 100 mg
+danazol 200 mg,danazol,danazol cápsula 200 mg,false,false,false,true,1B,true,danazol 200 mg
+dapagliflozina 10 mg,dapagliflozina,DAPAGLIFLOZINA 10 MG,true,false,false,true,2,true,dapagliflozina 10 mg
+dapsona 100 mg,dapsona,dapsona 100 mg comprimido,false,false,true,false,,false,dapsona 100 mg
+darunavir 150 mg,darunavir,darunavir (DRV) 150 mg comprimido,false,false,true,false,,false,darunavir 150 mg
+darunavir 600 mg,darunavir,darunavir (DRV) 600 mg comprimido,false,false,true,false,,false,darunavir 600 mg
+darunavir 75 mg,darunavir,darunavir (DRV) 75 mg comprimido,false,false,true,false,,false,darunavir 75 mg
+darunavir 800 mg,darunavir,darunavir (DRV) 800 mg comprimido,false,false,true,false,,false,darunavir 800 mg
+deferasirox 125 mg,deferasirox,deferasirox comprimido 125 mg,false,false,false,true,1A,true,deferasirox 125 mg
+deferasirox 250 mg,deferasirox,deferasirox comprimido 250 mg,false,false,false,true,1A,true,deferasirox 250 mg
+deferasirox 500 mg,deferasirox,deferasirox comprimido 500 mg,false,false,false,true,1A,true,deferasirox 500 mg
+deferiprona 500 mg,deferiprona,deferiprona comprimido 500 mg,false,false,false,true,1B,true,deferiprona 500 mg
+desferroxamina 500 mg,desferroxamina,"desferroxamina injetável, 500 mg frasco ampola",false,false,false,true,1B,true,desferroxamina 500 mg
+desmopressina 0.1 mg,desmopressina,"desmopressina (acetato de desmopressina) comprimido 0,1 mg",false,false,false,true,1A,true,desmopressina 0.1 mg
+desmopressina 0.1 mg/ml,desmopressina,"desmopressina (acetato de desmopressina) aplicação nasal, 0,1 mg/mL frasco de 2,5 mL",false,false,false,true,1A,true,desmopressina 0.1 mg/ml
+desmopressina 0.2 mg,desmopressina,"desmopressina (acetato de desmopressina) comprimido 0,2 mg",false,false,false,true,1A,true,desmopressina 0.2 mg
+dexametasona 0.1 mg/ml,dexametasona,"dexametasona 0,1 mg/mL solução oral",false,true,false,false,,false,dexametasona 0.1 mg/ml
+dexametasona 1 mg/g,dexametasona,"dexametasona 1 mg/g (0,1%) creme",false,true,false,false,,false,dexametasona 1 mg/g
+dexametasona 1 mg/ml,dexametasona,"dexametasona 1 mg/mL (0,1%) suspensão oftálmica",false,false,true,false,,false,dexametasona 1 mg/ml
+dexclorfeniramina 0.4 mg/ml,dexclorfeniramina,"dexclorfeniramina, maleato 0,4 mg/mL solução oral",false,true,false,false,,false,dexclorfeniramina 0.4 mg/ml
+dextrana + hipromelose 0.3 % + 1 mg/ml + 3 mg/ml,dextrana + hipromelose,"dextrana 1 mg/mL + hipromelose 3 mg/mL (0,3%) solução oftálmica",false,true,false,false,,false,dextrana + hipromelose
+diazepam 5 mg,diazepam,diazepam 5 mg comprimido,false,true,false,false,,false,diazepam 5 mg
+diclofenaco 50 mg,diclofenaco,diclofenaco 50 mg comprimido,false,true,false,false,,false,diclofenaco 50 mg
+digoxina 0.25 mg,digoxina,"digoxina 0,25 mg comprimido",false,true,false,false,,false,digoxina 0.25 mg
+dimenidrinato + piridoxina 25 mg/ml + 5 mg/ml,dimenidrinato + piridoxina,"dimenidrinato 25 mg/mL + piridoxina, cloridrato (vit. B6) 5 mg/mL solução oral gotas",false,true,false,false,,false,dimenidrinato 25 mg/ml + piridoxina 5 mg/ml
+dimetila 120 mg,dimetila,fumarato de Dimetila cápsula 120 mg,false,false,false,true,1A,true,dimetila 120 mg
+dimetila 240 mg,dimetila,fumarato de Dimetila cápsula 240 mg,false,false,false,true,1A,true,dimetila 240 mg
+dipirona + escopolamina 333.4 mg/ml + 6.67 mg/ml,dipirona + escopolamina,"escopolamina 6,67 mg/mL + dipirona sódica 333,4 mg/mL solução oral gotas",false,true,false,false,,false,escopolamina 6.67 mg/ml + dipirona 333.4 mg/ml
+dipirona 500 mg,dipirona,dipirona sódica 500 mg comprimido,false,true,false,false,,false,dipirona 500 mg
+dipirona 500 mg/ml,dipirona,dipirona sódica 500 mg/mL solução oral gotas,false,true,false,false,,false,dipirona 500 mg/ml
+dolutegravir 50 mg,dolutegravir,dolutegravir 50 mg (DTG) comprimido,false,false,true,false,,false,dolutegravir 50 mg
+donepezila 10 mg,donepezila,donepezila comprimido 10 mg,false,false,false,true,1A,true,donepezila 10 mg
+donepezila 5 mg,donepezila,donepezila comprimido 5 mg,false,false,false,true,1A,true,donepezila 5 mg
+dorzolamida 20 mg/ml,dorzolamida,"dorzolamida solução oftálmica, 20 mg/mL frasco com 5mL",false,false,false,true,2,true,dorzolamida 20 mg/ml
+doxazosina 2 mg,doxazosina,doxazosina 2 mg comprimido,false,true,false,false,,false,doxazosina 2 mg
+doxiciclina 100 mg,doxiciclina,"doxiciclina, cloridrato 100 mg comprimido",false,true,false,false,,false,doxiciclina 100 mg
+eculizumabe 300 mg,eculizumabe,"eculizumabe injetável, 300 mg seringa preenchida injetável, 300mg frasco- ampola",false,false,false,true,1A,true,eculizumabe 300 mg
+eexacaftor/tezacaftor/ ivacaftor + ivacaftor 100 mg + 150 mg + 50 mg + 75 mg,eexacaftor/tezacaftor/ ivacaftor + ivacaftor,eexacaftor/tezacaftor/ ivacaftor + ivacaftor comprimido 100mg/50mg/75mg + 150mg,false,false,false,true,1A,true,eexacaftor/tezacaftor/ ivacaftor + ivacaftor
+eexacaftor/tezacaftor/ ivacaftor + ivacaftor 25 mg + 37.5 mg + 50 mg + 75 mg,eexacaftor/tezacaftor/ ivacaftor + ivacaftor,"eexacaftor/tezacaftor/ ivacaftor + ivacaftor comprimido 50mg/25mg/37,5mg + 75mg",false,false,false,true,1A,true,eexacaftor/tezacaftor/ ivacaftor + ivacaftor
+efavirenz + lamivudina ( + tenofovir 300 mg + 300 mg + 600 mg,efavirenz + lamivudina ( + tenofovir,tenofovir (TDF) 300 mg + lamivudina (3TC) 300 mg + efavirenz (EFZ) 600 mg comprimido,false,false,true,false,,false,tenofovir 300 mg + lamivudina ( 300 mg + efavirenz 600 mg
+efavirenz 200 mg,efavirenz,efavirenz (EFZ) 200 mg comprimido,false,false,true,false,,false,efavirenz 200 mg
+efavirenz 30 mg/ml,efavirenz,efavirenz (EFZ) 30 mg/mL solução oral,false,false,true,false,,false,efavirenz 30 mg/ml
+efavirenz 600 mg,efavirenz,efavirenz (EFZ) 600 mg comprimido,false,false,true,false,,false,efavirenz 600 mg
+eltrombopague olamina 25 mg,eltrombopague olamina,eltrombopague olamina comprimido 25 mg,false,false,false,true,1B,true,eltrombopague olamina 25 mg
+eltrombopague olamina 50 mg,eltrombopague olamina,eltrombopague olamina comprimido 50 mg,false,false,false,true,1B,true,eltrombopague olamina 50 mg
+enalapril 10 mg,enalapril,MALEATO DE ENALAPRIL 10MG,true,false,false,false,,false,enalapril 10 mg
+enalapril 20 mg,enalapril,"enalapril, maleato 20 mg comprimido",false,true,false,false,,false,enalapril 20 mg
+enalapril 5 mg,enalapril,"enalapril, maleato 5 mg comprimido",false,true,false,false,,false,enalapril 5 mg
+enfuvirtida (t- 90 mg/ml,enfuvirtida (t-,enfuvirtida (T-20) 90 mg/mL pó para solução injetavel,false,false,true,false,,false,enfuvirtida (t- 90 mg/ml
+enoxaparina 20 mg,enoxaparina,"enoxaparina sódica 20 mg (equivalente a 100 mg/mL) solução injetável seringa 0,2 mL SC",false,false,true,false,,true,enoxaparina 20 mg
+enoxaparina 40 mg,enoxaparina,"enoxaparina sódica 40 mg (equivalente a 100 mg/mL) solução injetável seringa 0,4 mL SC",false,false,true,true,1A,true,enoxaparina 40 mg
+enoxaparina 60 mg,enoxaparina,"enoxaparina sódica 60 mg (equivalente a 100 mg/mL) solução injetável seringa 0,6 mL SC",false,false,true,true,1A,true,enoxaparina 60 mg
+entacapona 200 mg,entacapona,entacapona comprimido 200 mg,false,false,false,true,1A,true,entacapona 200 mg
+entecavir 0.5 mg,entecavir,"entecavir 0,5 mg comprimido",false,false,true,false,,false,entecavir 0.5 mg
+entricitabina + tenofovir 200 mg + 300 mg,entricitabina + tenofovir,tenofovir (TDF) 300 mg + entricitabina (FTC) 200 mg,false,false,true,false,,false,tenofovir 300 mg + entricitabina 200 mg
+escopolamina 10 mg/ml,escopolamina,escopolamina 10 mg/mL solução oral gotas ou comprimido 10 mg,false,true,false,false,,false,escopolamina 10 mg/ml
+espiramicina 500 mg,espiramicina,espiramicina 500 mg (equivalente a 1.500.000 UI) comprimido,false,false,true,false,,false,espiramicina 500 mg
+espironolactona 100 mg,espironolactona,espironolactona 100 mg comprimido,false,true,false,false,,false,espironolactona 100 mg
+espironolactona 25 mg,espironolactona,ESPIRONOLACTONA 25 MG,true,true,false,false,,false,espironolactona 25 mg
+estradiol + noretisterona 5 mg + 50 mg,estradiol + noretisterona,VALERATO DE ESTRADIOL 5MG + ENANTATO DE NORETISTERONA 50MG,true,false,false,false,,false,estradiol 5 mg + enantato de noretisterona 50 mg
+estradiol + noretisterona 5 mg/ml + 50 mg/ml,estradiol + noretisterona,"noretisterona, enantato 50 mg/mL + estradiol, valerato 5 mg/mL solução injetável",false,true,false,false,,false,noretisterona 50 mg/ml + estradiol 5 mg/ml
+estradiol 1 mg,estradiol,"estradiol, valerato 1mg comprimido",false,true,false,false,,false,estradiol 1 mg
+estradiol 2 mg,estradiol,"estradiol, valerato 2mg comprimido",false,false,true,false,,false,estradiol 2 mg
+estradiol cipionato + medroxiprogesterona 25 mg + 5 mg,estradiol cipionato + medroxiprogesterona,"medroxiprogesterona, acetato 25 mg + estradiol cipionato 5 mg suspensão injetável",false,true,false,false,,false,medroxiprogesterona 25 mg + estradiol cipionato 5 mg
+estriol 1 mg/g,estriol,"estriol 1 mg/g (0,1%) creme vaginal",false,true,false,false,,false,estriol 1 mg/g
+etambutol + isoniazida + pirazinamida + rifampicina 150 mg + 275 mg + 400 mg + 75 mg,etambutol + isoniazida + pirazinamida + rifampicina,"rifampicina 150 mg + isoniazida 75 mg + pirazinamida 400 mg + etambutol, cloridrato 275 mg comprimido",false,false,true,false,,false,rifampicina 150 mg + isoniazida 75 mg + pirazinamida 400 mg + etambutol 275 mg
+etambutol 400 mg,etambutol,"etambutol, cloridrato 400 mg comprimido",false,false,true,false,,false,etambutol 400 mg
+etanercepte 25 mg,etanercepte,"etanercepte injetável, 25 mg frasco ampola",false,false,false,true,1A,true,etanercepte 25 mg
+etanercepte 50 mg,etanercepte,"etanercepte injetável, 50 mg frasco ampola ou seringa preenchida",false,false,false,true,1A,true,etanercepte 50 mg
+etinilestradiol + levonorgestrel 0.03 mg + 0.15 mg,etinilestradiol + levonorgestrel,"ETINILESTRADIOL 0,03MG + LEVONORGESTREL 0,15MG",true,true,false,false,,false,etinilestradiol 0.03 mg + levonorgestrel 0.15 mg | levonorgestrel 0.15 mg + etinilestradiol 0.03 mg
+etionamida 250 mg,etionamida,etionamida 250 mg comprimido,false,false,true,false,,false,etionamida 250 mg
+etofibrato 500 mg,etofibrato,etofibrato cápsula 500 mg,false,false,false,true,2,true,etofibrato 500 mg
+etonogestrel 68 mg,etonogestrel,etonogestrel 68 mg implante subdérmico,false,false,true,false,,false,etonogestrel 68 mg
+etossuximida 50 mg/ml,etossuximida,"etossuximida Solução oral, 50 mg/mL frasco com 120 mL",false,false,false,true,2,true,etossuximida 50 mg/ml
+etravirina 100 mg,etravirina,etravirina (ETR) 100 mg comprimido,false,false,true,false,,false,etravirina 100 mg
+etravirina 200 mg,etravirina,etravirina (ETR) 200 mg comprimido,false,false,true,false,,false,etravirina 200 mg
+everolimo 0.5 mg,everolimo,"everolimo comprimido 0,5 mg",false,false,false,true,1A,true,everolimo 0.5 mg
+everolimo 0.75 mg,everolimo,"everolimo comprimido 0,75 mg",false,false,false,true,1A,true,everolimo 0.75 mg
+everolimo 1 mg,everolimo,everolimo comprimido 1 mg,false,false,false,true,1A,true,everolimo 1 mg
+fenitoina ou fenitoina 100 mg,fenitoina ou fenitoina,fenitoína ou fenitoína sódica 100 mg comprimido,false,true,false,false,,false,fenitoina ou fenitoina 100 mg
+fenobarbital 100 mg,fenobarbital,fenobarbital 100 mg comprimido,false,true,false,false,,false,fenobarbital 100 mg
+fenobarbital 40 mg/ml,fenobarbital,fenobarbital 40 mg/mL (4%) solução oral gotas,false,true,false,false,,false,fenobarbital 40 mg/ml
+fenofibrato 200 mg,fenofibrato,fenofibrato cápsula 200 mg,false,false,false,true,2,true,fenofibrato 200 mg
+fenofibrato 250 mg,fenofibrato,fenofibrato cápsula de liberação retardada 250 mg,false,false,false,true,2,true,fenofibrato 250 mg
+fenoterol 100 mcg,fenoterol,"fenoterol aerossol, 100 mcg/dose -",false,false,false,true,2,true,fenoterol 100 mcg/dose
+fenoterol 5 mg/ml,fenoterol,fenoterol 5 mg/mL solução inalante gotas,false,true,false,false,,true,fenoterol 5 mg/ml
+filgrastim 300 mcg,filgrastim,"filgrastim injetável, 300 mcg frasco- ampola ou seringa preenchida",false,false,false,true,1A,true,filgrastim 300 mcg
+finasterida 5 mg,finasterida,finasterida 5 mg comprimido,false,false,true,false,,false,finasterida 5 mg
+fingolimode 0.5 mg,fingolimode,"fingolimode cápsula 0,5 mg",false,false,false,true,1A,true,fingolimode 0.5 mg
+fluconazol 100 mg,fluconazol,fluconazol 100 mg cápsula,false,false,true,false,,true,fluconazol 100 mg
+fluconazol 150 mg,fluconazol,fluconazol 150 mg cápsula,false,true,false,false,,true,fluconazol 150 mg
+fluconazol 200 mcg,fluconazol,"fluconazol cápsula inalante ou pó inalante, 6 + 200 mcg",false,false,false,true,2,true,fluconazol 200 mcg
+fludrocortisona 0.1 mg,fludrocortisona,"fludrocortisona comprimido 0,1 mg",false,false,false,true,2,true,fludrocortisona 0.1 mg
+fluoxetina 20 mg,fluoxetina,"fluoxetina, cloridrato 20 mg cápsula",false,true,false,false,,false,fluoxetina 20 mg
+fluticasona + umeclidinio + vilanterol 100 mcg + 25 mcg + 62.5 mcg,fluticasona + umeclidinio + vilanterol,"fluticasona + umeclidínio + vilanterol (furoato de fluticasona + brometo de umeclidínio + trifenatato de pó para solução oral, 100 mcg + 62,5 mcg + 25 mcg",false,false,false,true,1B,true,fluticasona 100 mcg + umeclidinio 62.5 mcg + vilanterol 25 mcg
+formoterol 12 mcg,formoterol,formoterol cápsula inalante ou pó inalante 12 mcg,false,false,false,true,2,true,formoterol 12 mcg
+furosemida 40 mg,furosemida,FUROSEMIDA 40 MG,true,true,false,false,,false,furosemida 40 mg
+gabapentina 300 mg,gabapentina,gabapentina 300 mg comprimido,false,false,true,true,2,true,gabapentina 300 mg
+gabapentina 400 mg,gabapentina,gabapentina cápsula 400 mg,false,false,false,true,2,true,gabapentina 400 mg
+galantamina 16 mg,galantamina,galantamina cápsula de liberação prolongada 16 mg,false,false,false,true,1A,true,galantamina 16 mg
+galantamina 24 mg,galantamina,galantamina cápsula de liberação prolongada 24 mg,false,false,false,true,1A,true,galantamina 24 mg
+galantamina 8 mg,galantamina,galantamina cápsula de liberação prolongada 8 mg,false,false,false,true,1A,true,galantamina 8 mg
+galsulfase 5 mg,galsulfase,"galsulfase injetável, 5 mg Frasco",false,false,false,true,1A,true,galsulfase 5 mg
+genfibrozila 600 mg,genfibrozila,genfibrozila comprimido 600 mg,false,false,false,true,2,true,genfibrozila 600 mg
+genfibrozila 900 mg,genfibrozila,genfibrozila comprimido 900 mg,false,false,false,true,2,true,genfibrozila 900 mg
+glatiramer 20 mg,glatiramer,"glatirâmer injetável, 20 mg seringa preenchida",false,false,false,true,1A,true,glatiramer 20 mg
+glatiramer 40 mg,glatiramer,"glatirâmer injetável, 40 mg seringa preenchida",false,false,false,true,1A,true,glatiramer 40 mg
+glibenclamida 5 mg,glibenclamida,GLIBENCLAMIDA 5MG,true,false,false,false,,false,glibenclamida 5 mg
+gliclazida 60 mg,gliclazida,gliclazida 60 mg comprimido de liberação prolongada,false,true,false,false,,false,gliclazida 60 mg
+glycine max merril. minimo de 50 mg,glycine max merril. minimo de,Glycine max (L.) Merril.(isoflavonas de soja) mínimo de 50 mg de isoflavonas totais,false,false,true,false,,false,glycine max merril. minimo de 50 mg
+golimumabe 50 mg,golimumabe,"golimumabe injetável, 50 mg seringa preenchida",false,false,false,true,1A,true,golimumabe 50 mg
+gosserrelina 10.8 mg,gosserrelina,"gosserrelina injetável, 10,80 mg seringa preenchida",false,false,false,true,1B,true,gosserrelina 10.8 mg
+gosserrelina 3.6 mg,gosserrelina,"gosserrelina injetável, 3,60 mg seringa preenchida",false,false,false,true,1B,true,gosserrelina 3.6 mg
+haloperidol 1 mg,haloperidol,haloperidol 1 mg comprimido,false,true,false,false,,false,haloperidol 1 mg
+haloperidol 2 mg/ml,haloperidol,"haloperidol 2 mg/mL (0,2%) solução oral gotas",false,true,false,false,,false,haloperidol 2 mg/ml
+haloperidol 5 mg,haloperidol,haloperidol 5 mg comprimido,false,true,false,false,,false,haloperidol 5 mg
+haloperidol 70.52 mg/ml,haloperidol,"haloperidol, decanoato 70,52 mg/mL (equivalente a 50 mg/mL de haloperidol) solução injetável",false,true,false,false,,false,haloperidol 70.52 mg/ml
+harpagophytum procumbens dc. harpagosideo 5 mg,harpagophytum procumbens dc. harpagosideo,Harpagophytum procumbens (Burch.) DC. (garra do diabo) harpagosídeo 5 mg a 50 mg comprimido,false,false,true,false,,false,harpagophytum procumbens dc. harpagosideo 5 mg
+hidroclorotiazida 25 mg,hidroclorotiazida,HIDROCLOROTIAZIDA 25MG,true,true,false,false,,false,hidroclorotiazida 25 mg
+hidrocortisona 10 mg/g,hidrocortisona,"hidrocortisona, acetato 10 mg/g (1%) creme",false,true,false,false,,false,hidrocortisona 10 mg/g
+hidroxicloroquina 400 mg,hidroxicloroquina,hidroxicloroquina comprimido 400 mg,false,false,false,true,2,true,hidroxicloroquina 400 mg
+hidroxido de aluminio 60 mg/ml,hidroxido de aluminio,hidróxido de alumínio 60 mg/mL a 63 mg/mL suspensão oral,false,true,false,false,,false,hidroxido de aluminio 60 mg/ml
+hidroxido ferrico 20 mg/ml,hidroxido ferrico,"sacarato de hidróxido férrico injetável, 20 mg/mL frasco com 5 mL",false,false,false,true,1B,true,sacarato de hidroxido ferrico 20 mg/ml
+hidroxiureia 100 mg,hidroxiureia,hidroxiureia comprimido 100 mg,false,false,false,true,1B,true,hidroxiureia 100 mg
+hidroxiureia 500 mg,hidroxiureia,hidroxiureia cápsula 500 mg,false,false,false,true,1B,true,hidroxiureia 500 mg
+ibuprofeno 300 mg,ibuprofeno,ibuprofeno 300 mg comprimido,false,true,false,false,,false,ibuprofeno 300 mg
+ibuprofeno 50 mg/ml,ibuprofeno,ibuprofeno 50 mg/mL suspensão oral gotas,false,true,false,false,,false,ibuprofeno 50 mg/ml
+idursulfase 2 mg/ml,idursulfase,"idursulfase injetável, 2 mg/ml frasco ampola 3mL",false,false,false,true,1A,true,idursulfase 2 mg/ml
+iloprosta 10 mcg/ml,iloprosta,"iloprosta solução para nebulização, 10 mcg/mL ampola 1 ml",false,false,false,true,1B,true,iloprosta 10 mcg/ml
+imiglucerase 400 ui,imiglucerase,"imiglucerase injetável, 400 UI frasco ampola",false,false,false,true,1A,true,imiglucerase 400 ui
+imipramina 25 mg,imipramina,"imipramina, cloridrato 25 mg comprimido",false,true,false,false,,false,imipramina 25 mg
+imiquimode 50 mg/g,imiquimode,imiquimode 50 mg/g (5%) creme,false,false,true,false,,false,imiquimode 50 mg/g
+imunoglobulina anti rho 250 mcg,imunoglobulina anti rho,imunoglobulina anti Rho (D) 250 mcg a 300 mcg solução injetável fam,false,false,true,false,,false,imunoglobulina anti rho 250 mcg
+imunoglobulina antivaricela zoster 0.5 g,imunoglobulina antivaricela zoster,"imunoglobulina antivaricela zoster injetável, 0,5 g frasco",false,false,false,true,1B,true,imunoglobulina antivaricela zoster 0.5 g
+imunoglobulina antivaricela zoster 1 g,imunoglobulina antivaricela zoster,"imunoglobulina antivaricela zoster injetável, 1,0 g frasco",false,false,false,true,1B,true,imunoglobulina antivaricela zoster 1 g
+imunoglobulina humana 2.5 g,imunoglobulina humana,"imunoglobulina humana injetável, 2,5 g frasco",false,false,false,true,1B,true,imunoglobulina humana 2.5 g
+imunoglobulina humana 5 g,imunoglobulina humana,"imunoglobulina humana injetável, 5,0 g frasco",false,false,false,true,1A,true,imunoglobulina humana 5 g
+imunoglobulina humana anti-hepatite b 1000 ui,imunoglobulina humana anti-hepatite b,imunoglobulina humana anti-hepatite B 1000 UI/ 5 mL solução injetável,false,false,true,false,,false,imunoglobulina humana anti-hepatite b 1000 ui
+infliximabe 100 mg,infliximabe,"infliximabe injetável, 100mg frasco- ampola",false,false,false,true,1A,true,infliximabe 100 mg
+infliximabe 100 ui/ml,infliximabe,"infliximabe insulina Degludeca, 100 UI/mL caneta (uso em crianças entre 1 e 2 anos)",false,false,false,true,1B,true,infliximabe 100 ui/ml
+insulina asparte 100 ui/ml,insulina asparte,"insulina análoga de ação rápida insulina Asparte, 100 UI/mL caneta (uso em crianças de 1 e 3 anos)",false,false,false,true,1A,true,insulina asparte 100 ui/ml
+insulina glargina 100 ui/ml,insulina glargina,Insulina análoga glargina 100 UI/mL solução injetável carpule / tubete,false,true,false,true,1A,true,insulina analoga glargina 100 ui/ml | insulina glargina 100 ui/ml
+insulina humana 100 ui/ml,insulina humana,INSULINA HUMANA 100UI/ML,true,true,false,false,,false,insulina humana 100 ui/ml | insulina humana nph 100 ui/ml
+insulina humana regular 100 ui/ml,insulina humana regular,INSULINA HUMANA REGULAR 100UI/ML,true,true,false,false,,false,insulina humana regular 100 ui/ml
+insulina lispro 100 ui/ml,insulina lispro,"insulina análoga de ação rápida insulina Lispro, 100 UI/mL caneta (uso em pacientes acima 3 anos)",false,false,false,true,1B,true,insulina lispro 100 ui/ml
+ipratropio 0.02 mg,ipratropio,"BROMETO DE IPRATRÓPIO 0,02MG",true,false,false,false,,false,brometo de ipratropio 0.02 mg
+ipratropio 0.25 mg,ipratropio,"BROMETO DE IPRATRÓPIO 0,25MG",true,false,false,false,,false,brometo de ipratropio 0.25 mg
+ipratropio 0.25 mg/ml,ipratropio,"ipratrópio, brometo 0,25 mg/mL (0,025%) solução inalante gotas",false,true,false,false,,false,ipratropio 0.25 mg/ml
+isoniazida + pirazinamida + rifampicina 150 mg + 50 mg + 75 mg,isoniazida + pirazinamida + rifampicina,rifampicina 75 mg + isoniazida 50 mg + pirazinamida 150 mg comprimido dispersível,false,false,true,false,,false,rifampicina 75 mg + isoniazida 50 mg + pirazinamida 150 mg
+isoniazida + rifampicina 150 mg + 300 mg,isoniazida + rifampicina,isoniazida 150 mg + rifampicina 300 mg comprimido,false,false,true,false,,false,isoniazida 150 mg + rifampicina 300 mg
+isoniazida + rifampicina 150 mg + 75 mg,isoniazida + rifampicina,isoniazida 75 mg + rifampicina 150 mg comprimido,false,false,true,false,,false,isoniazida 75 mg + rifampicina 150 mg
+isoniazida + rifampicina 50 mg + 75 mg,isoniazida + rifampicina,rifampicina 75 mg + isoniazida 50 mg comprimido dispersível,false,false,true,false,,false,rifampicina 75 mg + isoniazida 50 mg
+isoniazida 100 mg,isoniazida,isoniazida 100 mg comprimido,false,false,true,false,,false,isoniazida 100 mg
+isoniazida 300 mg,isoniazida,isoniazida 300 mg comprimido,false,false,true,false,,false,isoniazida 300 mg
+isossorbida 20 mg,isossorbida,"isossorbida, mononitrato 20 mg comprimido",false,true,false,false,,false,isossorbida 20 mg
+isossorbida 5 mg,isossorbida,"isossorbida, dinitrato 5 mg comprimido sublingual ou propatilnitrato 10 mg comprimido",false,true,false,false,,false,isossorbida 5 mg
+isotretinoina 10 mg,isotretinoina,isotretinoína cápsula 10 mg,false,false,false,true,2,true,isotretinoina 10 mg
+isotretinoina 20 mg,isotretinoina,isotretinoína cápsula 20 mg,false,false,false,true,2,true,isotretinoina 20 mg
+itraconazol 100 mg,itraconazol,itraconazol 100 mg cápsula,false,true,false,false,,false,itraconazol 100 mg
+ivacaftor 150 mg,ivacaftor,Ivacaftor frasco comprimido 150mg,false,false,false,true,1A,true,ivacaftor 150 mg
+ivermectina 6 mg,ivermectina,ivermectina 6 mg comprimido,false,true,false,false,,false,ivermectina 6 mg
+lamivudina ( + tenofovir 300 mg + 300 mg,lamivudina ( + tenofovir,tenofovir (TDF) 300 mg + lamivudina (3TC) 300 mg,false,false,true,false,,false,tenofovir 300 mg + lamivudina ( 300 mg
+lamivudina ( + zidovudina 150 mg + 300 mg,lamivudina ( + zidovudina,zidovudina (AZT) 300 mg + lamivudina (3TC) 150 mg comprimido,false,false,true,false,,false,zidovudina 300 mg + lamivudina ( 150 mg
+lamivudina ( 10 mg/ml,lamivudina (,lamivudina (3TC) 10 mg/mL solução oral,false,false,true,false,,false,lamivudina ( 10 mg/ml
+lamivudina ( 150 mg,lamivudina (,lamivudina (3TC) 150 mg comprimido,false,false,true,false,,false,lamivudina ( 150 mg
+lamotrigina 100 mg,lamotrigina,lamotrigina comprimido 100 mg,false,false,false,true,2,true,lamotrigina 100 mg
+lamotrigina 25 mg,lamotrigina,lamotrigina comprimido 25 mg,false,false,false,true,2,true,lamotrigina 25 mg
+lamotrigina 50 mg,lamotrigina,lamotrigina comprimido 50 mg,false,false,false,true,2,true,lamotrigina 50 mg
+lanreotida 120 mg,lanreotida,"lanreotida injetável, 120 mg seringa preenchida",false,false,false,true,1A,true,lanreotida 120 mg
+lanreotida 60 mg,lanreotida,"lanreotida injetável, 60 mg seringa preenchida",false,false,false,true,1A,true,lanreotida 60 mg
+lanreotida 90 mg,lanreotida,"lanreotida injetável, 90 mg seringa preenchida",false,false,false,true,1A,true,lanreotida 90 mg
+laronidase 0.58 mg/ml,laronidase,"laronidase injetável, 0,58 mg/mL frasco com 5 mL",false,false,false,true,1A,true,laronidase 0.58 mg/ml
+latanoprosta 0.05 mg/ml,latanoprosta,"latanoprosta solução oftálmica, 0,05mg/mL frasco 2,5mL",false,false,false,true,1A,true,latanoprosta 0.05 mg/ml
+leflunomida 20 mg,leflunomida,leflunomida comprimido 20 mg,false,false,false,true,1A,true,leflunomida 20 mg
+leuprorrelina 3.75 mg,leuprorrelina,"leuprorrelina injetável, 3,75 mg frasco ampola",false,false,false,true,1B,true,leuprorrelina 3.75 mg
+leuprorrelina 45 mg,leuprorrelina,"leuprorrelina injetável, 45 mg frasco ampola",false,false,false,true,1B,true,leuprorrelina 45 mg
+levetiracetam 100 mg/ml,levetiracetam,"levetiracetam solução oral, 100mg/mL frasco 100 ou 150mL",false,false,false,true,1A,true,levetiracetam 100 mg/ml
+levetiracetam 1000 mg,levetiracetam,levetiracetam comprimido 1000mg,false,false,false,true,1A,true,levetiracetam 1000 mg
+levetiracetam 250 mg,levetiracetam,levetiracetam comprimido 250mg,false,false,false,true,1A,true,levetiracetam 250 mg
+levetiracetam 500 mg,levetiracetam,levetiracetam comprimido 500mg,false,false,false,true,1A,true,levetiracetam 500 mg
+levetiracetam 750 mg,levetiracetam,levetiracetam comprimido 750mg,false,false,false,true,1A,true,levetiracetam 750 mg
+levofloxacino 250 mg,levofloxacino,levofloxacino 250 mg comprimido,false,false,true,false,,false,levofloxacino 250 mg
+levofloxacino 500 mg,levofloxacino,levofloxacino 500 mg comprimido,false,false,true,false,,false,levofloxacino 500 mg
+levonorgestrel 0.75 mg,levonorgestrel,"levonorgestrel 0,75 mg comprimido cartela",false,true,false,false,,false,levonorgestrel 0.75 mg
+levonorgestrel 19.5 mg,levonorgestrel,"levonorgestrel 19,5 mg sistema intrauterino (SIU)",false,false,true,false,,false,levonorgestrel 19.5 mg
+levonorgestrel 52 mg,levonorgestrel,levonorgestrel 52 mg sistema intrauterino (SIU),false,false,true,false,,false,levonorgestrel 52 mg
+levotiroxina 100 mcg,levotiroxina,levotiroxina sódica 100 mcg comprimido,false,true,false,false,,false,levotiroxina 100 mcg
+levotiroxina 12.5 mcg,levotiroxina,"levotiroxina sódica 12,5 mcg comprimido",false,true,false,false,,false,levotiroxina 12.5 mcg
+levotiroxina 25 mcg,levotiroxina,levotiroxina sódica 25 mcg comprimido,false,true,false,false,,false,levotiroxina 25 mcg
+levotiroxina 50 mcg,levotiroxina,levotiroxina sódica 50 mcg comprimido,false,true,false,false,,false,levotiroxina 50 mcg
+linezolida 600 mg,linezolida,linezolida 600 mg comprimido,false,false,true,false,,false,linezolida 600 mg
+litio 300 mg,litio,carbonato de lítio 300 mg comprimido,false,true,false,false,,false,carbonato de litio 300 mg
+loperamida 2 mg,loperamida,loperamida 2 mg comprimido,false,false,true,false,,false,loperamida 2 mg
+lopinavir + ritonavir 100 mg + 25 mg,lopinavir + ritonavir,lopinavir (LPV) 100 mg + ritonavir (r) 25 mg comprimido,false,false,true,false,,false,lopinavir 100 mg + ritonavir 25 mg
+lopinavir + ritonavir 20 mg/ml + 80 mg/ml,lopinavir + ritonavir,lopinavir (LPV) 80 mg/mL + ritonavir (r) 20 mg/mL solução oral,false,false,true,false,,false,lopinavir 80 mg/ml + ritonavir 20 mg/ml
+loratadina 1 mg/ml,loratadina,loratadina 1 mg/mL solução oral,false,true,false,false,,false,loratadina 1 mg/ml
+loratadina 10 mg,loratadina,loratadina 10 mg comprimido,false,true,false,false,,false,loratadina 10 mg
+losartana 50 mg,losartana,LOSARTANA POTÁSSICA 50MG,true,true,false,false,,false,losartana 50 mg
+maraviroque 150 mg,maraviroque,maraviroque (MVQ) 150 mg comprimido,false,false,true,false,,false,maraviroque 150 mg
+maytenus ilicifolia mart. ex. reissek. taninos totais 13 mg,maytenus ilicifolia mart. ex. reissek. taninos totais,Maytenus ilicifolia Mart. ex. Reissek. (espinheira santa) taninos totais 13 mg a 20 mg comprimido,false,false,true,false,,false,maytenus ilicifolia mart. ex. reissek. taninos totais 13 mg
+mebendazol 20 mg/ml,mebendazol,mebendazol 20 mg/mL suspensão oral,false,true,false,false,,false,mebendazol 20 mg/ml
+medroxiprogesterona 10 mg,medroxiprogesterona,"medroxiprogesterona, acetato 10 mg comprimido",false,true,false,false,,false,medroxiprogesterona 10 mg
+medroxiprogesterona 150 mg,medroxiprogesterona,ACETATO DE MEDROXIPROGESTERONA 150MG,true,false,false,false,,false,medroxiprogesterona 150 mg
+medroxiprogesterona 150 mg/ml,medroxiprogesterona,"medroxiprogesterona, acetato 150 mg/mL suspensão injetável",false,true,false,false,,false,medroxiprogesterona 150 mg/ml
+memantina 10 mg,memantina,memantina comprimido 10 mg,false,false,false,true,1A,true,memantina 10 mg
+mepolizumabe,mepolizumabe,"mepolizumabe solução injetável, 100mgmL caneta",false,false,false,true,1B,true,mepolizumabe
+mepolizumabe 40 mg,mepolizumabe,"mepolizumabe solução injetável, 40mg/0,4mL caneta",false,false,false,true,1B,true,mepolizumabe 40 mg
+mesalazina,mesalazina,mesalazina comprimido de liberação,false,false,false,true,2,true,mesalazina
+mesalazina 10 mg/ml,mesalazina,"mesalazina enema retal, 10 mg/mL frasco com 100 mL",false,false,false,true,2,true,mesalazina 10 mg/ml
+mesalazina 1000 mg,mesalazina,mesalazina supositório 1000 mg,false,false,false,true,2,true,mesalazina 1000 mg
+mesalazina 2 g,mesalazina,mesalazina sachê 2g,false,false,false,true,2,true,mesalazina 2 g
+mesalazina 250 mg,mesalazina,mesalazina supositório 250 mg,false,false,false,true,2,true,mesalazina 250 mg
+mesalazina 400 mg,mesalazina,mesalazina comprimido 400 mg,false,false,false,true,2,true,mesalazina 400 mg
+mesalazina 500 mg,mesalazina,mesalazina supositório 500 mg,false,false,false,true,2,true,mesalazina 500 mg
+mesalazina 800 mg,mesalazina,mesalazina comprimido 800 mg,false,false,false,true,2,true,mesalazina 800 mg
+metadona 10 mg,metadona,metadona comprimido 10 mg,false,false,false,true,2,true,metadona 10 mg
+metadona 10 mg/ml,metadona,"metadona injetável, 10 mg/mL ampola 1 mL",false,false,false,true,2,true,metadona 10 mg/ml
+metadona 5 mg,metadona,metadona comprimido 5 mg,false,false,false,true,2,true,metadona 5 mg
+metformina 500 mg,metformina,CLORIDRATO DE METFORMINA 500MG,true,true,false,false,,false,metformina 500 mg
+metformina 850 mg,metformina,CLORIDRATO DE METFORMINA 850MG,true,true,false,false,,false,metformina 850 mg
+metildopa 250 mg,metildopa,metildopa 250 mg comprimido,false,true,false,false,,false,metildopa 250 mg
+metilfenidato 10 mg,metilfenidato,metilfenidato 10 mg comprimido,false,false,true,false,,false,metilfenidato 10 mg
+metilprednisolona 500 mg,metilprednisolona,"metilprednisolona injetável, 500 mg frasco ampola",false,false,false,true,2,true,metilprednisolona 500 mg
+metoclopramida 10 mg,metoclopramida,"metoclopramida, cloridrato 10 mg comprimido",false,true,false,false,,false,metoclopramida 10 mg
+metoprolol 25 mg,metoprolol,SUCCINATO DE METOPROLOL 25 MG,true,false,false,false,,false,metoprolol 25 mg
+metotrexato 2.5 mg,metotrexato,"metotrexato comprimido 2,5 mg comprimido 2,5 mg",false,false,false,true,1A,true,metotrexato 2.5 mg
+metotrexato 25 mg/ml,metotrexato,"metotrexato injetável, 25 mg/mL ampola de 2 mL",false,false,false,true,1A,true,metotrexato 25 mg/ml
+metronidazol 100 mg/g,metronidazol,metronidazol 100 mg/g (10%) creme ou gel vaginal,false,true,false,false,,false,metronidazol 100 mg/g
+metronidazol 250 mg,metronidazol,metronidazol 250 mg comprimido,false,true,false,false,,false,metronidazol 250 mg
+miconazol 20 mg/g,miconazol,"miconazol, nitrato 20 mg/g (2%) creme vaginal",false,true,false,false,,false,miconazol 20 mg/g
+miglustate 100 mg,miglustate,miglustate cápsula 100 mg,false,false,false,true,1A,true,miglustate 100 mg
+mikania glomerata spreng solucao oral,mikania glomerata spreng solucao oral,Mikania glomerata spreng (guaco) solução oral,false,false,true,false,,false,mikania glomerata spreng solucao oral
+mofetila 500 mg,mofetila,micofenolato de mofetila comprimido 500 mg,false,false,false,true,1A,true,micofenolato de mofetila 500 mg
+morfina 10 mg,morfina,morfina comprimido 10 mg,false,false,false,true,2,true,morfina 10 mg
+morfina 10 mg/ml,morfina,"morfina injetável, 10 mg/mL ampola de 1 mL",false,false,false,true,2,true,morfina 10 mg/ml
+morfina 100 mg,morfina,morfina cápsula de liberação controlada 100 mg,false,false,false,true,2,true,morfina 100 mg
+morfina 30 mg,morfina,"morfina, sulfato 30 mg comprimido de liberação modificada",false,false,true,true,2,true,morfina 30 mg
+morfina 60 mg,morfina,morfina cápsula de liberação controlada 60 mg,false,false,false,true,2,true,morfina 60 mg
+moxifloxacino 400 mg,moxifloxacino,moxifloxacino 400 mg comprimido,false,false,true,false,,false,moxifloxacino 400 mg
+mupirocina 20 mg/g,mupirocina,mupirocina 20 mg/g pomada bisnaga,false,false,true,false,,false,mupirocina 20 mg/g
+naltrexona 50 mg,naltrexona,naltrexona 50 mg comprimido,false,false,true,false,,false,naltrexona 50 mg
+naproxeno 250 mg,naproxeno,naproxeno Comprimido 250mg,false,false,false,true,2,true,naproxeno 250 mg
+naproxeno 500 mg,naproxeno,naproxeno Comprimido 500mg,false,false,false,true,2,true,naproxeno 500 mg
+natalizumabe 20 mg/ml,natalizumabe,"natalizumabe injetável, 20 mg/mL frasco ampola com 15 mL",false,false,false,true,1A,true,natalizumabe 20 mg/ml
+nevirapina 10 mg/ml,nevirapina,nevirapina (NVP) 10 mg/mL suspensão oral,false,false,true,false,,false,nevirapina 10 mg/ml
+nevirapina 200 mg,nevirapina,nevirapina (NVP) 200 mg comprimido,false,false,true,false,,false,nevirapina 200 mg
+nicotina 14 mg,nicotina,nicotina 14 mg adesivo transdérmico,false,false,true,false,,false,nicotina 14 mg
+nicotina 2 mg,nicotina,nicotina 2 mg goma de mascar,false,false,true,false,,false,nicotina 2 mg
+nicotina 21 mg,nicotina,nicotina 21 mg adesivo transdérmico,false,false,true,false,,false,nicotina 21 mg
+nicotina 7 mg,nicotina,nicotina 7 mg adesivo transdérmico,false,false,true,false,,false,nicotina 7 mg
+nifedipino 20 mg,nifedipino,nifedipino 20 mg comprimido liberação prolongada,false,true,false,false,,false,nifedipino 20 mg
+nirmatrelvir + ritonavir comprimidos revestidos,nirmatrelvir + ritonavir comprimidos revestidos,nirmatrelvir + ritonavir comprimidos revestidos,false,false,true,false,,false,nirmatrelvir + ritonavir comprimidos revestidos
+nistatina 100 ui/ml,nistatina,nistatina 100.000 UI/mL suspensão oral,false,true,false,false,,false,nistatina 100 ui/ml
+nitrofurantoina 100 mg,nitrofurantoina,nitrofurantoína 100 mg comprimido,false,true,false,false,,false,nitrofurantoina 100 mg
+noretisterona 0.35 mg,noretisterona,"NORETISTERONA 0,35MG",true,true,false,false,,false,noretisterona 0.35 mg
+norfloxacino 400 mg,norfloxacino,norfloxacino 400 mg comprimido,false,true,false,false,,false,norfloxacino 400 mg
+nortriptilina 25 mg,nortriptilina,"nortriptilina, cloridrato 25 mg comprimido",false,true,false,false,,false,nortriptilina 25 mg
+nusinersena 2.4 mg/ml,nusinersena,"nusinersena injetável, 2,4 mg/mL frasco- ampola com 5 mL",false,false,false,true,1A,true,nusinersena 2.4 mg/ml
+octreotida 0.1 mg/ml,octreotida,"octreotida injetável, 0,1 mg/mL ampola com 1 mL",false,false,false,true,1B,true,octreotida 0.1 mg/ml
+octreotida 10 mg,octreotida,"octreotida injetável, 10 mg frasco- ampola",false,false,false,true,1B,true,octreotida 10 mg
+octreotida 20 mg,octreotida,"octreotida injetável, 20 mg frasco- ampola",false,false,false,true,1A,true,octreotida 20 mg
+octreotida 30 mg,octreotida,"octreotida injetável, 30 mg frasco- ampola",false,false,false,true,1A,true,octreotida 30 mg
+olanzapina 10 mg,olanzapina,olanzapina comprimido 10 mg,false,false,false,true,1A,true,olanzapina 10 mg
+olanzapina 5 mg,olanzapina,olanzapina comprimido 5 mg,false,false,false,true,1A,true,olanzapina 5 mg
+oleo mineral frasco,oleo mineral frasco,óleo mineral frasco,false,true,false,false,,false,oleo mineral frasco
+olodaterol + tiotropio 2.5 mcg + 2.5 mcg,olodaterol + tiotropio,"tiotrópio + olodaterol solução inalatória, (2,5mcg + 2,5mcg)/dose frasco com 60 doses",false,false,false,true,1B,true,tiotropio 2.5 mcg + olodaterol 2.5 mcg
+omalizumabe 150 mg,omalizumabe,"omalizumabe injetável, 150 mg seringa preenchida",false,false,false,true,1B,true,omalizumabe 150 mg
+omeprazol 20 mg,omeprazol,omeprazol 20 mg cápsula,false,true,false,false,,false,omeprazol 20 mg
+onasemnogeno abeparvoveque,onasemnogeno abeparvoveque,"onasemnogeno abeparvoveque 13 injetável, 2,0 x 10 gv/mL",false,false,false,true,1A,true,onasemnogeno abeparvoveque
+oseltamivir 30 mg,oseltamivir,oseltamivir 30 mg cápsula,false,true,false,false,,false,oseltamivir 30 mg
+oseltamivir 45 mg,oseltamivir,oseltamivir 45 mg cápsula,false,true,false,false,,false,oseltamivir 45 mg
+oseltamivir 75 mg,oseltamivir,oseltamivir 75 mg cápsula,false,true,false,false,,false,oseltamivir 75 mg
+pamidronato 60 mg,pamidronato,"pamidronato injetável, 60 mg frasco ampola",false,false,false,true,2,true,pamidronato 60 mg
+pancreatina 10 ui,pancreatina,pancreatina cápsula 10.000UI,false,false,false,true,1B,true,pancreatina 10 ui
+pancreatina 25 ui,pancreatina,pancreatina cápsula 25.000UI,false,false,false,true,1B,true,pancreatina 25 ui
+paracetamol 200 mg/ml,paracetamol,paracetamol 200 mg/mL solução oral gotas,false,true,false,false,,false,paracetamol 200 mg/ml
+paracetamol 500 mg,paracetamol,paracetamol 500 mg comprimido,false,true,false,false,,false,paracetamol 500 mg
+paricalcitol 5 mcg/ml,paricalcitol,"paricalcitol injetável, 5 mcg/mL ampola com 1 mL",false,false,false,true,1A,true,paricalcitol 5 mcg/ml
+pasireotida 40 mg,pasireotida,"pasireotida injetável, 40mg frasco",false,false,false,true,1A,true,pasireotida 40 mg
+pasireotida 60 mg,pasireotida,"pasireotida injetável, 60mg frasco",false,false,false,true,1A,true,pasireotida 60 mg
+penicilamina 250 mg,penicilamina,penicilamina cápsula 250 mg,false,false,false,true,1B,true,penicilamina 250 mg
+pentoxifilina 400 mg,pentoxifilina,pentoxifilina 400 mg comprimido,false,false,true,false,,false,pentoxifilina 400 mg
+periciazina 40 mg/ml,periciazina,periciazina 40 mg/mL (4%) solução oral gotas,false,true,false,false,,false,periciazina 40 mg/ml
+permetrina 10 mg/ml,permetrina,permetrina 10 mg/mL (1%) loção capilar,false,true,false,false,,false,permetrina 10 mg/ml
+permetrina 50 mg/ml,permetrina,permetrina 50 mg/mL (5%) creme ou loção,false,true,false,false,,false,permetrina 50 mg/ml
+pilocarpina 20 mg/ml,pilocarpina,"pilocarpina, cloridrato 20 mg/mL (2%) solução oftálmica",false,false,true,true,2,true,pilocarpina 20 mg/ml
+pirazinamida 150 mg,pirazinamida,pirazinamida 150 mg comprimido dispersível,false,false,true,false,,false,pirazinamida 150 mg
+pirazinamida 500 mg,pirazinamida,pirazinamida 500 mg comprimido,false,false,true,false,,false,pirazinamida 500 mg
+piridostigmina 60 mg,piridostigmina,piridostigmina comprimido 60 mg,false,false,false,true,2,true,piridostigmina 60 mg
+piridoxina 40 mg,piridoxina,"piridoxina, cloridrato (vit. B6) 40 mg comprimido",false,true,false,false,,false,piridoxina 40 mg
+piridoxina 50 mg,piridoxina,"piridoxina, cloridrato (vit. B6) 50 mg comprimido",false,false,true,false,,false,piridoxina 50 mg
+pirimetamina 25 mg,pirimetamina,pirimetamina 25 mg comprimido,false,false,true,false,,false,pirimetamina 25 mg
+pirimetamina 3 mg/ml,pirimetamina,pirimetamina 3 mg/mL solução oral,false,false,true,false,,false,pirimetamina 3 mg/ml
+pramipexol 0.125 mg,pramipexol,"pramipexol (dicloridrato de pramipexol) comprimido 0,125 mg",false,false,false,true,1A,true,pramipexol 0.125 mg
+pramipexol 0.25 mg,pramipexol,"pramipexol (dicloridrato de pramipexol) comprimido 0,25 mg",false,false,false,true,1A,true,pramipexol 0.25 mg
+pramipexol 1 mg,pramipexol,pramipexol (dicloridrato de pramipexol) comprimido 1 mg,false,false,false,true,1A,true,pramipexol 1 mg
+pravastatina 10 mg,pravastatina,pravastatina comprimido 10mg,false,false,false,true,2,true,pravastatina 10 mg
+pravastatina 20 mg,pravastatina,pravastatina 20 mg comprimido,false,false,true,true,2,true,pravastatina 20 mg
+pravastatina 40 mg,pravastatina,pravastatina comprimido 40 mg,false,false,false,true,2,true,pravastatina 40 mg
+praziquantel 600 mg,praziquantel,praziquantel 600 mg comprimido,false,false,true,false,,false,praziquantel 600 mg
+prednisolona 4.02 mg/ml,prednisolona,"prednisolona, fosfato sódico 4,02 mg/mL (equivalente a 3 mg/mL de prednisolona) solução oral",false,true,false,false,,false,prednisolona 4.02 mg/ml
+prednisona 20 mg,prednisona,prednisona 20 mg comprimido,false,true,false,false,,false,prednisona 20 mg
+prednisona 5 mg,prednisona,prednisona 5 mg comprimido,false,true,false,false,,false,prednisona 5 mg
+primaquina 15 mg,primaquina,primaquina 15 mg comprimido,false,false,true,false,,false,primaquina 15 mg
+primidona 100 mg,primidona,primidona comprimido 100 mg,false,false,false,true,2,true,primidona 100 mg
+primidona 250 mg,primidona,primidona comprimido 250 mg,false,false,false,true,2,true,primidona 250 mg
+progesterona 200 mg,progesterona,progesterona 200 mg cápsula gelatinosa,false,true,false,false,,false,progesterona 200 mg
+prometazina 25 mg,prometazina,"prometazina, cloridrato 25 mg comprimido",false,true,false,false,,false,prometazina 25 mg
+propiltiuracila 100 mg,propiltiuracila,propiltiuracila 100 mg comprimido,false,true,false,false,,false,propiltiuracila 100 mg
+propranolol 40 mg,propranolol,CLORIDRATO DE PROPRANOLOL 40MG,true,true,false,false,,false,propranolol 40 mg
+quetiapina 100 mg,quetiapina,quetiapina comprimido 100 mg,false,false,false,true,1A,true,quetiapina 100 mg
+quetiapina 200 mg,quetiapina,quetiapina comprimido 200 mg,false,false,false,true,1A,true,quetiapina 200 mg
+quetiapina 25 mg,quetiapina,quetiapina comprimido 25 mg,false,false,false,true,1A,true,quetiapina 25 mg
+quetiapina 300 mg,quetiapina,quetiapina comprimido 300 mg,false,false,false,true,1A,true,quetiapina 300 mg
+raloxifeno 60 mg,raloxifeno,raloxifeno (cloridrato de raloxifeno) comprimido 60 mg,false,false,false,true,2,true,raloxifeno 60 mg
+raltegravir 100 mg,raltegravir,raltegravir (RAL) 100 mg comprimido,false,false,true,false,,false,raltegravir 100 mg
+raltegravir 400 mg,raltegravir,raltegravir (RAL) 400 mg comprimido,false,false,true,false,,false,raltegravir 400 mg
+rasagilina 1 mg,rasagilina,rasagilina comprimido 1 mg,false,false,false,true,1A,true,rasagilina 1 mg
+ravulizumabe 100 mg/ml,ravulizumabe,"ravulizumabe injetável, 100mg/mL frasco",false,false,false,true,1A,true,ravulizumabe 100 mg/ml
+rifabutina 150 mg,rifabutina,rifabutina 150 mg cápsula,false,false,true,false,,false,rifabutina 150 mg
+rifampicina 20 mg/ml,rifampicina,rifampicina 20 mg/mL (2%) suspensão oral,false,false,true,false,,false,rifampicina 20 mg/ml
+rifampicina 300 mg,rifampicina,rifampicina 300 mg cápsula,false,false,true,false,,false,rifampicina 300 mg
+rifapentina 150 mg,rifapentina,rifapentina 150 mg comprimido,false,false,true,false,,false,rifapentina 150 mg
+riluzol 50 mg,riluzol,riluzol comprimido 50 mg,false,false,false,true,1A,true,riluzol 50 mg
+risanquizumabe 150 mg/ml,risanquizumabe,"risanquizumabe solução injetável, 150mg/mL frasco ampola",false,false,false,true,1A,true,risanquizumabe 150 mg/ml
+risdiplam 0.75 mg/ml,risdiplam,"risdiplam pó para solução oral 0,75mg/mL",false,false,false,true,1A,true,risdiplam 0.75 mg/ml
+risedronato 35 mg,risedronato,risedronato comprimido 35 mg,false,false,false,true,2,true,risedronato 35 mg
+risperidona 1 mg,risperidona,risperidona comprimido 1 mg,false,false,false,true,1B,true,risperidona 1 mg
+risperidona 1 mg/ml,risperidona,"risperidona solução oral, 1mg/mL frasco com 30 mL",false,false,false,true,1B,true,risperidona 1 mg/ml
+risperidona 2 mg,risperidona,risperidona 2 mg comprimido,false,true,false,true,1B,true,risperidona 2 mg
+risperidona 3 mg,risperidona,risperidona comprimido 3 mg,false,false,false,true,1B,true,risperidona 3 mg
+ritonavir 100 mg,ritonavir,ritonavir (RTV) 100 mg comprimido,false,false,true,false,,false,ritonavir 100 mg
+ritonavir 100 mg/ml,ritonavir,ritonavir 100 mg/mL pó para suspensão oral,false,false,true,false,,false,ritonavir 100 mg/ml
+rituximabe 10 mg/ml,rituximabe,"rituximabe injetável, 10 mg/mL frasco ampola",false,false,false,true,1A,true,rituximabe 10 mg/ml
+rivastigmina 1.5 mg,rivastigmina,"rivastigmina cápsula 1,5 mg",false,false,false,true,1A,true,rivastigmina 1.5 mg
+rivastigmina 18 mg,rivastigmina,rivastigmina adesivo transdérmico 18 mg,false,false,false,true,1A,true,rivastigmina 18 mg
+rivastigmina 2 mg/ml,rivastigmina,"rivastigmina solução oral, 2mg/mL frasco com 120 mL",false,false,false,true,1B,true,rivastigmina 2 mg/ml
+rivastigmina 3 mg,rivastigmina,rivastigmina cápsula 3 mg,false,false,false,true,1A,true,rivastigmina 3 mg
+rivastigmina 4.5 mg,rivastigmina,"rivastigmina cápsula 4,5 mg",false,false,false,true,1A,true,rivastigmina 4.5 mg
+rivastigmina 6 mg,rivastigmina,rivastigmina cápsula 6 mg,false,false,false,true,1A,true,rivastigmina 6 mg
+rivastigmina 9 mg,rivastigmina,rivastigmina adesivo transdérmico 9 mg,false,false,false,true,1A,true,rivastigmina 9 mg
+romosozumabe 90 mg/ml,romosozumabe,"romosozumabe injetável, 90 mg/mL seringa",false,false,false,true,1A,true,romosozumabe 90 mg/ml
+sacubitril valsartana 100 mg,sacubitril valsartana,sacubitril valsartana sódica comprimido 100mg,false,false,false,true,1B,true,sacubitril valsartana 100 mg
+sacubitril valsartana 200 mg,sacubitril valsartana,sacubitril valsartana sódica comprimido 200mg,false,false,false,true,1B,true,sacubitril valsartana 200 mg
+sacubitril valsartana 50 mg,sacubitril valsartana,sacubitril valsartana sódica comprimido 50mg,false,false,false,true,1B,true,sacubitril valsartana 50 mg
+sais para reidratacao oral po para solucao oral,sais para reidratacao oral po para solucao oral,sais para reidratação oral pó para solução oral,false,true,false,false,,false,sais para reidratacao oral po para solucao oral
+salbutamol 100 mcg,salbutamol,SULFATO DE SALBUTAMOL 100MCG,true,true,false,false,,false,salbutamol 100 mcg | salbutamol 100 mcg/dose
+salbutamol 5 mg,salbutamol,SULFATO DE SALBUTAMOL 5MG,true,false,false,false,,false,salbutamol 5 mg
+sapropterina 100 mg,sapropterina,sapropterina (dicloridrato de sapropterina) comprimido solúvel 100 mg,false,false,false,true,1B,true,sapropterina 100 mg
+secuquinumabe 150 mg/ml,secuquinumabe,"secuquinumabe injetável, 150mg/mL caneta aplicadora com 1 mL",false,false,false,true,1A,true,secuquinumabe 150 mg/ml
+selexipague 1000 mcg,selexipague,selexipague comprimido 1000mcg,false,false,false,true,1B,true,selexipague 1000 mcg
+selexipague 1200 mcg,selexipague,selexipague comprimido 1200mcg,false,false,false,true,1B,true,selexipague 1200 mcg
+selexipague 1400 mcg,selexipague,selexipague comprimido 1400mcg,false,false,false,true,1B,true,selexipague 1400 mcg
+selexipague 1600 mcg,selexipague,selexipague comprimido 1600mcg,false,false,false,true,1B,true,selexipague 1600 mcg
+selexipague 200 mcg,selexipague,selexipague comprimido 200mcg,false,false,false,true,1B,true,selexipague 200 mcg
+selexipague 400 mcg,selexipague,selexipague comprimido 400mcg,false,false,false,true,1B,true,selexipague 400 mcg
+selexipague 600 mcg,selexipague,selexipague comprimido 600mcg,false,false,false,true,1B,true,selexipague 600 mcg
+selexipague 800 mcg,selexipague,selexipague comprimido 800mcg,false,false,false,true,1B,true,selexipague 800 mcg
+sertralina 50 mg,sertralina,sertralina 50 mg comprimido,false,true,false,false,,false,sertralina 50 mg
+sevelamer 800 mg,sevelamer,sevelamer (cloridrato de sevelâmer) comprimido 800 mg,false,false,false,true,1A,true,sevelamer 800 mg
+sildenafila 20 mg,sildenafila,sildenafila comprimido 20 mg,false,false,false,true,1A,true,sildenafila 20 mg
+sildenafila 25 mg,sildenafila,sildenafila comprimido 25 mg,false,false,false,true,1A,true,sildenafila 25 mg
+sildenafila 50 mg,sildenafila,sildenafila comprimido 50 mg,false,false,false,true,1A,true,sildenafila 50 mg
+sinvastatina 10 mg,sinvastatina,SINVASTATINA 10MG,true,true,false,false,,false,sinvastatina 10 mg
+sinvastatina 20 mg,sinvastatina,SINVASTATINA 20MG,true,true,false,false,,false,sinvastatina 20 mg
+sinvastatina 40 mg,sinvastatina,SINVASTATINA 40MG,true,true,false,false,,false,sinvastatina 40 mg
+sirolimo 1 mg,sirolimo,sirolimo drágea 1 mg,false,false,false,true,1A,true,sirolimo 1 mg
+sirolimo 2 mg,sirolimo,sirolimo drágea 2 mg,false,false,false,true,1A,true,sirolimo 2 mg
+sodio 180 mg,sodio,micofenolato de sodio comprimido 180 mg,false,false,false,true,1A,true,micofenolato de sodio 180 mg
+sodio 25 mg/ml,sodio,"hipoclorito de sódio 25 mg/mL de cloro ativo (2,5 %) solução",false,true,false,false,,true,hipoclorito de sodio 25 mg/ml
+sodio 360 mg,sodio,micofenolato de sodio comprimido 360 mg,false,false,false,true,1A,true,micofenolato de sodio 360 mg
+sodio 576 mg,sodio,valproato de sódio 576 mg (equivalente a 500 mg de ácido valpróico) comprimido revestido ou cápsula,false,true,false,false,,true,valproato de sodio 576 mg
+sodio 624 mg/ml,sodio,"valproato de sódio 57, 624 mg/mL (equivalente a 50 mg de ácido valpróico) solução oral ou xarope",false,true,false,false,,true,valproato de sodio 624 mg/ml
+sodio 70 mg,sodio,ALENDRONATO DE SÓDIO 70MG,true,true,false,false,,true,alendronato de sodio 70 mg
+sodio 9 mg/ml,sodio,"cloreto de sódio 9 mg/mL (0,9 % - 0,154 mEq/mL) solução injetável ampola",false,true,false,false,,true,cloreto de sodio 9 mg/ml
+sofosbuvir + velpatasvir + voxilaprevir 100 mg + 100 mg + 400 mg,sofosbuvir + velpatasvir + voxilaprevir,sofosbuvir 400 mg + velpatasvir 100 mg + voxilaprevir 100 mg comprimido revestido,false,false,true,false,,false,sofosbuvir 400 mg + velpatasvir 100 mg + voxilaprevir 100 mg
+sofosbuvir + velpatasvir 100 mg + 400 mg,sofosbuvir + velpatasvir,sofosbuvir 400 mg + velpatasvir 100 mg comprimido revestido,false,false,true,false,,false,sofosbuvir 400 mg + velpatasvir 100 mg
+sofosbuvir + velpatasvir 200 mg + 50 mg,sofosbuvir + velpatasvir,sofosbuvir 200 mg + velpatasvir 50 mg granulado,false,false,true,false,,false,sofosbuvir 200 mg + velpatasvir 50 mg
+sofosbuvir 400 mg,sofosbuvir,sofosbuvir 400 mg comprimido revestido,false,false,true,false,,false,sofosbuvir 400 mg
+somatropina 12 ui,somatropina,"somatropina injetável, 12 UI frasco ampola",false,false,false,true,1A,true,somatropina 12 ui
+somatropina 15 ui,somatropina,"somatropina injetável, 15 UI frasco ampola",false,false,false,true,1A,true,somatropina 15 ui
+somatropina 16 ui,somatropina,"somatropina injetável, 16 UI frasco ampola",false,false,false,true,1A,true,somatropina 16 ui
+somatropina 18 ui,somatropina,"somatropina injetável, 18 UI frasco ampola",false,false,false,true,1A,true,somatropina 18 ui
+somatropina 24 ui,somatropina,"somatropina injetável, 24 UI frasco ampola",false,false,false,true,1A,true,somatropina 24 ui
+somatropina 30 ui,somatropina,"somatropina injetável, 30 UI frasco ampola injetável, imunoglobulinas que neutralizam, no mínimo, 1,5 dose mínima mortal",false,false,false,true,1A,true,somatropina 30 ui
+somatropina 4 ui,somatropina,"somatropina injetável, 4 UI frasco ampola",false,false,false,true,1A,true,somatropina 4 ui
+sulfadiazina 150 mg/ml,sulfadiazina,sulfadiazina 150 mg/mL solução oral,false,false,true,false,,false,sulfadiazina 150 mg/ml
+sulfadiazina 500 mg,sulfadiazina,sulfadiazina 500 mg comprimido,false,false,true,false,,false,sulfadiazina 500 mg
+sulfametoxazol + trimetoprima 160 mg + 800 mg,sulfametoxazol + trimetoprima,sulfametoxazol 800 mg + trimetoprima 160 mg comprimido,false,true,false,false,,false,sulfametoxazol 800 mg + trimetoprima 160 mg
+sulfametoxazol + trimetoprima 40 mg/ml + 8 mg/ml,sulfametoxazol + trimetoprima,sulfametoxazol 40 mg/mL + trimetoprima 8 mg/mL suspensão oral,false,true,false,false,,false,sulfametoxazol 40 mg/ml + trimetoprima 8 mg/ml
+sulfassalazina 500 mg,sulfassalazina,sulfassalazina comprimido 500 mg,false,false,false,true,2,true,sulfassalazina 500 mg
+tacrolimo 1 mg,tacrolimo,tacrolimo cápsula 1 mg,false,false,false,true,1A,true,tacrolimo 1 mg
+tacrolimo 5 mg,tacrolimo,tacrolimo cápsula 5 mg,false,false,false,true,1A,true,tacrolimo 5 mg
+tafamidis 0.3 mg/g,tafamidis,"tafamidis pomada de 0,3 mg/g ou 1 mg/g cápsula 61 mg",false,false,false,true,1A,true,tafamidis 0.3 mg/g
+tafamidis meglumina 20 mg,tafamidis meglumina,tafamidis meglumina cápsula 20 mg,false,false,false,true,1A,true,tafamidis meglumina 20 mg
+talidomida 100 mg,talidomida,talidomida 100 mg comprimido,false,false,true,false,,false,talidomida 100 mg
+tenofovir 300 mg,tenofovir,tenofovir 300 mg comprimido,false,false,true,false,,false,tenofovir 300 mg
+tenofovir alafenamida 25 mg,tenofovir alafenamida,tenofovir alafenamida 25 mg comprimido,false,false,true,false,,false,tenofovir alafenamida 25 mg
+teofilina 100 mg,teofilina,teofilina 100 mg cápsula de liberação prolongada,false,true,false,false,,false,teofilina 100 mg
+terbinafina 250 mg,terbinafina,terbinafina 250 mg comprimido,false,true,false,false,,false,terbinafina 250 mg
+teriflunomida 14 mg,teriflunomida,teriflunomida comprimido 14 mg,false,false,false,true,1A,true,teriflunomida 14 mg
+terizidona 250 mg,terizidona,terizidona 250 mg comprimido,false,false,true,false,,false,terizidona 250 mg
+testosterona 250 mg/ml,testosterona,"testosterona, undecanoato 250 mg/mL solução injetável",false,false,true,false,,false,testosterona 250 mg/ml
+tiamazol 5 mg,tiamazol,tiamazol 5 mg comprimido,false,true,false,false,,false,tiamazol 5 mg
+tiamina 300 mg,tiamina,"tiamina, cloridrato (vit. B1) 300 mg comprimido",false,true,false,false,,false,tiamina 300 mg
+timolol 2.5 mg,timolol,"MALEATO DE TIMOLOL 2,5MG",true,false,false,false,,true,timolol 2.5 mg
+timolol 5 mg,timolol,MALEATO DE TIMOLOL 5MG,true,false,false,false,,true,timolol 5 mg
+timolol 5 mg/ml,timolol,"timolol, maleato 5 mg/mL (0,5%) solução oftálmica",false,false,true,true,2,true,timolol 5 mg/ml
+tinidazol 500 mg,tinidazol,tinidazol 500 mg comprimido,false,true,false,false,,false,tinidazol 500 mg
+tobramicina 3 mg/ml,tobramicina,"tobramicina 3 mg/mL (0,3%) solução oftálmica",false,true,false,false,,true,tobramicina 3 mg/ml
+tobramicina 300 mg,tobramicina,"tobramicina solução para inalação, 300mg frasco",false,false,false,true,1A,true,tobramicina 300 mg
+tocilizumabe 20 mg/ml,tocilizumabe,"tocilizumabe injetável, 20 mg/mL frasco",false,false,false,true,1A,true,tocilizumabe 20 mg/ml
+tofacitinibe 5 mg,tofacitinibe,tofacitinibe comprimido 5 mg,false,false,false,true,1A,true,tofacitinibe 5 mg
+topiramato 100 mg,topiramato,topiramato comprimido 100 mg,false,false,false,true,2,true,topiramato 100 mg
+topiramato 25 mg,topiramato,topiramato comprimido 25 mg,false,false,false,true,2,true,topiramato 25 mg
+topiramato 50 mg,topiramato,topiramato comprimido 50 mg,false,false,false,true,2,true,topiramato 50 mg
+toxina botulinica tipo a 100 ui,toxina botulinica tipo a,"toxina botulínica tipo A injetável, 100 UI frasco ampola",false,false,false,true,1A,true,toxina botulinica tipo a 100 ui
+toxina botulinica tipo a 500 ui,toxina botulinica tipo a,"toxina botulínica tipo A injetável, 500 UI frasco ampola",false,false,false,true,1A,true,toxina botulinica tipo a 500 ui
+tramadol 50 mg,tramadol,tramadol 50 mg comprimido,false,false,true,false,,false,tramadol 50 mg
+travoprosta 0.04 mg/ml,travoprosta,"travoprosta solução oftálmica, 0,04 mg/mL frasco com 2,5 mL",false,false,false,true,1A,true,travoprosta 0.04 mg/ml
+trientina 250 mg,trientina,trientina cápsula 250 mg,false,false,false,true,1A,true,trientina 250 mg
+triexifenidil 5 mg,triexifenidil,triexifenidil (cloridrato de triexifenidil) comprimido 5 mg,false,false,false,true,1B,true,triexifenidil 5 mg
+triptorrelina 11.25 mg,triptorrelina,"triptorrelina injetável, 11,25 mg frasco ampola",false,false,false,true,1B,true,triptorrelina 11.25 mg
+triptorrelina 22.5 mg,triptorrelina,"triptorrelina injetável, 22,5 mg frasco ampola",false,false,false,true,1B,true,triptorrelina 22.5 mg
+triptorrelina 3.75 mg,triptorrelina,"triptorrelina injetável, 3,75 mg frasco ampola",false,false,false,true,1B,true,triptorrelina 3.75 mg
+umeclidinio + vilaterol 25 mcg + 62.5 mcg,umeclidinio + vilaterol,"umeclidínio + vilaterol pó para inalação oral, (62,5mcg + 25mcg)/dose frasco com 60 doses",false,false,false,true,1B,true,umeclidinio 62.5 mcg + vilaterol 25 mcg
+upadacitinibe 15 mg,upadacitinibe,"upadacitinibe comprimidos revestido de liberação prolongada, 15 mg comprimidos revestido de",false,false,false,true,1A,true,upadacitinibe 15 mg
+ureia 100 mg/g,ureia,ureia 100 mg/g (10%) creme,false,false,true,false,,false,ureia 100 mg/g
+ustequinumabe 15 mg,ustequinumabe,"ustequinumabe liberação prolongada, 15 mg injetável, 45mg frasco ampola",false,false,false,true,1A,true,ustequinumabe 15 mg
+valaciclovir 500 mg,valaciclovir,valaciclovir 500 mg comprimido,false,false,true,false,,false,valaciclovir 500 mg
+valeriana officinalis l. sesquiterpenos 0.8 mg,valeriana officinalis l. sesquiterpenos,"Valeriana officinalis L. (valeriana) sesquiterpenos 0,8 mg a 3,5 mg comprimido",false,false,true,false,,false,valeriana officinalis l. sesquiterpenos 0.8 mg
+varfarina 2.5 mg,varfarina,"varfarina sódica 2,5 mg comprimido",false,true,false,false,,false,varfarina 2.5 mg
+varfarina 5 mg,varfarina,varfarina sódica 5 mg comprimido,false,true,false,false,,false,varfarina 5 mg
+vedolizumabe 300 mg,vedolizumabe,"vedolizumabe injetável, 300mg frasco",false,false,false,true,1A,true,vedolizumabe 300 mg
+vigabatrina 500 mg,vigabatrina,vigabatrina comprimido 500 mg,false,false,false,true,2,true,vigabatrina 500 mg
+zidovudina 10 mg/ml,zidovudina,zidovudina (AZT) 10 mg/mL solução injetável,false,false,true,false,,false,zidovudina 10 mg/ml
+zidovudina 100 mg,zidovudina,zidovudina (AZT) 100 mg cápsula,false,false,true,false,,false,zidovudina 100 mg
+ziprasidona 40 mg,ziprasidona,ziprasidona cápsula 40 mg,false,false,false,true,1A,true,ziprasidona 40 mg
+ziprasidona 80 mg,ziprasidona,"ziprasidona cápsula 80 mg HINSG : Hospital Infantil Nossa Senhora da Glória, CEAF: Medicamento do Componente Especializado da Assistência Farmacêutica padronizado pelo Ministério da Saúde, OBS : Nesta versão, temos disponíveis: CESAF (RENAME) = 242 medicamentos/insumos; ii) CEAF (RENAME) = 262 medicamentos/fórmula nutricional, sendo Grupo 1A = 134; Grupo 1B =",false,false,false,true,1A,true,ziprasidona 80 mg

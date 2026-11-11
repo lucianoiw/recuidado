@@ -1,0 +1,5903 @@
+{
+  "source": {
+    "name": "Prefeitura de São Paulo, Secretaria Municipal da Saúde, REMUME (itens entregues à população)",
+    "url": "https://prefeitura.sp.gov.br/documents/d/saude/remume_site_out__2026-pdf",
+    "page": "https://prefeitura.sp.gov.br/web/saude/w/atencao_basica/rela%C3%A7%C3%A3o-municipal-de-medicamentos-remume",
+    "fetched_at": "2026-11-11T03:35:01.681Z"
+  },
+  "items": [
+    {
+      "id": "abacavir-sulfato-abc-20-mg-ml-solucao-oral",
+      "name": "abacavir, sulfato (ABC) 20 mg/mL solução oral",
+      "active_ingredients": [
+        "abacavir"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "abacavir 20 mg/ml",
+      "ingredient_key": "abacavir",
+      "loose_match_key": "abacavir 20 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "abacavir-sulfato-abc-300-mg-comprimido",
+      "name": "abacavir, sulfato (ABC) 300 mg comprimido",
+      "active_ingredients": [
+        "abacavir"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "abacavir 300 mg",
+      "ingredient_key": "abacavir",
+      "loose_match_key": "abacavir 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "aciclovir-30-mg-g-3-pomada-oftalmica",
+      "name": "aciclovir 30 mg/g (3%) pomada oftálmica",
+      "active_ingredients": [
+        "aciclovir"
+      ],
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg/g"
+        },
+        {
+          "value": 3,
+          "unit": "%"
+        }
+      ],
+      "match_key": "aciclovir 30 mg/g",
+      "ingredient_key": "aciclovir",
+      "loose_match_key": "aciclovir 30 mg/g",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia/ AMAE/ AE e em unidades de referência em Oftalmologia"
+    },
+    {
+      "id": "aciclovir-50-mg-g-5-creme",
+      "name": "aciclovir 50 mg/g (5%) creme",
+      "active_ingredients": [
+        "aciclovir"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/g"
+        },
+        {
+          "value": 5,
+          "unit": "%"
+        }
+      ],
+      "match_key": "aciclovir 50 mg/g",
+      "ingredient_key": "aciclovir",
+      "loose_match_key": "aciclovir 50 mg/g",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em SAE/IST/AIDS, Centro de Especialidades Odontológicas, Casa Ser, Hospital Dia/ AMAE/ AE"
+    },
+    {
+      "id": "aciclovir-200-mg-comprimido",
+      "name": "aciclovir 200 mg comprimido",
+      "active_ingredients": [
+        "aciclovir"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "aciclovir 200 mg",
+      "ingredient_key": "aciclovir",
+      "loose_match_key": "aciclovir 200 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "aciclovir-400-mg-comprimido",
+      "name": "aciclovir 400 mg comprimido",
+      "active_ingredients": [
+        "aciclovir"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "aciclovir 400 mg",
+      "ingredient_key": "aciclovir",
+      "loose_match_key": "aciclovir 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "acido-acetilsalicilico-100-mg-comprimido",
+      "name": "ácido acetilsalicílico 100 mg comprimido",
+      "active_ingredients": [
+        "ácido acetilsalicílico"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido acetilsalicilico 100 mg",
+      "ingredient_key": "acido acetilsalicilico",
+      "loose_match_key": "acido acetilsalicilico 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "acido-folico-0-2-mg-ml-solucao-oral-gotas",
+      "name": "ácido fólico 0,2 mg/mL solução oral (gotas)",
+      "active_ingredients": [
+        "ácido fólico"
+      ],
+      "strengths": [
+        {
+          "value": 0.2,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "acido folico 0.2 mg/ml",
+      "ingredient_key": "acido folico",
+      "loose_match_key": "acido folico 0.2 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "acido-folico-5-mg-comprimido",
+      "name": "ácido fólico 5 mg comprimido",
+      "active_ingredients": [
+        "ácido fólico"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "acido folico 5 mg",
+      "ingredient_key": "acido folico",
+      "loose_match_key": "acido folico 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "acido-folinico-5-mg-ml-solucao-oral",
+      "name": "ácido folínico 5 mg/mL solução oral",
+      "active_ingredients": [
+        "ácido folínico"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "acido folinico 5 mg/ml",
+      "ingredient_key": "acido folinico",
+      "loose_match_key": "acido folinico 5 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "acido-paraminossalicilico-4g-sache-granulado-revestido",
+      "name": "ácido paraminossalicílico 4g sachê granulado revestido",
+      "active_ingredients": [
+        "ácido paraminossalicílico"
+      ],
+      "strengths": [
+        {
+          "value": 4,
+          "unit": "g"
+        }
+      ],
+      "match_key": "acido paraminossalicilico 4 g",
+      "ingredient_key": "acido paraminossalicilico",
+      "loose_match_key": "acido paraminossalicilico 4 g",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "adapaleno-1-mg-g-0-1-gel",
+      "name": "adapaleno 1 mg/g (0,1%) gel",
+      "active_ingredients": [
+        "adapaleno"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/g"
+        },
+        {
+          "value": 0.1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "adapaleno 1 mg/g",
+      "ingredient_key": "adapaleno",
+      "loose_match_key": "adapaleno 1 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "albendazol-40-mg-ml-suspensao-oral",
+      "name": "albendazol 40 mg/mL suspensão oral",
+      "active_ingredients": [
+        "albendazol"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "albendazol 40 mg/ml",
+      "ingredient_key": "albendazol",
+      "loose_match_key": "albendazol 40 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "albendazol-400-mg-comprimido-mastigavel",
+      "name": "albendazol 400 mg comprimido mastigável",
+      "active_ingredients": [
+        "albendazol"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "albendazol 400 mg",
+      "ingredient_key": "albendazol",
+      "loose_match_key": "albendazol 400 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "alendronato-de-sodio-70-mg-comprimido",
+      "name": "alendronato de sódio 70 mg comprimido",
+      "active_ingredients": [
+        "alendronato de sódio"
+      ],
+      "strengths": [
+        {
+          "value": 70,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "alendronato de sodio 70 mg",
+      "ingredient_key": "alendronato de sodio",
+      "loose_match_key": "sodio 70 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "alfapeginterferona-2a-180-mcg-seringa-preenchida",
+      "name": "alfapeginterferona 2A 180 mcg seringa preenchida",
+      "active_ingredients": [
+        "alfapeginterferona"
+      ],
+      "strengths": [
+        {
+          "value": 180,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "alfapeginterferona 180 mcg",
+      "ingredient_key": "alfapeginterferona",
+      "loose_match_key": "alfapeginterferona 180 mcg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "algestona-acetofenida-150-mg-ml-enantato-de-estradiol-10-mg-ml-solucao-injetavel",
+      "name": "algestona acetofenida 150 mg/mL + enantato de estradiol 10 mg/mL solução injetável",
+      "active_ingredients": [
+        "algestona acetofenida",
+        "enantato de estradiol"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "algestona acetofenida 150 mg/ml + enantato de estradiol 10 mg/ml",
+      "ingredient_key": "algestona acetofenida + enantato de estradiol",
+      "loose_match_key": "algestona acetofenida + estradiol 10 mg/ml + 150 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "alopurinol-100-mg-comprimido",
+      "name": "alopurinol 100 mg comprimido",
+      "active_ingredients": [
+        "alopurinol"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "alopurinol 100 mg",
+      "ingredient_key": "alopurinol",
+      "loose_match_key": "alopurinol 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "amiodarona-cloridrato-200-mg-comprimido",
+      "name": "amiodarona, cloridrato 200 mg comprimido",
+      "active_ingredients": [
+        "amiodarona"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "amiodarona 200 mg",
+      "ingredient_key": "amiodarona",
+      "loose_match_key": "amiodarona 200 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "amitriptilina-cloridrato-25-mg-comprimido",
+      "name": "amitriptilina, cloridrato 25 mg comprimido",
+      "active_ingredients": [
+        "amitriptilina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "amitriptilina 25 mg",
+      "ingredient_key": "amitriptilina",
+      "loose_match_key": "amitriptilina 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "amoxicilina-50-mg-ml-po-para-suspensao-oral",
+      "name": "amoxicilina 50 mg/mL pó para suspensão oral",
+      "active_ingredients": [
+        "amoxicilina"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "amoxicilina 50 mg/ml",
+      "ingredient_key": "amoxicilina",
+      "loose_match_key": "amoxicilina 50 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "amoxicilina-500-mg-capsula",
+      "name": "amoxicilina 500 mg cápsula",
+      "active_ingredients": [
+        "amoxicilina"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "amoxicilina 500 mg",
+      "ingredient_key": "amoxicilina",
+      "loose_match_key": "amoxicilina 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "anlodipino-besilato-5-mg-comprimido",
+      "name": "anlodipino, besilato 5 mg comprimido",
+      "active_ingredients": [
+        "anlodipino"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "anlodipino 5 mg",
+      "ingredient_key": "anlodipino",
+      "loose_match_key": "anlodipino 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "anlodipino-besilato-10-mg-comprimido",
+      "name": "anlodipino, besilato 10 mg comprimido",
+      "active_ingredients": [
+        "anlodipino"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "anlodipino 10 mg",
+      "ingredient_key": "anlodipino",
+      "loose_match_key": "anlodipino 10 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "atazanavir-sulfato-atv-300-mg-capsula",
+      "name": "atazanavir, sulfato (ATV) 300 mg cápsula",
+      "active_ingredients": [
+        "atazanavir"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atazanavir 300 mg",
+      "ingredient_key": "atazanavir",
+      "loose_match_key": "atazanavir 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "atenolol-50-mg-comprimido",
+      "name": "atenolol 50 mg comprimido",
+      "active_ingredients": [
+        "atenolol"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atenolol 50 mg",
+      "ingredient_key": "atenolol",
+      "loose_match_key": "atenolol 50 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "atorvastatina-10-mg-comprimido",
+      "name": "atorvastatina 10 mg comprimido",
+      "active_ingredients": [
+        "atorvastatina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "atorvastatina 10 mg",
+      "ingredient_key": "atorvastatina",
+      "loose_match_key": "atorvastatina 10 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "azitromicina-40-mg-ml-suspensao-oral",
+      "name": "azitromicina 40 mg/mL suspensão oral",
+      "active_ingredients": [
+        "azitromicina"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "azitromicina 40 mg/ml",
+      "ingredient_key": "azitromicina",
+      "loose_match_key": "azitromicina 40 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "azitromicina-500-mg-comprimido",
+      "name": "azitromicina 500 mg comprimido",
+      "active_ingredients": [
+        "azitromicina"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "azitromicina 500 mg",
+      "ingredient_key": "azitromicina",
+      "loose_match_key": "azitromicina 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "beclometasona-dipropionato-50-mcg-dose-po-solucao-inalante-ou-aerossol-oral",
+      "name": "beclometasona, dipropionato 50 mcg/dose pó, solução inalante ou aerossol oral",
+      "active_ingredients": [
+        "beclometasona"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mcg/dose"
+        }
+      ],
+      "match_key": "beclometasona 50 mcg/dose",
+      "ingredient_key": "beclometasona",
+      "loose_match_key": "beclometasona 50 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "beclometasona-dipropionato-200-mcg-dose-aerossol-oral",
+      "name": "beclometasona, dipropionato 200 mcg/dose aerossol oral",
+      "active_ingredients": [
+        "beclometasona"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mcg/dose"
+        }
+      ],
+      "match_key": "beclometasona 200 mcg/dose",
+      "ingredient_key": "beclometasona",
+      "loose_match_key": "beclometasona 200 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "beclometasona-dipropionato-50-mcg-dose-aerossol-nasal",
+      "name": "beclometasona, dipropionato 50 mcg/dose aerossol nasal",
+      "active_ingredients": [
+        "beclometasona"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mcg/dose"
+        }
+      ],
+      "match_key": "beclometasona 50 mcg/dose",
+      "ingredient_key": "beclometasona",
+      "loose_match_key": "beclometasona 50 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "benzilpenicilina-benzatina-600-000-ui-po-para-suspensao-injetavel-fam",
+      "name": "benzilpenicilina benzatina 600.000 UI pó para suspensão injetável fam",
+      "active_ingredients": [
+        "benzilpenicilina benzatina"
+      ],
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "benzilpenicilina benzatina 600 ui",
+      "ingredient_key": "benzilpenicilina benzatina",
+      "loose_match_key": "benzilpenicilina benzatina 600 ui",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "benzilpenicilina-benzatina-1-200-000-ui-po-para-suspensao-injetavel-fam",
+      "name": "benzilpenicilina benzatina 1.200.000 UI pó para suspensão injetável fam",
+      "active_ingredients": [
+        "benzilpenicilina benzatina"
+      ],
+      "strengths": [],
+      "match_key": "benzilpenicilina benzatina",
+      "ingredient_key": "benzilpenicilina benzatina",
+      "loose_match_key": "benzilpenicilina benzatina",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "benzoilmetronidazol-40-mg-ml-equivalente-a-25-mg-de-metronidazol-suspensao-oral-ou-secnidazol-30-mg-ml-suspensao-oral",
+      "name": "benzoilmetronidazol 40 mg/mL (equivalente a 25 mg de metronidazol) suspensão oral ou secnidazol 30 mg/mL suspensão oral",
+      "active_ingredients": [
+        "benzoilmetronidazol"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        },
+        {
+          "value": 30,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "benzoilmetronidazol 40 mg/ml",
+      "ingredient_key": "benzoilmetronidazol",
+      "loose_match_key": "benzoilmetronidazol 40 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "biperideno-cloridrato-2-mg-comprimido",
+      "name": "biperideno, cloridrato 2 mg comprimido",
+      "active_ingredients": [
+        "biperideno"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "biperideno 2 mg",
+      "ingredient_key": "biperideno",
+      "loose_match_key": "biperideno 2 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "brimonidina-2-mg-ml-0-2-solucao-oftalmica",
+      "name": "brimonidina 2 mg/mL (0,2%) solução oftálmica",
+      "active_ingredients": [
+        "brimonidina"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "brimonidina 2 mg/ml",
+      "ingredient_key": "brimonidina",
+      "loose_match_key": "brimonidina 2 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista"
+    },
+    {
+      "id": "bupropiona-cloridrato-150-mg-comprimido",
+      "name": "bupropiona, cloridrato 150 mg comprimido",
+      "active_ingredients": [
+        "bupropiona"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "bupropiona 150 mg",
+      "ingredient_key": "bupropiona",
+      "loose_match_key": "bupropiona 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS"
+    },
+    {
+      "id": "cabergolina-0-5-mg-comprimido",
+      "name": "cabergolina 0,5 mg comprimido",
+      "active_ingredients": [
+        "cabergolina"
+      ],
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cabergolina 0.5 mg",
+      "ingredient_key": "cabergolina",
+      "loose_match_key": "cabergolina 0.5 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "captopril-25-mg-comprimido",
+      "name": "captopril 25 mg comprimido",
+      "active_ingredients": [
+        "captopril"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "captopril 25 mg",
+      "ingredient_key": "captopril",
+      "loose_match_key": "captopril 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carbamazepina-20-mg-ml-2-suspensao-oral",
+      "name": "carbamazepina 20 mg/mL (2%) suspensão oral",
+      "active_ingredients": [
+        "carbamazepina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "carbamazepina 20 mg/ml",
+      "ingredient_key": "carbamazepina",
+      "loose_match_key": "carbamazepina 20 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carbamazepina-200-mg-comprimido",
+      "name": "carbamazepina 200 mg comprimido",
+      "active_ingredients": [
+        "carbamazepina"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "carbamazepina 200 mg",
+      "ingredient_key": "carbamazepina",
+      "loose_match_key": "carbamazepina 200 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carbonato-de-calcio-1-250-mg-equivalente-a-500-mg-de-ca-comprimido",
+      "name": "carbonato de cálcio 1.250 mg (equivalente a 500 mg de Ca++) comprimido",
+      "active_ingredients": [
+        "carbonato de cálcio",
+        ") comprimido"
+      ],
+      "strengths": [
+        {
+          "value": 1.25,
+          "unit": "mg"
+        },
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "carbonato de calcio 1.25 mg + ) comprimido 500 mg",
+      "ingredient_key": ") comprimido + carbonato de calcio",
+      "loose_match_key": ") comprimido + calcio 1.25 mg + 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carbonato-de-calcio-1-500-mg-equivalente-a-600-mg-de-ca-colecalciferol-vit-d3-400-ui-comprimido",
+      "name": "carbonato de cálcio 1.500 mg (equivalente a 600 mg de Ca++) + colecalciferol (vit D3) 400 UI comprimido",
+      "active_ingredients": [
+        "carbonato de cálcio",
+        ")",
+        "colecalciferol (vit d"
+      ],
+      "strengths": [
+        {
+          "value": 1.5,
+          "unit": "mg"
+        },
+        {
+          "value": 600,
+          "unit": "mg"
+        },
+        {
+          "value": 400,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "carbonato de calcio 1.5 mg + ) 600 mg + colecalciferol (vit d 400 ui",
+      "ingredient_key": ") + carbonato de calcio + colecalciferol (vit d",
+      "loose_match_key": ") + calcio + colecalciferol (vit d 1.5 mg + 400 ui + 600 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carbonato-de-litio-300-mg-comprimido",
+      "name": "carbonato de lítio 300 mg comprimido",
+      "active_ingredients": [
+        "carbonato de lítio"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "carbonato de litio 300 mg",
+      "ingredient_key": "carbonato de litio",
+      "loose_match_key": "litio 300 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carvedilol-6-25-mg-comprimido",
+      "name": "carvedilol 6,25 mg comprimido",
+      "active_ingredients": [
+        "carvedilol"
+      ],
+      "strengths": [
+        {
+          "value": 6.25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "carvedilol 6.25 mg",
+      "ingredient_key": "carvedilol",
+      "loose_match_key": "carvedilol 6.25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "carvedilol-12-5-mg-comprimido",
+      "name": "carvedilol 12,5 mg comprimido",
+      "active_ingredients": [
+        "carvedilol"
+      ],
+      "strengths": [
+        {
+          "value": 12.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "carvedilol 12.5 mg",
+      "ingredient_key": "carvedilol",
+      "loose_match_key": "carvedilol 12.5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cefalexina-50-mg-ml-suspensao-oral",
+      "name": "cefalexina 50 mg/mL suspensão oral",
+      "active_ingredients": [
+        "cefalexina"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "cefalexina 50 mg/ml",
+      "ingredient_key": "cefalexina",
+      "loose_match_key": "cefalexina 50 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cefalexina-comprimido-500-mg",
+      "name": "cefalexina comprimido 500 mg",
+      "active_ingredients": [
+        "cefalexina comprimido"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cefalexina comprimido 500 mg",
+      "ingredient_key": "cefalexina comprimido",
+      "loose_match_key": "cefalexina comprimido 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cetoconazol-20-mg-g-2-creme",
+      "name": "cetoconazol 20 mg/g (2%) creme",
+      "active_ingredients": [
+        "cetoconazol"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/g"
+        },
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "cetoconazol 20 mg/g",
+      "ingredient_key": "cetoconazol",
+      "loose_match_key": "cetoconazol 20 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cetoconazol-2-shampoo",
+      "name": "cetoconazol 2% shampoo",
+      "active_ingredients": [
+        "cetoconazol"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "cetoconazol 2 %",
+      "ingredient_key": "cetoconazol",
+      "loose_match_key": "cetoconazol 2 %",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cianocobalamina-vit-b12-2-5-mg-ml-2-500-mcg-solucao-injetavel",
+      "name": "cianocobalamina (vit. B12) 2,5 mg/mL (2.500 mcg) solução injetável",
+      "active_ingredients": [
+        "cianocobalamina (vit. b"
+      ],
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 2.5,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "cianocobalamina (vit. b 2.5 mg/ml",
+      "ingredient_key": "cianocobalamina (vit. b",
+      "loose_match_key": "cianocobalamina (vit. b 2.5 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "ciprofloxacino-cloridrato-500-mg-comprimido",
+      "name": "ciprofloxacino, cloridrato 500 mg comprimido",
+      "active_ingredients": [
+        "ciprofloxacino"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciprofloxacino 500 mg",
+      "ingredient_key": "ciprofloxacino",
+      "loose_match_key": "ciprofloxacino 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "ciproterona-50-mg-comprimido",
+      "name": "ciproterona 50 mg comprimido",
+      "active_ingredients": [
+        "ciproterona"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ciproterona 50 mg",
+      "ingredient_key": "ciproterona",
+      "loose_match_key": "ciproterona 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Saúde Integral da População LGBTIA+ da SMS"
+    },
+    {
+      "id": "claritromicina-50-mg-ml-po-para-suspensao-oral",
+      "name": "claritromicina 50 mg/mL pó para suspensão oral",
+      "active_ingredients": [
+        "claritromicina"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "claritromicina 50 mg/ml",
+      "ingredient_key": "claritromicina",
+      "loose_match_key": "claritromicina 50 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "claritromicina-500-mg-comprimido",
+      "name": "claritromicina 500 mg comprimido",
+      "active_ingredients": [
+        "claritromicina"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "claritromicina 500 mg",
+      "ingredient_key": "claritromicina",
+      "loose_match_key": "claritromicina 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde e em unidades de referência para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "clindamicina-cloridrato-300-mg-capsula",
+      "name": "clindamicina, cloridrato 300 mg cápsula",
+      "active_ingredients": [
+        "clindamicina"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clindamicina 300 mg",
+      "ingredient_key": "clindamicina",
+      "loose_match_key": "clindamicina 300 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clofazimina-100-mg-comprimido",
+      "name": "clofazimina 100 mg comprimido",
+      "active_ingredients": [
+        "clofazimina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clofazimina 100 mg",
+      "ingredient_key": "clofazimina",
+      "loose_match_key": "clofazimina 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "clofazimina-100-mg-clofazimina-50-mg-rifampicina-300-mg-dapsona-100-mg-multibacilar-adulto-comprimidos-em-blister",
+      "name": "clofazimina 100 mg + clofazimina 50 mg + rifampicina 300 mg + dapsona 100 mg (multibacilar) adulto comprimidos em blister",
+      "active_ingredients": [
+        "clofazimina",
+        "clofazimina",
+        "rifampicina",
+        "dapsona"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        },
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clofazimina 100 mg + clofazimina 50 mg + rifampicina 300 mg + dapsona 100 mg",
+      "ingredient_key": "clofazimina + clofazimina + dapsona + rifampicina",
+      "loose_match_key": "clofazimina + clofazimina + dapsona + rifampicina 100 mg + 100 mg + 300 mg + 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para o tratamento da hanseníase"
+    },
+    {
+      "id": "clofazimina-150-mg-clofazimina-50-mg-rifampicina-300-mg-rifampicina-150-mg-dapsona-50-mg-multibacilar-pediatrico-comprimidos-em-blister",
+      "name": "clofazimina 150 mg + clofazimina 50 mg + rifampicina 300 mg + rifampicina 150 mg + dapsona 50 mg (multibacilar) pediátrico comprimidos em blister",
+      "active_ingredients": [
+        "clofazimina",
+        "clofazimina",
+        "rifampicina",
+        "rifampicina",
+        "dapsona"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        },
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 150,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clofazimina 150 mg + clofazimina 50 mg + rifampicina 300 mg + rifampicina 150 mg + dapsona 50 mg",
+      "ingredient_key": "clofazimina + clofazimina + dapsona + rifampicina + rifampicina",
+      "loose_match_key": "clofazimina + clofazimina + dapsona + rifampicina + rifampicina 150 mg + 150 mg + 300 mg + 50 mg + 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para o tratamento da hanseníase"
+    },
+    {
+      "id": "clomipramina-cloridrato-25-mg-comprimido",
+      "name": "clomipramina, cloridrato 25 mg comprimido",
+      "active_ingredients": [
+        "clomipramina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clomipramina 25 mg",
+      "ingredient_key": "clomipramina",
+      "loose_match_key": "clomipramina 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clonazepam-2-5-mg-ml-0-25-solucao-oral-gotas",
+      "name": "clonazepam 2,5 mg/mL (0,25%) solução oral gotas",
+      "active_ingredients": [
+        "clonazepam"
+      ],
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.25,
+          "unit": "%"
+        }
+      ],
+      "match_key": "clonazepam 2.5 mg/ml",
+      "ingredient_key": "clonazepam",
+      "loose_match_key": "clonazepam 2.5 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clonazepam-0-5-mg-comprimido",
+      "name": "clonazepam 0,5 mg comprimido",
+      "active_ingredients": [
+        "clonazepam"
+      ],
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clonazepam 0.5 mg",
+      "ingredient_key": "clonazepam",
+      "loose_match_key": "clonazepam 0.5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clonazepam-2-mg-comprimido",
+      "name": "clonazepam 2 mg comprimido",
+      "active_ingredients": [
+        "clonazepam"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clonazepam 2 mg",
+      "ingredient_key": "clonazepam",
+      "loose_match_key": "clonazepam 2 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cloranfenicol-5-mg-g-retinol-acetato-10-000-ui-g-aminoacidos-25-mg-g-metionina-5-mg-g-pomada-oftalmica",
+      "name": "cloranfenicol 5 mg/g + retinol, acetato 10.000 UI/g + aminoácidos 25 mg/g + metionina 5 mg/g pomada oftálmica",
+      "active_ingredients": [
+        "cloranfenicol",
+        "retinol",
+        "aminoácidos",
+        "metionina"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg/g"
+        },
+        {
+          "value": 10,
+          "unit": "ui/g"
+        },
+        {
+          "value": 25,
+          "unit": "mg/g"
+        },
+        {
+          "value": 5,
+          "unit": "mg/g"
+        }
+      ],
+      "match_key": "cloranfenicol 5 mg/g + retinol 10 ui/g + aminoacidos 25 mg/g + metionina 5 mg/g",
+      "ingredient_key": "aminoacidos + cloranfenicol + metionina + retinol",
+      "loose_match_key": "aminoacidos + cloranfenicol + metionina + retinol 10 ui/g + 25 mg/g + 5 mg/g + 5 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cloreto-de-sodio-9-mg-ml-0-9-0-154-meq-ml-solucao-injetavel-ampola",
+      "name": "cloreto de sódio 9 mg/mL (0,9 % - 0,154 mEq/mL) solução injetável ampola",
+      "active_ingredients": [
+        "cloreto de sódio"
+      ],
+      "strengths": [
+        {
+          "value": 9,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.9,
+          "unit": "%"
+        },
+        {
+          "value": 0.154,
+          "unit": "meq/ml"
+        }
+      ],
+      "match_key": "cloreto de sodio 9 mg/ml",
+      "ingredient_key": "cloreto de sodio",
+      "loose_match_key": "sodio 9 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "cloreto-de-sodio-9-mg-ml-0-9-solucao-nasal-gotas",
+      "name": "cloreto de sódio 9 mg/mL (0,9%) solução nasal gotas",
+      "active_ingredients": [
+        "cloreto de sódio"
+      ],
+      "strengths": [
+        {
+          "value": 9,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.9,
+          "unit": "%"
+        }
+      ],
+      "match_key": "cloreto de sodio 9 mg/ml",
+      "ingredient_key": "cloreto de sodio",
+      "loose_match_key": "sodio 9 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clorpromazina-cloridrato-40-mg-ml-4-solucao-oral-gotas",
+      "name": "clorpromazina, cloridrato 40 mg/mL (4%) solução oral (gotas)",
+      "active_ingredients": [
+        "clorpromazina"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 4,
+          "unit": "%"
+        }
+      ],
+      "match_key": "clorpromazina 40 mg/ml",
+      "ingredient_key": "clorpromazina",
+      "loose_match_key": "clorpromazina 40 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clorpromazina-cloridrato-25-mg-comprimido",
+      "name": "clorpromazina, cloridrato 25 mg comprimido",
+      "active_ingredients": [
+        "clorpromazina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clorpromazina 25 mg",
+      "ingredient_key": "clorpromazina",
+      "loose_match_key": "clorpromazina 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "clorpromazina-cloridrato-100-mg-comprimido",
+      "name": "clorpromazina, cloridrato 100 mg comprimido",
+      "active_ingredients": [
+        "clorpromazina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "clorpromazina 100 mg",
+      "ingredient_key": "clorpromazina",
+      "loose_match_key": "clorpromazina 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "colecalciferol-vitamina-d3-1000-ui-gota-solucao-oral",
+      "name": "colecalciferol (vitamina D3) 1000 UI/gota solução oral",
+      "active_ingredients": [
+        "colecalciferol (vitamina d"
+      ],
+      "strengths": [
+        {
+          "value": 1000,
+          "unit": "ui/gota"
+        }
+      ],
+      "match_key": "colecalciferol (vitamina d 1000 ui/gota",
+      "ingredient_key": "colecalciferol (vitamina d",
+      "loose_match_key": "colecalciferol (vitamina d 1000 ui/gota",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde Dispensação sob protocolo mediante prescrição da rede pública ou privada Necessário formulário para dispensação"
+    },
+    {
+      "id": "cynara-scolymus-l-alcachofra-24-a-48-mg-derivados-de-acido-cafeoilquinico-expressos-em-acido-clorogenico",
+      "name": "Cynara scolymus L. (alcachofra) 24 a 48 mg derivados de ácido cafeoilquínico expressos em ácido clorogênico",
+      "active_ingredients": [
+        "cynara scolymus l."
+      ],
+      "strengths": [
+        {
+          "value": 48,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "cynara scolymus l. 48 mg",
+      "ingredient_key": "cynara scolymus l.",
+      "loose_match_key": "cynara scolymus l. 48 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação"
+    },
+    {
+      "id": "daclatasvir-60-mg-comprimido",
+      "name": "daclatasvir 60 mg comprimido",
+      "active_ingredients": [
+        "daclatasvir"
+      ],
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "daclatasvir 60 mg",
+      "ingredient_key": "daclatasvir",
+      "loose_match_key": "daclatasvir 60 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "dapsona-100-mg-comprimido",
+      "name": "dapsona 100 mg comprimido",
+      "active_ingredients": [
+        "dapsona"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "dapsona 100 mg",
+      "ingredient_key": "dapsona",
+      "loose_match_key": "dapsona 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "darunavir-drv-75-mg-comprimido",
+      "name": "darunavir (DRV) 75 mg comprimido",
+      "active_ingredients": [
+        "darunavir"
+      ],
+      "strengths": [
+        {
+          "value": 75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "darunavir 75 mg",
+      "ingredient_key": "darunavir",
+      "loose_match_key": "darunavir 75 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "darunavir-drv-150-mg-comprimido",
+      "name": "darunavir (DRV) 150 mg comprimido",
+      "active_ingredients": [
+        "darunavir"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "darunavir 150 mg",
+      "ingredient_key": "darunavir",
+      "loose_match_key": "darunavir 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "darunavir-drv-600-mg-comprimido",
+      "name": "darunavir (DRV) 600 mg comprimido",
+      "active_ingredients": [
+        "darunavir"
+      ],
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "darunavir 600 mg",
+      "ingredient_key": "darunavir",
+      "loose_match_key": "darunavir 600 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "darunavir-drv-800-mg-comprimido",
+      "name": "darunavir (DRV) 800 mg comprimido",
+      "active_ingredients": [
+        "darunavir"
+      ],
+      "strengths": [
+        {
+          "value": 800,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "darunavir 800 mg",
+      "ingredient_key": "darunavir",
+      "loose_match_key": "darunavir 800 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "dexametasona-0-1-mg-ml-solucao-oral",
+      "name": "dexametasona 0,1 mg/mL solução oral",
+      "active_ingredients": [
+        "dexametasona"
+      ],
+      "strengths": [
+        {
+          "value": 0.1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "dexametasona 0.1 mg/ml",
+      "ingredient_key": "dexametasona",
+      "loose_match_key": "dexametasona 0.1 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dexametasona-1-mg-g-0-1-creme",
+      "name": "dexametasona 1 mg/g (0,1%) creme",
+      "active_ingredients": [
+        "dexametasona"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/g"
+        },
+        {
+          "value": 0.1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "dexametasona 1 mg/g",
+      "ingredient_key": "dexametasona",
+      "loose_match_key": "dexametasona 1 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dexametasona-1-mg-ml-0-1-suspensao-oftalmica",
+      "name": "dexametasona 1 mg/mL (0,1%) suspensão oftálmica",
+      "active_ingredients": [
+        "dexametasona"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "dexametasona 1 mg/ml",
+      "ingredient_key": "dexametasona",
+      "loose_match_key": "dexametasona 1 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista"
+    },
+    {
+      "id": "dexclorfeniramina-maleato-0-4-mg-ml-solucao-oral",
+      "name": "dexclorfeniramina, maleato 0,4 mg/mL solução oral",
+      "active_ingredients": [
+        "dexclorfeniramina"
+      ],
+      "strengths": [
+        {
+          "value": 0.4,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "dexclorfeniramina 0.4 mg/ml",
+      "ingredient_key": "dexclorfeniramina",
+      "loose_match_key": "dexclorfeniramina 0.4 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dextrana-1-mg-ml-hipromelose-3-mg-ml-0-3-solucao-oftalmica",
+      "name": "dextrana 1 mg/mL + hipromelose 3 mg/mL (0,3%) solução oftálmica",
+      "active_ingredients": [
+        "dextrana",
+        "hipromelose"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 3,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.3,
+          "unit": "%"
+        }
+      ],
+      "match_key": "dextrana + hipromelose",
+      "ingredient_key": "dextrana + hipromelose",
+      "loose_match_key": "dextrana + hipromelose 0.3 % + 1 mg/ml + 3 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "diazepam-5-mg-comprimido",
+      "name": "diazepam 5 mg comprimido",
+      "active_ingredients": [
+        "diazepam"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "diazepam 5 mg",
+      "ingredient_key": "diazepam",
+      "loose_match_key": "diazepam 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "diclofenaco-50-mg-comprimido",
+      "name": "diclofenaco 50 mg comprimido",
+      "active_ingredients": [
+        "diclofenaco"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "diclofenaco 50 mg",
+      "ingredient_key": "diclofenaco",
+      "loose_match_key": "diclofenaco 50 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "digoxina-0-25-mg-comprimido",
+      "name": "digoxina 0,25 mg comprimido",
+      "active_ingredients": [
+        "digoxina"
+      ],
+      "strengths": [
+        {
+          "value": 0.25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "digoxina 0.25 mg",
+      "ingredient_key": "digoxina",
+      "loose_match_key": "digoxina 0.25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dimenidrinato-25-mg-ml-piridoxina-cloridrato-vit-b6-5-mg-ml-solucao-oral-gotas",
+      "name": "dimenidrinato 25 mg/mL + piridoxina, cloridrato (vit. B6) 5 mg/mL solução oral gotas",
+      "active_ingredients": [
+        "dimenidrinato",
+        "piridoxina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 5,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "dimenidrinato 25 mg/ml + piridoxina 5 mg/ml",
+      "ingredient_key": "dimenidrinato + piridoxina",
+      "loose_match_key": "dimenidrinato + piridoxina 25 mg/ml + 5 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dipirona-sodica-500-mg-ml-solucao-oral-gotas",
+      "name": "dipirona sódica 500 mg/mL solução oral gotas",
+      "active_ingredients": [
+        "dipirona sódica"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "dipirona 500 mg/ml",
+      "ingredient_key": "dipirona",
+      "loose_match_key": "dipirona 500 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dipirona-sodica-500-mg-comprimido",
+      "name": "dipirona sódica 500 mg comprimido",
+      "active_ingredients": [
+        "dipirona sódica"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "dipirona 500 mg",
+      "ingredient_key": "dipirona",
+      "loose_match_key": "dipirona 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "dolutegravir-50-mg-dtg-comprimido",
+      "name": "dolutegravir 50 mg (DTG) comprimido",
+      "active_ingredients": [
+        "dolutegravir"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "dolutegravir 50 mg",
+      "ingredient_key": "dolutegravir",
+      "loose_match_key": "dolutegravir 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "doxazosina-2-mg-comprimido",
+      "name": "doxazosina 2 mg comprimido",
+      "active_ingredients": [
+        "doxazosina"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "doxazosina 2 mg",
+      "ingredient_key": "doxazosina",
+      "loose_match_key": "doxazosina 2 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "doxiciclina-cloridrato-100-mg-comprimido",
+      "name": "doxiciclina, cloridrato 100 mg comprimido",
+      "active_ingredients": [
+        "doxiciclina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "doxiciclina 100 mg",
+      "ingredient_key": "doxiciclina",
+      "loose_match_key": "doxiciclina 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "efavirenz-efz-30-mg-ml-solucao-oral",
+      "name": "efavirenz (EFZ) 30 mg/mL solução oral",
+      "active_ingredients": [
+        "efavirenz"
+      ],
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "efavirenz 30 mg/ml",
+      "ingredient_key": "efavirenz",
+      "loose_match_key": "efavirenz 30 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "efavirenz-efz-200-mg-comprimido",
+      "name": "efavirenz (EFZ) 200 mg comprimido",
+      "active_ingredients": [
+        "efavirenz"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "efavirenz 200 mg",
+      "ingredient_key": "efavirenz",
+      "loose_match_key": "efavirenz 200 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "efavirenz-efz-600-mg-comprimido",
+      "name": "efavirenz (EFZ) 600 mg comprimido",
+      "active_ingredients": [
+        "efavirenz"
+      ],
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "efavirenz 600 mg",
+      "ingredient_key": "efavirenz",
+      "loose_match_key": "efavirenz 600 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "enalapril-maleato-5-mg-comprimido",
+      "name": "enalapril, maleato 5 mg comprimido",
+      "active_ingredients": [
+        "enalapril"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "enalapril 5 mg",
+      "ingredient_key": "enalapril",
+      "loose_match_key": "enalapril 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "enalapril-maleato-20-mg-comprimido",
+      "name": "enalapril, maleato 20 mg comprimido",
+      "active_ingredients": [
+        "enalapril"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "enalapril 20 mg",
+      "ingredient_key": "enalapril",
+      "loose_match_key": "enalapril 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "enfuvirtida-t-20-90-mg-ml-po-para-solucao-injetavel",
+      "name": "enfuvirtida (T-20) 90 mg/mL pó para solução injetavel",
+      "active_ingredients": [
+        "enfuvirtida (t-"
+      ],
+      "strengths": [
+        {
+          "value": 90,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "enfuvirtida (t- 90 mg/ml",
+      "ingredient_key": "enfuvirtida (t-",
+      "loose_match_key": "enfuvirtida (t- 90 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "enoxaparina-sodica-20-mg-equivalente-a-100-mg-ml-solucao-injetavel-seringa-0-2-ml-sc",
+      "name": "enoxaparina sódica 20 mg (equivalente a 100 mg/mL) solução injetável seringa 0,2 mL SC",
+      "active_ingredients": [
+        "enoxaparina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "enoxaparina 20 mg",
+      "ingredient_key": "enoxaparina",
+      "loose_match_key": "enoxaparina 20 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação exclusiva para usuários em tratamento na Rede Municipal de Saúde Necessário formulário para prescrição e dispensação"
+    },
+    {
+      "id": "enoxaparina-sodica-40-mg-equivalente-a-100-mg-ml-solucao-injetavel-seringa-0-4-ml-sc",
+      "name": "enoxaparina sódica 40 mg (equivalente a 100 mg/mL) solução injetável seringa 0,4 mL SC",
+      "active_ingredients": [
+        "enoxaparina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "enoxaparina 40 mg",
+      "ingredient_key": "enoxaparina",
+      "loose_match_key": "enoxaparina 40 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação exclusiva para usuários em tratamento na Rede Municipal de Saúde Necessário formulário para prescrição e dispensação"
+    },
+    {
+      "id": "enoxaparina-sodica-60-mg-equivalente-a-100-mg-ml-solucao-injetavel-seringa-0-6-ml-sc",
+      "name": "enoxaparina sódica 60 mg (equivalente a 100 mg/mL) solução injetável seringa 0,6 mL SC",
+      "active_ingredients": [
+        "enoxaparina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "enoxaparina 60 mg",
+      "ingredient_key": "enoxaparina",
+      "loose_match_key": "enoxaparina 60 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação exclusiva para usuários em tratamento na Rede Municipal de Saúde Necessário formulário para prescrição e dispensação"
+    },
+    {
+      "id": "entecavir-0-5-mg-comprimido",
+      "name": "entecavir 0,5 mg comprimido",
+      "active_ingredients": [
+        "entecavir"
+      ],
+      "strengths": [
+        {
+          "value": 0.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "entecavir 0.5 mg",
+      "ingredient_key": "entecavir",
+      "loose_match_key": "entecavir 0.5 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "escopolamina-10-mg-ml-solucao-oral-gotas-ou-comprimido-10-mg",
+      "name": "escopolamina 10 mg/mL solução oral gotas ou comprimido 10 mg",
+      "active_ingredients": [
+        "escopolamina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "escopolamina 10 mg/ml",
+      "ingredient_key": "escopolamina",
+      "loose_match_key": "escopolamina 10 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "escopolamina-6-67-mg-ml-dipirona-sodica-333-4-mg-ml-solucao-oral-gotas",
+      "name": "escopolamina 6,67 mg/mL + dipirona sódica 333,4 mg/mL solução oral gotas",
+      "active_ingredients": [
+        "escopolamina",
+        "dipirona sódica"
+      ],
+      "strengths": [
+        {
+          "value": 6.67,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 333.4,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "escopolamina 6.67 mg/ml + dipirona 333.4 mg/ml",
+      "ingredient_key": "dipirona + escopolamina",
+      "loose_match_key": "dipirona + escopolamina 333.4 mg/ml + 6.67 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "espiramicina-500-mg-equivalente-a-1-500-000-ui-comprimido",
+      "name": "espiramicina 500 mg (equivalente a 1.500.000 UI) comprimido",
+      "active_ingredients": [
+        "espiramicina"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "espiramicina 500 mg",
+      "ingredient_key": "espiramicina",
+      "loose_match_key": "espiramicina 500 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "espironolactona-25-mg-comprimido",
+      "name": "espironolactona 25 mg comprimido",
+      "active_ingredients": [
+        "espironolactona"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "espironolactona 25 mg",
+      "ingredient_key": "espironolactona",
+      "loose_match_key": "espironolactona 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "espironolactona-100-mg-comprimido",
+      "name": "espironolactona 100 mg comprimido",
+      "active_ingredients": [
+        "espironolactona"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "espironolactona 100 mg",
+      "ingredient_key": "espironolactona",
+      "loose_match_key": "espironolactona 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "estradiol-valerato-1mg-comprimido",
+      "name": "estradiol, valerato 1mg comprimido",
+      "active_ingredients": [
+        "estradiol"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "estradiol 1 mg",
+      "ingredient_key": "estradiol",
+      "loose_match_key": "estradiol 1 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "estradiol-valerato-2mg-comprimido",
+      "name": "estradiol, valerato 2mg comprimido",
+      "active_ingredients": [
+        "estradiol"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "estradiol 2 mg",
+      "ingredient_key": "estradiol",
+      "loose_match_key": "estradiol 2 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Saúde Integral da População LGBTIA+ da SMS"
+    },
+    {
+      "id": "estriol-1-mg-g-0-1-creme-vaginal",
+      "name": "estriol 1 mg/g (0,1%) creme vaginal",
+      "active_ingredients": [
+        "estriol"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/g"
+        },
+        {
+          "value": 0.1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "estriol 1 mg/g",
+      "ingredient_key": "estriol",
+      "loose_match_key": "estriol 1 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "etambutol-cloridrato-400-mg-comprimido",
+      "name": "etambutol, cloridrato 400 mg comprimido",
+      "active_ingredients": [
+        "etambutol"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etambutol 400 mg",
+      "ingredient_key": "etambutol",
+      "loose_match_key": "etambutol 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "etionamida-250-mg-comprimido",
+      "name": "etionamida 250 mg comprimido",
+      "active_ingredients": [
+        "etionamida"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etionamida 250 mg",
+      "ingredient_key": "etionamida",
+      "loose_match_key": "etionamida 250 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "etonogestrel-68-mg-implante-subdermico",
+      "name": "etonogestrel 68 mg implante subdérmico",
+      "active_ingredients": [
+        "etonogestrel"
+      ],
+      "strengths": [
+        {
+          "value": 68,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etonogestrel 68 mg",
+      "ingredient_key": "etonogestrel",
+      "loose_match_key": "etonogestrel 68 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência."
+    },
+    {
+      "id": "etravirina-etr-100-mg-comprimido",
+      "name": "etravirina (ETR) 100 mg comprimido",
+      "active_ingredients": [
+        "etravirina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etravirina 100 mg",
+      "ingredient_key": "etravirina",
+      "loose_match_key": "etravirina 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "etravirina-etr-200-mg-comprimido",
+      "name": "etravirina (ETR) 200 mg comprimido",
+      "active_ingredients": [
+        "etravirina"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "etravirina 200 mg",
+      "ingredient_key": "etravirina",
+      "loose_match_key": "etravirina 200 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "fenitoina-ou-fenitoina-sodica-100-mg-comprimido",
+      "name": "fenitoína ou fenitoína sódica 100 mg comprimido",
+      "active_ingredients": [
+        "fenitoína ou fenitoína sódica"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fenitoina ou fenitoina 100 mg",
+      "ingredient_key": "fenitoina ou fenitoina",
+      "loose_match_key": "fenitoina ou fenitoina 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "fenobarbital-100-mg-comprimido",
+      "name": "fenobarbital 100 mg comprimido",
+      "active_ingredients": [
+        "fenobarbital"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fenobarbital 100 mg",
+      "ingredient_key": "fenobarbital",
+      "loose_match_key": "fenobarbital 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "fenobarbital-40-mg-ml-4-solucao-oral-gotas",
+      "name": "fenobarbital 40 mg/mL (4%) solução oral gotas",
+      "active_ingredients": [
+        "fenobarbital"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 4,
+          "unit": "%"
+        }
+      ],
+      "match_key": "fenobarbital 40 mg/ml",
+      "ingredient_key": "fenobarbital",
+      "loose_match_key": "fenobarbital 40 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "fenoterol-5-mg-ml-solucao-inalante-gotas",
+      "name": "fenoterol 5 mg/mL solução inalante gotas",
+      "active_ingredients": [
+        "fenoterol"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "fenoterol 5 mg/ml",
+      "ingredient_key": "fenoterol",
+      "loose_match_key": "fenoterol 5 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "finasterida-5-mg-comprimido",
+      "name": "finasterida 5 mg comprimido",
+      "active_ingredients": [
+        "finasterida"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "finasterida 5 mg",
+      "ingredient_key": "finasterida",
+      "loose_match_key": "finasterida 5 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento por urologista"
+    },
+    {
+      "id": "fluconazol-100-mg-capsula",
+      "name": "fluconazol 100 mg cápsula",
+      "active_ingredients": [
+        "fluconazol"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fluconazol 100 mg",
+      "ingredient_key": "fluconazol",
+      "loose_match_key": "fluconazol 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "fluconazol-150-mg-capsula",
+      "name": "fluconazol 150 mg cápsula",
+      "active_ingredients": [
+        "fluconazol"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fluconazol 150 mg",
+      "ingredient_key": "fluconazol",
+      "loose_match_key": "fluconazol 150 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "fluoxetina-cloridrato-20-mg-capsula",
+      "name": "fluoxetina, cloridrato 20 mg cápsula",
+      "active_ingredients": [
+        "fluoxetina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "fluoxetina 20 mg",
+      "ingredient_key": "fluoxetina",
+      "loose_match_key": "fluoxetina 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "folinato-de-calcio-15-mg-comprimido",
+      "name": "folinato de cálcio 15 mg comprimido",
+      "active_ingredients": [
+        "folinato de cálcio"
+      ],
+      "strengths": [
+        {
+          "value": 15,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "folinato de calcio 15 mg",
+      "ingredient_key": "folinato de calcio",
+      "loose_match_key": "calcio 15 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "formoterol-6-mcg-budesonida-200-mcg-po-em-capsula-para-inalacao",
+      "name": "formoterol 6 mcg + budesonida 200 mcg pó em cápsula para inalação",
+      "active_ingredients": [
+        "formoterol",
+        "budesonida"
+      ],
+      "strengths": [
+        {
+          "value": 6,
+          "unit": "mcg"
+        },
+        {
+          "value": 200,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "formoterol 6 mcg + budesonida 200 mcg",
+      "ingredient_key": "budesonida + formoterol",
+      "loose_match_key": "budesonida + formoterol 200 mcg + 6 mcg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde"
+    },
+    {
+      "id": "formoterol-12-mcg-budesonida-400-mcg-po-em-capsula-para-inalacao",
+      "name": "formoterol 12 mcg + budesonida 400 mcg pó em cápsula para inalação",
+      "active_ingredients": [
+        "formoterol",
+        "budesonida"
+      ],
+      "strengths": [
+        {
+          "value": 12,
+          "unit": "mcg"
+        },
+        {
+          "value": 400,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "formoterol 12 mcg + budesonida 400 mcg",
+      "ingredient_key": "budesonida + formoterol",
+      "loose_match_key": "budesonida + formoterol 12 mcg + 400 mcg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde"
+    },
+    {
+      "id": "furosemida-40-mg-comprimido",
+      "name": "furosemida 40 mg comprimido",
+      "active_ingredients": [
+        "furosemida"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "furosemida 40 mg",
+      "ingredient_key": "furosemida",
+      "loose_match_key": "furosemida 40 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "gabapentina-300-mg-comprimido",
+      "name": "gabapentina 300 mg comprimido",
+      "active_ingredients": [
+        "gabapentina"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "gabapentina 300 mg",
+      "ingredient_key": "gabapentina",
+      "loose_match_key": "gabapentina 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "gliclazida-60-mg-comprimido-de-liberacao-prolongada",
+      "name": "gliclazida 60 mg comprimido de liberação prolongada",
+      "active_ingredients": [
+        "gliclazida"
+      ],
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "gliclazida 60 mg",
+      "ingredient_key": "gliclazida",
+      "loose_match_key": "gliclazida 60 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "glycine-max-l-merril-isoflavonas-de-soja-minimo-de-50-mg-de-isoflavonas-totais",
+      "name": "Glycine max (L.) Merril.(isoflavonas de soja) mínimo de 50 mg de isoflavonas totais",
+      "active_ingredients": [
+        "glycine max merril. mínimo de"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "glycine max merril. minimo de 50 mg",
+      "ingredient_key": "glycine max merril. minimo de",
+      "loose_match_key": "glycine max merril. minimo de 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação"
+    },
+    {
+      "id": "haloperidol-2-mg-ml-0-2-solucao-oral-gotas",
+      "name": "haloperidol 2 mg/mL (0,2%) solução oral gotas",
+      "active_ingredients": [
+        "haloperidol"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "haloperidol 2 mg/ml",
+      "ingredient_key": "haloperidol",
+      "loose_match_key": "haloperidol 2 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "haloperidol-1-mg-comprimido",
+      "name": "haloperidol 1 mg comprimido",
+      "active_ingredients": [
+        "haloperidol"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "haloperidol 1 mg",
+      "ingredient_key": "haloperidol",
+      "loose_match_key": "haloperidol 1 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "haloperidol-5-mg-comprimido",
+      "name": "haloperidol 5 mg comprimido",
+      "active_ingredients": [
+        "haloperidol"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "haloperidol 5 mg",
+      "ingredient_key": "haloperidol",
+      "loose_match_key": "haloperidol 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "haloperidol-decanoato-70-52-mg-ml-equivalente-a-50-mg-ml-de-haloperidol-solucao-injetavel",
+      "name": "haloperidol, decanoato 70,52 mg/mL (equivalente a 50 mg/mL de haloperidol) solução injetável",
+      "active_ingredients": [
+        "haloperidol"
+      ],
+      "strengths": [
+        {
+          "value": 70.52,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "haloperidol 70.52 mg/ml",
+      "ingredient_key": "haloperidol",
+      "loose_match_key": "haloperidol 70.52 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "harpagophytum-procumbens-burch-dc-garra-do-diabo-harpagosideo-5-mg-a-50-mg-comprimido",
+      "name": "Harpagophytum procumbens (Burch.) DC. (garra do diabo) harpagosídeo 5 mg a 50 mg comprimido",
+      "active_ingredients": [
+        "harpagophytum procumbens dc. harpagosídeo"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "harpagophytum procumbens dc. harpagosideo 5 mg",
+      "ingredient_key": "harpagophytum procumbens dc. harpagosideo",
+      "loose_match_key": "harpagophytum procumbens dc. harpagosideo 5 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação"
+    },
+    {
+      "id": "hidroclorotiazida-25-mg-comprimido",
+      "name": "hidroclorotiazida 25 mg comprimido",
+      "active_ingredients": [
+        "hidroclorotiazida"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "hidroclorotiazida 25 mg",
+      "ingredient_key": "hidroclorotiazida",
+      "loose_match_key": "hidroclorotiazida 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "hidrocortisona-acetato-10-mg-g-1-creme",
+      "name": "hidrocortisona, acetato 10 mg/g (1%) creme",
+      "active_ingredients": [
+        "hidrocortisona"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/g"
+        },
+        {
+          "value": 1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "hidrocortisona 10 mg/g",
+      "ingredient_key": "hidrocortisona",
+      "loose_match_key": "hidrocortisona 10 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "hidroxido-de-aluminio-60-mg-ml-a-63-mg-ml-suspensao-oral",
+      "name": "hidróxido de alumínio 60 mg/mL a 63 mg/mL suspensão oral",
+      "active_ingredients": [
+        "hidróxido de alumínio"
+      ],
+      "strengths": [
+        {
+          "value": 60,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 63,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "hidroxido de aluminio 60 mg/ml",
+      "ingredient_key": "hidroxido de aluminio",
+      "loose_match_key": "hidroxido de aluminio 60 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "hipoclorito-de-sodio-25-mg-ml-de-cloro-ativo-2-5-solucao",
+      "name": "hipoclorito de sódio 25 mg/mL de cloro ativo (2,5 %) solução",
+      "active_ingredients": [
+        "hipoclorito de sódio"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 2.5,
+          "unit": "%"
+        }
+      ],
+      "match_key": "hipoclorito de sodio 25 mg/ml",
+      "ingredient_key": "hipoclorito de sodio",
+      "loose_match_key": "sodio 25 mg/ml",
+      "access": "ubs",
+      "availability": "disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "ibuprofeno-50-mg-ml-suspensao-oral-gotas",
+      "name": "ibuprofeno 50 mg/mL suspensão oral gotas",
+      "active_ingredients": [
+        "ibuprofeno"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "ibuprofeno 50 mg/ml",
+      "ingredient_key": "ibuprofeno",
+      "loose_match_key": "ibuprofeno 50 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "ibuprofeno-300-mg-comprimido",
+      "name": "ibuprofeno 300 mg comprimido",
+      "active_ingredients": [
+        "ibuprofeno"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ibuprofeno 300 mg",
+      "ingredient_key": "ibuprofeno",
+      "loose_match_key": "ibuprofeno 300 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "imipramina-cloridrato-25-mg-comprimido",
+      "name": "imipramina, cloridrato 25 mg comprimido",
+      "active_ingredients": [
+        "imipramina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "imipramina 25 mg",
+      "ingredient_key": "imipramina",
+      "loose_match_key": "imipramina 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "imiquimode-50-mg-g-5-creme",
+      "name": "imiquimode 50 mg/g (5%) creme",
+      "active_ingredients": [
+        "imiquimode"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/g"
+        },
+        {
+          "value": 5,
+          "unit": "%"
+        }
+      ],
+      "match_key": "imiquimode 50 mg/g",
+      "ingredient_key": "imiquimode",
+      "loose_match_key": "imiquimode 50 mg/g",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "imunoglobulina-anti-rho-d-250-mcg-a-300-mcg-solucao-injetavel-fam",
+      "name": "imunoglobulina anti Rho (D) 250 mcg a 300 mcg solução injetável fam",
+      "active_ingredients": [
+        "imunoglobulina anti rho"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mcg"
+        },
+        {
+          "value": 300,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "imunoglobulina anti rho 250 mcg",
+      "ingredient_key": "imunoglobulina anti rho",
+      "loose_match_key": "imunoglobulina anti rho 250 mcg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivo para procedimento"
+    },
+    {
+      "id": "imunoglobulina-humana-anti-hepatite-b-1000-ui-5-ml-solucao-injetavel",
+      "name": "imunoglobulina humana anti-hepatite B 1000 UI/ 5 mL solução injetável",
+      "active_ingredients": [
+        "imunoglobulina humana anti-hepatite b"
+      ],
+      "strengths": [
+        {
+          "value": 1000,
+          "unit": "ui"
+        }
+      ],
+      "match_key": "imunoglobulina humana anti-hepatite b 1000 ui",
+      "ingredient_key": "imunoglobulina humana anti-hepatite b",
+      "loose_match_key": "imunoglobulina humana anti-hepatite b 1000 ui",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "insulina-humana-nph-100-ui-ml-suspensao-injetavel-frasco",
+      "name": "insulina humana NPH 100 UI/mL suspensão injetável frasco",
+      "active_ingredients": [
+        "insulina humana nph"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina humana nph 100 ui/ml",
+      "ingredient_key": "insulina humana nph",
+      "loose_match_key": "insulina humana 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "insulina-humana-nph-100-ui-ml-suspensao-injetavel-caneta",
+      "name": "insulina humana NPH 100 UI/mL suspensão injetável caneta",
+      "active_ingredients": [
+        "insulina humana nph"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina humana nph 100 ui/ml",
+      "ingredient_key": "insulina humana nph",
+      "loose_match_key": "insulina humana 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação"
+    },
+    {
+      "id": "insulina-humana-nph-100-ui-ml-suspensao-injetavel-carpule-tubete",
+      "name": "Insulina humana NPH 100 UI/mL suspensão injetável carpule / tubete",
+      "active_ingredients": [
+        "insulina humana nph"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina humana nph 100 ui/ml",
+      "ingredient_key": "insulina humana nph",
+      "loose_match_key": "insulina humana 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação"
+    },
+    {
+      "id": "insulina-humana-regular-100-ui-ml-solucao-injetavel-frasco",
+      "name": "insulina humana regular 100 UI/mL solução injetável frasco",
+      "active_ingredients": [
+        "insulina humana regular"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina humana regular 100 ui/ml",
+      "ingredient_key": "insulina humana regular",
+      "loose_match_key": "insulina humana regular 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "insulina-humana-regular-100-ui-ml-solucao-injetavel-caneta",
+      "name": "insulina humana regular 100 UI/mL solução injetável caneta",
+      "active_ingredients": [
+        "insulina humana regular"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina humana regular 100 ui/ml",
+      "ingredient_key": "insulina humana regular",
+      "loose_match_key": "insulina humana regular 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação"
+    },
+    {
+      "id": "insulina-humana-regular-100-ui-ml-solucao-injetavel-carpule-tubete",
+      "name": "insulina humana regular 100 UI/mL solução injetável carpule / tubete",
+      "active_ingredients": [
+        "insulina humana regular"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina humana regular 100 ui/ml",
+      "ingredient_key": "insulina humana regular",
+      "loose_match_key": "insulina humana regular 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação"
+    },
+    {
+      "id": "insulina-analoga-glargina-100-ui-ml-solucao-injetavel-carpule-tubete",
+      "name": "Insulina análoga glargina 100 UI/mL solução injetável carpule / tubete",
+      "active_ingredients": [
+        "insulina análoga glargina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "insulina analoga glargina 100 ui/ml",
+      "ingredient_key": "insulina analoga glargina",
+      "loose_match_key": "insulina glargina 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação"
+    },
+    {
+      "id": "ipratropio-brometo-0-25-mg-ml-0-025-solucao-inalante-gotas",
+      "name": "ipratrópio, brometo 0,25 mg/mL (0,025%) solução inalante gotas",
+      "active_ingredients": [
+        "ipratrópio"
+      ],
+      "strengths": [
+        {
+          "value": 0.25,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.025,
+          "unit": "%"
+        }
+      ],
+      "match_key": "ipratropio 0.25 mg/ml",
+      "ingredient_key": "ipratropio",
+      "loose_match_key": "ipratropio 0.25 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "isoniazida-100-mg-comprimido",
+      "name": "isoniazida 100 mg comprimido",
+      "active_ingredients": [
+        "isoniazida"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isoniazida 100 mg",
+      "ingredient_key": "isoniazida",
+      "loose_match_key": "isoniazida 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - medicamento exclusivo para tratamento de esquemas especiais de TB/MNT; tratamento da Infeccção Latente da Tuberculose (ILTB) e tratamento de crianças"
+    },
+    {
+      "id": "isoniazida-300-mg-comprimido",
+      "name": "isoniazida 300 mg comprimido",
+      "active_ingredients": [
+        "isoniazida"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isoniazida 300 mg",
+      "ingredient_key": "isoniazida",
+      "loose_match_key": "isoniazida 300 mg",
+      "access": "restricted",
+      "availability": "medicamento utilizado no tratamento de ILTB em unidades IST/Aids; tratamento de ILTB, associado a rifapentina 150mg, exclusivo em unidades de referência"
+    },
+    {
+      "id": "isoniazida-150-mg-rifampicina-300-mg-comprimido",
+      "name": "isoniazida 150 mg + rifampicina 300 mg comprimido",
+      "active_ingredients": [
+        "isoniazida",
+        "rifampicina"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        },
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isoniazida 150 mg + rifampicina 300 mg",
+      "ingredient_key": "isoniazida + rifampicina",
+      "loose_match_key": "isoniazida + rifampicina 150 mg + 300 mg",
+      "access": "restricted",
+      "availability": "medicamento exclusivo para tratamento com esquema básico de TB nas Unidades de Saúde; tratamento de esquemas especiais de TB em unidades de referência"
+    },
+    {
+      "id": "isoniazida-75-mg-rifampicina-150-mg-comprimido",
+      "name": "isoniazida 75 mg + rifampicina 150 mg comprimido",
+      "active_ingredients": [
+        "isoniazida",
+        "rifampicina"
+      ],
+      "strengths": [
+        {
+          "value": 75,
+          "unit": "mg"
+        },
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isoniazida 75 mg + rifampicina 150 mg",
+      "ingredient_key": "isoniazida + rifampicina",
+      "loose_match_key": "isoniazida + rifampicina 150 mg + 75 mg",
+      "access": "restricted",
+      "availability": "medicamento exclusivo para tratamento com esquema básico de TB nas Unidades de Saúde; tratamento de esquemas especiais de TB em unidades de referência"
+    },
+    {
+      "id": "isossorbida-dinitrato-5-mg-comprimido-sublingual-ou-propatilnitrato-10-mg-comprimido",
+      "name": "isossorbida, dinitrato 5 mg comprimido sublingual ou propatilnitrato 10 mg comprimido",
+      "active_ingredients": [
+        "isossorbida"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        },
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isossorbida 5 mg",
+      "ingredient_key": "isossorbida",
+      "loose_match_key": "isossorbida 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "isossorbida-mononitrato-20-mg-comprimido",
+      "name": "isossorbida, mononitrato 20 mg comprimido",
+      "active_ingredients": [
+        "isossorbida"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "isossorbida 20 mg",
+      "ingredient_key": "isossorbida",
+      "loose_match_key": "isossorbida 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "itraconazol-100-mg-capsula",
+      "name": "itraconazol 100 mg cápsula",
+      "active_ingredients": [
+        "itraconazol"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "itraconazol 100 mg",
+      "ingredient_key": "itraconazol",
+      "loose_match_key": "itraconazol 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "ivermectina-6-mg-comprimido",
+      "name": "ivermectina 6 mg comprimido",
+      "active_ingredients": [
+        "ivermectina"
+      ],
+      "strengths": [
+        {
+          "value": 6,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ivermectina 6 mg",
+      "ingredient_key": "ivermectina",
+      "loose_match_key": "ivermectina 6 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "lamivudina-3tc-10-mg-ml-solucao-oral",
+      "name": "lamivudina (3TC) 10 mg/mL solução oral",
+      "active_ingredients": [
+        "lamivudina ("
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "lamivudina ( 10 mg/ml",
+      "ingredient_key": "lamivudina (",
+      "loose_match_key": "lamivudina ( 10 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "lamivudina-3tc-150-mg-comprimido",
+      "name": "lamivudina (3TC) 150 mg comprimido",
+      "active_ingredients": [
+        "lamivudina ("
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lamivudina ( 150 mg",
+      "ingredient_key": "lamivudina (",
+      "loose_match_key": "lamivudina ( 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "levodopa-100-mg-benserazida-25-mg-capsula-de-liberacao-prolongada-hbs",
+      "name": "levodopa 100 mg + benserazida 25 mg cápsula de liberação prolongada (HBS)",
+      "active_ingredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levodopa 100 mg + benserazida 25 mg",
+      "ingredient_key": "benserazida + levodopa",
+      "loose_match_key": "benserazida + levodopa 100 mg + 25 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência"
+    },
+    {
+      "id": "levodopa-100-mg-benserazida-25-mg-comprimido",
+      "name": "levodopa 100 mg + benserazida 25 mg comprimido",
+      "active_ingredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levodopa 100 mg + benserazida 25 mg",
+      "ingredient_key": "benserazida + levodopa",
+      "loose_match_key": "benserazida + levodopa 100 mg + 25 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência"
+    },
+    {
+      "id": "levodopa-100-mg-benserazida-25-mg-comprimido-dispersivel",
+      "name": "levodopa 100 mg + benserazida 25 mg comprimido dispersível",
+      "active_ingredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levodopa 100 mg + benserazida 25 mg",
+      "ingredient_key": "benserazida + levodopa",
+      "loose_match_key": "benserazida + levodopa 100 mg + 25 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência"
+    },
+    {
+      "id": "levodopa-200-mg-benserazida-50-mg-comprimido",
+      "name": "levodopa 200 mg + benserazida 50 mg comprimido",
+      "active_ingredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levodopa 200 mg + benserazida 50 mg",
+      "ingredient_key": "benserazida + levodopa",
+      "loose_match_key": "benserazida + levodopa 200 mg + 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência"
+    },
+    {
+      "id": "levodopa-250-mg-carbidopa-25-mg-comprimido",
+      "name": "levodopa 250 mg + carbidopa 25 mg comprimido",
+      "active_ingredients": [
+        "levodopa",
+        "carbidopa"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levodopa 250 mg + carbidopa 25 mg",
+      "ingredient_key": "carbidopa + levodopa",
+      "loose_match_key": "carbidopa + levodopa 25 mg + 250 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência"
+    },
+    {
+      "id": "levofloxacino-250-mg-comprimido",
+      "name": "levofloxacino 250 mg comprimido",
+      "active_ingredients": [
+        "levofloxacino"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levofloxacino 250 mg",
+      "ingredient_key": "levofloxacino",
+      "loose_match_key": "levofloxacino 250 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "levofloxacino-500-mg-comprimido",
+      "name": "levofloxacino 500 mg comprimido",
+      "active_ingredients": [
+        "levofloxacino"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levofloxacino 500 mg",
+      "ingredient_key": "levofloxacino",
+      "loose_match_key": "levofloxacino 500 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "levonorgestrel-0-75-mg-comprimido-cartela",
+      "name": "levonorgestrel 0,75 mg comprimido cartela",
+      "active_ingredients": [
+        "levonorgestrel"
+      ],
+      "strengths": [
+        {
+          "value": 0.75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levonorgestrel 0.75 mg",
+      "ingredient_key": "levonorgestrel",
+      "loose_match_key": "levonorgestrel 0.75 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "levonorgestrel-0-15-mg-etinilestradiol-0-03-mg-comprimido-cartela",
+      "name": "levonorgestrel 0,15 mg + etinilestradiol 0,03 mg comprimido cartela",
+      "active_ingredients": [
+        "levonorgestrel",
+        "etinilestradiol"
+      ],
+      "strengths": [
+        {
+          "value": 0.15,
+          "unit": "mg"
+        },
+        {
+          "value": 0.03,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levonorgestrel 0.15 mg + etinilestradiol 0.03 mg",
+      "ingredient_key": "etinilestradiol + levonorgestrel",
+      "loose_match_key": "etinilestradiol + levonorgestrel 0.03 mg + 0.15 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "levonorgestrel-19-5-mg-sistema-intrauterino-siu",
+      "name": "levonorgestrel 19,5 mg sistema intrauterino (SIU)",
+      "active_ingredients": [
+        "levonorgestrel"
+      ],
+      "strengths": [
+        {
+          "value": 19.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levonorgestrel 19.5 mg",
+      "ingredient_key": "levonorgestrel",
+      "loose_match_key": "levonorgestrel 19.5 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Necessário formulário para procedimento"
+    },
+    {
+      "id": "levonorgestrel-52-mg-sistema-intrauterino-siu",
+      "name": "levonorgestrel 52 mg sistema intrauterino (SIU)",
+      "active_ingredients": [
+        "levonorgestrel"
+      ],
+      "strengths": [
+        {
+          "value": 52,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "levonorgestrel 52 mg",
+      "ingredient_key": "levonorgestrel",
+      "loose_match_key": "levonorgestrel 52 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Necessário formulário para procedimento"
+    },
+    {
+      "id": "levotiroxina-sodica-12-5-mcg-comprimido",
+      "name": "levotiroxina sódica 12,5 mcg comprimido",
+      "active_ingredients": [
+        "levotiroxina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 12.5,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "levotiroxina 12.5 mcg",
+      "ingredient_key": "levotiroxina",
+      "loose_match_key": "levotiroxina 12.5 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "levotiroxina-sodica-25-mcg-comprimido",
+      "name": "levotiroxina sódica 25 mcg comprimido",
+      "active_ingredients": [
+        "levotiroxina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "levotiroxina 25 mcg",
+      "ingredient_key": "levotiroxina",
+      "loose_match_key": "levotiroxina 25 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "levotiroxina-sodica-50-mcg-comprimido",
+      "name": "levotiroxina sódica 50 mcg comprimido",
+      "active_ingredients": [
+        "levotiroxina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "levotiroxina 50 mcg",
+      "ingredient_key": "levotiroxina",
+      "loose_match_key": "levotiroxina 50 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "levotiroxina-sodica-100-mcg-comprimido",
+      "name": "levotiroxina sódica 100 mcg comprimido",
+      "active_ingredients": [
+        "levotiroxina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mcg"
+        }
+      ],
+      "match_key": "levotiroxina 100 mcg",
+      "ingredient_key": "levotiroxina",
+      "loose_match_key": "levotiroxina 100 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "linezolida-600-mg-comprimido",
+      "name": "linezolida 600 mg comprimido",
+      "active_ingredients": [
+        "linezolida"
+      ],
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "linezolida 600 mg",
+      "ingredient_key": "linezolida",
+      "loose_match_key": "linezolida 600 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "loperamida-2-mg-comprimido",
+      "name": "loperamida 2 mg comprimido",
+      "active_ingredients": [
+        "loperamida"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "loperamida 2 mg",
+      "ingredient_key": "loperamida",
+      "loose_match_key": "loperamida 2 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "lopinavir-lpv-80-mg-ml-ritonavir-r-20-mg-ml-solucao-oral",
+      "name": "lopinavir (LPV) 80 mg/mL + ritonavir (r) 20 mg/mL solução oral",
+      "active_ingredients": [
+        "lopinavir",
+        "ritonavir"
+      ],
+      "strengths": [
+        {
+          "value": 80,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "lopinavir 80 mg/ml + ritonavir 20 mg/ml",
+      "ingredient_key": "lopinavir + ritonavir",
+      "loose_match_key": "lopinavir + ritonavir 20 mg/ml + 80 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "lopinavir-lpv-100-mg-ritonavir-r-25-mg-comprimido",
+      "name": "lopinavir (LPV) 100 mg + ritonavir (r) 25 mg comprimido",
+      "active_ingredients": [
+        "lopinavir",
+        "ritonavir"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "lopinavir 100 mg + ritonavir 25 mg",
+      "ingredient_key": "lopinavir + ritonavir",
+      "loose_match_key": "lopinavir + ritonavir 100 mg + 25 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "loratadina-1-mg-ml-solucao-oral",
+      "name": "loratadina 1 mg/mL solução oral",
+      "active_ingredients": [
+        "loratadina"
+      ],
+      "strengths": [
+        {
+          "value": 1,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "loratadina 1 mg/ml",
+      "ingredient_key": "loratadina",
+      "loose_match_key": "loratadina 1 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "loratadina-10-mg-comprimido",
+      "name": "loratadina 10 mg comprimido",
+      "active_ingredients": [
+        "loratadina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "loratadina 10 mg",
+      "ingredient_key": "loratadina",
+      "loose_match_key": "loratadina 10 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "losartana-potassica-50-mg-comprimido",
+      "name": "losartana potássica 50 mg comprimido",
+      "active_ingredients": [
+        "losartana potássica"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "losartana 50 mg",
+      "ingredient_key": "losartana",
+      "loose_match_key": "losartana 50 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "maraviroque-mvq-150-mg-comprimido",
+      "name": "maraviroque (MVQ) 150 mg comprimido",
+      "active_ingredients": [
+        "maraviroque"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "maraviroque 150 mg",
+      "ingredient_key": "maraviroque",
+      "loose_match_key": "maraviroque 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "maytenus-ilicifolia-mart-ex-reissek-espinheira-santa-taninos-totais-13-mg-a-20-mg-comprimido",
+      "name": "Maytenus ilicifolia Mart. ex. Reissek. (espinheira santa) taninos totais 13 mg a 20 mg comprimido",
+      "active_ingredients": [
+        "maytenus ilicifolia mart. ex. reissek. taninos totais"
+      ],
+      "strengths": [
+        {
+          "value": 13,
+          "unit": "mg"
+        },
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "maytenus ilicifolia mart. ex. reissek. taninos totais 13 mg",
+      "ingredient_key": "maytenus ilicifolia mart. ex. reissek. taninos totais",
+      "loose_match_key": "maytenus ilicifolia mart. ex. reissek. taninos totais 13 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação"
+    },
+    {
+      "id": "mebendazol-20-mg-ml-suspensao-oral",
+      "name": "mebendazol 20 mg/mL suspensão oral",
+      "active_ingredients": [
+        "mebendazol"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "mebendazol 20 mg/ml",
+      "ingredient_key": "mebendazol",
+      "loose_match_key": "mebendazol 20 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "medroxiprogesterona-acetato-10-mg-comprimido",
+      "name": "medroxiprogesterona, acetato 10 mg comprimido",
+      "active_ingredients": [
+        "medroxiprogesterona"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "medroxiprogesterona 10 mg",
+      "ingredient_key": "medroxiprogesterona",
+      "loose_match_key": "medroxiprogesterona 10 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "medroxiprogesterona-acetato-25-mg-estradiol-cipionato-5-mg-suspensao-injetavel",
+      "name": "medroxiprogesterona, acetato 25 mg + estradiol cipionato 5 mg suspensão injetável",
+      "active_ingredients": [
+        "medroxiprogesterona",
+        "estradiol cipionato"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        },
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "medroxiprogesterona 25 mg + estradiol cipionato 5 mg",
+      "ingredient_key": "estradiol cipionato + medroxiprogesterona",
+      "loose_match_key": "estradiol cipionato + medroxiprogesterona 25 mg + 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "medroxiprogesterona-acetato-150-mg-ml-suspensao-injetavel",
+      "name": "medroxiprogesterona, acetato 150 mg/mL suspensão injetável",
+      "active_ingredients": [
+        "medroxiprogesterona"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "medroxiprogesterona 150 mg/ml",
+      "ingredient_key": "medroxiprogesterona",
+      "loose_match_key": "medroxiprogesterona 150 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "metformina-cloridrato-500-mg-comprimido",
+      "name": "metformina, cloridrato 500 mg comprimido",
+      "active_ingredients": [
+        "metformina"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metformina 500 mg",
+      "ingredient_key": "metformina",
+      "loose_match_key": "metformina 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "metformina-cloridrato-850-mg-comprimido",
+      "name": "metformina, cloridrato 850 mg comprimido",
+      "active_ingredients": [
+        "metformina"
+      ],
+      "strengths": [
+        {
+          "value": 850,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metformina 850 mg",
+      "ingredient_key": "metformina",
+      "loose_match_key": "metformina 850 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "metildopa-250-mg-comprimido",
+      "name": "metildopa 250 mg comprimido",
+      "active_ingredients": [
+        "metildopa"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metildopa 250 mg",
+      "ingredient_key": "metildopa",
+      "loose_match_key": "metildopa 250 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "metilfenidato-10-mg-comprimido",
+      "name": "metilfenidato 10 mg comprimido",
+      "active_ingredients": [
+        "metilfenidato"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metilfenidato 10 mg",
+      "ingredient_key": "metilfenidato",
+      "loose_match_key": "metilfenidato 10 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para os pacientes em tratamento na Rede Municipal de Saúde Orientação técnica para prescrição"
+    },
+    {
+      "id": "metoclopramida-cloridrato-10-mg-comprimido",
+      "name": "metoclopramida, cloridrato 10 mg comprimido",
+      "active_ingredients": [
+        "metoclopramida"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metoclopramida 10 mg",
+      "ingredient_key": "metoclopramida",
+      "loose_match_key": "metoclopramida 10 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "metronidazol-100-mg-g-10-creme-ou-gel-vaginal",
+      "name": "metronidazol 100 mg/g (10%) creme ou gel vaginal",
+      "active_ingredients": [
+        "metronidazol"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg/g"
+        },
+        {
+          "value": 10,
+          "unit": "%"
+        }
+      ],
+      "match_key": "metronidazol 100 mg/g",
+      "ingredient_key": "metronidazol",
+      "loose_match_key": "metronidazol 100 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "metronidazol-250-mg-comprimido",
+      "name": "metronidazol 250 mg comprimido",
+      "active_ingredients": [
+        "metronidazol"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "metronidazol 250 mg",
+      "ingredient_key": "metronidazol",
+      "loose_match_key": "metronidazol 250 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "miconazol-nitrato-20-mg-g-2-creme-vaginal",
+      "name": "miconazol, nitrato 20 mg/g (2%) creme vaginal",
+      "active_ingredients": [
+        "miconazol"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/g"
+        },
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "miconazol 20 mg/g",
+      "ingredient_key": "miconazol",
+      "loose_match_key": "miconazol 20 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "mikania-glomerata-spreng-guaco-solucao-oral",
+      "name": "Mikania glomerata spreng (guaco) solução oral",
+      "active_ingredients": [
+        "mikania glomerata spreng solução oral"
+      ],
+      "strengths": [],
+      "match_key": "mikania glomerata spreng solucao oral",
+      "ingredient_key": "mikania glomerata spreng solucao oral",
+      "loose_match_key": "mikania glomerata spreng solucao oral",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação"
+    },
+    {
+      "id": "morfina-sulfato-30-mg-comprimido-de-liberacao-modificada",
+      "name": "morfina, sulfato 30 mg comprimido de liberação modificada",
+      "active_ingredients": [
+        "morfina"
+      ],
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "morfina 30 mg",
+      "ingredient_key": "morfina",
+      "loose_match_key": "morfina 30 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia"
+    },
+    {
+      "id": "moxifloxacino-400-mg-comprimido",
+      "name": "moxifloxacino 400 mg comprimido",
+      "active_ingredients": [
+        "moxifloxacino"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "moxifloxacino 400 mg",
+      "ingredient_key": "moxifloxacino",
+      "loose_match_key": "moxifloxacino 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "mupirocina-20-mg-g-pomada-bisnaga",
+      "name": "mupirocina 20 mg/g pomada bisnaga",
+      "active_ingredients": [
+        "mupirocina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/g"
+        }
+      ],
+      "match_key": "mupirocina 20 mg/g",
+      "ingredient_key": "mupirocina",
+      "loose_match_key": "mupirocina 20 mg/g",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia/ AMAE/ AE/ Centros de Exame da Mulher"
+    },
+    {
+      "id": "naltrexona-50-mg-comprimido",
+      "name": "naltrexona 50 mg comprimido",
+      "active_ingredients": [
+        "naltrexona"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "naltrexona 50 mg",
+      "ingredient_key": "naltrexona",
+      "loose_match_key": "naltrexona 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em UBS e CAPS AD"
+    },
+    {
+      "id": "nevirapina-nvp-10-mg-ml-suspensao-oral",
+      "name": "nevirapina (NVP) 10 mg/mL suspensão oral",
+      "active_ingredients": [
+        "nevirapina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "nevirapina 10 mg/ml",
+      "ingredient_key": "nevirapina",
+      "loose_match_key": "nevirapina 10 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "nevirapina-nvp-200-mg-comprimido",
+      "name": "nevirapina (NVP) 200 mg comprimido",
+      "active_ingredients": [
+        "nevirapina"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nevirapina 200 mg",
+      "ingredient_key": "nevirapina",
+      "loose_match_key": "nevirapina 200 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "nicotina-2-mg-goma-de-mascar",
+      "name": "nicotina 2 mg goma de mascar",
+      "active_ingredients": [
+        "nicotina"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nicotina 2 mg",
+      "ingredient_key": "nicotina",
+      "loose_match_key": "nicotina 2 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS"
+    },
+    {
+      "id": "nicotina-7-mg-adesivo-transdermico",
+      "name": "nicotina 7 mg adesivo transdérmico",
+      "active_ingredients": [
+        "nicotina"
+      ],
+      "strengths": [
+        {
+          "value": 7,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nicotina 7 mg",
+      "ingredient_key": "nicotina",
+      "loose_match_key": "nicotina 7 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS"
+    },
+    {
+      "id": "nicotina-14-mg-adesivo-transdermico",
+      "name": "nicotina 14 mg adesivo transdérmico",
+      "active_ingredients": [
+        "nicotina"
+      ],
+      "strengths": [
+        {
+          "value": 14,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nicotina 14 mg",
+      "ingredient_key": "nicotina",
+      "loose_match_key": "nicotina 14 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS"
+    },
+    {
+      "id": "nicotina-21-mg-adesivo-transdermico",
+      "name": "nicotina 21 mg adesivo transdérmico",
+      "active_ingredients": [
+        "nicotina"
+      ],
+      "strengths": [
+        {
+          "value": 21,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nicotina 21 mg",
+      "ingredient_key": "nicotina",
+      "loose_match_key": "nicotina 21 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS"
+    },
+    {
+      "id": "nifedipino-20-mg-comprimido-liberacao-prolongada",
+      "name": "nifedipino 20 mg comprimido liberação prolongada",
+      "active_ingredients": [
+        "nifedipino"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nifedipino 20 mg",
+      "ingredient_key": "nifedipino",
+      "loose_match_key": "nifedipino 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "nirmatrelvir-ritonavir-comprimidos-revestidos",
+      "name": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "active_ingredients": [
+        "nirmatrelvir",
+        "ritonavir comprimidos revestidos"
+      ],
+      "strengths": [],
+      "match_key": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "ingredient_key": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "loose_match_key": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivo para tratamento de COVID-19"
+    },
+    {
+      "id": "nistatina-100-000-ui-ml-suspensao-oral",
+      "name": "nistatina 100.000 UI/mL suspensão oral",
+      "active_ingredients": [
+        "nistatina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "nistatina 100 ui/ml",
+      "ingredient_key": "nistatina",
+      "loose_match_key": "nistatina 100 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "nitrofurantoina-100-mg-comprimido",
+      "name": "nitrofurantoína 100 mg comprimido",
+      "active_ingredients": [
+        "nitrofurantoína"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nitrofurantoina 100 mg",
+      "ingredient_key": "nitrofurantoina",
+      "loose_match_key": "nitrofurantoina 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "noretisterona-0-35-mg-comprimido-cartela",
+      "name": "noretisterona 0,35 mg comprimido cartela",
+      "active_ingredients": [
+        "noretisterona"
+      ],
+      "strengths": [
+        {
+          "value": 0.35,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "noretisterona 0.35 mg",
+      "ingredient_key": "noretisterona",
+      "loose_match_key": "noretisterona 0.35 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "noretisterona-enantato-50-mg-ml-estradiol-valerato-5-mg-ml-solucao-injetavel",
+      "name": "noretisterona, enantato 50 mg/mL + estradiol, valerato 5 mg/mL solução injetável",
+      "active_ingredients": [
+        "noretisterona",
+        "estradiol"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 5,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "noretisterona 50 mg/ml + estradiol 5 mg/ml",
+      "ingredient_key": "estradiol + noretisterona",
+      "loose_match_key": "estradiol + noretisterona 5 mg/ml + 50 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "norfloxacino-400-mg-comprimido",
+      "name": "norfloxacino 400 mg comprimido",
+      "active_ingredients": [
+        "norfloxacino"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "norfloxacino 400 mg",
+      "ingredient_key": "norfloxacino",
+      "loose_match_key": "norfloxacino 400 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "nortriptilina-cloridrato-25-mg-comprimido",
+      "name": "nortriptilina, cloridrato 25 mg comprimido",
+      "active_ingredients": [
+        "nortriptilina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "nortriptilina 25 mg",
+      "ingredient_key": "nortriptilina",
+      "loose_match_key": "nortriptilina 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "oleo-mineral-frasco",
+      "name": "óleo mineral frasco",
+      "active_ingredients": [
+        "óleo mineral frasco"
+      ],
+      "strengths": [],
+      "match_key": "oleo mineral frasco",
+      "ingredient_key": "oleo mineral frasco",
+      "loose_match_key": "oleo mineral frasco",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "omeprazol-20-mg-capsula",
+      "name": "omeprazol 20 mg cápsula",
+      "active_ingredients": [
+        "omeprazol"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "omeprazol 20 mg",
+      "ingredient_key": "omeprazol",
+      "loose_match_key": "omeprazol 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "oseltamivir-30-mg-capsula",
+      "name": "oseltamivir 30 mg cápsula",
+      "active_ingredients": [
+        "oseltamivir"
+      ],
+      "strengths": [
+        {
+          "value": 30,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "oseltamivir 30 mg",
+      "ingredient_key": "oseltamivir",
+      "loose_match_key": "oseltamivir 30 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "oseltamivir-45-mg-capsula",
+      "name": "oseltamivir 45 mg cápsula",
+      "active_ingredients": [
+        "oseltamivir"
+      ],
+      "strengths": [
+        {
+          "value": 45,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "oseltamivir 45 mg",
+      "ingredient_key": "oseltamivir",
+      "loose_match_key": "oseltamivir 45 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "oseltamivir-75-mg-capsula",
+      "name": "oseltamivir 75 mg cápsula",
+      "active_ingredients": [
+        "oseltamivir"
+      ],
+      "strengths": [
+        {
+          "value": 75,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "oseltamivir 75 mg",
+      "ingredient_key": "oseltamivir",
+      "loose_match_key": "oseltamivir 75 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "oxido-de-zinco-150-a-250-mg-g-retinol-vit-a-colecalciferol-pomada",
+      "name": "óxido de zinco 150 a 250 mg/g + retinol (vit. A) + colecalciferol pomada",
+      "active_ingredients": [
+        "óxido de zinco",
+        "retinol",
+        "colecalciferol pomada"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg/g"
+        }
+      ],
+      "match_key": "oxido de zinco + retinol + colecalciferol pomada",
+      "ingredient_key": "colecalciferol pomada + oxido de zinco + retinol",
+      "loose_match_key": "colecalciferol pomada + oxido de zinco + retinol 250 mg/g",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "paracetamol-200-mg-ml-solucao-oral-gotas",
+      "name": "paracetamol 200 mg/mL solução oral gotas",
+      "active_ingredients": [
+        "paracetamol"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "paracetamol 200 mg/ml",
+      "ingredient_key": "paracetamol",
+      "loose_match_key": "paracetamol 200 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "paracetamol-500-mg-comprimido",
+      "name": "paracetamol 500 mg comprimido",
+      "active_ingredients": [
+        "paracetamol"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "paracetamol 500 mg",
+      "ingredient_key": "paracetamol",
+      "loose_match_key": "paracetamol 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "pentoxifilina-400-mg-comprimido",
+      "name": "pentoxifilina 400 mg comprimido",
+      "active_ingredients": [
+        "pentoxifilina"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pentoxifilina 400 mg",
+      "ingredient_key": "pentoxifilina",
+      "loose_match_key": "pentoxifilina 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência de hanseníase"
+    },
+    {
+      "id": "periciazina-40-mg-ml-4-solucao-oral-gotas",
+      "name": "periciazina 40 mg/mL (4%) solução oral gotas",
+      "active_ingredients": [
+        "periciazina"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 4,
+          "unit": "%"
+        }
+      ],
+      "match_key": "periciazina 40 mg/ml",
+      "ingredient_key": "periciazina",
+      "loose_match_key": "periciazina 40 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "permetrina-10-mg-ml-1-locao-capilar",
+      "name": "permetrina 10 mg/mL (1%) loção capilar",
+      "active_ingredients": [
+        "permetrina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 1,
+          "unit": "%"
+        }
+      ],
+      "match_key": "permetrina 10 mg/ml",
+      "ingredient_key": "permetrina",
+      "loose_match_key": "permetrina 10 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "permetrina-50-mg-ml-5-creme-ou-locao",
+      "name": "permetrina 50 mg/mL (5%) creme ou loção",
+      "active_ingredients": [
+        "permetrina"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 5,
+          "unit": "%"
+        }
+      ],
+      "match_key": "permetrina 50 mg/ml",
+      "ingredient_key": "permetrina",
+      "loose_match_key": "permetrina 50 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "pilocarpina-cloridrato-20-mg-ml-2-solucao-oftalmica",
+      "name": "pilocarpina, cloridrato 20 mg/mL (2%) solução oftálmica",
+      "active_ingredients": [
+        "pilocarpina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "pilocarpina 20 mg/ml",
+      "ingredient_key": "pilocarpina",
+      "loose_match_key": "pilocarpina 20 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista"
+    },
+    {
+      "id": "pirazinamida-500-mg-comprimido",
+      "name": "pirazinamida 500 mg comprimido",
+      "active_ingredients": [
+        "pirazinamida"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pirazinamida 500 mg",
+      "ingredient_key": "pirazinamida",
+      "loose_match_key": "pirazinamida 500 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "pirazinamida-150-mg-comprimido-dispersivel",
+      "name": "pirazinamida 150 mg comprimido dispersível",
+      "active_ingredients": [
+        "pirazinamida"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pirazinamida 150 mg",
+      "ingredient_key": "pirazinamida",
+      "loose_match_key": "pirazinamida 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência -exclusivo para tratamento de TB em crianças e de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "piridoxina-cloridrato-vit-b6-40-mg-comprimido",
+      "name": "piridoxina, cloridrato (vit. B6) 40 mg comprimido",
+      "active_ingredients": [
+        "piridoxina"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "piridoxina 40 mg",
+      "ingredient_key": "piridoxina",
+      "loose_match_key": "piridoxina 40 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde e em unidades de referência para tratamento de Tuberculose em condições específicas"
+    },
+    {
+      "id": "piridoxina-cloridrato-vit-b6-50-mg-comprimido",
+      "name": "piridoxina, cloridrato (vit. B6) 50 mg comprimido",
+      "active_ingredients": [
+        "piridoxina"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "piridoxina 50 mg",
+      "ingredient_key": "piridoxina",
+      "loose_match_key": "piridoxina 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência -exclusivo para tratamento de TB em gestantes"
+    },
+    {
+      "id": "pirimetamina-25-mg-comprimido",
+      "name": "pirimetamina 25 mg comprimido",
+      "active_ingredients": [
+        "pirimetamina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pirimetamina 25 mg",
+      "ingredient_key": "pirimetamina",
+      "loose_match_key": "pirimetamina 25 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "pirimetamina-3-mg-ml-solucao-oral",
+      "name": "pirimetamina 3 mg/mL solução oral",
+      "active_ingredients": [
+        "pirimetamina"
+      ],
+      "strengths": [
+        {
+          "value": 3,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "pirimetamina 3 mg/ml",
+      "ingredient_key": "pirimetamina",
+      "loose_match_key": "pirimetamina 3 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "pravastatina-20-mg-comprimido",
+      "name": "pravastatina 20 mg comprimido",
+      "active_ingredients": [
+        "pravastatina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "pravastatina 20 mg",
+      "ingredient_key": "pravastatina",
+      "loose_match_key": "pravastatina 20 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "praziquantel-600-mg-comprimido",
+      "name": "praziquantel 600 mg comprimido",
+      "active_ingredients": [
+        "praziquantel"
+      ],
+      "strengths": [
+        {
+          "value": 600,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "praziquantel 600 mg",
+      "ingredient_key": "praziquantel",
+      "loose_match_key": "praziquantel 600 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência , utilizado no tratamento da esquistossomose"
+    },
+    {
+      "id": "prednisolona-fosfato-sodico-4-02-mg-ml-equivalente-a-3-mg-ml-de-prednisolona-solucao-oral",
+      "name": "prednisolona, fosfato sódico 4,02 mg/mL (equivalente a 3 mg/mL de prednisolona) solução oral",
+      "active_ingredients": [
+        "prednisolona"
+      ],
+      "strengths": [
+        {
+          "value": 4.02,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 3,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "prednisolona 4.02 mg/ml",
+      "ingredient_key": "prednisolona",
+      "loose_match_key": "prednisolona 4.02 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "prednisona-5-mg-comprimido",
+      "name": "prednisona 5 mg comprimido",
+      "active_ingredients": [
+        "prednisona"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "prednisona 5 mg",
+      "ingredient_key": "prednisona",
+      "loose_match_key": "prednisona 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "prednisona-20-mg-comprimido",
+      "name": "prednisona 20 mg comprimido",
+      "active_ingredients": [
+        "prednisona"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "prednisona 20 mg",
+      "ingredient_key": "prednisona",
+      "loose_match_key": "prednisona 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "primaquina-15-mg-comprimido",
+      "name": "primaquina 15 mg comprimido",
+      "active_ingredients": [
+        "primaquina"
+      ],
+      "strengths": [
+        {
+          "value": 15,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "primaquina 15 mg",
+      "ingredient_key": "primaquina",
+      "loose_match_key": "primaquina 15 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "progesterona-200-mg-capsula-gelatinosa",
+      "name": "progesterona 200 mg cápsula gelatinosa",
+      "active_ingredients": [
+        "progesterona"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "progesterona 200 mg",
+      "ingredient_key": "progesterona",
+      "loose_match_key": "progesterona 200 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "prometazina-cloridrato-25-mg-comprimido",
+      "name": "prometazina, cloridrato 25 mg comprimido",
+      "active_ingredients": [
+        "prometazina"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "prometazina 25 mg",
+      "ingredient_key": "prometazina",
+      "loose_match_key": "prometazina 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "propiltiuracila-100-mg-comprimido",
+      "name": "propiltiuracila 100 mg comprimido",
+      "active_ingredients": [
+        "propiltiuracila"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "propiltiuracila 100 mg",
+      "ingredient_key": "propiltiuracila",
+      "loose_match_key": "propiltiuracila 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "propranolol-cloridrato-40-mg-comprimido",
+      "name": "propranolol, cloridrato 40 mg comprimido",
+      "active_ingredients": [
+        "propranolol"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "propranolol 40 mg",
+      "ingredient_key": "propranolol",
+      "loose_match_key": "propranolol 40 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "raltegravir-ral-100-mg-comprimido",
+      "name": "raltegravir (RAL) 100 mg comprimido",
+      "active_ingredients": [
+        "raltegravir"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "raltegravir 100 mg",
+      "ingredient_key": "raltegravir",
+      "loose_match_key": "raltegravir 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "raltegravir-ral-100-mg-granulado-sache",
+      "name": "raltegravir (RAL) 100 mg granulado sachê",
+      "active_ingredients": [
+        "raltegravir"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "raltegravir 100 mg",
+      "ingredient_key": "raltegravir",
+      "loose_match_key": "raltegravir 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "raltegravir-ral-400-mg-comprimido",
+      "name": "raltegravir (RAL) 400 mg comprimido",
+      "active_ingredients": [
+        "raltegravir"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "raltegravir 400 mg",
+      "ingredient_key": "raltegravir",
+      "loose_match_key": "raltegravir 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "retinol-acetato-vit-a-50-000-ui-ml-colecalciferol-vit-d-10-000-ui-ml-solucao-oral-gotas",
+      "name": "retinol, acetato (vit. A) 50.000 UI/mL + colecalciferol (vit. D) 10.000 UI/mL solução oral gotas",
+      "active_ingredients": [
+        "retinol",
+        "colecalciferol"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "ui/ml"
+        },
+        {
+          "value": 10,
+          "unit": "ui/ml"
+        }
+      ],
+      "match_key": "retinol 50 ui/ml + colecalciferol 10 ui/ml",
+      "ingredient_key": "colecalciferol + retinol",
+      "loose_match_key": "colecalciferol + retinol 10 ui/ml + 50 ui/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "rifabutina-150-mg-capsula",
+      "name": "rifabutina 150 mg cápsula",
+      "active_ingredients": [
+        "rifabutina"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rifabutina 150 mg",
+      "ingredient_key": "rifabutina",
+      "loose_match_key": "rifabutina 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para o tratamento de TB para pacientes em uso de inibidores de protease;"
+    },
+    {
+      "id": "rifampicina-20-mg-ml-2-suspensao-oral",
+      "name": "rifampicina 20 mg/mL (2%) suspensão oral",
+      "active_ingredients": [
+        "rifampicina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 2,
+          "unit": "%"
+        }
+      ],
+      "match_key": "rifampicina 20 mg/ml",
+      "ingredient_key": "rifampicina",
+      "loose_match_key": "rifampicina 20 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de TB em crianças; cobertura de foco de meningites bacterianas e doenca miningocóccica; tratamento da Infeccção Latente da Tuberculose (ILTB); tratamento de esquemas especiais de TB"
+    },
+    {
+      "id": "rifampicina-300-mg-capsula",
+      "name": "rifampicina 300 mg cápsula",
+      "active_ingredients": [
+        "rifampicina"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rifampicina 300 mg",
+      "ingredient_key": "rifampicina",
+      "loose_match_key": "rifampicina 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para cobertura de foco de meningites bacterianas e doença meningocóccica; hidradenite supurativa; tratamento da Infeccção Latente da Tuberculose (ILTB); tratamento de esquemas especiais de TB/ MNT"
+    },
+    {
+      "id": "rifampicina-150-mg-isoniazida-75-mg-pirazinamida-400-mg-etambutol-cloridrato-275-mg-comprimido",
+      "name": "rifampicina 150 mg + isoniazida 75 mg + pirazinamida 400 mg + etambutol, cloridrato 275 mg comprimido",
+      "active_ingredients": [
+        "rifampicina",
+        "isoniazida",
+        "pirazinamida",
+        "etambutol"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        },
+        {
+          "value": 75,
+          "unit": "mg"
+        },
+        {
+          "value": 400,
+          "unit": "mg"
+        },
+        {
+          "value": 275,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rifampicina 150 mg + isoniazida 75 mg + pirazinamida 400 mg + etambutol 275 mg",
+      "ingredient_key": "etambutol + isoniazida + pirazinamida + rifampicina",
+      "loose_match_key": "etambutol + isoniazida + pirazinamida + rifampicina 150 mg + 275 mg + 400 mg + 75 mg",
+      "access": "restricted",
+      "availability": "medicamento exclusivo para tratamento de TB nas Unidades de Saúde; tratamento de esquemas especiais de TB em unidades de referência"
+    },
+    {
+      "id": "rifampicina-75-mg-isoniazida-50-mg-pirazinamida-150-mg-comprimido-dispersivel",
+      "name": "rifampicina 75 mg + isoniazida 50 mg + pirazinamida 150 mg comprimido dispersível",
+      "active_ingredients": [
+        "rifampicina",
+        "isoniazida",
+        "pirazinamida"
+      ],
+      "strengths": [
+        {
+          "value": 75,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        },
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rifampicina 75 mg + isoniazida 50 mg + pirazinamida 150 mg",
+      "ingredient_key": "isoniazida + pirazinamida + rifampicina",
+      "loose_match_key": "isoniazida + pirazinamida + rifampicina 150 mg + 50 mg + 75 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de tuberculose em crianças"
+    },
+    {
+      "id": "rifampicina-75-mg-isoniazida-50-mg-comprimido-dispersivel",
+      "name": "rifampicina 75 mg + isoniazida 50 mg comprimido dispersível",
+      "active_ingredients": [
+        "rifampicina",
+        "isoniazida"
+      ],
+      "strengths": [
+        {
+          "value": 75,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rifampicina 75 mg + isoniazida 50 mg",
+      "ingredient_key": "isoniazida + rifampicina",
+      "loose_match_key": "isoniazida + rifampicina 50 mg + 75 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de tuberculose em crianças"
+    },
+    {
+      "id": "rifapentina-150-mg-comprimido",
+      "name": "rifapentina 150 mg comprimido",
+      "active_ingredients": [
+        "rifapentina"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "rifapentina 150 mg",
+      "ingredient_key": "rifapentina",
+      "loose_match_key": "rifapentina 150 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento da Infecção Latente de Tuberculose (ILTB)"
+    },
+    {
+      "id": "risperidona-2-mg-comprimido",
+      "name": "risperidona 2 mg comprimido",
+      "active_ingredients": [
+        "risperidona"
+      ],
+      "strengths": [
+        {
+          "value": 2,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "risperidona 2 mg",
+      "ingredient_key": "risperidona",
+      "loose_match_key": "risperidona 2 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "ritonavir-100-mg-ml-po-para-suspensao-oral",
+      "name": "ritonavir 100 mg/mL pó para suspensão oral",
+      "active_ingredients": [
+        "ritonavir"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "ritonavir 100 mg/ml",
+      "ingredient_key": "ritonavir",
+      "loose_match_key": "ritonavir 100 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "ritonavir-rtv-100-mg-comprimido",
+      "name": "ritonavir (RTV) 100 mg comprimido",
+      "active_ingredients": [
+        "ritonavir"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "ritonavir 100 mg",
+      "ingredient_key": "ritonavir",
+      "loose_match_key": "ritonavir 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "sais-para-reidratacao-oral-po-para-solucao-oral",
+      "name": "sais para reidratação oral pó para solução oral",
+      "active_ingredients": [
+        "sais para reidratação oral pó para solução oral"
+      ],
+      "strengths": [],
+      "match_key": "sais para reidratacao oral po para solucao oral",
+      "ingredient_key": "sais para reidratacao oral po para solucao oral",
+      "loose_match_key": "sais para reidratacao oral po para solucao oral",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "salbutamol-sulfato-100-mcg-dose-aerossol-oral-frasco",
+      "name": "salbutamol, sulfato 100 mcg/dose aerossol oral frasco",
+      "active_ingredients": [
+        "salbutamol"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mcg/dose"
+        }
+      ],
+      "match_key": "salbutamol 100 mcg/dose",
+      "ingredient_key": "salbutamol",
+      "loose_match_key": "salbutamol 100 mcg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sertralina-50-mg-comprimido",
+      "name": "sertralina 50 mg comprimido",
+      "active_ingredients": [
+        "sertralina"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sertralina 50 mg",
+      "ingredient_key": "sertralina",
+      "loose_match_key": "sertralina 50 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sinvastatina-10-mg-comprimido",
+      "name": "sinvastatina 10 mg comprimido",
+      "active_ingredients": [
+        "sinvastatina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sinvastatina 10 mg",
+      "ingredient_key": "sinvastatina",
+      "loose_match_key": "sinvastatina 10 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sinvastatina-20-mg-comprimido",
+      "name": "sinvastatina 20 mg comprimido",
+      "active_ingredients": [
+        "sinvastatina"
+      ],
+      "strengths": [
+        {
+          "value": 20,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sinvastatina 20 mg",
+      "ingredient_key": "sinvastatina",
+      "loose_match_key": "sinvastatina 20 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sinvastatina-40-mg-comprimido",
+      "name": "sinvastatina 40 mg comprimido",
+      "active_ingredients": [
+        "sinvastatina"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sinvastatina 40 mg",
+      "ingredient_key": "sinvastatina",
+      "loose_match_key": "sinvastatina 40 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sofosbuvir-400-mg-comprimido-revestido",
+      "name": "sofosbuvir 400 mg comprimido revestido",
+      "active_ingredients": [
+        "sofosbuvir"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sofosbuvir 400 mg",
+      "ingredient_key": "sofosbuvir",
+      "loose_match_key": "sofosbuvir 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "sofosbuvir-400-mg-velpatasvir-100-mg-comprimido-revestido",
+      "name": "sofosbuvir 400 mg + velpatasvir 100 mg comprimido revestido",
+      "active_ingredients": [
+        "sofosbuvir",
+        "velpatasvir"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sofosbuvir 400 mg + velpatasvir 100 mg",
+      "ingredient_key": "sofosbuvir + velpatasvir",
+      "loose_match_key": "sofosbuvir + velpatasvir 100 mg + 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "sofosbuvir-400-mg-velpatasvir-100-mg-voxilaprevir-100-mg-comprimido-revestido",
+      "name": "sofosbuvir 400 mg + velpatasvir 100 mg + voxilaprevir 100 mg comprimido revestido",
+      "active_ingredients": [
+        "sofosbuvir",
+        "velpatasvir",
+        "voxilaprevir"
+      ],
+      "strengths": [
+        {
+          "value": 400,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg"
+        },
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sofosbuvir 400 mg + velpatasvir 100 mg + voxilaprevir 100 mg",
+      "ingredient_key": "sofosbuvir + velpatasvir + voxilaprevir",
+      "loose_match_key": "sofosbuvir + velpatasvir + voxilaprevir 100 mg + 100 mg + 400 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "sofosbuvir-200-mg-velpatasvir-50-mg-granulado",
+      "name": "sofosbuvir 200 mg + velpatasvir 50 mg granulado",
+      "active_ingredients": [
+        "sofosbuvir",
+        "velpatasvir"
+      ],
+      "strengths": [
+        {
+          "value": 200,
+          "unit": "mg"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sofosbuvir 200 mg + velpatasvir 50 mg",
+      "ingredient_key": "sofosbuvir + velpatasvir",
+      "loose_match_key": "sofosbuvir + velpatasvir 200 mg + 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais"
+    },
+    {
+      "id": "sulfadiazina-500-mg-comprimido",
+      "name": "sulfadiazina 500 mg comprimido",
+      "active_ingredients": [
+        "sulfadiazina"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sulfadiazina 500 mg",
+      "ingredient_key": "sulfadiazina",
+      "loose_match_key": "sulfadiazina 500 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "sulfadiazina-150-mg-ml-solucao-oral",
+      "name": "sulfadiazina 150 mg/mL solução oral",
+      "active_ingredients": [
+        "sulfadiazina"
+      ],
+      "strengths": [
+        {
+          "value": 150,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "sulfadiazina 150 mg/ml",
+      "ingredient_key": "sulfadiazina",
+      "loose_match_key": "sulfadiazina 150 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose"
+    },
+    {
+      "id": "sulfametoxazol-40-mg-ml-trimetoprima-8-mg-ml-suspensao-oral",
+      "name": "sulfametoxazol 40 mg/mL + trimetoprima 8 mg/mL suspensão oral",
+      "active_ingredients": [
+        "sulfametoxazol",
+        "trimetoprima"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 8,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "sulfametoxazol 40 mg/ml + trimetoprima 8 mg/ml",
+      "ingredient_key": "sulfametoxazol + trimetoprima",
+      "loose_match_key": "sulfametoxazol + trimetoprima 40 mg/ml + 8 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sulfametoxazol-800-mg-trimetoprima-160-mg-comprimido",
+      "name": "sulfametoxazol 800 mg + trimetoprima 160 mg comprimido",
+      "active_ingredients": [
+        "sulfametoxazol",
+        "trimetoprima"
+      ],
+      "strengths": [
+        {
+          "value": 800,
+          "unit": "mg"
+        },
+        {
+          "value": 160,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sulfametoxazol 800 mg + trimetoprima 160 mg",
+      "ingredient_key": "sulfametoxazol + trimetoprima",
+      "loose_match_key": "sulfametoxazol + trimetoprima 160 mg + 800 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sulfato-ferroso-heptahidratado-125-mg-ml-equivalente-a-25-mg-de-fe-solucao-oral-gotas",
+      "name": "sulfato ferroso heptahidratado 125 mg/mL (equivalente a 25 mg de Fe++) solução oral gotas",
+      "active_ingredients": [
+        "sulfato ferroso heptahidratado",
+        ") solução oral gotas"
+      ],
+      "strengths": [
+        {
+          "value": 125,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sulfato ferroso heptahidratado 125 mg/ml + ) solucao oral gotas 25 mg",
+      "ingredient_key": ") solucao oral gotas + sulfato ferroso heptahidratado",
+      "loose_match_key": ") solucao oral gotas + sulfato ferroso heptahidratado 125 mg/ml + 25 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "sulfato-ferroso-heptahidratado-equivalente-a-40-mg-de-fe-comprimido",
+      "name": "sulfato ferroso heptahidratado equivalente a 40 mg de Fe++ comprimido",
+      "active_ingredients": [
+        "sulfato ferroso heptahidratado equivalente a",
+        "comprimido"
+      ],
+      "strengths": [
+        {
+          "value": 40,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "sulfato ferroso heptahidratado equivalente a + comprimido",
+      "ingredient_key": "comprimido + sulfato ferroso heptahidratado equivalente a",
+      "loose_match_key": "comprimido + sulfato ferroso heptahidratado equivalente a 40 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "talidomida-100-mg-comprimido",
+      "name": "talidomida 100 mg comprimido",
+      "active_ingredients": [
+        "talidomida"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "talidomida 100 mg",
+      "ingredient_key": "talidomida",
+      "loose_match_key": "talidomida 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência em hanseníase"
+    },
+    {
+      "id": "tenofovir-300-mg-comprimido",
+      "name": "tenofovir 300 mg comprimido",
+      "active_ingredients": [
+        "tenofovir"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tenofovir 300 mg",
+      "ingredient_key": "tenofovir",
+      "loose_match_key": "tenofovir 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência para tratamento de hepatites virais."
+    },
+    {
+      "id": "tenofovir-alafenamida-25-mg-comprimido",
+      "name": "tenofovir alafenamida 25 mg comprimido",
+      "active_ingredients": [
+        "tenofovir alafenamida"
+      ],
+      "strengths": [
+        {
+          "value": 25,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tenofovir alafenamida 25 mg",
+      "ingredient_key": "tenofovir alafenamida",
+      "loose_match_key": "tenofovir alafenamida 25 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência para tratamento de hepatites virais."
+    },
+    {
+      "id": "tenofovir-tdf-300-mg-lamivudina-3tc-300-mg-efavirenz-efz-600-mg-comprimido",
+      "name": "tenofovir (TDF) 300 mg + lamivudina (3TC) 300 mg + efavirenz (EFZ) 600 mg comprimido",
+      "active_ingredients": [
+        "tenofovir",
+        "lamivudina (",
+        "efavirenz"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 600,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tenofovir 300 mg + lamivudina ( 300 mg + efavirenz 600 mg",
+      "ingredient_key": "efavirenz + lamivudina ( + tenofovir",
+      "loose_match_key": "efavirenz + lamivudina ( + tenofovir 300 mg + 300 mg + 600 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "tenofovir-tdf-300-mg-entricitabina-ftc-200-mg",
+      "name": "tenofovir (TDF) 300 mg + entricitabina (FTC) 200 mg",
+      "active_ingredients": [
+        "tenofovir",
+        "entricitabina"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 200,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tenofovir 300 mg + entricitabina 200 mg",
+      "ingredient_key": "entricitabina + tenofovir",
+      "loose_match_key": "entricitabina + tenofovir 200 mg + 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "tenofovir-tdf-300-mg-lamivudina-3tc-300-mg",
+      "name": "tenofovir (TDF) 300 mg + lamivudina (3TC) 300 mg",
+      "active_ingredients": [
+        "tenofovir",
+        "lamivudina ("
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tenofovir 300 mg + lamivudina ( 300 mg",
+      "ingredient_key": "lamivudina ( + tenofovir",
+      "loose_match_key": "lamivudina ( + tenofovir 300 mg + 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência para tratamento de hepatites virais."
+    },
+    {
+      "id": "teofilina-100-mg-capsula-de-liberacao-prolongada",
+      "name": "teofilina 100 mg cápsula de liberação prolongada",
+      "active_ingredients": [
+        "teofilina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "teofilina 100 mg",
+      "ingredient_key": "teofilina",
+      "loose_match_key": "teofilina 100 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "terbinafina-250-mg-comprimido",
+      "name": "terbinafina 250 mg comprimido",
+      "active_ingredients": [
+        "terbinafina"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "terbinafina 250 mg",
+      "ingredient_key": "terbinafina",
+      "loose_match_key": "terbinafina 250 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "terizidona-250-mg-comprimido",
+      "name": "terizidona 250 mg comprimido",
+      "active_ingredients": [
+        "terizidona"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "terizidona 250 mg",
+      "ingredient_key": "terizidona",
+      "loose_match_key": "terizidona 250 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT"
+    },
+    {
+      "id": "testosterona-undecanoato-250-mg-ml-solucao-injetavel",
+      "name": "testosterona, undecanoato 250 mg/mL solução injetável",
+      "active_ingredients": [
+        "testosterona"
+      ],
+      "strengths": [
+        {
+          "value": 250,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "testosterona 250 mg/ml",
+      "ingredient_key": "testosterona",
+      "loose_match_key": "testosterona 250 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Saúde Integral da População LGBTIA+ da SMS"
+    },
+    {
+      "id": "tiamazol-5-mg-comprimido",
+      "name": "tiamazol 5 mg comprimido",
+      "active_ingredients": [
+        "tiamazol"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tiamazol 5 mg",
+      "ingredient_key": "tiamazol",
+      "loose_match_key": "tiamazol 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "tiamina-cloridrato-vit-b1-300-mg-comprimido",
+      "name": "tiamina, cloridrato (vit. B1) 300 mg comprimido",
+      "active_ingredients": [
+        "tiamina"
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tiamina 300 mg",
+      "ingredient_key": "tiamina",
+      "loose_match_key": "tiamina 300 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "timolol-maleato-5-mg-ml-0-5-solucao-oftalmica",
+      "name": "timolol, maleato 5 mg/mL (0,5%) solução oftálmica",
+      "active_ingredients": [
+        "timolol"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.5,
+          "unit": "%"
+        }
+      ],
+      "match_key": "timolol 5 mg/ml",
+      "ingredient_key": "timolol",
+      "loose_match_key": "timolol 5 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista"
+    },
+    {
+      "id": "tinidazol-500-mg-comprimido",
+      "name": "tinidazol 500 mg comprimido",
+      "active_ingredients": [
+        "tinidazol"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tinidazol 500 mg",
+      "ingredient_key": "tinidazol",
+      "loose_match_key": "tinidazol 500 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "tobramicina-3-mg-ml-0-3-solucao-oftalmica",
+      "name": "tobramicina 3 mg/mL (0,3%) solução oftálmica",
+      "active_ingredients": [
+        "tobramicina"
+      ],
+      "strengths": [
+        {
+          "value": 3,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 0.3,
+          "unit": "%"
+        }
+      ],
+      "match_key": "tobramicina 3 mg/ml",
+      "ingredient_key": "tobramicina",
+      "loose_match_key": "tobramicina 3 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "tramadol-50-mg-comprimido",
+      "name": "tramadol 50 mg comprimido",
+      "active_ingredients": [
+        "tramadol"
+      ],
+      "strengths": [
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "tramadol 50 mg",
+      "ingredient_key": "tramadol",
+      "loose_match_key": "tramadol 50 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia"
+    },
+    {
+      "id": "ureia-100-mg-g-10-creme",
+      "name": "ureia 100 mg/g (10%) creme",
+      "active_ingredients": [
+        "ureia"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg/g"
+        },
+        {
+          "value": 10,
+          "unit": "%"
+        }
+      ],
+      "match_key": "ureia 100 mg/g",
+      "ingredient_key": "ureia",
+      "loose_match_key": "ureia 100 mg/g",
+      "access": "restricted",
+      "availability": "medicamento para pacientes em tratamento nas unidades de hanseníase"
+    },
+    {
+      "id": "valaciclovir-500-mg-comprimido",
+      "name": "valaciclovir 500 mg comprimido",
+      "active_ingredients": [
+        "valaciclovir"
+      ],
+      "strengths": [
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "valaciclovir 500 mg",
+      "ingredient_key": "valaciclovir",
+      "loose_match_key": "valaciclovir 500 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades"
+    },
+    {
+      "id": "valeriana-officinalis-l-valeriana-sesquiterpenos-0-8-mg-a-3-5-mg-comprimido",
+      "name": "Valeriana officinalis L. (valeriana) sesquiterpenos 0,8 mg a 3,5 mg comprimido",
+      "active_ingredients": [
+        "valeriana officinalis l. sesquiterpenos"
+      ],
+      "strengths": [
+        {
+          "value": 0.8,
+          "unit": "mg"
+        },
+        {
+          "value": 3.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "valeriana officinalis l. sesquiterpenos 0.8 mg",
+      "ingredient_key": "valeriana officinalis l. sesquiterpenos",
+      "loose_match_key": "valeriana officinalis l. sesquiterpenos 0.8 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação"
+    },
+    {
+      "id": "valproato-de-sodio-57-624-mg-ml-equivalente-a-50-mg-de-acido-valproico-solucao-oral-ou-xarope",
+      "name": "valproato de sódio 57, 624 mg/mL (equivalente a 50 mg de ácido valpróico) solução oral ou xarope",
+      "active_ingredients": [
+        "valproato de sódio"
+      ],
+      "strengths": [
+        {
+          "value": 624,
+          "unit": "mg/ml"
+        },
+        {
+          "value": 50,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "valproato de sodio 624 mg/ml",
+      "ingredient_key": "valproato de sodio",
+      "loose_match_key": "sodio 624 mg/ml",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "valproato-de-sodio-576-mg-equivalente-a-500-mg-de-acido-valproico-comprimido-revestido-ou-capsula",
+      "name": "valproato de sódio 576 mg (equivalente a 500 mg de ácido valpróico) comprimido revestido ou cápsula",
+      "active_ingredients": [
+        "valproato de sódio"
+      ],
+      "strengths": [
+        {
+          "value": 576,
+          "unit": "mg"
+        },
+        {
+          "value": 500,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "valproato de sodio 576 mg",
+      "ingredient_key": "valproato de sodio",
+      "loose_match_key": "sodio 576 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "varfarina-sodica-2-5-mg-comprimido",
+      "name": "varfarina sódica 2,5 mg comprimido",
+      "active_ingredients": [
+        "varfarina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 2.5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "varfarina 2.5 mg",
+      "ingredient_key": "varfarina",
+      "loose_match_key": "varfarina 2.5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "varfarina-sodica-5-mg-comprimido",
+      "name": "varfarina sódica 5 mg comprimido",
+      "active_ingredients": [
+        "varfarina sódica"
+      ],
+      "strengths": [
+        {
+          "value": 5,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "varfarina 5 mg",
+      "ingredient_key": "varfarina",
+      "loose_match_key": "varfarina 5 mg",
+      "access": "ubs",
+      "availability": "medicamento disponível nas Unidades de Saúde"
+    },
+    {
+      "id": "zidovudina-azt-10-mg-ml-solucao-injetavel",
+      "name": "zidovudina (AZT) 10 mg/mL solução injetável",
+      "active_ingredients": [
+        "zidovudina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "zidovudina 10 mg/ml",
+      "ingredient_key": "zidovudina",
+      "loose_match_key": "zidovudina 10 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "zidovudina-azt-10-mg-ml-solucao-oral",
+      "name": "zidovudina (AZT) 10 mg/mL solução oral",
+      "active_ingredients": [
+        "zidovudina"
+      ],
+      "strengths": [
+        {
+          "value": 10,
+          "unit": "mg/ml"
+        }
+      ],
+      "match_key": "zidovudina 10 mg/ml",
+      "ingredient_key": "zidovudina",
+      "loose_match_key": "zidovudina 10 mg/ml",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "zidovudina-azt-100-mg-capsula",
+      "name": "zidovudina (AZT) 100 mg cápsula",
+      "active_ingredients": [
+        "zidovudina"
+      ],
+      "strengths": [
+        {
+          "value": 100,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "zidovudina 100 mg",
+      "ingredient_key": "zidovudina",
+      "loose_match_key": "zidovudina 100 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    },
+    {
+      "id": "zidovudina-azt-300-mg-lamivudina-3tc-150-mg-comprimido",
+      "name": "zidovudina (AZT) 300 mg + lamivudina (3TC) 150 mg comprimido",
+      "active_ingredients": [
+        "zidovudina",
+        "lamivudina ("
+      ],
+      "strengths": [
+        {
+          "value": 300,
+          "unit": "mg"
+        },
+        {
+          "value": 150,
+          "unit": "mg"
+        }
+      ],
+      "match_key": "zidovudina 300 mg + lamivudina ( 150 mg",
+      "ingredient_key": "lamivudina ( + zidovudina",
+      "loose_match_key": "lamivudina ( + zidovudina 150 mg + 300 mg",
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS"
+    }
+  ]
+}
