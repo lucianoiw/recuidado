@@ -12,6 +12,10 @@ describe('validateEnv', () => {
     expect(env.DOSE_CALL_AFTER_MINUTES).toBe(15);
   });
 
+  it('treats an empty VOICE_URL as unset', () => {
+    expect(validateEnv({ ...base, VOICE_URL: '' }).VOICE_URL).toBeUndefined();
+  });
+
   it('rejects a missing DATABASE_URL', () => {
     expect(() => validateEnv({ REDIS_URL: base.REDIS_URL })).toThrow(/DATABASE_URL/);
   });
