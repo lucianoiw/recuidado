@@ -25,7 +25,7 @@ function bounds(points: { lat: number; lng: number }[]) {
     south: Math.min(...lats),
     east: Math.max(...lngs),
     west: Math.min(...lngs),
-    padding: 40,
+    padding: 24,
   };
 }
 
@@ -44,7 +44,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
   return (
     <figure className="flex flex-col gap-2">
       <APIProvider apiKey={KEY} language="pt-BR" region="BR">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-card border border-line-soft bg-surface">
+        <div className="aspect-square w-full overflow-hidden rounded-card border border-line-soft bg-surface">
           <Map
             mapId={MAP_ID}
             defaultBounds={bounds([home, ...shown])}
@@ -54,8 +54,8 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
             clickableIcons={false}
             onClick={() => setSelected(null)}
           >
-            <AdvancedMarker position={home} title={homeLabel} zIndex={20}>
-              <span className="flex size-9 items-center justify-center rounded-full border-[3px] border-white bg-brand text-[15px] font-extrabold text-white shadow-md">
+            <AdvancedMarker position={home} title={homeLabel} zIndex={1}>
+              <span className="flex size-8 items-center justify-center rounded-full border-[3px] border-white bg-brand text-[14px] font-extrabold text-white shadow-md">
                 C
               </span>
             </AdvancedMarker>
