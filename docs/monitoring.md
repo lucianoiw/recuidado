@@ -1,5 +1,7 @@
 # Monitoria
 
+Painel público, sem login: https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg
+
 Tudo vai para o projeto **Recuidado** no PostHog (org 89Dev, região US). Um lugar só para logs, erros, acessos, eventos de produto, traces de IA e replay das telas.
 
 ## Por que
