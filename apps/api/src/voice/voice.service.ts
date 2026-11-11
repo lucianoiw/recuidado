@@ -295,7 +295,10 @@ export class VoiceCallService {
       .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver')));
     const said = note?.trim() ? ` disse agora na ligação do remédio: "${note.trim().slice(0, 200)}"` : ' disse agora na ligação do remédio que não está bem';
     const message = `Olá, aqui é a assistente virtual da Recuidado. ${patient.name}${said}. Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.`;
-    for (const c of caregivers.filter((m) => m.phone).slice(0, 2)) {
+    // One call per phone: two caregivers may share a number.
+    const seen = new Set<string>();
+    const targets = caregivers.filter((m) => m.phone && !seen.has(m.phone) && seen.add(m.phone));
+    for (const c of targets.slice(0, 2)) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',
         headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },

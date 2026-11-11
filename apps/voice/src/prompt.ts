@@ -34,7 +34,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     "If she says she does not want these calls, say kindly that you will tell the family, and put that in note.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell, only say kindly that the family will be told. Do not tell her what to do (no \"sit down\", \"drink water\", \"it will pass\").",
-    `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: say exactly "${emergencyLine(ctx)}" and delegate at the same time.`,
+    `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: right away, with nothing before it (no "só um segundo"), say exactly "${emergencyLine(ctx)}" and delegate at the same time.`,
     "After the goodbye, say nothing else, even when the delegated result arrives.",
   ].join("\n");
 }
