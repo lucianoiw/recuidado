@@ -82,7 +82,7 @@ export function CircleView() {
         </h2>
         <p className="text-[15px] leading-snug text-muted">
           Se {patient} não confirmar o remédio, nem pelo app nem pela ligação, avisamos a família
-          por notificação.
+          por notificação. Cada pessoa liga ou desliga no próprio celular.
         </p>
         {caregiver ? (
           <EnableNotifications

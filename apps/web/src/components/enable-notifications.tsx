@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { BellIcon, buttonClass } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
-import { currentPushState, enablePush, sendTestPush, type PushState } from "@/lib/push";
+import { currentPushState, disablePush, enablePush, sendTestPush, type PushState } from "@/lib/push";
 
 const MESSAGES: Record<PushState, string> = {
   unsupported:
@@ -46,6 +46,20 @@ export function EnableNotifications({
     }
   }
 
+  async function disable() {
+    setBusy(true);
+    setError(null);
+    try {
+      setState(await disablePush());
+      track("notifications_disabled", {});
+    } catch (e) {
+      captureError(e, { screen: "notifications" });
+      setError("Não deu para desligar agora. Tente de novo.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (state === null) return null;
 
   return (
@@ -59,6 +73,11 @@ export function EnableNotifications({
         >
           <BellIcon size={large ? 28 : 22} />
           {busy ? "Ativando..." : state === "on" ? "Testar notificação" : label}
+        </button>
+      ) : null}
+      {state === "on" && !large ? (
+        <button type="button" onClick={disable} disabled={busy} className="min-h-11 font-bold text-danger">
+          Desligar alertas neste celular
         </button>
       ) : null}
       {MESSAGES[state] ? <p className={large ? "text-[20px] text-muted" : "text-[15px] text-muted"}>{MESSAGES[state]}</p> : null}

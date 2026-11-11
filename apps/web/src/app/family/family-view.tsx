@@ -121,7 +121,7 @@ export function FamilyView() {
                 )}
               </span>
               <span className="text-[14px] text-muted">
-                Ela mesma contou. O app não avalia a saúde dela.
+                Ela mesma informou. O app não avalia a saúde dela.
               </span>
             </div>
           </div>

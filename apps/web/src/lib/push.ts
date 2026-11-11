@@ -69,3 +69,19 @@ export async function sendTestPush(memberId: string): Promise<void> {
     body: JSON.stringify({ memberId }),
   });
 }
+
+/** Stops notifications on this device: removes the subscription here and in the API. */
+export async function disablePush(): Promise<PushState> {
+  if (!pushSupported()) return "unsupported";
+  const reg = await navigator.serviceWorker.getRegistration("/");
+  const sub = await reg?.pushManager.getSubscription();
+  if (sub) {
+    await fetch(`${API_URL}/push/subscriptions`, {
+      method: "DELETE",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ endpoint: sub.endpoint }),
+    });
+    await sub.unsubscribe();
+  }
+  return "off";
+}
