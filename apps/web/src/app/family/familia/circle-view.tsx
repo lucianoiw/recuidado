@@ -2,13 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { callName, deleteFamilyData, exportDataUrl, joinFamily, type Member } from "@/lib/api";
+import { callName, deleteFamilyData, exportDataUrl, joinFamily, setEmergencyContact, type Member } from "@/lib/api";
 import { track } from "@/lib/analytics";
 import { clearFamilyId } from "@/lib/family-id";
 import { CopyLinkButton } from "@/components/copy-button";
 import { EnableNotifications } from "@/components/enable-notifications";
 import Link from "next/link";
-import { BellIcon, Button, CheckIcon, StatusPill, buttonClass, cn } from "@/components/ui";
+import { BellIcon, Button, CheckIcon, PhoneIcon, StatusPill, buttonClass, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { clearMe, useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
@@ -79,6 +79,8 @@ export function CircleView() {
         </ul>
       </section>
 
+      <FirstContact caregivers={data.caregivers} patient={patient} onSaved={reload} />
+
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
         <h2 className="flex items-center gap-2 text-[18px] font-extrabold">
           <BellIcon size={22} className="text-brand" />
@@ -109,6 +111,87 @@ export function CircleView() {
 
       <YourData isDemo={Boolean(data.isDemo)} caregiver={caregiver} patient={patient} consent={data.patient} />
     </>
+  );
+}
+
+/** Who gets the phone call when she reports an emergency. Calling everyone would cause alarm. */
+function FirstContact({
+  caregivers,
+  patient,
+  onSaved,
+}: {
+  caregivers: Member[];
+  patient: string;
+  onSaved: () => void;
+}) {
+  const [saving, setSaving] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function choose(c: Member) {
+    if (c.emergencyContact || saving) return;
+    setSaving(c.id);
+    setError(null);
+    try {
+      await setEmergencyContact(c.id);
+      track("emergency_contact_changed");
+      onSaved();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Não deu para salvar o primeiro contato.");
+    } finally {
+      setSaving(null);
+    }
+  }
+
+  return (
+    <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
+      <h2 className="flex items-center gap-2 text-[18px] font-extrabold">
+        <PhoneIcon size={22} className="text-danger" />
+        Primeiro contato
+      </h2>
+      <p className="text-[15px] leading-snug text-muted">
+        Se {patient} disser na ligação que caiu, que sente dor no peito, falta de ar ou que desmaiou,
+        ligamos só para esta pessoa. As outras recebem a notificação.
+      </p>
+      <ul className="overflow-hidden rounded-2xl border border-line-soft" role="radiogroup" aria-label="Primeiro contato em emergência">
+        {caregivers.map((c) => {
+          const on = Boolean(c.emergencyContact);
+          const noPhone = !c.hasPhone;
+          return (
+            <li key={c.id} className="border-b border-line-soft last:border-b-0">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={on}
+                disabled={noPhone || saving !== null}
+                onClick={() => choose(c)}
+                className="flex min-h-14 w-full items-center gap-3 px-4 text-left disabled:cursor-not-allowed"
+              >
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <b className={noPhone ? "text-muted" : undefined}>{c.name}</b>
+                  <span className="text-[15px] text-muted">
+                    {noPhone ? "Sem celular cadastrado" : saving === c.id ? "Salvando..." : c.phone}
+                  </span>
+                  {on ? <span className="text-[15px] font-bold text-danger">Recebe a ligação</span> : null}
+                </span>
+                <span
+                  className={cn(
+                    "flex size-7 shrink-0 items-center justify-center rounded-full",
+                    on ? "bg-brand text-white" : "border-2 border-line",
+                  )}
+                >
+                  {on ? <CheckIcon size={16} strokeWidth={3} /> : null}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {error ? (
+        <p className="text-[15px] font-semibold text-danger" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </section>
   );
 }
 

@@ -32,6 +32,8 @@ export interface Member {
   phone?: string | null;
   /** Has a full phone number saved, even when the API sends it masked. */
   hasPhone?: boolean;
+  /** Caregiver only: the one phoned when she reports an emergency on the call. */
+  emergencyContact?: boolean;
   /** Patient only (LGPD): when she agreed to reminders and calls, and who said so. */
   consentAt?: string | null;
   consentSource?: "patient" | "caregiver" | null;
@@ -264,6 +266,11 @@ async function send(method: string, path: string, body: unknown, fallback: strin
   });
   if (!res.ok) throw new Error(await errorMessage(res, fallback));
   return res;
+}
+
+/** The caregiver phoned when she reports an emergency on the call; the others get only the push. */
+export async function setEmergencyContact(memberId: string): Promise<void> {
+  await send("PUT", withFamily(`/family/members/${memberId}/emergency-contact`), {}, "Não deu para salvar o primeiro contato.");
 }
 
 /** "Pegar grátis" (buy = false) or "Comprar" (buy = true). */

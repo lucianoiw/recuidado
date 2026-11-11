@@ -47,6 +47,8 @@ export const members = pgTable('members', {
   // Pix key of the caregiver who buys the medicines and receives the others' shares.
   // Normalized: CPF digits, "+55" phone, lowercase e-mail or a random key (EVP).
   pixKey: text(),
+  // The one caregiver phoned when she reports an emergency on the call. None set: the oldest caregiver with a phone.
+  emergencyContact: boolean().notNull().default(false),
   invitedById: uuid().references((): AnyPgColumn => members.id, { onDelete: 'set null' }),
   joinedAt: timestamp({ withTimezone: true }),
   // LGPD consent of the patient (health data, art. 11): reminders, calls and the family seeing doses.

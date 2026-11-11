@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
-import { and, count, eq, gte, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gte, isNotNull, ne, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, pharmacyInquiries, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
@@ -275,7 +275,8 @@ export class VoiceCallService {
   }
 
   /**
-   * Emergency reported on the call: phones the family's first contact with a short recorded-style message.
+   * Emergency reported on the call: phones only the family's first contact (members.emergencyContact,
+   * else the oldest caregiver with a phone) with a short recorded-style message. Calling everyone causes alarm.
    * Only numbers in the voice CALL_ALLOWED_NUMBERS get through; the push already went out either way.
    */
   private async callCaregivers(doseId: string, note?: string | null): Promise<void> {
@@ -292,12 +293,12 @@ export class VoiceCallService {
     const caregivers = await this.db
       .select({ id: members.id, phone: members.phone })
       .from(members)
-      .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver')))
-      .orderBy(members.createdAt);
+      .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver'), isNotNull(members.phone), ne(members.phone, '')))
+      .orderBy(desc(members.emergencyContact), asc(members.createdAt))
+      .limit(1);
     const said = note?.trim() ? ` disse agora na ligação do remédio: "${note.trim().slice(0, 200)}"` : ' disse agora na ligação do remédio que não está bem';
     const message = `Olá, aqui é a assistente virtual da Recuidado. ${patient.name}${said}. Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.`;
-    // Only the first contact (the caregiver registered first) gets the call: calling everyone causes alarm.
-    for (const c of caregivers.filter((m) => m.phone).slice(0, 1)) {
+    for (const c of caregivers) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',
         headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
