@@ -17,7 +17,6 @@ export interface VoiceConfig {
   port: number;
   voiceApiToken: string;
   apiUrl?: string;
-  apiToken?: string;
 }
 
 function required(env: NodeJS.ProcessEnv, name: string): string {
@@ -46,8 +45,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     delegateModel: env.OPENAI_DELEGATE_MODEL?.trim() || "gpt-6-luna",
     sip: {
       providerUrl,
-      username: required(env, "SIP_USERNAME"),
-      password: required(env, "SIP_PASSWORD"),
+      username: env.OPENAI_SIP_USERNAME?.trim() || "openai",
+      password: required(env, "OPENAI_SIP_PASSWORD"),
       callerNumber: toE164(required(env, "SIP_CALLER_NUMBER")),
     },
     allowedNumbers: new Set(allowed),
@@ -55,6 +54,5 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     port: Number(env.PORT ?? 5000),
     voiceApiToken: required(env, "VOICE_API_TOKEN"),
     apiUrl: env.API_URL?.trim() || undefined,
-    apiToken: env.API_TOKEN?.trim() || undefined,
   };
 }

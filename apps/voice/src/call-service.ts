@@ -54,7 +54,7 @@ export class CallService {
     }
     const url = `${this.config.apiUrl.replace(/\/$/, "")}/doses/${encodeURIComponent(doseId)}/voice-result`;
     const headers: Record<string, string> = { "Content-Type": "application/json" };
-    if (this.config.apiToken) headers.Authorization = `Bearer ${this.config.apiToken}`;
+    headers.Authorization = `Bearer ${this.config.voiceApiToken}`;
     for (let attempt = 1; attempt <= 4; attempt++) {
       try {
         const res = await fetch(url, { method: "POST", headers, body: JSON.stringify(result) });
