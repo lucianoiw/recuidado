@@ -16,6 +16,7 @@ export type { FreeAccessRow } from "./link-free-access.ts";
 export { readCsv } from "./lib/csv.ts";
 export { findFreeAccess, type FreeAccess, type FreePlace } from "./free-access.ts";
 export { highCostGuide, slugFor, type HighCostGuide, type HighCostItem } from "./high-cost-guide.ts";
+export { findCmedPrice, DAYS_PER_MONTH, type CmedOffer, type CmedPrice } from "./cmed-price.ts";
 export { searchMedicines, type MedicineKind, type MedicineResult, type MedicineStrength } from "./medicine-search.ts";
 export { buildIngredientKey, buildMatchKey, looseKey, looseMatchKey, normalizeIngredient, parseStrengths } from "./lib/normalize.ts";
 export { DEMO_REGION } from "./region.ts";

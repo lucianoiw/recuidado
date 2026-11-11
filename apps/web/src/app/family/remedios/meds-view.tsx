@@ -70,11 +70,21 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
         ) : m.times.length > 0 ? (
           <span className="text-[14px] text-muted">Quantos comprimidos tem em casa? Toque para contar.</span>
         ) : null}
-        {!isFree(m) ? (
+        {getsFree(m) ? (
+          m.monthlyCostCents > 0 ? (
+            <span className="text-[15px] font-bold text-brand">
+              Economia de {brl.format(m.monthlyCostCents / 100)} por mês
+            </span>
+          ) : null
+        ) : (
           <span className="text-[15px] font-bold">
-            {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)} por mês` : "Sem preço ainda"}
+            {m.monthlyCostCents > 0
+              ? `Até ${brl.format(m.monthlyCostCents / 100)} por mês (preço máximo CMED)`
+              : m.times.length === 0 && m.price
+                ? `Caixa com ${m.price.unitsPerPack}: até ${brl.format(m.price.packCents / 100)} (CMED)`
+                : "Sem preço ainda"}
           </span>
-        ) : null}
+        )}
       </button>
       {m.highCost ? (
         <Link
