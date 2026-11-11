@@ -1,3 +1,4 @@
+import { runsApi } from '../role.js';
 import {
   ForbiddenException,
   Inject,
@@ -66,6 +67,8 @@ export class FamilyService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
+    // Boot tasks run once, in the API process; the worker only consumes the queue.
+    if (!runsApi()) return;
     const ids = await this.ensureDemoFamily();
     await this.resetDemoFirstContact(ids.familyId);
     if (!this.config.get<boolean>('DEMO_SEED_ENABLED')) return;

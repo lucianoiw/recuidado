@@ -8,11 +8,13 @@ import { DosesController } from './doses.controller.js';
 import { DosesProcessor } from './doses.processor.js';
 import { DOSES_QUEUE } from './doses.queue.js';
 import { DosesService } from './doses.service.js';
+import { runsWorker } from '../role.js';
 
 @Module({
   imports: [BullModule.registerQueue({ name: DOSES_QUEUE }), PushModule, AlertsModule, StockModule, VoiceModule],
   controllers: [DosesController],
-  providers: [DosesService, DosesProcessor],
+  // The queue worker runs only where APP_ROLE allows it (the recuidado/worker resource in production).
+  providers: [DosesService, ...(runsWorker() ? [DosesProcessor] : [])],
   exports: [DosesService],
 })
 export class DosesModule {}
