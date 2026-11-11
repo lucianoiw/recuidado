@@ -87,7 +87,7 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
         </StatusPill>
       ) : null}
 
-      {inquiry?.status === "answered" ? <Answers inquiry={inquiry} /> : null}
+      {inquiry?.status === "answered" ? <Answers inquiry={inquiry} medications={medications} /> : null}
 
       {inquiry && ENDED[inquiry.status] ? <p className="text-[15px] text-muted">{ENDED[inquiry.status]}</p> : null}
 
@@ -112,7 +112,28 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
   );
 }
 
-function Answers({ inquiry }: { inquiry: PharmacyInquiry }) {
+/** Pills in the box as the attendant said it, e.g. "caixa com 30 comprimidos" → 30. */
+export function unitsIn(pack: string | undefined): number | null {
+  const n = Number(pack?.match(/(\d{1,4})/)?.[1]);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/**
+ * The phone price against the CMED ceiling, per pill so boxes of different sizes compare.
+ * Null when the box size or the CMED price is unknown.
+ */
+export function vsCeiling(
+  priceCents: number,
+  pack: string | undefined,
+  ceiling: { packCents: number; unitsPerPack: number },
+): "above" | "within" | null {
+  const units = unitsIn(pack);
+  if (!units || ceiling.unitsPerPack <= 0) return null;
+  // One cent of rounding either way is not "above".
+  return priceCents / units > ceiling.packCents / ceiling.unitsPerPack + 0.01 ? "above" : "within";
+}
+
+function Answers({ inquiry, medications }: { inquiry: PharmacyInquiry; medications: Medication[] }) {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[15px] text-muted">
@@ -123,6 +144,8 @@ function Answers({ inquiry }: { inquiry: PharmacyInquiry }) {
         {inquiry.medications.map((m, i) => {
           const a = inquiry.answers[i];
           const popular = a ? POPULAR[a.farmaciaPopular] : null;
+          const ceiling = medications.find((x) => x.id === m.medicationId)?.price ?? null;
+          const compare = a?.priceCents != null && ceiling ? vsCeiling(a.priceCents, a.package, ceiling) : null;
           return (
             <li key={m.medicationId} className="flex flex-col gap-1 border-b border-line-soft px-3.5 py-3 last:border-b-0">
               <div className="flex items-center justify-between gap-3">
@@ -139,6 +162,16 @@ function Answers({ inquiry }: { inquiry: PharmacyInquiry }) {
                   "Não disse o preço"
                 )}
               </span>
+              {ceiling ? (
+                <span className="text-[15px] text-muted">
+                  Teto CMED: {brl.format(ceiling.packCents / 100)} a caixa com {ceiling.unitsPerPack}
+                  {compare === "above" ? (
+                    <b className="text-danger">. Acima do teto</b>
+                  ) : compare === "within" ? (
+                    <b className="text-brand">. Dentro do teto</b>
+                  ) : null}
+                </span>
+              ) : null}
               {popular ? <span className="text-[15px] text-muted">{popular}</span> : null}
             </li>
           );
