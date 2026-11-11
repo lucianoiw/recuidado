@@ -438,4 +438,5 @@ test("the required line skips an opener the assistant already said", () => {
     "Dona Maria, vou avisar a sua família de novo. Até já!",
   );
   assert.equal(withoutSaidOpener("Que bom. Vou avisar a sua família.", ""), "Que bom. Vou avisar a sua família.");
+  assert.equal(withoutSaidOpener("Entendi. Vou avisar a sua família. Até já.", "Entendi."), "Vou avisar a sua família. Até já.");
 });
