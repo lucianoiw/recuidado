@@ -57,3 +57,13 @@ Meal cues ("após o café", "à noite") and intervals ("12/12h") become clock ti
 - `pnpm test`: unit tests (no API calls).
 - `pnpm eval`: reads every fixture with the real API and compares with `expected.json`. Costs a few cents.
 - `pnpm read <file>`: prints the JSON for one prescription.
+
+## In the api
+
+`apps/api` exposes it as `POST /prescriptions/parse` (multipart, photo in the `file` field). It answers the same JSON as `readPrescription`, and 503 when `ANTHROPIC_API_KEY` is not set.
+
+```
+curl -F "file=@packages/prescription-reader/fixtures/receita-01-ubs-digitada.png" http://localhost:4000/prescriptions/parse
+```
+
+The package is consumed through `dist/`, built by the `prepare` script on `pnpm install` (and by `pnpm build`).

@@ -16,7 +16,15 @@ describe('validateEnv', () => {
     expect(validateEnv({ ...base, VOICE_URL: '' }).VOICE_URL).toBeUndefined();
   });
 
+  it('treats an empty ANTHROPIC_API_KEY as unset', () => {
+    expect(
+      validateEnv({ ...base, ANTHROPIC_API_KEY: '' }).ANTHROPIC_API_KEY,
+    ).toBeUndefined();
+  });
+
   it('rejects a missing DATABASE_URL', () => {
-    expect(() => validateEnv({ REDIS_URL: base.REDIS_URL })).toThrow(/DATABASE_URL/);
+    expect(() => validateEnv({ REDIS_URL: base.REDIS_URL })).toThrow(
+      /DATABASE_URL/,
+    );
   });
 });
