@@ -12,7 +12,7 @@ RUN pnpm install --frozen-lockfile --filter @recuidado/mcp...
 COPY apps/mcp apps/mcp
 RUN pnpm --filter @recuidado/mcp build \
   && pnpm deploy --filter @recuidado/mcp --prod --legacy /out \
-  && cp -r apps/mcp/dist /out/
+  && cp -r apps/mcp/dist apps/mcp/public /out/
 
 FROM node:22-alpine
 ENV NODE_ENV=production PORT=7000

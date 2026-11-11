@@ -55,6 +55,21 @@ const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o si
 const GOODBYE = /tchau/i;
 const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
 const KEYS = /^[0-9*#]{1,8}$/;
+/** A recorded menu asking for a key. */
+const MENU = /\b(tecle|digite|pressione|disque)\b/i;
+const DIGIT_WORDS: Record<string, string> = {
+  zero: "0", um: "1", dois: "2", "três": "3", tres: "3", quatro: "4", cinco: "5", seis: "6", sete: "7", oito: "8", nove: "9",
+};
+/** The assistant saying the option aloud, e.g. "Opção 2" or "vou teclar dois". */
+const SPOKEN_CHOICE = /(?:op[çc][ãa]o|tecla|teclar|teclo|n[úu]mero)\s*(\d|zero|um|dois|tr[êe]s|quatro|cinco|seis|sete|oito|nove)\b/i;
+
+/** The digit the assistant said it chose, or null. */
+export function spokenChoice(text: string): string | null {
+  const m = text.match(SPOKEN_CHOICE);
+  if (!m) return null;
+  const word = m[1].toLowerCase();
+  return /^\d$/.test(word) ? word : (DIGIT_WORDS[word] ?? null);
+}
 
 type LiveEvent = { type: string; event_id?: string; [key: string]: unknown };
 
@@ -81,6 +96,9 @@ export class PharmacyCall {
   private answer?: { items: PharmacyItem[]; note?: string };
   private answered = false;
   private heardOtherSide = false;
+  /** A menu was heard and no key was pressed since. */
+  private menuPending = false;
+  private assistantSinceMenu = "";
   private error?: string;
   private durationSeconds?: number;
   private hangupRequested = false;
@@ -166,6 +184,10 @@ export class PharmacyCall {
       case "session.input_transcript.delta":
         if (event.delta) this.heardOtherSide = true;
         this.appendTranscript("patient", String(event.delta ?? ""));
+        if (MENU.test(this.transcript.at(-1)?.text ?? "") && !this.answer) {
+          this.menuPending = true;
+          this.assistantSinceMenu = "";
+        }
         this.checkVoicemail();
         if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(1000);
         break;
@@ -222,22 +244,27 @@ export class PharmacyCall {
   private pressKeys(callId: string, keys: unknown) {
     const valid = typeof keys === "string" && KEYS.test(keys.trim());
     if (valid) {
-      const digits = [...(keys as string).trim()];
-      const gap = this.opts.keyGapMs ?? 300;
-      digits.forEach((key, i) => {
-        const send = () => {
-          if (this.finished) return;
-          this.send({ type: "transport.dtmf.send", event: key, event_id: `dtmf_${callId}_${i}` });
-        };
-        if (i === 0) send();
-        else this.timers.push(setTimeout(send, gap * i));
-      });
-      this.keysPressed.push(...digits);
-      this.log(`pressing keys ${digits.join("")}`);
+      this.sendKeys(callId, [...(keys as string).trim()]);
     } else {
       this.log("invalid keypad request", keys);
     }
     this.toolOutput(callId, { pressed: valid ? (keys as string).trim() : "", ok: valid });
+  }
+
+  private sendKeys(id: string, digits: string[]) {
+    this.menuPending = false;
+    this.assistantSinceMenu = "";
+    const gap = this.opts.keyGapMs ?? 300;
+    digits.forEach((key, i) => {
+      const send = () => {
+        if (this.finished) return;
+        this.send({ type: "transport.dtmf.send", event: key, event_id: `dtmf_${id}_${i}` });
+      };
+      if (i === 0) send();
+      else this.timers.push(setTimeout(send, gap * i));
+    });
+    this.keysPressed.push(...digits);
+    this.log(`pressing keys ${digits.join("")}`);
   }
 
   private recordAnswer(callId: string, args: Record<string, unknown>) {
@@ -272,6 +299,15 @@ export class PharmacyCall {
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
     this.appendTranscript("assistant", delta);
+    if (this.menuPending) {
+      // The model sometimes says the option instead of delegating the key press: press it for it.
+      this.assistantSinceMenu += delta;
+      const key = spokenChoice(this.assistantSinceMenu);
+      if (key) {
+        this.log(`assistant said option ${key} aloud, pressing it`);
+        this.sendKeys(`spoken_${this.keysPressed.length}`, [key]);
+      }
+    }
     if (!this.answer) return;
     this.assistantAfterAnswer += delta;
     if (!GOODBYE.test(this.assistantAfterAnswer)) {
