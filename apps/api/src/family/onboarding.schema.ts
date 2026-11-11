@@ -99,3 +99,18 @@ export const medicationUpdateBody = z
   });
 
 export type MedicationUpdateBody = z.infer<typeof medicationUpdateBody>;
+
+const isoDay = z.iso.date('Data no formato AAAA-MM-DD.');
+
+/** Alto Custo path: checklist items the family has, LME date and approval date (null clears). */
+export const highCostBody = z
+  .object({
+    checked: z.array(z.string().regex(/^[a-z_]{1,40}$/)).max(30).optional(),
+    lmeFilledOn: isoDay.nullable().optional(),
+    since: isoDay.nullable().optional(),
+  })
+  .refine((b) => b.checked !== undefined || b.lmeFilledOn !== undefined || b.since !== undefined, {
+    message: 'Nada para mudar.',
+  });
+
+export type HighCostBody = z.infer<typeof highCostBody>;

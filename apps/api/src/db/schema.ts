@@ -73,6 +73,12 @@ export const medications = pgTable('medications', {
   stockCountedAt: timestamp({ withTimezone: true }),
   // Set when the family was told it is running out; cleared when the stock is counted again.
   lowStockAlertedAt: timestamp({ withTimezone: true }),
+  // Alto Custo (CEAF) path: ids of the checklist items the family already has.
+  highCostChecked: jsonb().$type<string[]>().notNull().default([]),
+  // Day the doctor filled the LME form: it is valid for 90 days to ask for the medicine.
+  lmeFilledOn: date(),
+  // Day the state approved it (or last renewed it): the next renewal counts from here.
+  highCostSince: date(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

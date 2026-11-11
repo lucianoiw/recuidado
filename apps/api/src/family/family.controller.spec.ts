@@ -24,11 +24,12 @@ describe('FamilyController', () => {
   const join = vi.fn();
   const updateMedication = vi.fn();
   const removeMedication = vi.fn();
+  const saveHighCost = vi.fn();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [FamilyController],
-      providers: [{ provide: FamilyService, useValue: { saveOnboarding, setBuyChoice, join, updateMedication, removeMedication } }],
+      providers: [{ provide: FamilyService, useValue: { saveOnboarding, setBuyChoice, join, updateMedication, removeMedication, saveHighCost } }],
     }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
@@ -117,6 +118,27 @@ describe('FamilyController', () => {
     const res = await request(app.getHttpServer()).delete(`/family/medications/${id}`);
     expect(res.status).toBe(204);
     expect(removeMedication).toHaveBeenCalledWith(null, id);
+  });
+
+  it('saves the Alto Custo checklist and dates', async () => {
+    const id = '7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11';
+    const res = await request(app.getHttpServer())
+      .put(`/family/medications/${id}/high-cost`)
+      .send({ checked: ['lme', 'sus_card'], lmeFilledOn: '2026-11-10', since: null });
+    expect(res.status).toBe(204);
+    expect(saveHighCost).toHaveBeenCalledWith(null, id, {
+      checked: ['lme', 'sus_card'],
+      lmeFilledOn: '2026-11-10',
+      since: null,
+    });
+  });
+
+  it('rejects an Alto Custo date that is not a day', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/family/medications/7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11/high-cost')
+      .send({ lmeFilledOn: '10/11/2026' });
+    expect(res.status).toBe(400);
+    expect(saveHighCost).not.toHaveBeenCalled();
   });
 
   it('passes the family of this device', async () => {

@@ -19,6 +19,7 @@ import { FreeOrBuy } from "@/components/free-or-buy";
 import { callName, isFree, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { formatDistance, pharmacies } from "@/lib/pharmacies";
+import { pathLine } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { ubsUnits } from "@/lib/sus-units";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
@@ -59,11 +60,6 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
             <b>Grátis em:</b> {freeWhere(m)}
           </span>
         ) : null}
-        {m.highCost ? (
-          <span className="text-[14px] font-bold text-warn">
-            Pode ser grátis no Alto Custo, com laudo do médico
-          </span>
-        ) : null}
         {m.stock?.low ? (
           <span className="flex items-center gap-1.5 text-[15px] font-bold text-warn">
             <AlertIcon size={16} strokeWidth={2.4} className="shrink-0" />
@@ -80,6 +76,17 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           </span>
         ) : null}
       </button>
+      {m.highCost ? (
+        <Link
+          href={`/family/alto-custo/${m.id}`}
+          className={`flex items-center justify-between gap-2 rounded-xl border-[1.5px] px-3.5 py-2.5 text-[15px] font-bold leading-snug no-underline ${
+            m.highCostPath?.due ? "border-warn bg-warn-soft text-warn" : "border-line-soft text-brand"
+          }`}
+        >
+          {m.highCostPath ? pathLine(m.highCostPath) : "Pode ser grátis no Alto Custo, com laudo do médico. Ver o caminho"}
+          <ChevronRightIcon size={18} className="shrink-0" />
+        </Link>
+      ) : null}
       {isFree(m) ? (
         <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(free) => setBuy(m.id, !free)} />
       ) : null}

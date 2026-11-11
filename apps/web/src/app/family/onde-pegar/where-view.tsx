@@ -2,7 +2,8 @@
 
 import { callName } from "@/lib/api";
 import { useState } from "react";
-import { InfoIcon, NavigationIcon, Segmented, StatusPill } from "@/components/ui";
+import Link from "next/link";
+import { ChevronRightIcon, InfoIcon, NavigationIcon, Segmented, StatusPill } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { formatDistance, mapsUrl, pharmacies, type Pharmacy } from "@/lib/pharmacies";
 import { highCostUnits, ubsUnits, type SusUnit } from "@/lib/sus-units";
@@ -94,7 +95,7 @@ export function WhereView() {
   const list = pharmacies.slice(0, 6);
   const meds = data?.medications ?? [];
   const ubsMeds = meds.filter((m) => m.freeAt?.includes("ubs")).map((m) => medLabel(m.name, null));
-  const highCostMeds = meds.filter((m) => m.highCost).map((m) => medLabel(m.name, null));
+  const highCostMeds = meds.filter((m) => m.highCost);
 
   return (
     <>
@@ -140,10 +141,18 @@ export function WhereView() {
             <p className="text-[15px] leading-snug text-muted">
               Remédios de doenças específicas, entregues pelo Estado. O médico precisa preencher o
               laudo (LME).
-              {highCostMeds.length > 0
-                ? ` Desta receita: ${highCostMeds.join(", ")}.`
-                : " Nenhum remédio desta receita está nessa lista."}
+              {highCostMeds.length > 0 ? null : " Nenhum remédio desta receita está nessa lista."}
             </p>
+            {highCostMeds.map((m) => (
+              <Link
+                key={m.id}
+                href={`/family/alto-custo/${m.id}`}
+                className="inline-flex min-h-11 w-fit items-center gap-1.5 text-[15px] font-bold text-brand"
+              >
+                Ver o caminho de {medLabel(m.name, null)}
+                <ChevronRightIcon size={18} />
+              </Link>
+            ))}
             {highCostUnits[0] ? (
               <span className="text-[15px]">
                 Mais perto: <b>{highCostUnits[0].name}</b>, {highCostUnits[0].address} (
