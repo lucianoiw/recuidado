@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { telemetry } from '../telemetry/telemetry.js';
-import { alertEmail, type AlertEmailInput } from './alert-email.js';
+import { alertEmail, type AlertEmailKind } from './alert-email.js';
 
 /** Family alerts by e-mail, sent with Resend. Without RESEND_API_KEY nothing is sent. */
 @Injectable()
@@ -16,7 +16,8 @@ export class EmailService {
   }
 
   /** One e-mail per address, so nobody sees the others. Returns how many Resend accepted. */
-  async sendAlert(to: string[], alert: AlertEmailInput, kind: string): Promise<number> {
+  async sendAlert(to: string[], alert: { kind: AlertEmailKind; title: string; body: string; link: string }): Promise<number> {
+    const { kind } = alert;
     const addresses = [...new Set(to.map((a) => a.trim().toLowerCase()).filter(Boolean))];
     if (addresses.length === 0) return 0;
     if (!this.resend) {
@@ -24,7 +25,7 @@ export class EmailService {
       return 0;
     }
     const from = this.config.get<string>('EMAIL_FROM')!;
-    const email = alertEmail(alert);
+    const email = alertEmail({ ...alert, webUrl: this.config.get<string>('WEB_URL')! });
     try {
       const { data, error } = await this.resend.batch.send(
         addresses.map((address) => ({ from, to: [address], subject: email.subject, html: email.html, text: email.text })),
