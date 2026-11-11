@@ -83,12 +83,13 @@ export class RecuidadoApi {
     private readonly fetchFn: typeof fetch = fetch,
   ) {}
 
-  family(familyId?: string): Promise<FamilyOverview> {
-    return this.get("/family", { familyId });
+  /** `link`: the secret of the patient link (/m/<secret>) the family connected. Without it, the demo family. */
+  family(link?: string): Promise<FamilyOverview> {
+    return this.get("/family", {}, link);
   }
 
-  alerts(familyId?: string): Promise<Alert[]> {
-    return this.get("/family/alerts", { familyId });
+  alerts(link?: string): Promise<Alert[]> {
+    return this.get("/family/alerts", {}, link);
   }
 
   searchMedicines(query: string, limit: number): Promise<MedicineResult[]> {
@@ -99,18 +100,23 @@ export class RecuidadoApi {
     await this.request("POST", `/doses/${encodeURIComponent(doseId)}/confirm`);
   }
 
-  private async get<T>(path: string, query: Record<string, string | undefined>): Promise<T> {
+  private async get<T>(path: string, query: Record<string, string | undefined>, link?: string): Promise<T> {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(query)) if (value) params.set(key, value);
     const search = params.size > 0 ? `?${params}` : "";
-    const res = await this.request("GET", `${path}${search}`);
+    const res = await this.request("GET", `${path}${search}`, link);
     return (await res.json()) as T;
   }
 
-  private async request(method: string, path: string): Promise<Response> {
+  private async request(method: string, path: string, link?: string): Promise<Response> {
     const res = await this.fetchFn(new URL(path, this.baseUrl), {
       method,
-      headers: { accept: "application/json", "user-agent": "recuidado-mcp" },
+      headers: {
+        accept: "application/json",
+        "user-agent": "recuidado-mcp",
+        // The patient link reads the family, like her app does.
+        ...(link ? { authorization: `Bearer p.${link}` } : {}),
+      },
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) {

@@ -1,6 +1,16 @@
-import { setFamilyId, withFamily } from "./family-id";
+import { authHeader, setSession } from "./session";
+import { setMe, clearMe } from "./me";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
+/** fetch to the API with this screen's login (caregiver session or patient link). */
+export function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  return fetch(`${API_URL}${path}`, {
+    cache: "no-store",
+    ...init,
+    headers: { ...authHeader(), ...(init.headers as Record<string, string> | undefined) },
+  });
+}
 
 export type DoseStatus = "pending" | "taken" | "missed";
 
@@ -119,7 +129,7 @@ export interface HighCostPath {
 }
 
 export async function getHighCost(medicationId: string): Promise<HighCostPath> {
-  const res = await fetch(`${API_URL}${withFamily(`/family/medications/${medicationId}/high-cost`)}`, {
+  const res = await apiFetch(`/family/medications/${medicationId}/high-cost`, {
     cache: "no-store",
   });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para abrir o caminho do Alto Custo."));
@@ -130,7 +140,7 @@ export async function saveHighCost(
   medicationId: string,
   body: { checked?: string[]; lmeFilledOn?: string | null; since?: string | null },
 ): Promise<void> {
-  await send("PUT", withFamily(`/family/medications/${medicationId}/high-cost`), body, "Não deu para salvar.");
+  await send("PUT", `/family/medications/${medicationId}/high-cost`, body, "Não deu para salvar.");
 }
 
 export interface Stock {
@@ -157,7 +167,7 @@ export interface FamilyAlert {
 
 /** Alerts sent to the family, newest first. */
 export async function getAlerts(): Promise<FamilyAlert[]> {
-  const res = await fetch(`${API_URL}${withFamily("/family/alerts")}`, { cache: "no-store" });
+  const res = await apiFetch("/family/alerts", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
 }
@@ -186,13 +196,13 @@ export function isFree(m: Medication): boolean {
 }
 
 export async function getFamily(): Promise<FamilyOverview> {
-  const res = await fetch(`${API_URL}${withFamily("/family")}`, { cache: "no-store" });
+  const res = await apiFetch("/family", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
 }
 
 export async function confirmDose(doseId: string): Promise<void> {
-  const res = await fetch(`${API_URL}/doses/${doseId}/confirm`, { method: "POST" });
+  const res = await apiFetch(`/doses/${doseId}/confirm`, { method: "POST" });
   if (!res.ok) throw new Error(`API ${res.status}`);
 }
 
@@ -239,7 +249,7 @@ export async function parsePrescription(file: File): Promise<ReadResult> {
   const form = new FormData();
   form.append("file", file);
   // The family id lets the API count reads per family (it limits reads per day).
-  const res = await fetch(`${API_URL}${withFamily("/prescriptions/parse")}`, { method: "POST", body: form });
+  const res = await apiFetch("/prescriptions/parse", { method: "POST", body: form });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para ler a receita."));
   return res.json();
 }
@@ -254,7 +264,7 @@ export interface ConfirmItem {
 }
 
 export async function confirmPrescription(patientId: string, items: ConfirmItem[]): Promise<void> {
-  const res = await fetch(`${API_URL}/prescriptions/confirm`, {
+  const res = await apiFetch(`/prescriptions/confirm`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ patientId, items }),
@@ -263,7 +273,7 @@ export async function confirmPrescription(patientId: string, items: ConfirmItem[
 }
 
 async function send(method: string, path: string, body: unknown, fallback: string): Promise<Response> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await apiFetch(path, {
     method,
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
@@ -274,18 +284,69 @@ async function send(method: string, path: string, body: unknown, fallback: strin
 
 /** The caregiver phoned when she reports an emergency on the call; the others get only the push. */
 export async function setEmergencyContact(memberId: string): Promise<void> {
-  await send("PUT", withFamily(`/family/members/${memberId}/emergency-contact`), {}, "Não deu para salvar o primeiro contato.");
+  await send("PUT", `/family/members/${memberId}/emergency-contact`, {}, "Não deu para salvar o primeiro contato.");
 }
 
 /** "Pegar grátis" (buy = false) or "Comprar" (buy = true). */
 export async function setBuyChoice(medicationId: string, buy: boolean): Promise<void> {
-  await send("PUT", withFamily(`/family/medications/${medicationId}/buy-choice`), { buy }, "Não deu para salvar.");
+  await send("PUT", `/family/medications/${medicationId}/buy-choice`, { buy }, "Não deu para salvar.");
 }
 
-/** An invited caregiver opened the app and picked their name. */
-export async function joinFamily(memberId: string): Promise<void> {
-  const res = await fetch(`${API_URL}${withFamily(`/family/members/${memberId}/join`)}`, { method: "POST" });
+/** The signed-in caregiver. memberId and familyId are null until the sign-up is saved. */
+export interface Me {
+  email: string;
+  memberId: string | null;
+  name: string | null;
+  familyId: string | null;
+}
+
+/** Sends the e-mail with the 6 digit code and the sign-in link. */
+export async function startSignIn(email: string): Promise<void> {
+  await send("POST", "/auth/start", { email }, "Não deu para enviar o código.");
+}
+
+/** Code typed in the app, or the token of the link in the e-mail. Keeps the session on this device. */
+export async function verifySignIn(body: { email: string; code: string } | { link: string }): Promise<Me> {
+  const res = await send("POST", "/auth/verify", body, "Não deu para entrar.");
+  const { token, me } = (await res.json()) as { token: string; me: Me };
+  setSession(token);
+  if (me.memberId) setMe(me.memberId);
+  else clearMe();
+  return me;
+}
+
+/** Null when the session is missing or expired (and then it is forgotten). */
+export async function getMe(): Promise<Me | null> {
+  const res = await apiFetch("/auth/me");
+  if (res.status === 401) {
+    setSession(null);
+    clearMe();
+    return null;
+  }
   if (!res.ok) throw new Error(`API ${res.status}`);
+  const me = (await res.json()) as Me;
+  if (me.memberId) setMe(me.memberId);
+  return me;
+}
+
+export async function signOut(): Promise<void> {
+  await apiFetch("/auth/sign-out", { method: "POST" }).catch(() => {});
+  setSession(null);
+  clearMe();
+}
+
+/** Invite shared by WhatsApp: the signed-in person takes the pending invite with their name. */
+export async function claimInvite(familyId: string, name: string): Promise<Me> {
+  const res = await send("POST", "/auth/claim-invite", { familyId, name }, "Não deu para entrar na família.");
+  const me = (await res.json()) as Me;
+  if (me.memberId) setMe(me.memberId);
+  return me;
+}
+
+/** Secret of the link that opens her app without sign-up. `renew` makes a new one; the old stops working. */
+export async function getPatientLink(renew = false): Promise<string> {
+  const res = await send("POST", "/family/patient-link", { renew }, "Não deu para gerar o link dela.");
+  return ((await res.json()) as { token: string }).token;
 }
 
 /** Sign-up answers as the API stores them: phone and CEP in digits, birth as aaaa-mm-dd. */
@@ -294,24 +355,22 @@ export interface OnboardingRecord {
   caregiverId: string;
   caregiver: { name: string; phone: string; email?: string; relation: string | null; relationOther: string };
   patient: { name: string; nickname: string; gender: "female" | "male"; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
-  invites: { id: string; name: string; relation: string | null; phone?: string; joined: boolean }[];
+  invites: { id: string; name: string; relation: string | null; phone?: string; email?: string; joined: boolean }[];
 }
 
-/** Null when this caregiver is not in the family anymore. */
-export async function getOnboarding(caregiverId: string): Promise<OnboardingRecord | null> {
-  const res = await fetch(`${API_URL}/family/onboarding?caregiverId=${caregiverId}`, { cache: "no-store" });
-  if (res.status === 404 || res.status === 400) return null;
+/** The signed-in caregiver's sign-up, or null before the first save. */
+export async function getOnboarding(): Promise<OnboardingRecord | null> {
+  const res = await apiFetch("/family/onboarding");
+  if (res.status === 404 || res.status === 401) return null;
   if (!res.ok) throw new Error(`API ${res.status}`);
-  const record = (await res.json()) as OnboardingRecord;
-  setFamilyId(record.familyId);
-  return record;
+  return (await res.json()) as OnboardingRecord;
 }
 
-/** Saves the sign-up. A new sign-up gets its own family, which this device then follows. */
+/** Saves the sign-up of the signed-in caregiver. The first save creates the family. */
 export async function saveOnboarding(body: unknown): Promise<{ caregiverId: string; familyId: string }> {
   const res = await send("PUT", "/family/onboarding", body, "Não deu para salvar o cadastro.");
   const saved = (await res.json()) as { caregiverId: string; familyId: string };
-  setFamilyId(saved.familyId);
+  setMe(saved.caregiverId);
   return saved;
 }
 
@@ -320,12 +379,12 @@ export async function updateMedication(
   id: string,
   body: { strength?: string | null; times?: string[]; stockUnits?: number | null },
 ): Promise<void> {
-  await send("PATCH", withFamily(`/family/medications/${id}`), body, "Não deu para salvar a mudança.");
+  await send("PATCH", `/family/medications/${id}`, body, "Não deu para salvar a mudança.");
 }
 
 /** Family stops a medication. */
 export async function removeMedication(id: string): Promise<void> {
-  const res = await fetch(`${API_URL}${withFamily(`/family/medications/${id}`)}`, { method: "DELETE" });
+  const res = await apiFetch(`/family/medications/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para tirar o remédio."));
 }
 
@@ -352,13 +411,13 @@ export interface DemoRun {
 
 /** Starts the demo run, or returns the one already going. */
 export async function startDemoRun(): Promise<{ doseId: string; alreadyRunning: boolean }> {
-  const res = await fetch(`${API_URL}/demo/run`, { method: "POST" });
+  const res = await apiFetch(`/demo/run`, { method: "POST" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para começar a demo."));
   return res.json();
 }
 
 export async function getDemoRun(doseId: string): Promise<DemoRun> {
-  const res = await fetch(`${API_URL}/demo/run/${doseId}`, { cache: "no-store" });
+  const res = await apiFetch(`/demo/run/${doseId}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
 }
@@ -368,15 +427,23 @@ export async function setConsent(patientId: string, accepted: boolean): Promise<
   await send("PUT", `/privacy/consent/${patientId}`, { accepted }, "Não deu para salvar a sua resposta.");
 }
 
-/** Link that downloads everything stored about the family of this caregiver (JSON). */
-export function exportDataUrl(caregiverId: string): string {
-  return `${API_URL}/privacy/export?caregiverId=${caregiverId}`;
+/** Downloads everything stored about the family of the signed-in caregiver (JSON file). */
+export async function downloadFamilyData(): Promise<void> {
+  const res = await apiFetch("/privacy/export");
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para baixar os dados."));
+  const url = URL.createObjectURL(await res.blob());
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "recuidado-dados.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Deletes the family of this caregiver and everything under it. */
-export async function deleteFamilyData(caregiverId: string): Promise<void> {
-  const res = await fetch(`${API_URL}/privacy/family?caregiverId=${caregiverId}`, { method: "DELETE" });
+/** Deletes the family of the signed-in caregiver and everything under it, then signs out. */
+export async function deleteFamilyData(): Promise<void> {
+  const res = await apiFetch("/privacy/family", { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para apagar os dados."));
+  await signOut();
 }
 
 export type TriState = "yes" | "no" | "unknown";
@@ -406,13 +473,13 @@ export interface PharmacyInquiry {
 
 /** "Perguntar à farmácia": the voice agent calls the pharmacy about these medicines. */
 export async function askPharmacy(medicationIds: string[]): Promise<PharmacyInquiry> {
-  const res = await send("POST", withFamily("/pharmacy-inquiries"), { medicationIds }, "Não deu para ligar agora.");
+  const res = await send("POST", "/pharmacy-inquiries", { medicationIds }, "Não deu para ligar agora.");
   return res.json();
 }
 
 /** The family's most recent pharmacy call, or null. */
 export async function getLatestPharmacyInquiry(): Promise<PharmacyInquiry | null> {
-  const res = await fetch(`${API_URL}${withFamily("/pharmacy-inquiries/latest")}`, { cache: "no-store" });
+  const res = await apiFetch("/pharmacy-inquiries/latest", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return ((await res.json()) as { inquiry: PharmacyInquiry | null }).inquiry;
 }
@@ -466,19 +533,19 @@ export interface MonthSummary {
 }
 
 export async function getMonth(): Promise<MonthSummary> {
-  const res = await fetch(`${API_URL}${withFamily("/family/month")}`, { cache: "no-store" });
+  const res = await apiFetch("/family/month", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
 }
 
 /** Marks a caregiver's share of this month as paid or not. */
 export async function setSharePaid(memberId: string, paid: boolean): Promise<void> {
-  await send("PUT", withFamily(`/family/shares/${memberId}/paid`), { paid }, "Não deu para salvar.");
+  await send("PUT", `/family/shares/${memberId}/paid`, { paid }, "Não deu para salvar.");
 }
 
 /** Saves who receives the Pix (null removes the key). */
 export async function setPixKey(memberId: string, pix: { type: PixKeyType; key: string } | null): Promise<void> {
-  await send("PUT", withFamily(`/family/members/${memberId}/pix`), { pix }, "Não deu para salvar a chave Pix.");
+  await send("PUT", `/family/members/${memberId}/pix`, { pix }, "Não deu para salvar a chave Pix.");
 }
 
 export interface Plan {
@@ -494,17 +561,17 @@ export interface Plan {
 }
 
 export async function getPlan(): Promise<Plan> {
-  const res = await fetch(`${API_URL}${withFamily("/family/plan")}`, { cache: "no-store" });
+  const res = await apiFetch("/family/plan", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
 }
 
 /** Opens the AbacatePay checkout of the paid plan; returns its URL. */
 export async function startPlanCheckout(): Promise<string> {
-  const res = await send("POST", withFamily("/family/plan/checkout"), {}, "Não deu para abrir o pagamento.");
+  const res = await send("POST", "/family/plan/checkout", {}, "Não deu para abrir o pagamento.");
   return ((await res.json()) as { url: string }).url;
 }
 
 export async function cancelPlan(): Promise<void> {
-  await send("POST", withFamily("/family/plan/cancel"), {}, "Não deu para cancelar.");
+  await send("POST", "/family/plan/cancel", {}, "Não deu para cancelar.");
 }

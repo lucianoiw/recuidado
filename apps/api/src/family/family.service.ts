@@ -410,17 +410,29 @@ export class FamilyService implements OnApplicationBootstrap {
           name: m.name,
           relation: m.relation,
           phone: m.phone ?? '',
+          email: m.email ?? '',
           joined: m.joinedAt !== null,
         })),
     };
   }
 
   /**
-   * Saves the sign-up answers. A caregiver saved earlier from this device updates their own
-   * family; anyone else gets a new family. The demo family is never changed here.
+   * Saves the sign-up answers of the signed-in caregiver. With a caregiver already (a later edit) it
+   * updates their family; on the first save it creates a new family. The demo family is never changed.
+   * Returns the invites that got an e-mail now, for the caller to send.
    */
-  async saveOnboarding(input: OnboardingBody): Promise<{ caregiverId: string; familyId: string }> {
-    const own = input.caregiverId ? await this.ownFamily(input.caregiverId) : null;
+  async saveOnboarding(
+    input: OnboardingBody,
+    email: string,
+    signedInCaregiverId: string | null,
+  ): Promise<{
+    caregiverId: string;
+    familyId: string;
+    caregiverName: string;
+    patientName: string;
+    newInvites: { name: string; email: string }[];
+  }> {
+    const own = signedInCaregiverId ? await this.ownFamily(signedInCaregiverId) : null;
     return this.db.transaction(async (tx) => {
       const p = input.patient;
       const patientValues = {
@@ -462,18 +474,18 @@ export class FamilyService implements OnApplicationBootstrap {
       const caregiverValues = {
         name: c.name,
         phone: c.phone,
-        email: c.email || null,
+        email,
         relation: c.relation,
         relationOther: c.relation === 'Outro' ? c.relationOther : null,
       };
       let caregiverId: string | undefined;
-      if (own && input.caregiverId) {
+      if (own && signedInCaregiverId) {
         const [updated] = await tx
           .update(members)
           .set(caregiverValues)
           .where(
             and(
-              eq(members.id, input.caregiverId),
+              eq(members.id, signedInCaregiverId),
               eq(members.familyId, familyId),
               eq(members.role, 'caregiver'),
             ),
@@ -492,9 +504,10 @@ export class FamilyService implements OnApplicationBootstrap {
       // Invites are matched by name. Pending ones no longer in the list are removed;
       // people who already opened the app stay.
       const invited = await tx
-        .select({ id: members.id, name: members.name, joinedAt: members.joinedAt })
+        .select({ id: members.id, name: members.name, email: members.email, joinedAt: members.joinedAt })
         .from(members)
         .where(eq(members.invitedById, caregiverId));
+      const newInvites: { name: string; email: string }[] = [];
       const key = (n: string) => n.trim().toLocaleLowerCase('pt-BR');
       const wanted = new Map(input.invites.map((i) => [key(i.name), i]));
       const stale = invited.filter((m) => m.joinedAt === null && !wanted.has(key(m.name)));
@@ -504,7 +517,12 @@ export class FamilyService implements OnApplicationBootstrap {
       for (const m of invited) {
         const invite = wanted.get(key(m.name));
         if (!invite) continue;
-        await tx.update(members).set({ relation: invite.relation, phone: invite.phone || null }).where(eq(members.id, m.id));
+        const inviteEmail = invite.email || m.email || null;
+        await tx
+          .update(members)
+          .set({ relation: invite.relation, phone: invite.phone || null, email: inviteEmail })
+          .where(eq(members.id, m.id));
+        if (invite.email && invite.email !== m.email && !m.joinedAt) newInvites.push({ name: m.name, email: invite.email });
         wanted.delete(key(m.name));
       }
       if (wanted.size > 0) {
@@ -514,12 +532,20 @@ export class FamilyService implements OnApplicationBootstrap {
             name: i.name,
             relation: i.relation,
             phone: i.phone || null,
+            email: i.email || null,
             role: 'caregiver' as const,
             invitedById: caregiverId,
           })),
         );
+        for (const i of wanted.values()) if (i.email) newInvites.push({ name: i.name, email: i.email });
       }
-      return { caregiverId, familyId };
+      return {
+        caregiverId,
+        familyId,
+        caregiverName: c.name,
+        patientName: p.nickname || p.name,
+        newInvites,
+      };
     });
   }
 
@@ -532,19 +558,6 @@ export class FamilyService implements OnApplicationBootstrap {
     if (!row) return null;
     const ref = await this.resolveFamily(row.familyId).catch(() => null);
     return ref && !ref.isDemo ? ref : null;
-  }
-
-  /** Marks an invited caregiver as joined when they pick themselves on a device. */
-  async join(familyIdOrDemo: string | null | undefined, memberId: string): Promise<void> {
-    const { familyId } = await this.resolveFamily(familyIdOrDemo);
-    const [row] = await this.db
-      .select({ id: members.id, joinedAt: members.joinedAt })
-      .from(members)
-      .where(and(eq(members.id, memberId), eq(members.familyId, familyId), eq(members.role, 'caregiver')));
-    if (!row) throw new NotFoundException('Pessoa não encontrada.');
-    if (!row.joinedAt) {
-      await this.db.update(members).set({ joinedAt: new Date() }).where(eq(members.id, memberId));
-    }
   }
 
   /**

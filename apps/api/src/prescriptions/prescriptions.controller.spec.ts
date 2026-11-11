@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PrescriptionReadError } from '@recuidado/prescription-reader';
 import request from 'supertest';
 import { HttpException } from '@nestjs/common';
+import { caregiverAuth, FAMILY, useFakeAuth } from '../auth/testing.js';
 import { PrescriptionLimitService } from './prescription-limit.service.js';
 import { PrescriptionsController } from './prescriptions.controller.js';
 import { PrescriptionsService } from './prescriptions.service.js';
@@ -22,6 +23,7 @@ describe('POST /prescriptions/parse', () => {
       ],
     }).compile();
     app = moduleRef.createNestApplication();
+    useFakeAuth(app);
     await app.init();
   });
 
@@ -35,14 +37,15 @@ describe('POST /prescriptions/parse', () => {
   it('answers 429 and skips the reader when the read limit is reached', async () => {
     consume.mockRejectedValue(new HttpException('Limite', 429));
     const res = await request(app.getHttpServer())
-      .post('/prescriptions/parse?familyId=8b0c5f8e-6a43-4f7e-9d2b-1c3a5e7f9b10')
+      .post('/prescriptions/parse')
+      .set('x-test-auth', caregiverAuth())
       .attach('file', Buffer.from('png-bytes'), { filename: 'receita.png', contentType: 'image/png' });
     expect(res.status).toBe(429);
     expect(parse).not.toHaveBeenCalled();
-    expect(consume.mock.calls[0]![1]).toBe('8b0c5f8e-6a43-4f7e-9d2b-1c3a5e7f9b10');
+    expect(consume.mock.calls[0]![1]).toBe(FAMILY);
   });
 
-  it('counts a read without a valid familyId by IP only', async () => {
+  it('counts a visitor read by IP only', async () => {
     parse.mockResolvedValue({ reading: { items: [] }, model: 'm', usage: { input_tokens: 1, output_tokens: 1 } });
     await request(app.getHttpServer())
       .post('/prescriptions/parse?familyId=nope')
@@ -102,12 +105,13 @@ describe('POST /prescriptions/parse', () => {
     };
     const res = await request(app.getHttpServer())
       .post('/prescriptions/confirm')
+      .set('x-test-auth', caregiverAuth())
       .send(body);
     expect(res.status).toBe(201);
-    expect(confirm).toHaveBeenCalledWith({
-      ...body,
-      items: [{ ...body.items[0], activeIngredient: null }],
-    });
+    expect(confirm).toHaveBeenCalledWith(
+      { ...body, items: [{ ...body.items[0], activeIngredient: null }] },
+      FAMILY,
+    );
   });
 
   it('rejects an invalid confirmation without calling the service', async () => {
@@ -136,7 +140,7 @@ describe('PrescriptionsController error mapping', () => {
     const controller = new PrescriptionsController({
       parse,
     } as unknown as PrescriptionsService, limits);
-    await expect(controller.parse(file, '127.0.0.1')).rejects.toMatchObject({
+    await expect(controller.parse(file, '127.0.0.1', null)).rejects.toMatchObject({
       status,
       message: 'mensagem',
     });
@@ -149,6 +153,6 @@ describe('PrescriptionsController error mapping', () => {
         throw boom;
       }),
     } as unknown as PrescriptionsService, limits);
-    await expect(controller.parse(file, '127.0.0.1')).rejects.toBe(boom);
+    await expect(controller.parse(file, '127.0.0.1', null)).rejects.toBe(boom);
   });
 });
