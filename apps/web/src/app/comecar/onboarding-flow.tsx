@@ -99,6 +99,7 @@ export function OnboardingFlow() {
   }
 
   const nickname = p.nickname.trim() || p.name.trim().split(" ")[0] || "ela";
+  const she = p.gender === "male" ? "ele" : "ela";
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-6 pb-8 pt-6 text-[17px]">
@@ -231,12 +232,12 @@ export function OnboardingFlow() {
                 {p.consent ? <CheckIcon size={16} strokeWidth={3} /> : null}
               </span>
               <span className="text-[15px] leading-snug">
-                Conversei com {nickname} e ela aceita receber lembretes e ligações de uma assistente virtual, e que a
-                família veja se ela tomou o remédio. Ela também confirma isso no app dela.
+                Conversei com {nickname} e {she} aceita receber lembretes e ligações de uma assistente virtual, e que a
+                família veja se {she} tomou o remédio.{p.usesPhone ? ` ${she === "ele" ? "Ele" : "Ela"} também confirma isso no app.` : ""}
               </span>
             </button>
             <Link href="/privacidade" className="text-[15px] font-bold text-brand">
-              Como cuidamos dos dados dela
+              Como cuidamos dos dados {she === "ele" ? "dele" : "dela"}
             </Link>
           </div>
         </>
