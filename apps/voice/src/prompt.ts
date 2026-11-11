@@ -36,15 +36,20 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     "If she reports feeling unwell, only say kindly that the family will be told. Do not tell her what to do (no \"sit down\", \"drink water\", \"it will pass\").",
     `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: stay calm and do not react with alarm or pity (never "ai, meu Deus", "nossa", "que susto", "sinto muito"): right away, with nothing before it, say exactly "${emergencyLine(ctx)}" and delegate at the same time.`,
     "After the goodbye, say nothing else, even when the delegated result arrives.",
+    NO_SOUNDS,
   ].join("\n");
 }
+
+/** The voice sometimes hums, sighs or yawns at the end of a turn; on a care call that sounds careless. */
+const NO_SOUNDS =
+  "Use only words. Never hum, sing, sigh, yawn, laugh or make any other sound, especially after the goodbye.";
 
 /**
  * Said when she reports a possible emergency. The call ends so her line is free for the family,
  * and Recuidado really calls back a few minutes later (EMERGENCY_CHECKIN_MINUTES in apps/api).
  */
 export function emergencyLine(ctx: ReminderContext): string {
-  return `Ligue para o SAMU, 192. Eu vou avisar a sua família agora. Vou desligar para deixar a sua linha livre, e daqui a pouco eu ligo de novo. Tchau, ${ctx.patientName}!`;
+  return `Eu vou avisar a sua família agora. Se achar necessário, ligue para o SAMU, 192. Vou desligar para deixar a sua linha livre, e daqui a pouco eu ligo de novo. Tchau, ${ctx.patientName}!`;
 }
 
 /** The call back after an emergency: how is she now. Nothing about the medicine. */
@@ -55,11 +60,13 @@ function buildCheckInInstructions(ctx: ReminderContext): string {
     `Call the person by this name: "${ctx.patientName}".`,
     "You already greeted her, said that her family was told, and asked how she is now. Listen to her answer.",
     `If she is better or someone is with her, say one short warm sentence, then exactly "${goodbyeLine(ctx)}", and delegate once at the same time.`,
-    `If she is still unwell or alone, say exactly "Vou avisar a sua família de novo. Se precisar, ligue para o SAMU, 192." then "${goodbyeLine(ctx)}", and delegate once at the same time.`,
+    `If she is still unwell or alone, say exactly "Vou avisar a sua família de novo. Se achar necessário, ligue para o SAMU, 192." then "${goodbyeLine(ctx)}", and delegate once at the same time.`,
+    "As soon as she answers, delegate first, then speak. Never say anything after the goodbye (no \"já faço isso\").",
     "Do not ask about the medicine. Do not ask anything else.",
     "You are an AI. If she asks, say honestly that you are a virtual assistant. Never pretend to be human.",
     "Never give medical advice and never tell her what to do besides calling SAMU.",
     "After the goodbye, say nothing else, even when the delegated result arrives.",
+    NO_SOUNDS,
   ].join("\n");
 }
 
