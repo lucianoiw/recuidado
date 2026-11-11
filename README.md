@@ -258,6 +258,53 @@ A região da demo é São Paulo capital. Detalhes em [packages/data/README.md](p
 - O agente não faz diagnóstico, não recomenda tratamento e não muda dose. A família revisa a leitura da receita antes de salvar.
 - Antes de ter usuário real ainda faltaria: login de verdade (hoje o id salvo no aparelho identifica a família), e retenção zero nos provedores de IA.
 
+## Revisão 360 (11/11/2026)
+
+Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coolify. Plano original em [docs/context.md](docs/context.md), levantamento anterior em [docs/product-360.md](docs/product-360.md).
+
+**Funcionando, testado de verdade**
+- Telas da família (Hoje, Remédios, Onde pegar, Família, Avisos, Resumo do mês, Onde comprar e dividir, Demo), app da Dona Maria e /privacidade: todas abrem sem erro de console nem de rede.
+- Cadastro em 3 passos com dados fictícios, leitura da receita manuscrita de teste (3 remédios, 15,9 s), exportar e apagar a família (204, depois 404).
+- Preço CMED, economia do mês (R$ 65,60), Alto Custo com prazo do laudo, remédio acabando, Pix copia e cola com "quem pagou", 51 de 53 doses do mês.
+- Ligação para a farmácia de teste com menu de teclas: resposta gravada e comparada ao teto (46 s).
+- MCP: `get_today_doses` e `find_free_medicine` respondem pela família demo.
+- PostHog recebe ligações, avisos, emergência, ligação de volta, farmácia, MCP, push e leitura de receita. Painel público abre.
+- Telefone mascarado no `GET /family`, limite de requisições e cabeçalhos de segurança ativos. O e-mail privacidade@recuidado.com.br tem MX (Migadu); entrega não testada.
+
+**Quebrado ou não testado**
+- `recuidado/worker` no Coolify está parado (nunca ficou online). A fila roda dentro da `api` (sem `APP_ROLE`), então nada parou. Não mudar a `api` para `APP_ROLE=api` antes do worker subir.
+- A atendente da URA de teste diz que a Rosuvastatina "sai pelo Farmácia Popular", mas o app mostra ela em "Para comprar". Contradição visível no vídeo.
+- Avisos da família demo estão cheios de testes (22 novos, emergências repetidas, um falso "não está bem" para "Eu tô aguardando", ponto duplo `".` no fim da fala, resumo em terceira pessoa no lugar das palavras dela).
+- "Vale ligar para ela" fixo, sem respeitar "O senhor".
+- Sem medição: custo por ligação. Temos só a duração (18 ligações, média 21 s, mediana 17 s); o custo do GPT-Live não vai para o PostHog.
+- Não testados ao vivo nesta revisão: "ainda dói" na ligação de volta, roteiro novo do PR #104, segunda ligação em 15 min, demo de 2 minutos (liga para o celular real), push chegando no aparelho.
+
+**Planejado e não feito**
+- Conversa por mensagem (WhatsApp): fora, decidido em 11/11.
+- Preço de farmácia online com Firecrawl: fora; o preço é o teto CMED mais a ligação para a farmácia.
+- Login real: o id salvo no aparelho identifica a família.
+- Religar se ninguém da família agir depois do "não estou bem": backlog.
+
+**Riscos para o vídeo e os jurados**
+- A linha pública às vezes cai na operadora: gravar a ligação com folga de tentativas.
+- A Dona Maria do plano é "hipertensa e diabética"; a demo também tem Sacubitril valsartana (insuficiência cardíaca). Ajustar a história ou o remédio.
+- Os três telefones da demo terminam em 6330: jurado pode perguntar.
+- "Quanto custa por idoso por mês?" ainda sem resposta com número.
+- "Quem impede alguém de ver a família de outro?": responder que é prova de conceito sem login, com ids aleatórios e dados fictícios.
+
+**Próximos passos até o vídeo (por prioridade)**
+1. Subir o worker ou apagar o recurso, para o Coolify não mostrar serviço parado.
+2. Trocar a fala da URA para "não sai pelo Farmácia Popular" e refazer uma ligação, para a tela ficar coerente.
+3. Limpar os avisos da família demo antes de gravar.
+4. Testar ao vivo o roteiro novo: segunda ligação, emergência com "ainda dói" e ligação de volta.
+5. Medir custo por ligação (minuto Nvoip e GPT-Live) em 10 ligações e colocar na tabela de resultados.
+6. Garantir doses do dia na família do vídeo entre 26 e 29/11.
+
+**Melhorias que valem a pena**
+- Respeitar senhor ou senhora em todos os textos da família, não só na ligação.
+- Gravar o custo de cada ligação no PostHog, junto da duração.
+- Um monitor de disponibilidade da demo até 15/12 (regra 7.3).
+
 ## Rodar localmente
 
 Requisitos: Node 22+, pnpm 10 e Docker.
