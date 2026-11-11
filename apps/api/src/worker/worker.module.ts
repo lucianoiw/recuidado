@@ -7,6 +7,7 @@ import { validateEnv } from '../config/env.js';
 import { DbModule } from '../db/db.module.js';
 import { DOSES_QUEUE } from '../doses/doses.queue.js';
 import { DosesService } from '../doses/doses.service.js';
+import { EmailService } from '../email/email.service.js';
 import { PushService } from '../push/push.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
@@ -31,7 +32,7 @@ import { DosesProcessor } from './doses.processor.js';
     BullModule.registerQueue({ name: DOSES_QUEUE }),
     DbModule,
   ],
-  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, AlertsService, StockService],
+  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService],
 })
 export class WorkerModule implements OnApplicationShutdown {
   /** Sends buffered events and logs before the container stops. */
