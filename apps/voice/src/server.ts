@@ -68,7 +68,8 @@ function parseCallRequest(body: unknown) {
   if (typeof b.patientName !== "string" || !b.patientName.trim()) throw new Error("patientName is required");
   if (meds.length === 0) throw new Error("medications must have at least one item");
   const patientId = typeof b.patientId === "string" && b.patientId ? b.patientId : undefined;
-  return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds };
+  const checkIn = b.checkIn === true;
+  return { doseId: b.doseId, patientId, phone: b.phone, patientName: b.patientName.trim(), medications: meds, checkIn };
 }
 
 /** Body of POST /pharmacy-calls. At most 3 medicines, so the call stays short. */
@@ -157,7 +158,7 @@ const server = createServer(async (req, res) => {
             distinctId,
             properties: { dose_id: input.doseId, outcome: result.outcome },
           });
-          await service.report(input.doseId, result);
+          await service.report(input.doseId, { ...result, checkIn: input.checkIn });
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {

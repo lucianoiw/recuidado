@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import { ReminderCall, type SidebandSocket } from "./reminder-call.js";
 import { toE164 } from "./phone.js";
+import { buildDelegateInstructions, buildLiveInstructions, goodbyeLine, greetingLine } from "./prompt.js";
 
 class FakeSocket extends EventEmitter implements SidebandSocket {
   sent: Record<string, unknown>[] = [];
@@ -341,4 +342,16 @@ test("alert call speaks the message and hangs up after it", async () => {
   assert.equal(hangups, 1);
   assert.equal(result.delivered, true);
   assert.equal(result.endReason, "message_delivered");
+});
+
+test("emergency: says SAMU, frees the line and promises the call back; the call back only asks how she is", () => {
+  const ctx = { patientName: "Dona Maria", medications: [{ name: "Losartana" }] };
+  const live = buildLiveInstructions(ctx);
+  assert.match(live, /SAMU, 192/);
+  assert.match(live, /daqui a pouco eu ligo de novo\. Tchau, Dona Maria!/);
+  const back = { ...ctx, checkIn: true };
+  assert.match(greetingLine(back), /de novo\. A sua família já foi avisada\. Como a senhora está agora\?/);
+  assert.equal(goodbyeLine(back), "Tchau, Dona Maria!");
+  assert.doesNotMatch(buildLiveInstructions(back), /já tomou/);
+  assert.match(buildDelegateInstructions(back), /taken=false/);
 });

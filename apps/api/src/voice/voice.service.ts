@@ -28,6 +28,8 @@ export interface VoiceResult {
   feelsUnwell?: boolean | null;
   /** Fall, chest pain, shortness of breath or fainting: the caregivers also get a phone call. */
   emergency?: boolean | null;
+  /** The call back after an emergency: only how she is now, the dose is left as it was. */
+  checkIn?: boolean | null;
   transcript?: { speaker: 'assistant' | 'patient'; text: string }[];
   durationSeconds?: number | null;
   endReason?: string | null;
@@ -48,8 +50,12 @@ export class VoiceCallService {
     private readonly stock: StockService,
   ) {}
 
-  /** Asks apps/voice to call the patient. Does nothing if the dose is no longer pending. */
-  async call(doseId: string): Promise<{ callId: string } | null> {
+  /**
+   * Asks apps/voice to call the patient. Does nothing if the dose is no longer pending.
+   * With checkIn, it is the call back after an emergency: the dose status does not matter.
+   */
+  async call(doseId: string, opts: { checkIn?: boolean } = {}): Promise<{ callId: string } | null> {
+    const checkIn = Boolean(opts.checkIn);
     const voiceUrl = this.config.get<string>('VOICE_URL');
     const token = this.config.get<string>('VOICE_API_TOKEN');
     if (!voiceUrl || !token) {
@@ -75,7 +81,7 @@ export class VoiceCallService {
       .innerJoin(families, eq(members.familyId, families.id))
       .where(eq(doses.id, doseId));
     if (!row) throw new NotFoundException('Dose não encontrada.');
-    if (row.status !== 'pending') {
+    if (row.status !== 'pending' && !checkIn) {
       this.logger.log(`Dose ${doseId} is ${row.status}; not calling.`);
       return null;
     }
@@ -112,6 +118,7 @@ export class VoiceCallService {
         phone: row.phone,
         patientName: row.patientName,
         medications: [{ name: row.medication, dose: row.strength ?? undefined }],
+        checkIn,
       }),
     });
     if (res.status === 403) {
@@ -123,10 +130,10 @@ export class VoiceCallService {
     if (!res.ok) {
       throw new Error(`Voice service answered ${res.status}: ${await res.text()}`);
     }
-    await this.db.update(doses).set({ callRequestedAt: new Date() }).where(eq(doses.id, doseId));
+    if (!checkIn) await this.db.update(doses).set({ callRequestedAt: new Date() }).where(eq(doses.id, doseId));
     const body = (await res.json()) as { callId: string };
     telemetry.capture(
-      'dose_call_requested',
+      checkIn ? 'emergency_checkin_requested' : 'dose_call_requested',
       { dose_id: doseId, call_id: body.callId, demo: row.demo },
       row.patientId,
     );
@@ -186,6 +193,16 @@ export class VoiceCallService {
       } catch (error) {
         telemetry.captureException(error, { step: 'emergency_call', dose_id: doseId });
       }
+      if (!result.checkIn) await this.scheduleCheckIn(doseId);
+    }
+    // The call back after an emergency only reports how she is; the dose was already settled.
+    if (result.checkIn) {
+      telemetry.capture(
+        'emergency_checkin_result',
+        { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome, feels_unwell: Boolean(result.feelsUnwell), demo: dose.demo },
+        dose.patientId,
+      );
+      return 'ignored';
     }
     const props = { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome, demo: dose.demo };
     // Confirmed in the app while the phone was ringing: the app wins.
@@ -246,7 +263,17 @@ export class VoiceCallService {
     return rows.length > 0;
   }
 
-  /** She said she is not well: tell the caregivers right away, with her words. */
+  /** She told the assistant it would call back: queue that call (EMERGENCY_CHECKIN_MINUTES). */
+  private async scheduleCheckIn(doseId: string): Promise<void> {
+    const minutes = this.config.get<number>('EMERGENCY_CHECKIN_MINUTES') ?? 2;
+    await this.queue.add(
+      'check-in',
+      { kind: 'check-in', doseId },
+      { jobId: doseJobId('check-in', doseId), delay: minutes * 60_000 },
+    );
+    this.logger.log(`Dose ${doseId}: calling her back in ${minutes} min.`);
+  }
+
   /**
    * Emergency reported on the call: phones up to two caregivers with a short recorded-style message.
    * Only numbers in the voice CALL_ALLOWED_NUMBERS get through; the push already went out either way.
