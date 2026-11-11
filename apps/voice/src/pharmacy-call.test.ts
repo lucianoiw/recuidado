@@ -238,3 +238,17 @@ test("does not repeat the introduction once said", async () => {
   await call.endCall();
   await call.result;
 });
+
+test("does not introduce itself to a menu that arrives in pieces", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Bem-vindo à Farmácia" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi," });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Para preço" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: "bom dia" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i3", delta: "tecle dois" });
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  await call.endCall();
+  await call.result;
+});
