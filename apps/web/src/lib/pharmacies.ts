@@ -19,6 +19,6 @@ export function formatDistance(km: number): string {
   return km < 1 ? `${Math.round(km * 100) * 10} m` : `${km.toFixed(1).replace(".", ",")} km`;
 }
 
-export function mapsUrl(p: Pharmacy): string {
+export function mapsUrl(p: { lat: number; lng: number }): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
 }

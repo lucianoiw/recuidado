@@ -24,6 +24,12 @@ function MedRow({ m }: { m: Medication }) {
         <span className="text-[15px] text-muted">
           {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
         </span>
+        {m.freeAt?.includes("ubs") ? (
+          <span className="text-[14px] font-bold text-brand">Também grátis na UBS</span>
+        ) : null}
+        {m.highCost ? (
+          <span className="text-[14px] font-bold text-warn">Alto Custo: precisa de laudo (LME)</span>
+        ) : null}
       </div>
       {m.freeInFarmaciaPopular ? (
         <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(free) => setBuy(m.id, !free)} />

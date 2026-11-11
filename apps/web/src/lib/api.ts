@@ -27,6 +27,10 @@ export interface Medication {
   times: string[];
   freeInFarmaciaPopular: boolean;
   monthlyCostCents: number;
+  /** Where it is free: "farmacia_popular", "ubs". Optional until the API sends it. */
+  freeAt?: string[];
+  /** In the state high cost program (CEAF): needs the LME form from the doctor. */
+  highCost?: boolean;
 }
 
 export interface FamilyOverview {
