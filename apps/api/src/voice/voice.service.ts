@@ -21,7 +21,7 @@ export interface VoiceResult {
   note?: string | null;
 }
 
-export const alertJobId = (doseId: string) => `alert-family:${doseId}`;
+export const alertJobId = (doseId: string) => `alert-family-${doseId}`;
 
 @Injectable()
 export class VoiceCallService {
