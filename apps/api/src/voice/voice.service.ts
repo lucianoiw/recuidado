@@ -14,6 +14,7 @@ import { doses, families, medications, members, voiceCalls } from '../db/schema.
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { DEMO_FAMILY } from '../family/family.service.js';
+import { mayContact } from '../privacy/privacy.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { minutesSince } from '../doses/time.js';
 import { telemetry } from '../telemetry/telemetry.js';
@@ -60,6 +61,7 @@ export class VoiceCallService {
         patientId: members.id,
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         phone: members.phone,
+        consentAt: members.consentAt,
         familyId: members.familyId,
         familyName: families.name,
         medication: medications.name,
@@ -79,7 +81,20 @@ export class VoiceCallService {
       this.logger.warn(`Patient of dose ${doseId} has no phone; not calling.`);
       return null;
     }
-    const overLimit = await this.overCallLimit(row.familyId, row.familyName === DEMO_FAMILY);
+    const isDemoFamily = row.familyName === DEMO_FAMILY;
+    // The demo phone is a real person's: its daily doses only push, unless DEMO_SCHEDULED_CALLS is on.
+    if (isDemoFamily && !row.demo && !this.config.get<boolean>('DEMO_SCHEDULED_CALLS')) {
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'demo_scheduled' }, row.patientId);
+      this.logger.log(`Dose ${doseId} is a scheduled demo dose; push only.`);
+      return null;
+    }
+    if (!mayContact(row.consentAt, row.familyName)) {
+      // LGPD: no call before she (or the family for her) agreed. Push and the family alert still work.
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'no_consent' }, row.patientId);
+      this.logger.log(`Patient of dose ${doseId} has not consented; not calling.`);
+      return null;
+    }
+    const overLimit = await this.overCallLimit(row.familyId, isDemoFamily);
     if (overLimit) {
       telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: overLimit }, row.patientId);
       this.logger.warn(`Not calling for dose ${doseId}: ${overLimit}.`);
@@ -110,7 +125,7 @@ export class VoiceCallService {
     const body = (await res.json()) as { callId: string };
     telemetry.capture(
       'dose_call_requested',
-      { dose_id: doseId, call_id: body.callId, medication: row.medication, demo: row.demo },
+      { dose_id: doseId, call_id: body.callId, demo: row.demo },
       row.patientId,
     );
     this.logger.log(`Calling patient of dose ${doseId} (${body.callId}).`);

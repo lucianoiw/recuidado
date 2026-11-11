@@ -24,10 +24,17 @@ export interface Member {
   role: "caregiver" | "patient";
   relation?: string | null;
   relationOther?: string | null;
+  /** Added as an invite by another caregiver. */
+  invited?: boolean;
   /** Invited during sign-up and has not opened the app yet. */
   pending?: boolean;
-  /** Digits only, e.g. "11987654321". */
+  /** Digits only, e.g. "11987654321". In the demo family it comes masked: "(11) •••••-4321". */
   phone?: string | null;
+  /** Has a full phone number saved, even when the API sends it masked. */
+  hasPhone?: boolean;
+  /** Patient only (LGPD): when she agreed to reminders and calls, and who said so. */
+  consentAt?: string | null;
+  consentSource?: "patient" | "caregiver" | null;
 }
 
 /** The name screens show for the patient: the nickname when there is one. */
@@ -153,7 +160,8 @@ async function errorMessage(res: Response, fallback: string): Promise<string> {
 export async function parsePrescription(file: File): Promise<ReadResult> {
   const form = new FormData();
   form.append("file", file);
-  const res = await fetch(`${API_URL}/prescriptions/parse`, { method: "POST", body: form });
+  // The family id lets the API count reads per family (it limits reads per day).
+  const res = await fetch(`${API_URL}${withFamily("/prescriptions/parse")}`, { method: "POST", body: form });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para ler a receita."));
   return res.json();
 }
@@ -202,7 +210,7 @@ export interface OnboardingRecord {
   familyId: string;
   caregiverId: string;
   caregiver: { name: string; phone: string; relation: string | null; relationOther: string };
-  patient: { name: string; nickname: string; phone: string; birth: string; cep: string; usesPhone: boolean };
+  patient: { name: string; nickname: string; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
   invites: { id: string; name: string; relation: string | null; phone?: string; joined: boolean }[];
 }
 
@@ -270,4 +278,20 @@ export async function getDemoRun(doseId: string): Promise<DemoRun> {
   const res = await fetch(`${API_URL}/demo/run/${doseId}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
+}
+
+/** The patient accepts (or takes back) reminders, calls and the family seeing her doses. */
+export async function setConsent(patientId: string, accepted: boolean): Promise<void> {
+  await send("PUT", `/privacy/consent/${patientId}`, { accepted }, "Não deu para salvar a sua resposta.");
+}
+
+/** Link that downloads everything stored about the family of this caregiver (JSON). */
+export function exportDataUrl(caregiverId: string): string {
+  return `${API_URL}/privacy/export?caregiverId=${caregiverId}`;
+}
+
+/** Deletes the family of this caregiver and everything under it. */
+export async function deleteFamilyData(caregiverId: string): Promise<void> {
+  const res = await fetch(`${API_URL}/privacy/family?caregiverId=${caregiverId}`, { method: "DELETE" });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para apagar os dados."));
 }

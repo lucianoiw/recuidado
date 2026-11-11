@@ -46,6 +46,10 @@ export const members = pgTable('members', {
   // Set on caregivers added as an invite during onboarding; joinedAt is set when they open the app.
   invitedById: uuid().references((): AnyPgColumn => members.id, { onDelete: 'set null' }),
   joinedAt: timestamp({ withTimezone: true }),
+  // LGPD consent of the patient (health data, art. 11): reminders, calls and the family seeing doses.
+  // 'patient' when she accepted in her app, 'caregiver' when the family declared it at sign-up.
+  consentAt: timestamp({ withTimezone: true }),
+  consentSource: text().$type<'patient' | 'caregiver'>(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -121,6 +125,7 @@ export const voiceCalls = pgTable('voice_calls', {
   // Self-reported in the call ("E a senhora, está bem?"). Not a diagnosis.
   feelsUnwell: boolean(),
   note: text(),
+  // Emptied after VOICE_TRANSCRIPT_RETENTION_DAYS (see RetentionService).
   transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
   durationSeconds: integer(),
   endReason: text(),

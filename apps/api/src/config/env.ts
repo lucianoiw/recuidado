@@ -31,6 +31,17 @@ export const envSchema = z.object({
     (v) => (v === '' ? undefined : v),
     z.string().optional(),
   ),
+  // Claude model that reads prescriptions. Empty uses the reader's default.
+  PRESCRIPTION_MODEL: optionalString,
+  // Prescription reading is open (no login) and each read costs money (about US$ 0.06).
+  // Reads allowed in 24 hours per IP, per family and in total. 0 turns that limit off; total 0 turns reading off.
+  PRESCRIPTION_LIMIT_PER_IP: z.coerce.number().int().nonnegative().default(10),
+  PRESCRIPTION_LIMIT_PER_FAMILY: z.coerce.number().int().nonnegative().default(10),
+  PRESCRIPTION_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(100),
+  // Requests per minute from one IP, for every route (health check excluded). 0 turns it off.
+  RATE_LIMIT_PER_MINUTE: z.coerce.number().int().nonnegative().default(300),
+  // Reverse proxies in front of the API (Traefik in Coolify), so the client IP comes from X-Forwarded-For.
+  TRUST_PROXY_HOPS: z.coerce.number().int().nonnegative().default(1),
   // Web Push (VAPID). Without the keys, pushes are skipped and only logged.
   VAPID_PUBLIC_KEY: optionalString,
   VAPID_PRIVATE_KEY: optionalString,
@@ -41,6 +52,8 @@ export const envSchema = z.object({
   // per family (the demo family is exempt) and for the whole app. 0 turns calls off.
   CALL_DAILY_LIMIT_PER_FAMILY: z.coerce.number().int().nonnegative().default(3),
   CALL_DAILY_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(20),
+  // Days a call transcript (and what she said about how she feels) is kept. After that only the outcome stays.
+  VOICE_TRANSCRIPT_RETENTION_DAYS: z.coerce.number().int().positive().default(90),
   // Minutes to wait after the call before alerting the family.
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
   // Demo run (POST /demo/run): the whole dose flow in about two minutes. "false" turns it off.
@@ -48,6 +61,18 @@ export const envSchema = z.object({
     (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
     z.boolean(),
   ),
+  // On boot, bring the demo family to its fixed story (3 medicines, times, stock, a week of history). "false" turns it off.
+  DEMO_SEED_ENABLED: z.preprocess(
+    (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
+    z.boolean(),
+  ),
+  // Scheduled doses of the demo family also call its phone. Off: only the demo run button calls.
+  DEMO_SCHEDULED_CALLS: z.preprocess(
+    (v) => v === true || v === 'true',
+    z.boolean(),
+  ),
+  // Seconds a demo run holds the button: a second press in this time follows the same run.
+  DEMO_RUN_LOCK_SECONDS: z.coerce.number().int().positive().default(240),
   // Seconds after the demo reminder before the call.
   DEMO_CALL_AFTER_SECONDS: z.coerce.number().int().positive().default(20),
   // Seconds after the demo call starts before the family is alerted if the call never reports back.

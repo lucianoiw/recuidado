@@ -2,16 +2,19 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { findFreeAccess, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
+import { ConfigService } from '@nestjs/config';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { DosesService } from '../doses/doses.service.js';
 import { StockService } from '../stock/stock.service.js';
+import { seedDemoFamily } from './demo-seed.js';
 import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
@@ -29,17 +32,39 @@ export interface FamilyRef {
 export const DEMO_READ_ONLY =
   'Esta é a família de demonstração e ela não muda. Faça o seu cadastro para testar com a sua família.';
 
+/** "(11) •••••-5678": only the last 4 digits, so it can not be called or copied. */
+export function maskPhone(phone: string | null): string | null {
+  let digits = phone?.replace(/\D/g, '') ?? '';
+  if (digits.length >= 12 && digits.startsWith('55')) digits = digits.slice(2);
+  if (digits.length < 4) return null;
+  const ddd = digits.length >= 10 ? `(${digits.slice(0, 2)}) ` : '';
+  return `${ddd}•••••-${digits.slice(-4)}`;
+}
+
 @Injectable()
 export class FamilyService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(FamilyService.name);
+
   constructor(
     @Inject(DB) private readonly db: Database,
     private readonly doses: DosesService,
     private readonly stock: StockService,
     private readonly alerts: AlertsService,
+    private readonly config: ConfigService,
   ) {}
 
   async onApplicationBootstrap() {
-    await this.ensureDemoFamily();
+    const ids = await this.ensureDemoFamily();
+    if (!this.config.get<boolean>('DEMO_SEED_ENABLED')) return;
+    try {
+      // Fixed story of Dona Maria: three medicines, times, stock and a week of history.
+      const medIds = await seedDemoFamily(this.db, ids);
+      for (const id of medIds) await this.doses.scheduleForMedication(id);
+      this.logger.log('Demo family seeded.');
+    } catch (error) {
+      // The app works without the demo story; never block the boot on it.
+      this.logger.error(`Demo family seed failed: ${String(error)}`);
+    }
   }
 
   /** Creates the demo family if missing. Returns its id and the patient id. */
@@ -122,6 +147,10 @@ export class FamilyService implements OnApplicationBootstrap {
         relation: members.relation,
         relationOther: members.relationOther,
         phone: members.phone,
+        consentAt: members.consentAt,
+        consentSource: members.consentSource,
+        // Added as an invite by another caregiver (only the one who signed up exports or deletes).
+        invited: isNotNull(members.invitedById).mapWith(Boolean),
         // Added as an invite and not opened the app yet.
         pending: and(isNotNull(members.invitedById), isNull(members.joinedAt))!.mapWith(Boolean),
       })
@@ -144,11 +173,17 @@ export class FamilyService implements OnApplicationBootstrap {
       .where(eq(medications.patientId, patientId))
       .orderBy(asc(medications.createdAt));
     const stock = await this.stock.statusFor(meds);
+    // Anyone can open the demo family without logging in: its phones are never sent in full.
+    const shown = people.map((p) => ({
+      ...p,
+      phone: isDemo ? maskPhone(p.phone) : p.phone,
+      hasPhone: (p.phone?.replace(/\D/g, '').length ?? 0) >= 10,
+    }));
     return {
       familyId,
       isDemo,
-      patient: people.find((p) => p.id === patientId)!,
-      caregivers: people.filter((p) => p.role === 'caregiver'),
+      patient: shown.find((p) => p.id === patientId)!,
+      caregivers: shown.filter((p) => p.role === 'caregiver'),
       medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => ({
         ...med,
         ...freeAccessOf(activeIngredient ?? med.name, med.strength),
@@ -259,6 +294,7 @@ export class FamilyService implements OnApplicationBootstrap {
         birth: patient.birthDate ?? '',
         cep: patient.cep ?? '',
         usesPhone: !patient.prefersVoice,
+        consent: patient.consentAt !== null,
       },
       invites: people
         .filter((m) => m.invitedById === caregiverId)
@@ -289,16 +325,29 @@ export class FamilyService implements OnApplicationBootstrap {
         prefersVoice: !p.usesPhone,
       };
       let familyId: string;
+      let patientId: string;
       if (own) {
         familyId = own.familyId;
-        await tx.update(members).set(patientValues).where(eq(members.id, own.patientId));
+        patientId = own.patientId;
+        await tx.update(members).set(patientValues).where(eq(members.id, patientId));
       } else {
         const [family] = await tx
           .insert(families)
           .values({ name: `Família de ${p.nickname || p.name}` })
           .returning({ id: families.id });
         familyId = family.id;
-        await tx.insert(members).values({ ...patientValues, familyId, role: 'patient' });
+        const [patient] = await tx
+          .insert(members)
+          .values({ ...patientValues, familyId, role: 'patient' })
+          .returning({ id: members.id });
+        patientId = patient.id;
+      }
+      // Her own "Aceito" in the app wins; the caregiver's declaration only fills an empty consent.
+      if (p.consent) {
+        await tx
+          .update(members)
+          .set({ consentAt: new Date(), consentSource: 'caregiver' })
+          .where(and(eq(members.id, patientId), isNull(members.consentAt)));
       }
 
       const c = input.caregiver;

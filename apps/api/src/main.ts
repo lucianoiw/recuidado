@@ -1,4 +1,6 @@
 import { NestFactory } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
 import { AppModule } from './app.module.js';
 import { corsOrigins } from './cors.js';
 import { runMigrations } from './db/migrate.js';
@@ -11,9 +13,13 @@ async function bootstrap() {
   if (process.env.DATABASE_URL) {
     await runMigrations(process.env.DATABASE_URL);
   }
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new TelemetryLogger(telemetry),
   });
+  // Traefik (Coolify) sits in front: the client IP is in X-Forwarded-For. Used by the prescription read limits.
+  app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS ?? 1));
+  // Security headers. The API only serves JSON to the web app on another origin.
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.enableCors({ origin: corsOrigins(process.env.WEB_URL) });
   app.use(accessLog(telemetry));
   app.useGlobalFilters(new TelemetryExceptionFilter(app.getHttpAdapter()));

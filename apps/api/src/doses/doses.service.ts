@@ -102,7 +102,7 @@ export class DosesService implements OnApplicationBootstrap {
 
     telemetry.capture(
       'dose_reminder_sent',
-      { dose_id: doseId, medication: dose.medicationLabel, channel: 'push', pushes_delivered: delivered, demo: dose.demo },
+      { dose_id: doseId, channel: 'push', pushes_delivered: delivered, demo: dose.demo },
       dose.patientId,
     );
     this.logger.log(`Reminder for dose ${doseId} sent (${delivered} pushes).`);
@@ -143,7 +143,6 @@ export class DosesService implements OnApplicationBootstrap {
     await this.db.update(doses).set({ familyAlertedAt: new Date() }).where(eq(doses.id, doseId));
     const props = {
       dose_id: doseId,
-      medication: dose.medicationLabel,
       minutes_since_scheduled: minutesSince(dose.scheduledAt),
       demo: dose.demo,
     };
@@ -167,7 +166,6 @@ export class DosesService implements OnApplicationBootstrap {
         {
           dose_id: doseId,
           via: 'app',
-          medication: details.medicationLabel,
           minutes_since_scheduled: minutesSince(details.scheduledAt),
           demo: details.demo,
         },

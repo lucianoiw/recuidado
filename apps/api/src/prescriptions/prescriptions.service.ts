@@ -48,7 +48,7 @@ export class PrescriptionsService {
       properties: { media_type: input.mediaType, bytes: input.data.byteLength },
     };
     try {
-      const result = await readPrescription(input, { client });
+      const result = await readPrescription(input, { client, model: this.model() });
       const latencySeconds = (performance.now() - started) / 1000;
       telemetry.llmGeneration({
         ...base,
@@ -56,7 +56,8 @@ export class PrescriptionsService {
         latencySeconds,
         inputTokens: result.usage.input_tokens,
         outputTokens: result.usage.output_tokens,
-        output: [{ role: 'assistant', content: JSON.stringify(result.reading) }],
+        // LGPD: medicine names and doses are health data and stay out of PostHog (US). Only the shape goes.
+        output: [{ role: 'assistant', content: `[leitura com ${result.reading.items.length} remédio(s)]` }],
       });
       telemetry.capture('prescription_read', {
         $ai_trace_id: traceId,
@@ -71,7 +72,7 @@ export class PrescriptionsService {
       const code = error instanceof PrescriptionReadError ? error.code : 'api_error';
       telemetry.llmGeneration({
         ...base,
-        model: DEFAULT_MODEL,
+        model: this.model(),
         latencySeconds: (performance.now() - started) / 1000,
         isError: true,
         error: String(error),
@@ -127,6 +128,11 @@ export class PrescriptionsService {
       patient.id,
     );
     return { medications: saved };
+  }
+
+  /** PRESCRIPTION_MODEL, or the reader's default model. */
+  private model(): string {
+    return this.config.get<string>('PRESCRIPTION_MODEL') || DEFAULT_MODEL;
   }
 
   private getClient(): Anthropic {

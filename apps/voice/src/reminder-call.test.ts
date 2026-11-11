@@ -134,7 +134,7 @@ test("greeting is one short line", async () => {
     { patientName: "Dona Maria", medications: [{ name: "Losartana", dose: "50 mg" }] },
     new Date("2026-11-11T02:30:00Z"),
   );
-  assert.match(g, /"Oi, Dona Maria, boa noite! Como a senhora está\?"/);
+  assert.match(g, /"Oi, Dona Maria, boa noite! É a assistente virtual da Recuidado\. Como a senhora está\?"/);
   assert.doesNotMatch(g, /Losartana/);
 });
 
