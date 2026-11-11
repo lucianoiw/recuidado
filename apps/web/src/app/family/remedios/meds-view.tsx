@@ -7,6 +7,7 @@ import {
   ChevronRightIcon,
   GiftIcon,
   PinIcon,
+  PlusIcon,
   buttonClass,
   cn,
 } from "@/components/ui";
@@ -117,7 +118,7 @@ export function MedsView() {
             <CameraIcon size={32} />
           </span>
           <b className="text-[19px]">Nenhum remédio ainda</b>
-          <p className="text-muted">Tire a foto da receita. A IA lê os remédios e os horários.</p>
+          <p className="text-muted">Adicione pela foto da receita ou um por um.</p>
         </section>
       ) : null}
 
@@ -139,9 +140,9 @@ export function MedsView() {
         />
       ) : null}
 
-      <Link href="/family/receita" className={buttonClass()}>
-        <CameraIcon size={22} />
-        {data.medications.length === 0 ? "Foto da receita" : "Receita nova"}
+      <Link href="/family/adicionar" className={buttonClass()}>
+        <PlusIcon size={22} />
+        Adicionar remédios
       </Link>
 
       {data.medications.some(isFree) ? (

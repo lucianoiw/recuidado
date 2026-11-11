@@ -131,11 +131,11 @@ export function FamilyView() {
         {data.today.length === 0 ? (
           <Card className="flex flex-col gap-3">
             <p className="text-muted">
-              Nenhuma dose hoje. Comece pela foto da receita.
+              Nenhuma dose hoje. Comece adicionando os remédios.
             </p>
-            <Link href="/family/receita" className={buttonClass()}>
+            <Link href="/family/adicionar" className={buttonClass()}>
               <CameraIcon size={22} />
-              Foto da receita
+              Adicionar remédios
             </Link>
           </Card>
         ) : (
@@ -178,16 +178,16 @@ export function FamilyView() {
       ) : null}
 
       <Link
-        href="/family/receita"
+        href="/family/adicionar"
         className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
       >
         <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
           <CameraIcon size={24} />
         </span>
         <span className="flex flex-1 flex-col">
-          <b>Receita nova</b>
+          <b>Adicionar remédios</b>
           <span className="text-[15px] text-muted">
-            Tire a foto e a IA atualiza os horários
+            Pela foto da receita ou um por um
           </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />
