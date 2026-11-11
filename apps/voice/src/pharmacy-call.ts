@@ -40,6 +40,8 @@ export interface PharmacyCallOptions {
   maxCallMs: number;
   /** If nobody speaks this long after the call is answered, the assistant opens. */
   openingWaitMs?: number;
+  /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
+  introduceAfterMs?: number;
   /** Pause between two DTMF keys. */
   keyGapMs?: number;
   /** After the answer is recorded, hang up after this much silence without a goodbye. */
@@ -99,6 +101,8 @@ export class PharmacyCall {
   /** A menu was heard and no key was pressed since. */
   private menuPending = false;
   private assistantSinceMenu = "";
+  /** The opening ("assistente virtual da Recuidado") was said or requested. */
+  private introduced = false;
   private error?: string;
   private durationSeconds?: number;
   private hangupRequested = false;
@@ -187,6 +191,9 @@ export class PharmacyCall {
         if (MENU.test(this.transcript.at(-1)?.text ?? "") && !this.answer) {
           this.menuPending = true;
           this.assistantSinceMenu = "";
+        } else if (event.delta && !this.menuPending) {
+          // A person (not a menu) is talking: the assistant must say who it is before anything else.
+          this.timers.push(setTimeout(() => this.introduceIfNeeded(), this.opts.introduceAfterMs ?? 1500));
         }
         this.checkVoicemail();
         if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(1000);
@@ -216,8 +223,23 @@ export class PharmacyCall {
     }
   }
 
+  private introduceIfNeeded() {
+    if (this.introduced || this.answer || this.hangupRequested || this.finished || this.menuPending) return;
+    const line = this.transcript.at(-1);
+    if (line && MENU.test(line.text)) return;
+    this.introduced = true;
+    this.log("person on the line and no introduction yet, introducing");
+    this.send({
+      type: "session.commentary.append",
+      event_id: `introduce_${this.opts.sessionId}`,
+      delegation_id: null,
+      content: `Say exactly this in Brazilian Portuguese now, before anything else, then listen: "${pharmacyOpening(this.opts.context)}"`,
+    });
+  }
+
   private openIfSilent() {
     if (this.heardOtherSide || this.answer || this.hangupRequested) return;
+    this.introduced = true;
     this.log("nobody spoke after answer, opening");
     this.send({
       type: "session.commentary.append",
@@ -299,6 +321,7 @@ export class PharmacyCall {
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
     this.appendTranscript("assistant", delta);
+    if (/assistente virtual/i.test(this.transcript.at(-1)?.text ?? "")) this.introduced = true;
     if (this.menuPending) {
       // The model sometimes says the option instead of delegating the key press: press it for it.
       this.assistantSinceMenu += delta;
