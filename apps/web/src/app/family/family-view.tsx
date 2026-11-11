@@ -73,7 +73,6 @@ export function FamilyView() {
   }
   const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
-  const free = data.medications.filter(isFree).length;
   const tel = telHref(data.patient);
   const unwell = data.unwellReports?.[0];
   const runningOut = data.medications.filter((m) => m.stock?.low);
@@ -249,26 +248,19 @@ export function FamilyView() {
         )}
       </section>
 
-      {data.medications.length > 0 ? (
-        <section className="grid grid-cols-2 gap-3">
-          <Card className="flex flex-col gap-0.5">
-            <span className="text-[14px] text-muted">
-              Podem sair grátis
-            </span>
-            <span className="text-[26px] font-extrabold text-brand">
-              {free} de {data.medications.length}
-            </span>
-            <span className="text-[13px] text-muted">remédios da receita</span>
-          </Card>
-          <Card className="flex flex-col gap-0.5">
-            <span className="text-[14px] text-muted">Doses hoje</span>
-            <span className="text-[26px] font-extrabold">
-              {taken} de {data.today.length}
-            </span>
-            <span className="text-[13px] text-muted">confirmadas</span>
-          </Card>
-        </section>
-      ) : null}
+      <Link
+        href="/family/avisos"
+        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+      >
+        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+          <BellIcon size={24} />
+        </span>
+        <span className="flex flex-1 flex-col">
+          <b>Histórico de avisos</b>
+          <span className="text-[15px] text-muted">Tudo que o Recuidado avisou à família</span>
+        </span>
+        <ChevronRightIcon size={20} className="text-muted" />
+      </Link>
 
       <Link
         href="/family/adicionar"
