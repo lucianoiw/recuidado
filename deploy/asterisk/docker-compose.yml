@@ -15,6 +15,8 @@ services:
       - NVOIP_SIP_USER=${NVOIP_SIP_USER}
       - NVOIP_SIP_PASSWORD=${NVOIP_SIP_PASSWORD}
       - CALL_ALLOWED_NUMBERS=${CALL_ALLOWED_NUMBERS}
+      # Optional: enables AMI on 5038 (private networks only) for recuidado/voice. Same value as ASTERISK_AMI_SECRET there.
+      - AMI_SECRET=${AMI_SECRET:-}
       - ACME_JSON=/acme/acme.json
     volumes:
       # Certificate Traefik (Coolify proxy) issued for SIP_DOMAIN, through the

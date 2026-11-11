@@ -1,9 +1,13 @@
 import {
   KEYPAD_TOOL_NAME,
+  MENU_KEYS,
+  OTHER_SIDE,
   PHARMACY_TOOL_NAME,
   pharmacyOpening,
+  type OtherSide,
   type PharmacyContext,
 } from "./pharmacy-prompt.js";
+import { openGate, type VoiceGate } from "./ami.js";
 import type { CallStatus, SidebandSocket, TranscriptLine } from "./reminder-call.js";
 
 export type PharmacyCallOutcome = "answered" | "unclear" | "no_answer" | "failed";
@@ -51,11 +55,31 @@ export interface PharmacyCallOptions {
   /** After the goodbye, how long to wait before hanging up. */
   goodbyeTailMs?: number;
   closeGraceMs?: number;
+  /** Mutes what the AI says to the pharmacy until the other side is a person. */
+  gate?: VoiceGate;
+  /** Silence that starts a new utterance of the other side, for the word rules. */
+  utteranceGapMs?: number;
   log?: (msg: string, extra?: unknown) => void;
   onStatusChange?: (status: CallStatus) => void;
 }
 
+/** How the other side was classified, and how long the second model took. */
+export interface Classification {
+  side: OtherSide;
+  source: "rule" | "decisions";
+  /** Decisions only: from the transcript piece it judged to the answer. */
+  latencyMs?: number;
+  /** Milliseconds since the call was answered. */
+  atMs: number;
+}
+
 const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o sinal|caixa postal|caixa de mensagens/i;
+/** A recorded hold message. "aguarde" alone is not enough: a person says it too. */
+const HOLD = /atendentes est[ãa]o ocupad|sua liga[çc][ãa]o [ée] (muito )?importante|permane[çc]a na linha|aguarde na linha|em instantes (voc[êe] )?ser[áa] atendid|continue na linha/i;
+/** A person asking to wait a moment. */
+const WAIT = /s[óo] um minut|um minutinho|s[óo] um moment|um momentinho|s[óo] um instante|um segundinho|j[áa] te atendo|aguarda? (um|s[óo]|a[íi])\b/i;
+/** A recording saying the store is closed. */
+const CLOSED = /hor[áa]rio de (atendimento|funcionamento)|estamos fechad|ligue novamente|fora do hor[áa]rio/i;
 const GOODBYE = /tchau/i;
 const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
 const KEYS = /^[0-9*#]{1,8}$/;
@@ -64,6 +88,16 @@ const MENU = /\b(tecle|digite|pressione|disque)\b/i;
 /** Menu options worth choosing, best first: prices and stock, then a person, then medicines. */
 const WANTED = [/pre[çc]o|estoque/i, /atendente|atendimento|balc[ãa]o|falar com/i, /rem[ée]dio|medicamento/i];
 const OPTION = /([^.]*?)(?:tecle|digite|pressione|disque)\s*(\d|zero|um|dois|tr[êe]s|quatro|cinco|seis|sete|oito|nove)\b/gi;
+
+/** What the other side is doing by the word rules alone, or null when no rule fits. */
+export function sideByRule(utterance: string, sinceKey: string): OtherSide | null {
+  if (VOICEMAIL.test(utterance)) return "voicemail";
+  if (CLOSED.test(utterance)) return "closed";
+  if (MENU.test(sinceKey)) return "menu";
+  if (HOLD.test(utterance)) return "hold";
+  if (WAIT.test(utterance)) return "person_wait";
+  return null;
+}
 
 /** The key for the best option of a recorded menu, or null when none fits. */
 export function menuChoice(menu: string): string | null {
@@ -140,11 +174,31 @@ export class PharmacyCall {
   private introTimer?: NodeJS.Timeout;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
+  private readonly gate: VoiceGate;
+  /** What the other side is doing now, by the word rules or the second model. */
+  private side?: OtherSide;
+  private readonly classifications: Classification[] = [];
+  private answeredAt = 0;
+  /** The other side's current utterance, for the word rules (a pause starts a new one). */
+  private utterance = "";
+  private lastInputAt = 0;
+  /** Order of the other side's transcript pieces, to drop late Decisions answers about older ones. */
+  private inputOrder = 0;
+  private utteranceStartOrder = 0;
+  private lastDecisionOrder = -1;
+  private readonly inputPieces = new Map<string, { order: number; at: number }>();
+  /** Key the second model suggests for the current menu. */
+  private suggestedKey?: string;
+  /** A person asked to wait; the AI says "Claro, eu aguardo" and is muted until they speak again. */
+  private waiting = false;
+  private waitAck = "";
+  private closed = false;
   private resolveResult!: (r: PharmacyCallResult) => void;
   readonly result: Promise<PharmacyCallResult>;
 
   constructor(private readonly opts: PharmacyCallOptions) {
     this.result = new Promise((resolve) => (this.resolveResult = resolve));
+    this.gate = opts.gate ?? openGate;
     const { socket } = opts;
     socket.on("message", (data) => this.onMessage(data));
     socket.on("close", () => {
@@ -198,7 +252,10 @@ export class PharmacyCall {
       case "transport.answered":
         this.status = "answered";
         this.answered = true;
+        this.answeredAt = Date.now();
         this.opts.onStatusChange?.("answered");
+        // Like LiveKit and Pipecat: the AI is not heard until the other side is known to be a person.
+        void this.gate.mute();
         // Pharmacies and menus usually speak first. If nobody does, open the conversation.
         this.timers.push(setTimeout(() => this.openIfSilent(), this.opts.openingWaitMs ?? 4000));
         break;
@@ -215,6 +272,7 @@ export class PharmacyCall {
       case "session.input_transcript.delta":
         if (event.delta) this.heardOtherSide = true;
         this.appendTranscript("patient", String(event.delta ?? ""));
+        this.onInputPiece(event.event_id, String(event.delta ?? ""));
         if (MENU.test(this.otherSideSinceKey()) && !this.answer) {
           if (!this.menuPending) this.assistantSinceMenu = "";
           this.menuPending = true;
@@ -238,6 +296,9 @@ export class PharmacyCall {
       case "response.event":
         this.handleResponseEvent(event.event as LiveEvent | undefined);
         break;
+      case "decision.event":
+        this.onDecision(event);
+        break;
       case "session.usage.updated": {
         const usage = event.usage as { seconds?: number } | undefined;
         if (typeof usage?.seconds === "number") this.durationSeconds = usage.seconds;
@@ -259,7 +320,7 @@ export class PharmacyCall {
 
   private chooseFromMenu() {
     if (!this.menuPending || this.answer || this.hangupRequested || this.finished) return;
-    const key = menuChoice(this.otherSideSinceKey());
+    const key = menuChoice(this.otherSideSinceKey()) ?? this.suggestedKey ?? null;
     if (!key) {
       // A word like "tecle" with no options is not a menu (often the tail of the last one): treat it as a person.
       this.log("no menu option fits, leaving it to the model");
@@ -267,7 +328,7 @@ export class PharmacyCall {
       this.introduceIfNeeded(true);
       return;
     }
-    this.log(`menu option chosen by rule: ${key}`);
+    this.log(`menu option chosen ${menuChoice(this.otherSideSinceKey()) ? "by rule" : "by the second model"}: ${key}`);
     this.sendKeys(`menu_${this.keysPressed.length}`, [key]);
   }
 
@@ -275,14 +336,18 @@ export class PharmacyCall {
     if (this.introduced || this.answer || this.hangupRequested || this.finished || this.menuPending) return;
     // Menus arrive in small pieces mixed with the assistant's words: look at everything heard since the last key.
     if (!notAMenu && MENU.test(this.otherSideSinceKey())) return;
+    // A recording or a person who asked to wait: not the moment to talk.
+    if (this.side && this.side !== "person" && this.side !== "unclear" && !(notAMenu && this.side === "menu")) return;
     this.introduced = true;
-    this.log("person on the line and no introduction yet, introducing");
-    this.send({
-      type: "session.commentary.append",
-      event_id: `introduce_${this.opts.sessionId}`,
-      delegation_id: null,
-      content: `Say exactly this in Brazilian Portuguese now, before anything else, then listen: "${pharmacyOpening(this.opts.context)}"`,
-    });
+    this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
+    void this.gate.unmute().then(() =>
+      this.send({
+        type: "session.commentary.append",
+        event_id: `introduce_${this.opts.sessionId}`,
+        delegation_id: null,
+        content: `Say exactly this in Brazilian Portuguese now, before anything else, then listen: "${pharmacyOpening(this.opts.context)}"`,
+      }),
+    );
   }
 
   /** What the other side said since the last key press (or since the start). */
@@ -298,12 +363,14 @@ export class PharmacyCall {
     if (this.heardOtherSide || this.answer || this.hangupRequested) return;
     this.introduced = true;
     this.log("nobody spoke after answer, opening");
-    this.send({
-      type: "session.commentary.append",
-      event_id: `opening_${this.opts.sessionId}`,
-      delegation_id: null,
-      content: `Say exactly this in Brazilian Portuguese, then stop and listen: "${pharmacyOpening(this.opts.context)}"`,
-    });
+    void this.gate.unmute().then(() =>
+      this.send({
+        type: "session.commentary.append",
+        event_id: `opening_${this.opts.sessionId}`,
+        delegation_id: null,
+        content: `Say exactly this in Brazilian Portuguese, then stop and listen: "${pharmacyOpening(this.opts.context)}"`,
+      }),
+    );
   }
 
   private handleResponseEvent(inner: LiveEvent | undefined) {
@@ -335,6 +402,8 @@ export class PharmacyCall {
 
   private sendKeys(id: string, digits: string[]) {
     this.menuPending = false;
+    this.suggestedKey = undefined;
+    this.startUtterance();
     this.lastKeyAt = Date.now();
     if (this.menuTimer) clearTimeout(this.menuTimer);
     this.transcriptAtKey = this.transcript.length;
@@ -389,6 +458,14 @@ export class PharmacyCall {
     if (!delta) return;
     this.appendTranscript("assistant", delta);
     if (/assistente virtual/i.test(this.transcript.at(-1)?.text ?? "")) this.introduced = true;
+    if (this.waiting && this.waitAck !== "done") {
+      this.waitAck += delta;
+      if (/aguard/i.test(this.waitAck)) {
+        this.waitAck = "done";
+        // Let "Claro, eu aguardo" finish, then the AI is not heard until the person speaks again.
+        this.timers.push(setTimeout(() => this.waiting && void this.gate.mute(), 1500));
+      }
+    }
     if (this.menuPending) {
       // The model sometimes says the option instead of delegating the key press: press it for it.
       this.assistantSinceMenu += delta;
@@ -448,6 +525,102 @@ export class PharmacyCall {
     else this.transcript.push({ speaker, text: delta });
   }
 
+  private startUtterance() {
+    this.utterance = "";
+    this.utteranceStartOrder = this.inputOrder;
+  }
+
+  /** A piece of what the other side said: word rules now (fast path); Decisions answers arrive later. */
+  private onInputPiece(eventId: string | undefined, delta: string) {
+    if (!delta) return;
+    const now = Date.now();
+    if (this.lastInputAt && now - this.lastInputAt > (this.opts.utteranceGapMs ?? 1500)) this.startUtterance();
+    this.lastInputAt = now;
+    this.inputOrder++;
+    if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
+    this.utterance += delta;
+    const side = sideByRule(this.utterance, this.otherSideSinceKey());
+    if (side) this.applySide(side, "rule");
+    else if (this.side && this.side !== "person" && this.utterance === delta) {
+      // A new utterance no rule recognizes, after a recording: whoever it is, judge it again.
+      this.applySide("unclear", "rule");
+    }
+  }
+
+  private onDecision(event: LiveEvent) {
+    const inner = event.event as { type?: string; decision?: { answers?: { name?: string; choice?: string }[] } } | undefined;
+    if (inner?.type !== "decision.completed") return;
+    const piece = this.inputPieces.get(String(event.source_event_id ?? ""));
+    const answers = inner.decision?.answers ?? [];
+    const side = answers.find((a) => a.name === "other_side")?.choice as OtherSide | undefined;
+    const key = answers.find((a) => a.name === "menu_key")?.choice;
+    const latency = piece ? Date.now() - piece.at : undefined;
+    this.log(`decision: other_side=${side ?? "?"} menu_key=${key ?? "?"}${latency !== undefined ? ` in ${latency} ms` : ""}`);
+    // Answers can arrive out of order: only the newest, and only about the current utterance.
+    if (piece && (piece.order < this.lastDecisionOrder || piece.order <= this.utteranceStartOrder)) return;
+    if (piece) this.lastDecisionOrder = piece.order;
+    if (key && key !== "none" && (MENU_KEYS as readonly string[]).includes(key)) this.suggestedKey = key;
+    if (side && (OTHER_SIDE as readonly string[]).includes(side)) this.applySide(side, "decisions", latency);
+  }
+
+  private applySide(side: OtherSide, source: Classification["source"], latencyMs?: number) {
+    if (this.answer || this.hangupRequested || this.finished) return;
+    if (side === "unclear" && source === "decisions") return;
+    const changed = side !== this.side;
+    if (changed) {
+      this.classifications.push({ side, source, latencyMs, atMs: this.answeredAt ? Date.now() - this.answeredAt : 0 });
+      this.log(`other side: ${side} (${source}${latencyMs !== undefined ? `, ${latencyMs} ms` : ""})`);
+    } else if (latencyMs !== undefined) {
+      this.classifications.push({ side, source, latencyMs, atMs: this.answeredAt ? Date.now() - this.answeredAt : 0 });
+    }
+    this.side = side;
+    if (!changed) return;
+    switch (side) {
+      case "menu":
+        void this.gate.mute();
+        if (!this.menuPending) {
+          // The second model heard a menu the words did not catch (e.g. "diga o nome do setor").
+          this.menuPending = true;
+          this.assistantSinceMenu = "";
+          if (this.menuTimer) clearTimeout(this.menuTimer);
+          this.menuTimer = setTimeout(() => this.chooseFromMenu(), this.opts.menuPauseMs ?? 1500);
+          this.timers.push(this.menuTimer);
+        }
+        break;
+      case "hold":
+        void this.gate.mute();
+        if (this.introTimer) clearTimeout(this.introTimer);
+        break;
+      case "person_wait":
+        this.waiting = true;
+        this.waitAck = "";
+        if (this.introTimer) clearTimeout(this.introTimer);
+        // Heard for "Claro, eu aguardo"; muted again once it is said.
+        void this.gate.unmute();
+        break;
+      case "person":
+        if (this.waiting) this.log("the person is back");
+        this.waiting = false;
+        void this.gate.unmute();
+        break;
+      case "closed":
+        this.closed = true;
+        this.endReason ??= "closed";
+        this.log("closed (recorded opening hours), hanging up");
+        void this.endCall();
+        break;
+      case "voicemail":
+        this.voicemail = true;
+        this.endReason ??= "voicemail";
+        this.log("voicemail, hanging up");
+        void this.endCall();
+        break;
+      case "unclear":
+        if (this.waiting) this.waiting = false;
+        break;
+    }
+  }
+
   async endCall() {
     if (this.hangupRequested || this.finished) return;
     this.hangupRequested = true;
@@ -461,7 +634,7 @@ export class PharmacyCall {
 
   private outcome(): PharmacyCallOutcome {
     if (this.answer) return "answered";
-    if (this.voicemail) return "no_answer";
+    if (this.voicemail || this.closed) return "no_answer";
     if (this.answered) return "unclear";
     return this.error ? "failed" : "no_answer";
   }
@@ -471,6 +644,15 @@ export class PharmacyCall {
     this.finished = true;
     this.status = "ended";
     for (const t of this.timers) clearTimeout(t);
+    this.gate.close?.();
+    if (this.classifications.length) {
+      const latencies = this.classifications.filter((c) => c.latencyMs !== undefined).map((c) => c.latencyMs!);
+      const median = latencies.length ? [...latencies].sort((a, b) => a - b)[Math.floor(latencies.length / 2)] : undefined;
+      this.log(
+        `classified: ${this.classifications.map((c) => `${c.side}/${c.source}@${(c.atMs / 1000).toFixed(1)}s`).join(" ")}` +
+          (median !== undefined ? ` (Decisions median ${median} ms over ${latencies.length})` : ""),
+      );
+    }
     try {
       this.opts.socket.close();
     } catch {
@@ -480,7 +662,7 @@ export class PharmacyCall {
       sessionId: this.opts.sessionId,
       outcome: this.outcome(),
       items: this.answer?.items ?? [],
-      note: this.answer?.note,
+      note: this.answer?.note ?? (this.closed ? "A farmácia estava fechada (mensagem gravada)." : undefined),
       keysPressed: [...this.keysPressed],
       transcript: this.transcript
         .map((l) => ({ ...l, text: l.text.replace(/\[[^\]]*\]/g, "").replace(/\s+/g, " ").trim() }))

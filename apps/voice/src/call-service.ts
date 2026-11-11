@@ -7,6 +7,7 @@ import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.
 import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
+import { AsteriskVoiceGate, openGate } from "./ami.js";
 
 export interface StartCallInput extends ReminderContext {
   phone: string;
@@ -120,13 +121,19 @@ export class CallService {
       throw new NumberNotAllowedError(`Pharmacy number ${destination} is not listed in CALL_ALLOWED_NUMBERS`);
     }
     const context: PharmacyContext = { medications: input.medications };
-    const sessionId = await this.live.createPharmacySipCall(destination, context);
-    this.log(`pharmacy call created ${sessionId}`);
+    const { sessionId, decisions, decisionsError } = await this.live.createPharmacySipCall(destination, context);
+    if (decisionsError) this.log(`pharmacy call: Decisions triggers rejected, calling without them: ${decisionsError}`);
+    this.log(`pharmacy call created ${sessionId} (decisions ${decisions ? "on" : "off"}, voice gate ${this.config.ami ? "on" : "off"})`);
     const socket = this.live.attach(sessionId);
+    // The dialplan keys the AI's channel by the national number (DDD + number).
+    const gate = this.config.ami
+      ? new AsteriskVoiceGate(this.config.ami, destination.replace(/^\+55/, ""), (m) => this.log(`[${sessionId}] ${m}`))
+      : openGate;
     const call = new PharmacyCall({
       sessionId,
       context,
       socket,
+      gate,
       hangup: () => this.live.hangup(sessionId),
       // Recorded menus take time: allow a bit longer than a reminder call.
       maxCallMs: Math.max(this.config.maxCallSeconds, 180) * 1000,

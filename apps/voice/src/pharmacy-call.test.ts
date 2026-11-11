@@ -1,7 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
-import { PharmacyCall, menuChoice, spokenChoice, toCents } from "./pharmacy-call.js";
+import { PharmacyCall, menuChoice, sideByRule, spokenChoice, toCents } from "./pharmacy-call.js";
+import type { VoiceGate } from "./ami.js";
+import { defaultGateway } from "./ami.js";
 import type { SidebandSocket } from "./reminder-call.js";
 import { isAllowedPharmacy } from "./call-service.js";
 import { buildPharmacyLiveInstructions, pharmacyOpening, pharmacyTool } from "./pharmacy-prompt.js";
@@ -24,13 +26,28 @@ class FakeSocket extends EventEmitter implements SidebandSocket {
 
 const context = { medications: [{ name: "Losartana", dose: "50 mg" }, { name: "Sinvastatina", dose: "20 mg" }] };
 
+class FakeGate implements VoiceGate {
+  states: string[] = [];
+  async mute() {
+    this.states.push("muted");
+  }
+  async unmute() {
+    this.states.push("heard");
+  }
+  get last() {
+    return this.states.at(-1);
+  }
+}
+
 function setup(openingWaitMs = 60_000) {
   const socket = new FakeSocket();
+  const gate = new FakeGate();
   let hangups = 0;
   const call = new PharmacyCall({
     sessionId: "live_pharmacy",
     context,
     socket,
+    gate,
     hangup: async () => {
       hangups++;
       socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested", usage: { seconds: 48 } });
@@ -44,7 +61,23 @@ function setup(openingWaitMs = 60_000) {
     goodbyeTailMs: 5,
     closeGraceMs: 5,
   });
-  return { socket, call, hangups: () => hangups };
+  return { socket, call, gate, hangups: () => hangups };
+}
+
+const tick = () => new Promise((r) => setTimeout(r, 20));
+
+function decision(id: string, source: string, side: string, key = "none") {
+  return {
+    type: "decision.event",
+    event_id: id,
+    delegation_id: null,
+    source_event_type: "session.input_transcript.delta",
+    source_event_id: source,
+    event: {
+      type: "decision.completed",
+      decision: { answers: [{ type: "choice", name: "other_side", choice: side }, { type: "choice", name: "menu_key", choice: key }] },
+    },
+  };
 }
 
 function fnCall(id: string, name: string, args: unknown) {
@@ -182,9 +215,12 @@ test("pharmacy session has no greeting input and both tools", () => {
     maxCallSeconds: 150,
     port: 0,
     voiceApiToken: "t",
+    pharmacyDecisions: true,
   } satisfies VoiceConfig;
   const req = new LiveClient(config).buildPharmacySessionRequest("+5511912345678", context);
   assert.equal("input" in req.session, false);
+  assert.equal((req.session as { triggers?: unknown[] }).triggers?.length, 1);
+  assert.equal("triggers" in new LiveClient({ ...config, pharmacyDecisions: false }).buildPharmacySessionRequest("+5511912345678", context).session, false);
   assert.deepEqual(
     req.session.delegation.responses.tools.map((t) => t.name),
     ["press_phone_keys", pharmacyTool.name],
@@ -351,4 +387,104 @@ test("a stray menu word after the key press does not block the introduction", as
   assert.match(intro[0].content, /assistente virtual/);
   await call.endCall();
   await call.result;
+});
+
+test("word rules: menu, hold, wait, closed, voicemail; a greeting is not classified", () => {
+  assert.equal(sideByRule("Para preço, tecle 2", "Para preço, tecle 2"), "menu");
+  assert.equal(sideByRule("Todos os nossos atendentes estão ocupados", ""), "hold");
+  assert.equal(sideByRule("Farmácia Teste, boa tarde. Só um minutinho, por favor", ""), "person_wait");
+  assert.equal(sideByRule("Nosso horário de atendimento é das oito às vinte e duas", ""), "closed");
+  assert.equal(sideByRule("Deixe sua mensagem após o sinal", ""), "voicemail");
+  assert.equal(sideByRule("Farmácia Teste, boa tarde.", ""), null);
+  assert.equal(sideByRule("Aguarde um pouquinho que eu vejo", ""), null);
+});
+
+test("default gateway is read from the route table", () => {
+  const table = "Iface\tDestination\tGateway\tFlags\neth0\t00000000\t0101000A\t0003\neth0\t0001000A\t00000000\t0001\n";
+  assert.equal(defaultGateway(table), "10.0.1.1");
+  assert.equal(defaultGateway(""), undefined);
+});
+
+test("the AI is muted from the answer until a person speaks, then introduces itself", async () => {
+  const { socket, gate } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  await tick();
+  assert.equal(gate.last, "muted");
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Teste, boa tarde." });
+  socket.emitEvent(decision("d1", "i1", "person"));
+  await tick();
+  assert.equal(gate.last, "heard");
+  const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.equal(intro.length, 1);
+  assert.match(intro[0].content, /assistente virtual da Recuidado/);
+});
+
+test("hold message keeps the AI muted and does not introduce", async () => {
+  const { socket, gate } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Todos os nossos atendentes estão ocupados. Por favor, aguarde na linha." });
+  await tick();
+  assert.equal(gate.last, "muted");
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+});
+
+test("a person asking to wait hears 'Claro, eu aguardo', then the AI is muted until they are back", async () => {
+  const { socket, gate } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Teste, boa tarde. Só um minutinho, por favor." });
+  await tick();
+  assert.equal(gate.last, "heard");
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Claro, eu aguardo." });
+  await new Promise((r) => setTimeout(r, 1600));
+  assert.equal(gate.last, "muted");
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Pronto, desculpa a demora." });
+  socket.emitEvent(decision("d2", "i2", "person"));
+  await tick();
+  assert.equal(gate.last, "heard");
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 1);
+});
+
+test("closed pharmacy: hangs up with no answer and a note", async () => {
+  const { socket, call, hangups } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Nosso horário de atendimento é de segunda a sábado." });
+  const result = await call.result;
+  assert.equal(hangups(), 1);
+  assert.equal(result.outcome, "no_answer");
+  assert.equal(result.endReason, "closed");
+  assert.match(result.note ?? "", /fechada/);
+});
+
+test("a menu only the second model recognizes is answered with its key", async () => {
+  const socket = new FakeSocket();
+  new PharmacyCall({
+    sessionId: "live_pharmacy",
+    context,
+    socket,
+    gate: new FakeGate(),
+    hangup: async () => {},
+    maxCallMs: 60_000,
+    openingWaitMs: 60_000,
+    introduceAfterMs: 60_000,
+    menuPauseMs: 5,
+    keyGapMs: 1,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Diga o nome do setor ou fale com a farmácia." });
+  socket.emitEvent(decision("d1", "i1", "menu", "3"));
+  await tick();
+  const keys = socket.sent.filter((e) => e.type === "transport.dtmf.send").map((e) => e.event);
+  assert.deepEqual(keys, ["3"]);
+});
+
+test("a late Decisions answer about an older utterance is ignored", async () => {
+  const { socket, gate } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Teste," });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: " boa tarde." });
+  socket.emitEvent(decision("d2", "i2", "person"));
+  socket.emitEvent(decision("d1", "i1", "hold"));
+  await tick();
+  assert.equal(gate.last, "heard");
 });

@@ -32,6 +32,8 @@ export function buildPharmacyLiveInstructions(ctx: PharmacyContext, now: Date = 
     `Your first words to a person must always be exactly: "${pharmacyOpening(ctx, now)}" Say it even if the person already started talking or already gave some answers: they must hear that you are a virtual assistant before anything else.`,
     `Medicines to ask about, in this order: ${list}.`,
     "For each medicine, find out: whether they have it in stock now, the price of one box and how many pills come in it, and whether it can be taken through Farmácia Popular there. Ask one short question at a time and only what is still missing.",
+    "If a person asks you to wait (for example \"só um minuto\", \"um momento\", \"já te atendo\"), say only \"Claro, eu aguardo.\" and then stay silent until they speak to you again.",
+    "During a hold message or hold music, stay silent.",
     "If they say the price changes or they do not give prices by phone, accept it politely and move on.",
     "Never buy, reserve or order anything, never give a name, CPF, address or phone number, and never discuss treatment or doses. If they ask for personal data, say: \"É só uma consulta de preço, obrigada.\"",
     "If they ask who is calling, say: \"Sou a assistente virtual da Recuidado, um app que ajuda famílias a cuidar dos remédios de uma pessoa idosa.\"",
@@ -101,3 +103,46 @@ export const pharmacyTool = {
     additionalProperties: false,
   },
 };
+
+/** What the other side of a pharmacy call is doing, as classified by the second model. */
+export const OTHER_SIDE = ["menu", "hold", "person", "person_wait", "closed", "voicemail", "unclear"] as const;
+export type OtherSide = (typeof OTHER_SIDE)[number];
+export const MENU_KEYS = ["none", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "#"] as const;
+
+/**
+ * GPT-Live Decisions trigger: on every piece of the other side's transcript, a second model
+ * answers what the other side is doing and, for a menu, which key to press. The call code acts on it.
+ */
+export const pharmacyTriggers = [
+  {
+    type: "decisions",
+    event_type: "session.input_transcript.delta",
+    decisions: {
+      questions: [
+        {
+          type: "choice",
+          name: "other_side",
+          instructions: [
+            "This is a phone call from a virtual assistant to a pharmacy in Brazil. Classify what the OTHER side (not the assistant) is doing in what it said most recently.",
+            "menu: a recording that lists options or asks to press a key or say an option (\"tecle\", \"digite\", \"para ... tecle 2\", \"diga o nome do setor\").",
+            "hold: a recording or music asking to wait in line (\"aguarde\", \"todos os atendentes estão ocupados\", \"sua ligação é importante\").",
+            "person: a live person talking: a greeting with the store name, an answer, a question.",
+            "person_wait: a live person asking to wait a moment (\"só um minuto\", \"um momento\", \"já te atendo\", \"aguarda aí\").",
+            "closed: a recording saying the store is closed or giving opening hours.",
+            "voicemail: a recording asking to leave a message.",
+            "unclear: too little to tell.",
+            "A recording sounds formal and complete and does not react to the assistant. A person reacts, hesitates and uses informal words.",
+          ].join(" "),
+          choices: OTHER_SIDE.map((value) => ({ value })),
+        },
+        {
+          type: "choice",
+          name: "menu_key",
+          instructions:
+            "Only when the other side is a recorded menu that asks to press keys: the key whose option best leads to medicine price or stock; if none, to an attendant or the pharmacy counter; if none, to medicines. Otherwise none. Never a key that asks for personal data.",
+          choices: MENU_KEYS.map((value) => ({ value })),
+        },
+      ],
+    },
+  },
+];

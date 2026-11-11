@@ -14,6 +14,7 @@ import {
   buildPharmacyLiveInstructions,
   keypadTool,
   pharmacyTool,
+  pharmacyTriggers,
   type PharmacyContext,
 } from "./pharmacy-prompt.js";
 
@@ -94,12 +95,13 @@ export class LiveClient {
   }
 
   /** A call to a pharmacy: no greeting input, the other side speaks first. Two tools: keypad and answer. */
-  buildPharmacySessionRequest(destination: string, ctx: PharmacyContext) {
+  buildPharmacySessionRequest(destination: string, ctx: PharmacyContext, decisions = this.config.pharmacyDecisions) {
     return {
       session: {
         model: this.config.liveModel,
         instructions: buildPharmacyLiveInstructions(ctx),
         audio: { output: { voice: this.config.liveVoice } },
+        ...(decisions ? { triggers: pharmacyTriggers } : {}),
         delegation: {
           type: "responses",
           responses: {
@@ -132,9 +134,21 @@ export class LiveClient {
     return this.createSession(this.buildAlertSessionRequest(destination, message));
   }
 
-  /** Places a call to a pharmacy. Not idempotent, like createSipCall. */
-  createPharmacySipCall(destination: string, ctx: PharmacyContext): Promise<string> {
-    return this.createSession(this.buildPharmacySessionRequest(destination, ctx));
+  /**
+   * Places a call to a pharmacy. Not idempotent, like createSipCall. If the API rejects the
+   * Decisions triggers (400 places no call), retries once without them: the word rules still work.
+   */
+  async createPharmacySipCall(destination: string, ctx: PharmacyContext): Promise<{ sessionId: string; decisions: boolean; decisionsError?: string }> {
+    const decisions = this.config.pharmacyDecisions;
+    try {
+      return { sessionId: await this.createSession(this.buildPharmacySessionRequest(destination, ctx, decisions)), decisions };
+    } catch (err) {
+      if (decisions && err instanceof LiveApiError && err.status === 400 && /trigger|decision/i.test(err.body)) {
+        const sessionId = await this.createSession(this.buildPharmacySessionRequest(destination, ctx, false));
+        return { sessionId, decisions: false, decisionsError: err.body.slice(0, 500) };
+      }
+      throw err;
+    }
   }
 
   /**
