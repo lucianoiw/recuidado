@@ -28,11 +28,13 @@ mkdir -p "$KEYS"
 
 if [ -n "${ACME_JSON:-}" ] && [ -f "$ACME_JSON" ]; then
   # Reuse the Let's Encrypt certificate that Traefik (Coolify proxy) issued for SIP_DOMAIN.
-  FILTER='[.. | objects | select(has("certificates")) | .certificates[]? | select(.domain.main == $d)][0]'
+  # Traefik stores them as {"<resolver>": {"Certificates": [{"domain": {"main", "sans"}, "certificate", "key"}]}}.
+  FILTER='[.. | objects | (.Certificates? // .certificates? // empty) | .[]? | select(.domain.main == $d or ((.domain.sans // []) | index($d)))][0]'
   CERT=$(jq -r --arg d "$SIP_DOMAIN" "$FILTER.certificate // empty" "$ACME_JSON")
   KEY=$(jq -r --arg d "$SIP_DOMAIN" "$FILTER.key // empty" "$ACME_JSON")
   if [ -z "$CERT" ] || [ -z "$KEY" ]; then
-    echo "No certificate for $SIP_DOMAIN in $ACME_JSON. Give the domain to an HTTP service in Coolify first." >&2
+    echo "No certificate for $SIP_DOMAIN in $ACME_JSON yet. Give the domain to an HTTP service in Coolify; retrying in 60s." >&2
+    sleep 60
     exit 1
   fi
   echo "$CERT" | base64 -d > "$KEYS/sip.crt"
