@@ -21,6 +21,7 @@ Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração us
 - **Ligação de voz de verdade.** Sem confirmação, a IA liga para o telefone dela pela rede telefônica comum, pergunta se tomou e como ela está. Não precisa de app nem de internet do lado dela.
 - **Família avisada.** Sem confirmação, ou se ela disser que não está bem, os filhos recebem o aviso na hora.
 - **O que é grátis e onde.** Cada remédio é cruzado com a lista do Farmácia Popular, com o REMUME das UBS de São Paulo e com o Alto Custo, e a família vê as farmácias credenciadas mais perto.
+- **MCP para qualquer assistente de IA.** Claude, ChatGPT ou outro agente consulta o plano, as doses e os avisos da família por conversa. Ver [Servidor MCP](#servidor-mcp).
 - **Monitoria completa.** Logs, erros, eventos, traces da IA e replay das telas em um só lugar (PostHog).
 
 ## Impacto
@@ -49,6 +50,7 @@ flowchart LR
     W[apps/web<br/>Next.js 16 PWA]
     A[apps/api<br/>NestJS 12]
     V[apps/voice<br/>agente de voz]
+    X[apps/mcp<br/>servidor MCP]
     K[Asterisk<br/>ponte SIP]
     P[(PostgreSQL)]
     R[(Redis<br/>fila BullMQ)]
@@ -62,6 +64,8 @@ flowchart LR
   end
 
   F --> W
+  F -- assistente de IA --> X
+  X --> A
   M --> W
   W --> A
   A --> P
@@ -84,9 +88,39 @@ flowchart LR
 | `apps/web` | App instalável (PWA). A família cadastra a Dona Maria, lê a receita e acompanha as doses. A Dona Maria vê o remédio da hora e confirma com um toque. | Next.js 16, React 19, Tailwind 4, Web Push |
 | `apps/api` | Família, remédios, doses, leitura de receita e escalonamento. Agenda lembrete, ligação e aviso em uma fila. | NestJS 12, PostgreSQL, Drizzle, Redis, BullMQ |
 | `apps/voice` | Liga para a Dona Maria, conversa por voz e devolve o resultado para a API. | OpenAI GPT-Live por SIP, Asterisk, Nvoip |
+| `apps/mcp` | Servidor MCP sobre a API: qualquer assistente de IA consulta o plano, as doses, os avisos e onde o remédio é grátis. | MCP TypeScript SDK v2, Streamable HTTP |
 | `packages/prescription-reader` | Leitura de receita (inclusive manuscrita) com saída estruturada. | Claude Opus 5.5 |
 | `packages/data` | Coleta e cruzamento de dados públicos de remédios e farmácias. | Scripts Node, Firecrawl |
 | `packages/telemetry` | Eventos, erros, traces de IA e exportação de logs para o PostHog. | posthog-node, OTLP |
+
+## Servidor MCP
+
+Endereço: `https://mcp.recuidado.com.br/mcp` (Streamable HTTP, sem login). Sem `familyId`, usa a família de demonstração.
+
+| Ferramenta | O que faz |
+| --- | --- |
+| `get_care_plan` | Remédios, horários, onde cada um é grátis (Farmácia Popular, UBS), Alto Custo, custo do mês e comprimidos restantes |
+| `get_today_doses` | Doses de hoje: tomada, pendente ou perdida, como foi confirmada e se a família foi avisada |
+| `confirm_dose` | Marca uma dose de hoje como tomada, igual ao botão "Tomei" |
+| `list_family_alerts` | Avisos enviados à família: dose não confirmada, não está bem, remédio acabando |
+| `find_free_medicine` | Busca um remédio e diz, por dosagem, onde é grátis e se entra no Alto Custo |
+
+O telefone nunca sai nas respostas, e o servidor não dá conselho clínico. Detalhes em [apps/mcp/README.md](apps/mcp/README.md).
+
+**Como conectar.** No Claude: Configurações, Conectores, Adicionar conector personalizado, URL acima. No Claude Code: `claude mcp add --transport http recuidado https://mcp.recuidado.com.br/mcp`.
+
+**Casos de uso**
+
+1. **Pergunta rápida no celular.** O filho pergunta ao Claude ou ao ChatGPT, por texto ou voz, até dirigindo: "a mãe tomou o remédio da pressão hoje?".
+2. **Resumo automático.** Uma tarefa agendada no assistente, todo dia às 21h: "como foram as doses da mãe hoje e teve algum aviso?". O resumo chega sem abrir o app.
+3. **Na consulta médica.** "Liste os remédios e horários da minha mãe." O assistente monta a lista para mostrar ao médico.
+4. **Receita nova ou balcão da farmácia.** "Atorvastatina 20 mg é grátis?" A resposta diz se é grátis no Farmácia Popular, na UBS ou se entra no Alto Custo.
+5. **Ela ligou e disse que tomou.** "Marca que ela tomou o das 8." A dose é confirmada e a ligação e o aviso daquela dose são cancelados.
+6. **Agenda.** "Coloque os horários de remédio da mãe no meu Google Agenda." O assistente lê o Recuidado e grava na agenda do filho.
+7. **Lista de compras.** "O que está acabando?" O que estiver acabando vai para a lista no Notion, no Todoist ou nas notas.
+8. **Grupo da família.** O assistente escreve o resumo da semana para os irmãos, e o filho só envia.
+
+Os casos 6 a 8 usam o conector do Recuidado junto com outro conector do mesmo assistente (agenda, notas). O Recuidado não acessa esses serviços.
 
 ## Fluxo de uma dose
 
@@ -175,7 +209,7 @@ pnpm lint && pnpm test && pnpm build
 
 ## Deploy
 
-No Coolify, com um recurso para cada parte (web, api, voz, Asterisk, Postgres e Redis). Cada push na `main` faz o deploy automático. Os detalhes estão em [deploy/README.md](deploy/README.md).
+No Coolify, com um recurso para cada parte (web, api, voz, MCP, Asterisk, Postgres e Redis). Cada push na `main` faz o deploy automático. Os detalhes estão em [deploy/README.md](deploy/README.md).
 
 ## Licença
 
