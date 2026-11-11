@@ -28,18 +28,24 @@ const STATIC: Record<string, [file: string, type: string]> = {
   "/apple-touch-icon.png": ["icon-192.png", "image/png"],
 };
 
-/** The whole MCP service as one fetch handler: icons, OAuth, discovery documents and /mcp behind a bearer token. */
+/** The whole MCP service as one fetch handler: icons, OAuth, discovery documents and the MCP endpoint (/ and /mcp) behind a bearer token. */
 export function createApp({ api, publicUrl, authSecret, onToolCall, publicDir }: AppOptions) {
   const auth = new Auth(publicUrl, authSecret, api);
-  const resourceMetadataUrl = getOAuthProtectedResourceMetadataUrl(auth.resource);
-  const metadataOptions = {
-    oauthMetadata: auth.metadata(),
-    resourceServerUrl: auth.resource,
-    resourceName: "Recuidado",
-    scopesSupported: ["family"],
-    dangerouslyAllowInsecureIssuerUrl: auth.issuer.protocol === "http:",
-  };
-  const gate = requireBearerAuth({ verifier: auth, resourceMetadataUrl, expectedResource: auth.resource });
+  // Served at the root (like most remote MCP servers) and at /mcp (the first published URL). Same tokens on both.
+  const endpoints = [new URL("/", auth.issuer), auth.resource].map((resource) => {
+    const resourceMetadataUrl = getOAuthProtectedResourceMetadataUrl(resource);
+    return {
+      path: resource.pathname,
+      metadata: {
+        oauthMetadata: auth.metadata(),
+        resourceServerUrl: resource,
+        resourceName: "Recuidado",
+        scopesSupported: ["family"],
+        dangerouslyAllowInsecureIssuerUrl: auth.issuer.protocol === "http:",
+      },
+      gate: requireBearerAuth({ verifier: auth, resourceMetadataUrl }),
+    };
+  });
   const mcp = createMcpHandler(({ authInfo }) =>
     createRecuidadoServer(api, (authInfo?.extra?.familyId as LinkedFamily | undefined) ?? null, onToolCall),
   );
@@ -55,15 +61,19 @@ export function createApp({ api, publicUrl, authSecret, onToolCall, publicDir }:
         headers: { "content-type": file.type, "cache-control": "public, max-age=86400" },
       });
     }
-    if (pathname === "/" && request.method === "GET") {
-      return new Response(homePage(auth.resource.href), { headers: { "content-type": "text/html; charset=utf-8" } });
+    const wantsPage = request.method === "GET" && (request.headers.get("accept") ?? "").includes("text/html");
+    if (pathname === "/" && wantsPage) {
+      return new Response(homePage(auth.issuer.href.replace(/\/$/, "")), { headers: { "content-type": "text/html; charset=utf-8" } });
     }
-    const discovery = oauthMetadataResponse(request, metadataOptions);
-    if (discovery) return discovery;
+    for (const endpoint of endpoints) {
+      const discovery = oauthMetadataResponse(request, endpoint.metadata);
+      if (discovery) return discovery;
+    }
     const authResponse = await auth.handle(request);
     if (authResponse) return authResponse;
-    if (pathname === "/mcp") {
-      const authInfo = await gate(request);
+    const endpoint = endpoints.find((e) => e.path === pathname);
+    if (endpoint) {
+      const authInfo = await endpoint.gate(request);
       if (authInfo instanceof Response) return authInfo;
       return mcp.fetch(request, { authInfo });
     }

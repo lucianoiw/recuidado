@@ -84,10 +84,10 @@ async function tokenFor(app: (r: Request) => Promise<Response>, form: Record<str
   return { tokens: (await res.json()) as { access_token: string; refresh_token: string }, client_id };
 }
 
-async function mcpClient(app: (r: Request) => Promise<Response>, token: string) {
+async function mcpClient(app: (r: Request) => Promise<Response>, token: string, path = "/mcp") {
   const client = new Client({ name: "test", version: "1" });
   await client.connect(
-    new StreamableHTTPClientTransport(new URL("/mcp", ORIGIN), {
+    new StreamableHTTPClientTransport(new URL(path, ORIGIN), {
       fetch: (input, init) => {
         const req = new Request(input, init);
         req.headers.set("authorization", `Bearer ${token}`);
@@ -108,6 +108,22 @@ describe("MCP login", () => {
     expect(prm.authorization_servers).toEqual([`${ORIGIN}/`]);
     const as = await (await call(app, "/.well-known/oauth-authorization-server")).json();
     expect(as.registration_endpoint).toBe(`${ORIGIN}/register`);
+  });
+
+  it("also serves MCP at the root, with its own discovery document", async () => {
+    const { app, seen } = makeApp();
+    const res = await call(app, "/", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+    expect(res.status).toBe(401);
+    expect(res.headers.get("www-authenticate")).toContain(`${ORIGIN}/.well-known/oauth-protected-resource"`);
+    const prm = await (await call(app, "/.well-known/oauth-protected-resource")).json();
+    expect(prm.resource).toBe(`${ORIGIN}/`);
+    const page = await call(app, "/", { headers: { accept: "text/html" } });
+    expect(page.headers.get("content-type")).toContain("text/html");
+    const { tokens } = await tokenFor(app, { action: "demo" });
+    const client = await mcpClient(app, tokens.access_token, "/");
+    await client.callTool({ name: "get_care_plan", arguments: {} });
+    expect(seen.at(-1)).toBe("/family");
+    await client.close();
   });
 
   it("links the demo family with one tap on Autorizar", async () => {
