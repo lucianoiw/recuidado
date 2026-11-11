@@ -265,7 +265,7 @@ export class VoiceCallService {
 
   /** She told the assistant it would call back: queue that call (EMERGENCY_CHECKIN_MINUTES). */
   private async scheduleCheckIn(doseId: string): Promise<void> {
-    const minutes = this.config.get<number>('EMERGENCY_CHECKIN_MINUTES') ?? 2;
+    const minutes = this.config.get<number>('EMERGENCY_CHECKIN_MINUTES') ?? 10;
     await this.queue.add(
       'check-in',
       { kind: 'check-in', doseId },
