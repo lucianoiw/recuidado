@@ -2,12 +2,28 @@
  * Runs the reader on every synthetic fixture and compares the fields the rest of
  * Recuidado depends on (match_key, schedule, as-needed, monthly units).
  * Calls the Claude API: needs ANTHROPIC_API_KEY and costs a few cents per run.
+ *
+ * With `--api <url>` (or EVAL_API_URL) it posts each image to
+ * `<url>/prescriptions/parse` instead, so no local key is needed.
  */
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadPrescriptionFile, readPrescription } from "../src/index.ts";
+import { loadPrescriptionFile, readPrescription, type ReadPrescriptionResult } from "../src/index.ts";
 import type { NormalizedItem } from "../src/normalize.ts";
+
+const apiFlag = process.argv.indexOf("--api");
+const apiUrl = (apiFlag >= 0 ? process.argv[apiFlag + 1] : process.env.EVAL_API_URL)?.replace(/\/$/, "");
+
+async function read(path: string): Promise<ReadPrescriptionResult> {
+  const input = await loadPrescriptionFile(path);
+  if (!apiUrl) return readPrescription(input);
+  const form = new FormData();
+  form.append("file", new Blob([new Uint8Array(input.data)], { type: input.mediaType }), path.split("/").pop());
+  const response = await fetch(`${apiUrl}/prescriptions/parse`, { method: "POST", body: form });
+  if (!response.ok) throw new Error(`${response.status} ${await response.text()}`);
+  return (await response.json()) as ReadPrescriptionResult;
+}
 
 interface ExpectedItem {
   match_key: string[];
@@ -55,7 +71,7 @@ let outputTokens = 0;
 
 for (const [file, want] of Object.entries(expected)) {
   const started = Date.now();
-  const { reading, usage, model } = await readPrescription(await loadPrescriptionFile(join(fixturesDir, file)));
+  const { reading, usage, model } = await read(join(fixturesDir, file));
   inputTokens += usage.input_tokens;
   outputTokens += usage.output_tokens;
 
