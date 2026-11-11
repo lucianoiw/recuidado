@@ -11,7 +11,9 @@ import type { Queue } from 'bullmq';
 import { and, asc, eq, gte, lt, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, medications, members } from '../db/schema.js';
+import { AlertsService } from '../alerts/alerts.service.js';
 import { PushService } from '../push/push.service.js';
+import { StockService } from '../stock/stock.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from './doses.queue.js';
 import { localDate, localDateTime, localTime, minutesSince, upcomingDoseTimes } from './time.js';
@@ -26,6 +28,8 @@ export class DosesService implements OnApplicationBootstrap {
     @Inject(DB) private readonly db: Database,
     @InjectQueue(DOSES_QUEUE) private readonly queue: Queue<DoseJob>,
     private readonly push: PushService,
+    private readonly alerts: AlertsService,
+    private readonly stock: StockService,
     private readonly config: ConfigService,
   ) {}
 
@@ -129,19 +133,13 @@ export class DosesService implements OnApplicationBootstrap {
       .set({ status: 'missed' })
       .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
 
-    const caregivers = await this.db
-      .select({ id: members.id })
-      .from(members)
-      .where(and(eq(members.familyId, dose.familyId), eq(members.role, 'caregiver')));
-    const sent = await this.push.sendToMembers(
-      caregivers.map((c) => c.id),
-      {
-        title: `${dose.patientName} não confirmou o remédio`,
-        body: `${dose.medicationLabel} das ${localTime(dose.scheduledAt)}. Vale ligar para ela.`,
-        url: '/family',
-        doseId,
-      },
-    );
+    const { caregivers, sent } = await this.alerts.notifyCaregivers(dose.familyId, {
+      kind: 'dose_missed',
+      title: `${dose.patientName} não confirmou o remédio`,
+      body: `${dose.medicationLabel} das ${localTime(dose.scheduledAt)}. Vale ligar para ela.`,
+      url: '/family',
+      doseId,
+    });
     await this.db.update(doses).set({ familyAlertedAt: new Date() }).where(eq(doses.id, doseId));
     const props = {
       dose_id: doseId,
@@ -150,7 +148,7 @@ export class DosesService implements OnApplicationBootstrap {
       demo: dose.demo,
     };
     telemetry.capture('dose_missed', props, dose.patientId);
-    telemetry.capture('family_alerted', { ...props, caregivers: caregivers.length, pushes_delivered: sent }, dose.patientId);
+    telemetry.capture('family_alerted', { ...props, caregivers, pushes_delivered: sent }, dose.patientId);
     this.logger.log(`Family alerted for dose ${doseId} (${sent} pushes).`);
   }
 
@@ -179,6 +177,17 @@ export class DosesService implements OnApplicationBootstrap {
     this.logger.log(`Dose ${doseId} confirmed in the app.`);
     for (const kind of ['call', 'alert-family'] as const) {
       await (await this.queue.getJob(doseJobId(kind, doseId)))?.remove();
+    }
+    await this.checkStock(doseId);
+  }
+
+  /** Low stock alert after a confirmed dose. Never fails the confirmation. */
+  async checkStock(doseId: string): Promise<void> {
+    try {
+      await this.stock.checkAfterDose(doseId);
+    } catch (error) {
+      telemetry.captureException(error, { step: 'low_stock_check', dose_id: doseId });
+      this.logger.error(`Low stock check for dose ${doseId} failed: ${String(error)}`);
     }
   }
 

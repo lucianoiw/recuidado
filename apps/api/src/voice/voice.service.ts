@@ -12,7 +12,8 @@ import { and, eq, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
-import { PushService } from '../push/push.service.js';
+import { AlertsService } from '../alerts/alerts.service.js';
+import { StockService } from '../stock/stock.service.js';
 import { minutesSince } from '../doses/time.js';
 import { telemetry } from '../telemetry/telemetry.js';
 
@@ -39,7 +40,8 @@ export class VoiceCallService {
     @Inject(DB) private readonly db: Database,
     @InjectQueue(DOSES_QUEUE) private readonly queue: Queue<DoseJob>,
     private readonly config: ConfigService,
-    private readonly push: PushService,
+    private readonly alerts: AlertsService,
+    private readonly stock: StockService,
   ) {}
 
   /** Asks apps/voice to call the patient. Does nothing if the dose is no longer pending. */
@@ -131,6 +133,11 @@ export class VoiceCallService {
         .set({ status: 'taken', confirmedVia: 'voice', confirmedAt: new Date() })
         .where(eq(doses.id, doseId));
       await (await this.queue.getJob(alertJobId(doseId)))?.remove();
+      try {
+        await this.stock.checkAfterDose(doseId);
+      } catch (error) {
+        telemetry.captureException(error, { step: 'low_stock_check', dose_id: doseId });
+      }
       return 'taken';
     }
 
@@ -168,21 +175,20 @@ export class VoiceCallService {
   /** She said she is not well: tell the caregivers right away, with her words. */
   private async alertUnwell(doseId: string, note?: string | null): Promise<void> {
     const [row] = await this.db
-      .select({ patientName: members.name, familyId: members.familyId })
+      .select({ patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
       .where(eq(doses.id, doseId));
     if (!row) return;
-    const caregivers = await this.db
-      .select({ id: members.id })
-      .from(members)
-      .where(and(eq(members.familyId, row.familyId), eq(members.role, 'caregiver')));
     const said = note?.trim() ? `Ela disse: "${note.trim()}".` : 'Ela disse que não está bem.';
-    const sent = await this.push.sendToMembers(
-      caregivers.map((c) => c.id),
-      { title: `${row.patientName} não está se sentindo bem`, body: `${said} Vale ligar para ela.`, url: '/family', doseId },
-    );
+    const { sent } = await this.alerts.notifyCaregivers(row.familyId, {
+      kind: 'unwell',
+      title: `${row.patientName} não está se sentindo bem`,
+      body: `${said} Vale ligar para ela.`,
+      url: '/family',
+      doseId,
+    });
     this.logger.log(`Dose ${doseId}: patient reported feeling unwell; ${sent} pushes sent.`);
   }
 

@@ -78,12 +78,22 @@ export const buyChoiceBody = z.object({ buy: z.boolean() });
 
 const clock = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Horário no formato 08:00.');
 
-/** Family edits a medication: dose text and/or times of day. */
+/** Pills at home, as counted by the family. */
+export const stockUnits = z
+  .number('Informe quantos comprimidos.')
+  .int('Só números inteiros.')
+  .min(0, 'Não pode ser negativo.')
+  .max(1000, 'No máximo 1000.');
+
+/** Family edits a medication: dose text, times of day and/or pills at home (null clears the count). */
 export const medicationUpdateBody = z
   .object({
     strength: z.string().trim().max(60).nullable().optional(),
     times: z.array(clock).min(1, 'Pelo menos um horário.').max(6).optional(),
+    stockUnits: stockUnits.nullable().optional(),
   })
-  .refine((b) => b.strength !== undefined || b.times !== undefined, { message: 'Nada para mudar.' });
+  .refine((b) => b.strength !== undefined || b.times !== undefined || b.stockUnits !== undefined, {
+    message: 'Nada para mudar.',
+  });
 
 export type MedicationUpdateBody = z.infer<typeof medicationUpdateBody>;

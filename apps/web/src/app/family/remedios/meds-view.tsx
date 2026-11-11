@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
+  AlertIcon,
   CameraIcon,
   CartIcon,
   ChevronRightIcon,
@@ -17,6 +18,7 @@ import { EditMedSheet } from "@/components/edit-med-sheet";
 import { FreeOrBuy } from "@/components/free-or-buy";
 import { callName, isFree, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
+import { stockText } from "@/lib/stock";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
 function freeWhere(m: Medication): string | null {
@@ -52,6 +54,16 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           <span className="text-[14px] font-bold text-warn">
             Pode ser grátis no Alto Custo, com laudo do médico
           </span>
+        ) : null}
+        {m.stock?.low ? (
+          <span className="flex items-center gap-1.5 text-[15px] font-bold text-warn">
+            <AlertIcon size={16} strokeWidth={2.4} className="shrink-0" />
+            Acabando: {stockText(m.stock)}
+          </span>
+        ) : m.stock ? (
+          <span className="text-[15px] text-muted">Em casa: {stockText(m.stock)}</span>
+        ) : m.times.length > 0 ? (
+          <span className="text-[14px] text-muted">Quantos comprimidos tem em casa? Toque para contar.</span>
         ) : null}
         {!isFree(m) ? (
           <span className="text-[15px] font-bold">

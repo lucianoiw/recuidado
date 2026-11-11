@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { StockField } from "@/components/stock-field";
 import { TimeChips } from "@/components/time-chips";
 import { Button, Field, InfoIcon, Sheet } from "@/components/ui";
 import { removeMedication, updateMedication, type Medication } from "@/lib/api";
+import { parseUnits } from "@/lib/stock";
 import { medLabel } from "@/lib/use-family";
 
-/** Change the dose text or the times of a medication, or stop it. */
+/** Change the dose text, the times or the pills at home of a medication, or stop it. */
 export function EditMedSheet({
   med,
   onClose,
@@ -26,6 +28,9 @@ export function EditMedSheet({
 function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => void; onSaved: () => void }) {
   const [strength, setStrength] = useState(med.strength ?? "");
   const [times, setTimes] = useState<string[]>(med.times);
+  const initialUnits = med.stock ? String(med.stock.units) : "";
+  const [units, setUnits] = useState(initialUnits);
+  const parsedUnits = parseUnits(units);
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +80,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         <span className="text-[15px] font-bold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
       </div>
+      <StockField value={units} onValue={setUnits} invalid={parsedUnits === undefined} />
       <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
         <InfoIcon size={18} className="mt-0.5 shrink-0" />
         Mude a dose, o horário ou pare o remédio só com orientação do médico.
@@ -86,8 +92,17 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
       ) : null}
       <div className="flex flex-col gap-1.5">
         <Button
-          disabled={busy || times.length === 0}
-          onClick={() => run(() => updateMedication(med.id, { strength: strength.trim() || null, times }))}
+          disabled={busy || times.length === 0 || parsedUnits === undefined}
+          onClick={() =>
+            run(() =>
+              updateMedication(med.id, {
+                strength: strength.trim() || null,
+                times,
+                // Only when changed: saving the count again restarts it from now.
+                ...(units.trim() !== initialUnits ? { stockUnits: parsedUnits } : {}),
+              }),
+            )
+          }
         >
           {busy ? "Salvando..." : "Salvar mudanças"}
         </Button>

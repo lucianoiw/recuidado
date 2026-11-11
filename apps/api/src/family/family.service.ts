@@ -3,7 +3,9 @@ import { findFreeAccess, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
+import { AlertsService } from '../alerts/alerts.service.js';
 import { DosesService } from '../doses/doses.service.js';
+import { StockService } from '../stock/stock.service.js';
 import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
@@ -16,6 +18,8 @@ export class FamilyService implements OnApplicationBootstrap {
   constructor(
     @Inject(DB) private readonly db: Database,
     private readonly doses: DosesService,
+    private readonly stock: StockService,
+    private readonly alerts: AlertsService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -80,17 +84,21 @@ export class FamilyService implements OnApplicationBootstrap {
         freeInFarmaciaPopular: medications.freeInFarmaciaPopular,
         monthlyCostCents: medications.monthlyCostCents,
         buyInsteadOfFree: medications.buyInsteadOfFree,
+        stockUnits: medications.stockUnits,
       })
       .from(medications)
       .where(eq(medications.patientId, patientId))
       .orderBy(asc(medications.createdAt));
+    const stock = await this.stock.statusFor(meds);
     return {
       familyId,
       patient: people.find((p) => p.id === patientId)!,
       caregivers: people.filter((p) => p.role === 'caregiver'),
-      medications: meds.map(({ activeIngredient, ...med }) => ({
+      medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => ({
         ...med,
         ...freeAccessOf(activeIngredient ?? med.name, med.strength),
+        // Pills left and days they last; null when the family has not counted them.
+        stock: stock.get(med.id) ?? null,
       })),
       today: await this.doses.listForDay(patientId),
       unwellReports: await this.unwellReports(patientId, now),
@@ -114,18 +122,31 @@ export class FamilyService implements OnApplicationBootstrap {
       .orderBy(desc(voiceCalls.createdAt));
   }
 
-  /** Family changes the dose text or the times. New times replace the pending future doses. */
+  /** Alerts sent to the caregivers, newest first. */
+  async alertHistory() {
+    const { familyId } = await this.ensureDemoFamily();
+    return this.alerts.list(familyId);
+  }
+
+  /**
+   * Family changes the dose text, the times or the pills at home.
+   * New times replace the pending future doses.
+   */
   async updateMedication(medicationId: string, input: MedicationUpdateBody, now = new Date()): Promise<void> {
     const { patientId } = await this.ensureDemoFamily();
+    const changes = {
+      ...(input.strength !== undefined ? { strength: input.strength || null } : {}),
+      ...(input.times !== undefined ? { times: [...new Set(input.times)].sort() } : {}),
+    };
     const [row] = await this.db
-      .update(medications)
-      .set({
-        ...(input.strength !== undefined ? { strength: input.strength || null } : {}),
-        ...(input.times !== undefined ? { times: [...new Set(input.times)].sort() } : {}),
-      })
-      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
-      .returning({ id: medications.id });
+      .select({ id: medications.id })
+      .from(medications)
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)));
     if (!row) throw new NotFoundException('Remédio não encontrado.');
+    if (Object.keys(changes).length > 0) {
+      await this.db.update(medications).set(changes).where(eq(medications.id, medicationId));
+    }
+    if (input.stockUnits !== undefined) await this.stock.setCount(medicationId, input.stockUnits, now);
     if (input.times !== undefined) {
       // Queued jobs of removed doses find no dose and do nothing.
       await this.db

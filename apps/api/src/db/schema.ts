@@ -64,6 +64,11 @@ export const medications = pgTable('medications', {
   monthlyCostCents: integer().notNull().default(0),
   // The family chose to buy it even though it is free in Farmácia Popular.
   buyInsteadOfFree: boolean().notNull().default(false),
+  // Pills at home when the family last counted (null = not told). One pill per dose time.
+  stockUnits: integer(),
+  stockCountedAt: timestamp({ withTimezone: true }),
+  // Set when the family was told it is running out; cleared when the stock is counted again.
+  lowStockAlertedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -133,4 +138,21 @@ export const costShares = pgTable('cost_shares', {
   month: text().notNull(),
   amountCents: integer().notNull(),
   paidAt: timestamp({ withTimezone: true }),
+});
+
+export const alertKind = pgEnum('alert_kind', ['dose_missed', 'unwell', 'low_stock']);
+
+// Every alert sent to the caregivers, for the history screen of the family app.
+export const alerts = pgTable('alerts', {
+  id: uuid().primaryKey().defaultRandom(),
+  familyId: uuid()
+    .notNull()
+    .references(() => families.id, { onDelete: 'cascade' }),
+  kind: alertKind().notNull(),
+  title: text().notNull(),
+  body: text().notNull(),
+  doseId: uuid().references(() => doses.id, { onDelete: 'set null' }),
+  medicationId: uuid().references(() => medications.id, { onDelete: 'set null' }),
+  pushesDelivered: integer().notNull().default(0),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });

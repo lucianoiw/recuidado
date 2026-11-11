@@ -20,6 +20,8 @@ export const confirmPrescriptionBody = z.object({
         strength: optionalText,
         // Empty for as-needed medicines: they are saved without reminders.
         times: z.array(time).max(12),
+        // Pills at home, when the family knows. Feeds the "remédio acabando" alert.
+        stockUnits: z.number().int().min(0).max(1000).nullish(),
       }),
     )
     .min(1, 'Confirme ao menos um remédio.')

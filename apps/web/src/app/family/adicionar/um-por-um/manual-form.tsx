@@ -4,16 +4,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MedSearch } from "@/components/med-search";
+import { StockField } from "@/components/stock-field";
 import { TimeChips } from "@/components/time-chips";
 import { Button, CheckIcon, Field, GiftIcon, TopBar, buttonClass, cn } from "@/components/ui";
 import { confirmPrescription, getFamily } from "@/lib/api";
 import { strengthChoices, type MedResult } from "@/lib/med-search";
+import { parseUnits } from "@/lib/stock";
 
 export function ManualForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [strength, setStrength] = useState("");
   const [times, setTimes] = useState<string[]>(["08:00"]);
+  const [units, setUnits] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
@@ -21,7 +24,8 @@ export function ManualForm() {
   const [picked, setPicked] = useState<MedResult | null>(null);
 
   async function save(another: boolean) {
-    if (!name.trim()) {
+    const stockUnits = parseUnits(units);
+    if (!name.trim() || stockUnits === undefined) {
       setTried(true);
       return;
     }
@@ -30,13 +34,14 @@ export function ManualForm() {
     try {
       const { patient } = await getFamily();
       await confirmPrescription(patient.id, [
-        { name: name.trim(), activeIngredient: null, strength: strength.trim() || null, times },
+        { name: name.trim(), activeIngredient: null, strength: strength.trim() || null, times, stockUnits },
       ]);
       setSaved((s) => [...s, [name.trim(), strength.trim()].filter(Boolean).join(" ")]);
       setName("");
       setStrength("");
       setPicked(null);
       setTimes(["08:00"]);
+      setUnits("");
       setTried(false);
       if (!another) router.push("/family/remedios");
     } catch (e) {
@@ -111,6 +116,7 @@ export function ManualForm() {
           Use 8:00, 12:00 e 20:00 quando der. Assim ela toma tudo junto.
         </span>
       </div>
+      <StockField value={units} onValue={setUnits} invalid={tried && parseUnits(units) === undefined} />
       <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
         Depois de salvar, a gente mostra se ele pode sair grátis no Farmácia Popular ou na UBS.
       </p>
