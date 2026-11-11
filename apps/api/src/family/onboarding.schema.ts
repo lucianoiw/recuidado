@@ -40,13 +40,9 @@ const birth = z
 /** Body of PUT /family/onboarding: the answers of the 4 sign-up steps. */
 export const onboardingBody = z
   .object({
-    // The caregiver saved earlier from this device. Missing or unknown creates a new caregiver.
-    caregiverId: z.uuid().nullish(),
     caregiver: z.object({
       name,
       phone,
-      // Optional: alerts also go by e-mail.
-      email: z.union([z.email('E-mail inválido.').trim().toLowerCase().max(120), z.literal('')]).default(''),
       relation,
       relationOther: z.string().trim().max(60).default(''),
     }),
@@ -68,6 +64,8 @@ export const onboardingBody = z
           name,
           relation: relation.nullable().default(null),
           phone: z.union([phone, z.literal('')]).optional(),
+          // The invite goes by e-mail and the person signs in with it.
+          email: z.union([z.email('E-mail inválido.').trim().toLowerCase().max(120), z.literal('')]).optional(),
         }),
       )
       .max(20)

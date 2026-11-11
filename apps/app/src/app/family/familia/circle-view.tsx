@@ -1,16 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { callName, deleteFamilyData, exportDataUrl, joinFamily, setEmergencyContact, type Member } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { callName, deleteFamilyData, downloadFamilyData, getMe, setEmergencyContact, signOut, type Me, type Member } from "@/lib/api";
 import { track } from "@/lib/analytics";
-import { clearFamilyId } from "@/lib/family-id";
-import { CopyLinkButton } from "@/components/copy-button";
 import { EnableNotifications } from "@/components/enable-notifications";
 import Link from "next/link";
 import { BellIcon, Button, CheckIcon, ChevronRightIcon, PhoneIcon, StatusPill, buttonClass, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
-import { clearMe, useMe } from "@/lib/me";
+import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
 
 function firstName(name: string) {
@@ -31,9 +29,11 @@ export function CircleView() {
     <>
       <PageTitle title="Família" subtitle={`Quem cuida de ${patient}`} />
 
+      {data.isDemo ? null : <SignedInAs />}
+
       <section className="flex flex-col gap-2">
-        <h2 className="text-[18px] font-extrabold">Quem é você?</h2>
-        <ul className="overflow-hidden rounded-card border border-line-soft bg-surface" role="radiogroup">
+        <h2 className="text-[18px] font-extrabold">{data.isDemo ? "Quem é você na demonstração?" : "Quem cuida"}</h2>
+        <ul className="overflow-hidden rounded-card border border-line-soft bg-surface" role={data.isDemo ? "radiogroup" : undefined}>
           {data.caregivers.map((c) => {
             const on = c.id === me;
             return (
@@ -43,9 +43,7 @@ export function CircleView() {
                   role="radio"
                   aria-checked={on}
                   onClick={() => {
-                    setMe(c.id);
-                    // An invited person who picks their name has joined.
-                    if (c.pending) joinFamily(c.id).then(reload, () => {});
+                    if (data.isDemo) setMe(c.id);
                   }}
                   className="flex min-h-16 w-full items-center gap-3 px-4 text-left"
                 >
@@ -114,7 +112,11 @@ export function CircleView() {
 
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
         <h2 className="text-[18px] font-extrabold">Convidar e instalar</h2>
-        <CopyLinkButton path="/family" label="Copiar convite" />
+        {data.isDemo ? null : (
+          <Link href="/comecar?passo=3" className={buttonClass({ variant: "secondary" })}>
+            Chamar mais alguém
+          </Link>
+        )}
         <Link href="/family/celular" className={buttonClass({ variant: "secondary" })}>
           Celular de {patient}
         </Link>
@@ -235,10 +237,8 @@ function YourData({
     setBusy(true);
     setError(null);
     try {
-      await deleteFamilyData(caregiver.id);
+      await deleteFamilyData();
       track("family_deleted");
-      clearMe();
-      clearFamilyId();
       router.replace("/");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Não deu para apagar os dados.");
@@ -263,14 +263,16 @@ function YourData({
         </p>
       ) : (
         <>
-          <a
-            href={exportDataUrl(caregiver.id)}
-            download="recuidado-dados.json"
-            onClick={() => track("family_export_clicked")}
+          <button
+            type="button"
+            onClick={() => {
+              track("family_export_clicked");
+              downloadFamilyData().catch((e) => setError(e instanceof Error ? e.message : "Não deu para baixar os dados."));
+            }}
             className={buttonClass({ variant: "secondary" })}
           >
             Baixar todos os dados
-          </a>
+          </button>
           {confirming ? (
             <div className="flex flex-col gap-2.5 rounded-2xl border-2 border-danger p-3.5" role="alertdialog">
               <p className="text-[15px] font-semibold leading-snug">
@@ -299,6 +301,34 @@ function YourData({
           ) : null}
         </>
       )}
+    </section>
+  );
+}
+
+/** Who is signed in on this device, and the way out. */
+function SignedInAs() {
+  const router = useRouter();
+  const [me, setMeInfo] = useState<Me | null>(null);
+  useEffect(() => {
+    getMe().then(setMeInfo, () => {});
+  }, []);
+  if (!me) return null;
+  return (
+    <section className="flex items-center justify-between gap-3 rounded-card border border-line-soft bg-surface p-4">
+      <span className="flex min-w-0 flex-col">
+        <b>Você entrou como {me.name ?? me.email}</b>
+        <span className="truncate text-[15px] text-muted">{me.email}</span>
+      </span>
+      <button
+        type="button"
+        onClick={async () => {
+          await signOut();
+          router.replace("/");
+        }}
+        className="min-h-11 shrink-0 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-bold"
+      >
+        Sair
+      </button>
     </section>
   );
 }

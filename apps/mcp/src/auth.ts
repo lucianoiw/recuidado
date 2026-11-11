@@ -17,9 +17,11 @@ import { authorizePage } from "./pages.ts";
 const CODE_TTL = 5 * 60;
 const ACCESS_TTL = 30 * 24 * 60 * 60;
 const REFRESH_TTL = 365 * 24 * 60 * 60;
-const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+// The link the family sends to the patient's phone: https://app.recuidado.com.br/m/<secret>.
+const PATIENT_LINK = /\/m\/([A-Za-z0-9_-]{16,64})/;
 
 /** The family a token gives access to. `null` is the demo family. */
+/** Secret of the patient link of the connected family; null is the demo family. */
 export type LinkedFamily = string | null;
 
 type Signed =
@@ -138,13 +140,14 @@ export class Auth {
     if (params.get("action") === "cancel") return back({ error: "access_denied" });
     let family: LinkedFamily = null;
     if (params.get("action") !== "demo") {
-      const found = (params.get("invite") ?? "").match(UUID)?.[0]?.toLowerCase();
+      const found = (params.get("invite") ?? "").match(PATIENT_LINK)?.[1];
       if (!found) {
-        return html(authorizePage({ client: client.name, hidden, error: "Cole o link do convite que a família recebeu, ou toque em Autorizar para usar a família de demonstração." }), 400);
+        return html(authorizePage({ client: client.name, hidden, error: "Cole o link do app da pessoa cuidada (o que a família manda para o celular dela), ou toque em Autorizar para usar a família de demonstração." }), 400);
       }
       try {
         const overview = await this.api.family(found);
-        family = overview.isDemo ? null : overview.familyId;
+        if (overview.isDemo) throw new ApiError(404, "not found");
+        family = found;
       } catch (error) {
         const message =
           error instanceof ApiError && error.status < 500

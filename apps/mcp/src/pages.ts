@@ -54,10 +54,10 @@ export function authorizePage({ client, hidden = {}, error, fatal }: AuthorizePa
   <button class="primary" name="action" value="demo">Autorizar</button>
   <button class="link" name="action" value="cancel">Cancelar</button>
 </form>
-<details class="card"${error ? " open" : ""}><summary class="small">Cadastrou a sua própria família? Conecte pelo link do convite</summary>
+<details class="card"${error ? " open" : ""}><summary class="small">Cadastrou a sua própria família? Conecte pelo link do app dela</summary>
 <form method="post" action="/authorize">${fields}
-  <label for="invite" style="margin-top:12px">Link do convite da família</label>
-  <input id="invite" name="invite" placeholder="https://app.recuidado.com.br/...?f=..." autocomplete="off">
+  <label for="invite" style="margin-top:12px">Link do app da pessoa cuidada (Família, Celular dela, Copiar link)</label>
+  <input id="invite" name="invite" placeholder="https://app.recuidado.com.br/m/..." autocomplete="off">
   <button class="secondary" name="action" value="family">Conectar esta família</button>
 </form></details>`,
   );

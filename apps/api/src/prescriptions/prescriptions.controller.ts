@@ -7,7 +7,6 @@ import {
   Ip,
   PayloadTooLargeException,
   Post,
-  Query,
   UnprocessableEntityException,
   UnsupportedMediaTypeException,
   UploadedFile,
@@ -20,6 +19,7 @@ import {
   type ReadPrescriptionResult,
 } from '@recuidado/prescription-reader';
 import { z } from 'zod';
+import { FamilyId } from '../auth/auth.context.js';
 import { confirmPrescriptionBody } from './confirm.schema.js';
 import { PrescriptionLimitService } from './prescription-limit.service.js';
 import { PrescriptionsService } from './prescriptions.service.js';
@@ -51,7 +51,7 @@ export class PrescriptionsController {
 
   /**
    * Multipart upload with the photo in the "file" field. Open (no login), so reads are
-   * capped per IP, per family (?familyId=) and in total: 429 when a limit is reached.
+   * capped per IP, per family (signed in) and in total: 429 when a limit is reached.
    */
   @Post('parse')
   @HttpCode(200)
@@ -63,7 +63,7 @@ export class PrescriptionsController {
   async parse(
     @UploadedFile() file: UploadedPrescription | undefined,
     @Ip() ip: string,
-    @Query('familyId') familyId?: string,
+    @FamilyId() familyId: string | null,
   ): Promise<ReadPrescriptionResult> {
     if (!file) {
       throw new BadRequestException('Envie a foto da receita no campo "file".');
@@ -74,7 +74,7 @@ export class PrescriptionsController {
       );
     }
     // Counted only for a valid upload, right before the paid model call.
-    await this.limits.consume(ip ?? 'unknown', familyOf(familyId));
+    await this.limits.consume(ip ?? 'unknown', familyId);
     try {
       return await this.prescriptions.parse({
         data: file.buffer,
@@ -88,18 +88,12 @@ export class PrescriptionsController {
   /** Saves the items the family reviewed and confirmed, then schedules their doses. */
   @Post('confirm')
   @HttpCode(201)
-  confirm(@Body() body: unknown) {
+  confirm(@Body() body: unknown, @FamilyId({ write: true }) familyId: string | null) {
     const result = confirmPrescriptionBody.safeParse(body);
     if (!result.success)
       throw new BadRequestException(z.prettifyError(result.error));
-    return this.prescriptions.confirm(result.data);
+    return this.prescriptions.confirm(result.data, familyId);
   }
-}
-
-/** Only a well-formed id counts as a family; anything else counts by IP alone. */
-function familyOf(value: string | undefined): string | null {
-  const result = z.uuid().safeParse(value);
-  return result.success ? result.data : null;
 }
 
 function toHttpError(error: unknown): unknown {

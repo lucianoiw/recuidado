@@ -5,21 +5,23 @@ import { RecuidadoApi } from "./api.ts";
 import { createApp } from "./app.ts";
 
 const FAMILY = "11111111-1111-4111-8111-111111111111";
+const LINK = "AbCdEfGhIjKlMnOpQrStUv";
 const DEMO = "99999999-9999-4999-8999-999999999999";
 const ORIGIN = "https://mcp.test";
 const REDIRECT = "https://claude.ai/api/mcp/auth_callback";
 
 function makeApp() {
   const seen: string[] = [];
-  const api = new RecuidadoApi("http://api.test", (async (input: URL) => {
+  const api = new RecuidadoApi("http://api.test", (async (input: URL, init?: RequestInit) => {
     const url = new URL(input);
-    seen.push(`${url.pathname}${url.search}`);
-    const id = url.searchParams.get("familyId");
+    const auth = (init?.headers as Record<string, string> | undefined)?.authorization;
+    seen.push(`${url.pathname}${url.search}${auth ? ` ${auth}` : ""}`);
+    // Like the API: an unknown patient link is a visitor (demo family).
+    const linked = auth === `Bearer p.${LINK}`;
     if (url.pathname === "/family") {
-      if (id && id !== FAMILY) return Response.json({ message: "Família não encontrada." }, { status: 404 });
       return Response.json({
-        familyId: id ?? DEMO,
-        isDemo: !id,
+        familyId: linked ? FAMILY : DEMO,
+        isDemo: !linked,
         patient: { id: "p", name: "Maria", nickname: null, role: "patient", relation: null },
         caregivers: [],
         medications: [],
@@ -137,7 +139,7 @@ describe("MCP login", () => {
 
   it("links a family from its invite link and keeps it on refresh", async () => {
     const { app, seen } = makeApp();
-    const { tokens, client_id } = await tokenFor(app, { action: "family", invite: `https://recuidado.com.br/patient?f=${FAMILY}` });
+    const { tokens, client_id } = await tokenFor(app, { action: "family", invite: `https://app.recuidado.com.br/m/${LINK}` });
     const refreshed = await call(app, "/token", {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -146,13 +148,13 @@ describe("MCP login", () => {
     const { access_token } = (await refreshed.json()) as { access_token: string };
     const client = await mcpClient(app, access_token);
     await client.callTool({ name: "get_today_doses", arguments: {} });
-    expect(seen.at(-1)).toBe(`/family?familyId=${FAMILY}`);
+    expect(seen.at(-1)).toBe(`/family Bearer p.${LINK}`);
     await client.close();
   });
 
   it("shows an error for an unknown invite", async () => {
     const { app } = makeApp();
-    const { post } = await login(app, { action: "family", invite: "22222222-2222-4222-8222-222222222222" });
+    const { post } = await login(app, { action: "family", invite: "https://app.recuidado.com.br/m/NaoExisteEsteLink123" });
     expect(post.status).toBe(400);
     expect(await post.text()).toContain("Não achamos essa família");
   });

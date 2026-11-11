@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { Redis } from 'ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DbModule, telemetry, validateEnv } from '@recuidado/core';
+import { AuthModule } from './auth/auth.module.js';
 import { BillingModule } from './billing/billing.module.js';
 import { DemoModule } from './demo/demo.module.js';
 import { DosesModule } from './doses/doses.module.js';
@@ -33,7 +34,7 @@ import { VoiceModule } from './voice/voice.module.js';
         }),
       }),
     }),
-    // Every route is open (no login): one IP gets RATE_LIMIT_PER_MINUTE requests a minute.
+    // Every route is rate limited: one IP gets RATE_LIMIT_PER_MINUTE requests a minute.
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
@@ -44,6 +45,7 @@ import { VoiceModule } from './voice/voice.module.js';
         };
       },
     }),
+    AuthModule,
     BillingModule,
     DbModule,
     DemoModule,

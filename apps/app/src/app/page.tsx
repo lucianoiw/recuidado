@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BellIcon, CameraIcon, FreeIcon, Logo, buttonClass } from "@/components/ui";
+import { SignedInRedirect } from "./signed-in-redirect";
 
 const points = [
   { icon: CameraIcon, title: "Foto da receita.", text: "A IA lê e monta os horários." },
@@ -10,6 +11,7 @@ const points = [
 export default function Welcome() {
   return (
     <>
+      <SignedInRedirect />
       <div
         aria-hidden="true"
         className="splash fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-brand text-white"
@@ -46,11 +48,11 @@ export default function Welcome() {
           ))}
         </ul>
         <div className="mt-auto flex flex-col gap-3">
-          <Link href="/comecar" className={buttonClass()}>
+          <Link href="/entrar" className={buttonClass()}>
             Começar
           </Link>
           <Link href="/family" className={buttonClass({ variant: "secondary" })}>
-            Já tenho conta
+            Ver a demonstração
           </Link>
           <Link href="/patient" className="py-2 text-center text-[15px] font-bold text-brand">
             Abrir o app da Dona Maria

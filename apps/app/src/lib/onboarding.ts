@@ -1,5 +1,4 @@
-// Onboarding answers. Saved in the API (PUT /family/onboarding) into the demo family;
-// this device keeps only the caregiver id (lib/me.ts).
+// Onboarding answers of the signed-in caregiver. Saved in the API (PUT /family/onboarding).
 
 import { maskCep, maskPhone } from "./masks";
 import type { OnboardingRecord } from "./api";
@@ -21,7 +20,7 @@ export type Relation = (typeof RELATIONS)[number];
 export interface Onboarding {
   caregiver: { name: string; phone: string; email: string; relation: Relation | null; relationOther: string };
   patient: { name: string; nickname: string; gender: "female" | "male"; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
-  invites: { name: string; phone?: string; relation: Relation | null }[];
+  invites: { name: string; phone?: string; email?: string; relation: Relation | null }[];
 }
 
 export const emptyOnboarding: Onboarding = {
@@ -54,6 +53,7 @@ export function fromRecord(r: OnboardingRecord): Onboarding {
     invites: r.invites.map((i) => ({
       name: i.name,
       phone: i.phone ?? "",
+      email: i.email ?? "",
       relation: asRelation(i.relation),
     })),
   };

@@ -1,14 +1,8 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Put } from '@nestjs/common';
+import { FamilyId } from '../auth/auth.context.js';
 import { z } from 'zod';
 import { MonthService } from './month.service.js';
 
-const familyIdQuery = z.uuid().nullish();
-
-function familyOf(value: unknown): string | null {
-  const result = familyIdQuery.safeParse(value || null);
-  if (!result.success) throw new BadRequestException('familyId inválido.');
-  return result.data ?? null;
-}
 
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
@@ -34,8 +28,8 @@ export class MonthController {
 
   /** Savings, cost, split with Pix and doses of the current month. */
   @Get('month')
-  summary(@Query('familyId') familyId?: string) {
-    return this.month.summary(familyOf(familyId));
+  summary(@FamilyId() familyId: string | null) {
+    return this.month.summary(familyId);
   }
 
   /** A caregiver's share of this month: paid or not. */
@@ -44,9 +38,9 @@ export class MonthController {
   async setPaid(
     @Param('memberId', new ParseUUIDPipe()) memberId: string,
     @Body() body: unknown,
-    @Query('familyId') familyId?: string,
+    @FamilyId({ write: true }) familyId: string | null,
   ) {
-    await this.month.setPaid(familyOf(familyId), memberId, parse(paidBody, body).paid);
+    await this.month.setPaid(familyId, memberId, parse(paidBody, body).paid);
   }
 
   /** Who buys the medicines and receives the others' shares by Pix. */
@@ -55,8 +49,8 @@ export class MonthController {
   async setPixKey(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: unknown,
-    @Query('familyId') familyId?: string,
+    @FamilyId({ write: true }) familyId: string | null,
   ) {
-    await this.month.setPixKey(familyOf(familyId), id, parse(pixKeyBody, body).pix);
+    await this.month.setPixKey(familyId, id, parse(pixKeyBody, body).pix);
   }
 }

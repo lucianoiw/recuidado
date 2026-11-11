@@ -7,20 +7,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
+import { FamilyId } from '../auth/auth.context.js';
 import { z } from 'zod';
 import { VoiceTokenGuard } from '../voice/voice-token.guard.js';
 import { PharmacyService, type PharmacyVoiceResult } from './pharmacy.service.js';
 
-const familyIdQuery = z.uuid().nullish();
-
-function familyOf(value: unknown): string | null {
-  const result = familyIdQuery.safeParse(value || null);
-  if (!result.success) throw new BadRequestException('familyId inválido.');
-  return result.data ?? null;
-}
 
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
@@ -62,14 +55,14 @@ export class PharmacyController {
 
   /** "Perguntar à farmácia": the voice agent calls the pharmacy about these medicines. */
   @Post()
-  ask(@Body() body: unknown, @Query('familyId') familyId?: string) {
-    return this.pharmacy.ask(familyOf(familyId), parse(askBody, body).medicationIds);
+  ask(@Body() body: unknown, @FamilyId({ write: true }) familyId: string | null) {
+    return this.pharmacy.ask(familyId, parse(askBody, body).medicationIds);
   }
 
   /** The family's most recent pharmacy call, polled by the screen while it rings. */
   @Get('latest')
-  async latest(@Query('familyId') familyId?: string) {
-    return { inquiry: await this.pharmacy.latest(familyOf(familyId)) };
+  async latest(@FamilyId() familyId: string | null) {
+    return { inquiry: await this.pharmacy.latest(familyId) };
   }
 
   /** Called by apps/voice when the pharmacy call ends. */

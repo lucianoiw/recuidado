@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { CopyIcon } from "@/components/ui";
-import { familyLink } from "@/lib/family-id";
+import { getPatientLink } from "@/lib/api";
 import { useOrigin } from "@/lib/origin";
+import { useSignedIn } from "@/lib/session";
 
 const SEEN_KEY = "recuidado:patient-link-seen";
 
@@ -30,10 +31,25 @@ export function afterMedsHref(fallback: string): string {
   return patientLinkSeen() ? fallback : "/family/celular";
 }
 
+/**
+ * The link that opens her app: /m/<secret>. She never signs up; this link is her login. Visitors
+ * (demo family) get /patient, which shows Dona Maria.
+ */
+export function usePatientUrl(): { url: string; renew: () => Promise<void> } {
+  const origin = useOrigin();
+  const signedIn = useSignedIn();
+  const [token, setToken] = useState<string | null>(null);
+  useEffect(() => {
+    if (!signedIn) return;
+    getPatientLink().then(setToken, () => {});
+  }, [signedIn]);
+  const url = !origin ? "" : signedIn ? (token ? `${origin}/m/${token}` : "") : `${origin}/patient`;
+  return { url, renew: async () => setToken(await getPatientLink(true)) };
+}
+
 /** QR code and copy button with the link to the patient app. */
 export function PatientLink() {
-  const origin = useOrigin();
-  const url = origin ? familyLink(origin, "/patient") : "";
+  const { url } = usePatientUrl();
   const [copied, setCopied] = useState(false);
   async function copy() {
     try {
@@ -44,7 +60,7 @@ export function PatientLink() {
   return (
     <section className="flex items-stretch gap-4 rounded-card border border-line-soft bg-surface p-4">
       <span className="flex size-[132px] shrink-0 items-center justify-center rounded-xl border border-line bg-white p-2">
-        {origin ? (
+        {url ? (
           <QRCodeSVG value={url} size={114} fgColor="#16201f" title="QR code do app dela" />
         ) : null}
       </span>

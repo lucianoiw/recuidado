@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -22,9 +22,8 @@ import { lookupCep, type CepLookup } from "@/lib/cep";
 import { useCanShare } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isEmail, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
-import { getOnboarding, saveOnboarding } from "@/lib/api";
-import { familyLink } from "@/lib/family-id";
-import { readMe, setMe } from "@/lib/me";
+import { getMe, getOnboarding, saveOnboarding } from "@/lib/api";
+import { readSession } from "@/lib/session";
 import {
   RELATIONS,
   emptyOnboarding,
@@ -37,7 +36,10 @@ const TOTAL = 3;
 
 export function OnboardingFlow() {
   const router = useRouter();
+  const params = useSearchParams();
   const [step, setStep] = useState(1);
+  const [email, setEmail] = useState("");
+  const [familyId, setFamilyId] = useState<string | null>(null);
   const [data, setData] = useState<Onboarding>(emptyOnboarding);
   const [tried, setTried] = useState(false);
   const [cepOk, setCepOk] = useState(true);
@@ -45,20 +47,34 @@ export function OnboardingFlow() {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Restore the answers this device's caregiver saved in an earlier visit.
-    const me = readMe();
-    if (!me) return;
+    // The sign-up belongs to a signed-in e-mail. Without a session, sign in first.
+    if (!readSession()) {
+      router.replace("/entrar?next=/comecar");
+      return;
+    }
     let alive = true;
-    getOnboarding(me).then(
+    getMe().then(
+      (me) => {
+        if (!alive) return;
+        if (!me) router.replace("/entrar?next=/comecar");
+        else setEmail(me.email);
+      },
+      () => {},
+    );
+    // Restore the answers saved in an earlier visit ("Chamar mais alguém" opens step 3).
+    getOnboarding().then(
       (r) => {
-        if (alive && r) setData(fromRecord(r));
+        if (!alive || !r) return;
+        setData(fromRecord(r));
+        setFamilyId(r.familyId);
+        if (params.get("passo") === "3") setStep(3);
       },
       () => {},
     );
     return () => {
       alive = false;
     };
-  }, []);
+  }, [params, router]);
 
   function patch<K extends keyof Onboarding>(key: K, value: Partial<Onboarding[K]>) {
     setData((d) => ({ ...d, [key]: { ...d[key], ...value } }));
@@ -67,7 +83,7 @@ export function OnboardingFlow() {
   const c = data.caregiver;
   const p = data.patient;
   const valid: Record<number, boolean> = {
-    1: c.name.trim().length > 1 && isPhone(c.phone) && (c.email.trim() === "" || isEmail(c.email)) && c.relation !== null && (c.relation !== "Outro" || c.relationOther.trim() !== ""),
+    1: c.name.trim().length > 1 && isPhone(c.phone) && c.relation !== null && (c.relation !== "Outro" || c.relationOther.trim() !== ""),
     2: p.name.trim().length > 1 && isPhone(p.phone) && isDate(p.birth) && isCep(p.cep) && cepOk && p.consent,
     3: true,
   };
@@ -83,8 +99,8 @@ export function OnboardingFlow() {
       setSaving(true);
       setSaveError(null);
       try {
-        const { caregiverId } = await saveOnboarding({ caregiverId: readMe(), ...data });
-        setMe(caregiverId);
+        const saved = await saveOnboarding(data);
+        setFamilyId(saved.familyId);
       } catch (e) {
         captureError(e, { screen: "onboarding", step });
         setSaveError(e instanceof Error ? e.message : "Não deu para salvar o cadastro.");
@@ -95,7 +111,7 @@ export function OnboardingFlow() {
     }
     track("onboarding_step_completed", { step, total: TOTAL });
     if (step < TOTAL) setStep(step + 1);
-    else router.push("/family/adicionar");
+    else router.push(params.get("passo") === "3" ? "/family/familia" : "/family/adicionar");
   }
 
   const nickname = p.nickname.trim() || p.name.trim().split(" ")[0] || "ela";
@@ -124,17 +140,11 @@ export function OnboardingFlow() {
               onValue={(v) => patch("caregiver", { phone: v })}
               aria-invalid={tried && !isPhone(c.phone)}
             />
-            <Field
-              label="E-mail (opcional)"
-              hint="Os avisos também chegam por e-mail."
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              placeholder="voce@exemplo.com"
-              value={c.email}
-              onValue={(v) => patch("caregiver", { email: v })}
-              aria-invalid={tried && c.email.trim() !== "" && !isEmail(c.email)}
-            />
+            {email ? (
+              <p className="text-[15px] leading-snug text-muted">
+                Os avisos também chegam no seu e-mail, <b className="text-ink">{email}</b>.
+              </p>
+            ) : null}
             <SelectField<Relation>
               label="Quem é você para a pessoa cuidada?"
               options={RELATIONS}
@@ -255,7 +265,7 @@ export function OnboardingFlow() {
       ) : null}
 
       {step === 3 ? (
-        <InviteStep data={data} setData={setData} nickname={nickname} />
+        <InviteStep data={data} setData={setData} nickname={nickname} familyId={familyId} />
       ) : null}
 
       {tried && !valid[step] ? (
@@ -272,7 +282,7 @@ export function OnboardingFlow() {
 
       <div className="mt-auto flex flex-col gap-1.5 pt-2">
         <Button onClick={next} disabled={saving}>
-          {saving ? "Salvando..." : step === TOTAL ? "Continuar, adicionar os remédios" : "Continuar"}
+          {saving ? "Salvando..." : step === TOTAL ? (params.get("passo") === "3" ? "Salvar" : "Continuar, adicionar os remédios") : "Continuar"}
         </Button>
       </div>
     </main>
@@ -292,13 +302,16 @@ function InviteStep({
   data,
   setData,
   nickname,
+  familyId,
 }: {
   data: Onboarding;
   setData: (fn: (d: Onboarding) => Onboarding) => void;
   nickname: string;
+  familyId: string | null;
 }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
   const [relation, setRelation] = useState<Relation | null>(null);
   const [adding, setAdding] = useState(false);
   const [done, setDone] = useState<string | null>(null);
@@ -306,18 +319,24 @@ function InviteStep({
 
   function add(): string | null {
     const who = name.trim();
-    if (!who || (phone && !isPhone(phone))) return null;
-    setData((d) => ({ ...d, invites: [...d.invites, { name: who, phone, relation }] }));
+    if (!who || (phone && !isPhone(phone)) || (inviteEmail.trim() && !isEmail(inviteEmail))) return null;
+    setData((d) => ({ ...d, invites: [...d.invites, { name: who, phone, email: inviteEmail.trim(), relation }] }));
     setName("");
     setPhone("");
+    setInviteEmail("");
     setRelation(null);
     setAdding(false);
     return who;
   }
 
-  const link = () => familyLink(window.location.origin, "/family");
+  // The person opens it, signs in with their e-mail and takes the invite with their name.
+  const link = (who: string) => {
+    const url = new URL("/entrar", window.location.origin);
+    if (familyId) url.search = new URLSearchParams({ convite: familyId, nome: who }).toString();
+    return url.toString();
+  };
   const message = (who: string) =>
-    `${who}, estou cuidando dos remédios da ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link()}`;
+    `${who}, estou cuidando dos remédios da ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link(who)}`;
 
   async function send() {
     const who = add();
@@ -353,8 +372,9 @@ function InviteStep({
   }
 
   function later() {
+    const email = inviteEmail.trim();
     const who = add();
-    if (who) setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
+    if (who) setDone(email ? `${who} foi adicionado(a). O convite vai para ${email} quando você continuar.` : `${who} foi adicionado(a). Envie o convite quando quiser.`);
   }
 
   const me = data.caregiver;
@@ -405,6 +425,16 @@ function InviteStep({
       <Sheet open={adding} onClose={() => setAdding(false)} title="Chamar mais alguém">
         <Field label="Nome" value={name} onValue={setName} autoComplete="off" />
         <Field
+          label="E-mail (opcional)"
+          hint="Mandamos o convite por e-mail. A pessoa entra com ele."
+          type="email"
+          inputMode="email"
+          value={inviteEmail}
+          onValue={setInviteEmail}
+          placeholder="pessoa@exemplo.com"
+          aria-invalid={inviteEmail.trim() !== "" && !isEmail(inviteEmail)}
+        />
+        <Field
           label="Celular (opcional)"
           hint="Para enviar não precisa: você escolhe a pessoa no WhatsApp ou no SMS."
           value={phone}
@@ -442,7 +472,7 @@ function InviteStep({
             disabled={!name.trim()}
             className="min-h-12 font-bold text-brand disabled:opacity-40"
           >
-            Só adicionar, envio depois
+            {inviteEmail.trim() ? "Mandar o convite por e-mail" : "Só adicionar, envio depois"}
           </button>
         </div>
       </Sheet>

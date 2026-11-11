@@ -9,7 +9,9 @@ O Recuidado lê a receita, mostra o que é de graça no Farmácia Popular, cota 
 
 Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração usa dados fictícios. O Recuidado não faz diagnóstico, não recomenda tratamento e não altera dose.
 
-- Demo: https://recuidado.com.br
+- App: https://app.recuidado.com.br (a demonstração da Dona Maria abre sem login)
+- Os dois celulares lado a lado, filho e mãe, com os apps de verdade: https://painel.recuidado.com.br
+- Site: https://recuidado.com.br
 - Contexto completo do projeto: [docs/context.md](docs/context.md)
 - Painel de monitoria ao vivo (público, sem login): https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg
 - Como a monitoria funciona: [docs/monitoring.md](docs/monitoring.md)
@@ -23,6 +25,7 @@ Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração us
 - **A IA liga para a farmácia.** Em "Onde comprar", a família toca em "Perguntar à farmácia". A IA liga, se apresenta como assistente virtual, passa pelo menu de teclas (URA) sozinha, pergunta se tem, quanto custa a caixa e se sai pelo Farmácia Popular, e a resposta aparece comparada ao teto da CMED. Ver [Ligação para a farmácia](#ligação-para-a-farmácia).
 - **O que é grátis e onde.** Cada remédio é cruzado com a lista do Farmácia Popular, com o REMUME das UBS de São Paulo e com o Alto Custo, e a família vê as farmácias credenciadas mais perto.
 - **MCP para qualquer assistente de IA.** Claude, ChatGPT ou outro agente consulta o plano, as doses e os avisos da família por conversa. Ver [Servidor MCP](#servidor-mcp).
+- **Login sem senha e a mãe sem cadastro.** O filho entra com o e-mail (código de 6 números ou link, pelo Resend). Os irmãos são convidados por e-mail. A mãe não se cadastra: o filho manda um link e o celular dela abre o app dela. Ver [Login e os dois celulares](#login-e-os-dois-celulares).
 - **Monitoria completa.** Logs, erros, eventos, traces da IA e replay das telas em um só lugar (PostHog).
 
 ## Impacto
@@ -105,7 +108,7 @@ flowchart LR
 
 ## Servidor MCP
 
-Endereço: `https://mcp.recuidado.com.br` (Streamable HTTP). Ao conectar, abre a tela "Conexão da família": um toque em Autorizar liga o assistente à família de demonstração, sem senha. Quem cadastrou a própria família cola o link do convite. Por baixo é OAuth 2.1 com PKCE, então o assistente só enxerga a família que foi conectada.
+Endereço: `https://mcp.recuidado.com.br` (Streamable HTTP). Ao conectar, abre a tela "Conexão da família": um toque em Autorizar liga o assistente à família de demonstração, sem senha. Quem cadastrou a própria família cola o link do app dela (o mesmo que o filho manda para o celular da mãe), que só lê. Por baixo é OAuth 2.1 com PKCE, então o assistente só enxerga a família que foi conectada.
 
 | Ferramenta | O que faz |
 | --- | --- |
@@ -137,6 +140,19 @@ O telefone nunca sai nas respostas, e o servidor não dá conselho clínico. Det
 8. **Grupo da família.** O assistente escreve o resumo da semana para os irmãos, e o filho só envia.
 
 Os casos 6 a 8 usam o conector do Recuidado junto com outro conector do mesmo assistente (agenda, notas). O Recuidado não acessa esses serviços.
+
+## Login e os dois celulares
+
+Decisões de 11/11/2026 (pedido do Luciano: profissionalizar o que foi feito em um dia).
+
+- **Três endereços.** `app.recuidado.com.br` é o produto (`apps/app`). `recuidado.com.br` e `www` ficam para o site (`apps/web`); enquanto o site não fica pronto, ele manda todo acesso para o app mantendo o caminho, então links antigos continuam valendo. `painel.recuidado.com.br` mostra os dois celulares.
+- **Filho entra com e-mail, sem senha.** O e-mail (Resend, remetente `avisos@recuidado.com.br`) traz um código de 6 números e um botão. O código existe porque no painel, e em quem lê o e-mail no computador, o link abriria em outra aba; digitar o código funciona dentro do celular. Vale 15 minutos, aceita 5 erros e até 6 pedidos por hora por e-mail. O banco guarda só o hash do código, do link e da sessão. Sessão de 60 dias.
+- **Quem entra pela primeira vez cai no cadastro**, que agora exige o login: o e-mail do cadastro é o da sessão. Quem já tem família vai direto para Hoje.
+- **Irmãos convidados por e-mail.** No passo "Quem cuida junto?" (e em Família, "Chamar mais alguém") vai o e-mail da pessoa. Ela recebe um link que vale 7 dias e já entra na família. Quem prefere mandar pelo WhatsApp manda o link `/entrar?convite=<família>&nome=<nome>`: a pessoa entra com o e-mail dela e assume o convite com aquele nome.
+- **A mãe não se cadastra.** O filho abre Família, Celular dela, e manda o link `app.recuidado.com.br/m/<segredo>` (ou mostra o QR code). O celular dela guarda o segredo e abre o app dela. Esse link só lê e confirma dose; não muda remédio. O mesmo link conecta a família no MCP.
+- **Dois logins no mesmo navegador sem misturar.** As telas `/patient` mandam só o link dela; as da família mandam só a sessão do filho. Por isso o painel funciona com os dois apps no mesmo navegador.
+- **Visitante continua vendo a demonstração.** Sem login, o app mostra a família da Dona Maria, só leitura, como antes. O vídeo e os jurados não precisam de login (regulamento 7.2).
+- **O painel** (`/painel`, servido pelo próprio app no domínio `painel`) põe os dois apps reais em molduras de Android: um Pixel 6 Pro para o filho e um Galaxy S8 para a mãe, desenhados em CSS pelo [devices.css](https://github.com/picturepan2/devices.css) (MIT). Cada celular tem uma barra de endereço: o filho copia o link dela à esquerda e cola no celular da mãe à direita. O app avisa o painel do endereço atual por `postMessage`, e "Começar de novo" apaga os dois logins. Notificação push não funciona dentro do painel (o navegador bloqueia em moldura); o lembrete aparece na tela dela do mesmo jeito.
 
 ## Fluxo de uma dose
 
@@ -286,7 +302,7 @@ Usamos produtos de patrocinadores do Hack Brasil onde eles resolvem algo do prod
 - O PostHog não recebe nomes de remédio nem transcrições, e o replay das telas esconde todo o texto.
 - A assistente da ligação diz que é uma assistente virtual na primeira frase.
 - O agente não faz diagnóstico, não recomenda tratamento e não muda dose. A família revisa a leitura da receita antes de salvar.
-- Antes de ter usuário real ainda faltaria: login de verdade (hoje o id salvo no aparelho identifica a família), e retenção zero nos provedores de IA.
+- A família só é vista por quem entrou com o e-mail (sessão) ou pelo link do app dela. O id da família na URL não abre mais nada. Antes de ter usuário real ainda faltaria: confirmar a dose e o aceite pelo link dela (hoje basta o id da dose ou da paciente) e retenção zero nos provedores de IA.
 
 ## Revisão 360 (11/11/2026)
 
