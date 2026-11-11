@@ -68,8 +68,8 @@ afterEach(async () => {
   client = undefined;
 });
 
-async function connect(api: RecuidadoApi) {
-  const handler = createMcpHandler(() => createRecuidadoServer(api));
+async function connect(api: RecuidadoApi, family: string | null = null) {
+  const handler = createMcpHandler(() => createRecuidadoServer(api, family));
   const transport = new StreamableHTTPClientTransport(new URL("http://mcp.test/mcp"), {
     fetch: (input, init) => handler.fetch(new Request(input, init)),
   });
@@ -97,8 +97,8 @@ describe("Recuidado MCP", () => {
 
   it("shows the care plan without phones", async () => {
     const { api, calls } = fakeApi();
-    const c = await connect(api);
-    const res = await c.callTool({ name: "get_care_plan", arguments: { familyId: FAMILY } });
+    const c2 = await connect(api, FAMILY);
+    const res = await c2.callTool({ name: "get_care_plan", arguments: {} });
     expect(calls).toEqual([`GET /family?familyId=${FAMILY}`]);
     expect(JSON.stringify(res.content)).not.toContain("9****");
     expect(data(res).remedios[0]).toMatchObject({
