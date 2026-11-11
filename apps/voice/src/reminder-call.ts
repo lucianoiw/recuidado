@@ -1,4 +1,4 @@
-import { DOSE_TOOL_NAME, buildGreeting, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
+import { DOSE_TOOL_NAME, buildGreeting, emergencyLine, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
 import { normalizeSpeech } from "./greeting-cache.js";
 
 export type CallStatus = "dialing" | "ringing" | "answered" | "ended";
@@ -102,6 +102,8 @@ export class ReminderCall {
   private silenceTimer?: NodeJS.Timeout;
   private recordTimer?: NodeJS.Timeout;
   private goodbyeHeard = false;
+  /** Emergency recorded but the SAMU line not said yet: the goodbye only counts after it. */
+  private emergencyLinePending = false;
   private assistantSinceGreeting = "";
   private greetingDone = false;
   private readonly greetingLine: string;
@@ -281,6 +283,21 @@ export class ReminderCall {
     this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
     if (this.recordTimer) clearTimeout(this.recordTimer);
+    if (emergency && !this.opts.context.checkIn && !/SAMU/i.test(this.assistantSinceGreeting)) {
+      // The model does not always follow the emergency step: make sure she hears it before the call ends.
+      this.emergencyLinePending = true;
+      if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
+      this.goodbyeTimer = undefined;
+      this.log("emergency recorded without the SAMU line: asking for it");
+      this.send({
+        type: "session.commentary.append",
+        event_id: `emergency_${item.call_id}`,
+        delegation_id: null,
+        content: `Say now, calmly and exactly: "${emergencyLine(this.opts.context)}"`,
+      });
+      this.armSilenceHangup();
+      return;
+    }
     if (this.goodbyeHeard) {
       // The goodbye was said while the answer was being recorded: give it a moment to finish, then hang up.
       this.armGoodbyeHangup((this.opts.replyTailMs ?? 1000) * 2);
@@ -325,7 +342,16 @@ export class ReminderCall {
       return;
     }
     this.assistantSinceGreeting += delta;
-    if (GOODBYE.test(this.assistantSinceGreeting)) {
+    let spoken = this.assistantSinceGreeting;
+    if (this.emergencyLinePending) {
+      const samu = spoken.search(/SAMU/i);
+      if (samu < 0) {
+        if (this.answer) this.armSilenceHangup();
+        return;
+      }
+      spoken = spoken.slice(samu);
+    }
+    if (GOODBYE.test(spoken)) {
       if (!this.goodbyeHeard) {
         this.goodbyeHeard = true;
         this.log("goodbye heard");
