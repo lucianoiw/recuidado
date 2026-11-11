@@ -1,4 +1,4 @@
-import { DOSE_TOOL_NAME, buildGreeting, emergencyLine, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
+import { DOSE_TOOL_NAME, buildGreeting, checkInUnwellLine, emergencyLine, goodbyeLine, greetingLine, type ReminderContext } from "./prompt.js";
 import { normalizeSpeech } from "./greeting-cache.js";
 
 export type CallStatus = "dialing" | "ringing" | "answered" | "ended";
@@ -283,8 +283,16 @@ export class ReminderCall {
     this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
     if (this.recordTimer) clearTimeout(this.recordTimer);
-    if (emergency && !this.opts.context.checkIn && !/SAMU/i.test(this.assistantSinceGreeting)) {
-      // The model does not always follow the emergency step: make sure she hears it before the call ends.
+    // The model does not always follow these steps: make sure she hears the line before the call ends.
+    const ctx = this.opts.context;
+    const requiredLine = ctx.checkIn
+      ? feelsUnwell || emergency
+        ? checkInUnwellLine(ctx)
+        : undefined
+      : emergency
+        ? emergencyLine(ctx)
+        : undefined;
+    if (requiredLine && !/SAMU/i.test(this.assistantSinceGreeting)) {
       this.emergencyLinePending = true;
       if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
       this.goodbyeTimer = undefined;
@@ -293,7 +301,7 @@ export class ReminderCall {
         type: "session.commentary.append",
         event_id: `emergency_${item.call_id}`,
         delegation_id: null,
-        content: `Say now, calmly and exactly: "${emergencyLine(this.opts.context)}"`,
+        content: `Say now, calmly and exactly: "${requiredLine}"`,
       });
       this.armSilenceHangup();
       return;
