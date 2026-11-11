@@ -25,11 +25,11 @@ export function buildLiveInstructions(ctx: ReminderContext): string {
     "First find out if she took them. If she has not taken them yet, kindly ask her to take them now.",
     "If the answer about the medicine is unclear, ask once more in a different, simple way.",
     "Then ask only: \"E a senhora, está bem?\" and listen to her answer.",
-    "After she answers how she is, delegate once so both answers are recorded. Do not ask anything else.",
+    "After she answers how she is, delegate once so both answers are recorded. Do not ask anything else and do not say filler like \"vou anotar\" or \"vamos lá\".",
     "If an automated call-screening assistant answers and asks who is calling, say only: \"Recuidado, lembrete do remédio\", then wait in silence for the person.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell or an emergency, tell her the family will be notified and suggest calling SAMU 192.",
-    "After the answer is recorded, say only a very short goodbye (for example \"Obrigada, tchau!\") and stop talking.",
+    "After the answer is recorded, say exactly \"Obrigada, tchau!\" and stop talking.",
   ].join("\n");
 }
 
@@ -68,9 +68,9 @@ export function buildDelegateInstructions(): string {
     `Your only job is to record the patient's answer by calling ${DOSE_TOOL_NAME}.`,
     "Set taken=true only if she clearly said she already took the medicine.",
     "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
-    "Set feels_unwell=true if she reports any pain, dizziness, a fall, shortness of breath, feeling sick, sad or not well. Otherwise false.",
+    "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false only if she says she is fine.",
     "Put what she said about how she feels, and any other relevant detail (ran out of medicine), in note, in Portuguese, close to her own words.",
-    "After the tool result, reply with one short sentence telling the voice assistant to say goodbye.",
+    "After the tool result, reply only: Say exactly \"Obrigada, tchau!\" and nothing else.",
   ].join("\n");
 }
 
