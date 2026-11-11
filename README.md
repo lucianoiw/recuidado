@@ -39,7 +39,7 @@ Requisitos: Node 22+, pnpm 10 e Docker.
 ```bash
 cp .env.example .env
 pnpm install
-pnpm db:up        # Postgres e Redis em Docker
+pnpm db:up        # Postgres e Redis locais em Docker
 pnpm dev          # web em http://localhost:3000, api em http://localhost:4000
 ```
 
@@ -51,7 +51,7 @@ pnpm lint && pnpm test && pnpm build
 
 ## Deploy
 
-O deploy é feito no Coolify com o `docker-compose.yml` da raiz (web, api, Postgres e Redis). Os domínios são configurados no Coolify: `recuidado.com.br` para o serviço `web` e `api.recuidado.com.br` para o serviço `api`. Os segredos ficam nas variáveis de ambiente do Coolify, nunca no repositório. A lista completa está em [.env.example](.env.example).
+No Coolify, com um recurso para cada parte (web, api, voz, Asterisk, Postgres e Redis). Os detalhes estão em [deploy/README.md](deploy/README.md). Os segredos ficam nas variáveis de ambiente do Coolify, nunca no repositório.
 
 ## Licença
 
