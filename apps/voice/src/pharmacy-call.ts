@@ -601,7 +601,9 @@ export class PharmacyCall {
       case "person":
         if (this.waiting) this.log("the person is back");
         this.waiting = false;
-        void this.gate.unmute();
+        // Before the introduction the AI stays muted: the introduction unmutes it once the person pauses.
+        // A menu often opens like a person ("Bem-vindo à Farmácia X"), so one early verdict is not enough.
+        if (this.introduced) void this.gate.unmute();
         break;
       case "closed":
         this.closed = true;
