@@ -219,7 +219,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
       `Your only job is to record how the patient is now by calling ${DOSE_TOOL_NAME}. This call is not about the medicine: set taken=false.`,
       "Set feels_unwell=false if she says she is better or that someone from the family is already with her (\"meu filho já veio\"). Otherwise true.",
       "Set emergency=true only if it is still a possible emergency: she fell and cannot get up, chest pain, shortness of breath, fainting, or she asks for urgent help.",
-      "Put what she said in note, in Portuguese, close to her own words.",
+      "Put in note what she reported, in Portuguese, as a short phrase in the third person and without a subject, so that it completes the sentence \"ela falou que ...\". Examples: \"caiu no banheiro e está com dor no braço\", \"ainda está com dor\", \"está melhor e o filho já chegou\", \"já tomou o remédio\". Never quote her in the first person.",
       "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
     ].join("\n");
   }
@@ -229,7 +229,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
     "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
     "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false if she says she is fine, or if she gives no complaint at all (\"tô aguardando\", \"tô aqui\", \"normal\", a question back): only a complaint counts.",
     "Set emergency=true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, too weak to stand up, or she asks for urgent help. The family gets a phone call. Tiredness alone is not an emergency. Otherwise false.",
-    "Put what she said about how she feels, and any other relevant detail (ran out of medicine), in note, in Portuguese, close to her own words.",
+    "Put in note what she reported, in Portuguese, as a short phrase in the third person and without a subject, so that it completes the sentence \"ela falou que ...\". Include how she feels and any other relevant detail (ran out of medicine). Examples: \"caiu no banheiro e está com dor no braço\", \"ainda está com dor\", \"está melhor e o filho já chegou\", \"já tomou o remédio\". Never quote her in the first person.",
     "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
   ].join("\n");
 }
@@ -248,7 +248,7 @@ export const doseTool = {
         type: "boolean",
         description: "true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, or she asks for urgent help",
       },
-      note: { type: "string", description: "What she said about how she feels and other relevant detail, in Portuguese, or empty" },
+      note: { type: "string", description: "What she reported, in Portuguese, in the third person without a subject (\"caiu no banheiro\"), or empty" },
     },
     required: ["taken", "feels_unwell", "emergency", "note"],
     additionalProperties: false,
