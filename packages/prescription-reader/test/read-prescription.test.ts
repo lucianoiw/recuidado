@@ -1,9 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { describe, expect, it } from "vitest";
 import { PrescriptionReadError, readPrescription } from "../src/read-prescription.ts";
-import type { PrescriptionReading } from "../src/schema.ts";
+import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
+import { MAX_UNION_PARAMETERS, ModelReadingSchema, type ModelReading } from "../src/model-schema.ts";
 
-const sampleReading: PrescriptionReading = {
+/** What the model returns: "" and "unknown" instead of null for text and choices. */
+const sampleReading: ModelReading = {
   is_prescription: true,
   legibility: "good",
   issued_on: "2026-11-03",
@@ -26,10 +28,10 @@ const sampleReading: PrescriptionReading = {
       schedule_source: "inferred",
       duration: { continuous: true, days: null },
       quantity_prescribed: "30 comprimidos",
-      instructions: null,
+      instructions: "",
       confidence: "high",
       needs_review: false,
-      review_reason: null,
+      review_reason: "",
     },
   ],
   other_instructions: [],
@@ -87,6 +89,8 @@ describe("readPrescription", () => {
     });
 
     expect(result.reading.items[0]!.match_key).toBe("rosuvastatina 10 mg");
+    expect(result.reading.items[0]!.instructions).toBeNull();
+    expect(result.reading.items[0]!.review_reason).toBeNull();
     expect(result.reading.items[0]!.monthly_units).toBe(30);
     expect(result.usage).toEqual({ input_tokens: 1500, output_tokens: 400 });
   });
@@ -101,6 +105,22 @@ describe("readPrescription", () => {
     const big = { data: Buffer.alloc(6 * 1024 * 1024), mediaType: "image/jpeg" as const };
     await expect(readPrescription(big, { client })).rejects.toBeInstanceOf(PrescriptionReadError);
     expect(requests).toHaveLength(0);
+  });
+});
+
+/** Counts schema nodes that are unions (anyOf or a type array), as the API does. */
+function countUnions(node: unknown): number {
+  if (Array.isArray(node)) return node.reduce((sum: number, child) => sum + countUnions(child), 0);
+  if (node === null || typeof node !== "object") return 0;
+  const record = node as Record<string, unknown>;
+  const own = "anyOf" in record || Array.isArray(record.type) ? 1 : 0;
+  return own + Object.values(record).reduce((sum: number, child) => sum + countUnions(child), 0);
+}
+
+describe("ModelReadingSchema", () => {
+  it("stays within the API limit of union-typed parameters", () => {
+    const format = betaZodOutputFormat(ModelReadingSchema) as unknown as { schema: unknown };
+    expect(countUnions(format.schema)).toBeLessThanOrEqual(MAX_UNION_PARAMETERS);
   });
 });
 
