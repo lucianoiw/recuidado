@@ -65,7 +65,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
                 key={`${p.lat},${p.lng}`}
                 position={p}
                 title={p.name}
-                zIndex={selected === i ? 30 : 10}
+                zIndex={selected === i ? 100 : 50 - i}
                 onClick={() => setSelected(i)}
               >
                 <span
