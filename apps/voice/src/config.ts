@@ -41,7 +41,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
   return {
     openaiApiKey: required(env, "OPENAI_API_KEY"),
     liveModel: env.OPENAI_LIVE_MODEL?.trim() || "gpt-live-1",
-    liveVoice: env.OPENAI_LIVE_VOICE?.trim() || "marin",
+    liveVoice: env.OPENAI_LIVE_VOICE?.trim() || "bossa",
     delegateModel: env.OPENAI_DELEGATE_MODEL?.trim() || "gpt-6-luna",
     sip: {
       providerUrl,
