@@ -55,3 +55,58 @@ export function formatTime(iso: string): string {
     minute: "2-digit",
   }).format(new Date(iso));
 }
+
+/** The fields of POST /prescriptions/parse that the review screen uses. */
+export interface ReadItem {
+  medication_name: string;
+  active_ingredient: string | null;
+  strength: { text: string };
+  frequency: { text: string; as_needed: boolean };
+  schedule: { time: string }[];
+  instructions: string | null;
+  needs_review: boolean;
+  review_reason: string | null;
+}
+
+export interface ReadResult {
+  reading: {
+    is_prescription: boolean;
+    legibility: "good" | "partial" | "poor";
+    items: ReadItem[];
+    warnings: string[];
+  };
+}
+
+async function errorMessage(res: Response, fallback: string): Promise<string> {
+  try {
+    const body = (await res.json()) as { message?: string | string[] };
+    const msg = Array.isArray(body.message) ? body.message[0] : body.message;
+    return msg || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+export async function parsePrescription(file: File): Promise<ReadResult> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(`${API_URL}/prescriptions/parse`, { method: "POST", body: form });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para ler a receita."));
+  return res.json();
+}
+
+export interface ConfirmItem {
+  name: string;
+  activeIngredient: string | null;
+  strength: string | null;
+  times: string[];
+}
+
+export async function confirmPrescription(patientId: string, items: ConfirmItem[]): Promise<void> {
+  const res = await fetch(`${API_URL}/prescriptions/confirm`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ patientId, items }),
+  });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para salvar."));
+}

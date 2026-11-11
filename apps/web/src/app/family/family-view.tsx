@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import {
   AlertIcon,
+  CameraIcon,
   Card,
   DoseList,
   DoseRow,
@@ -170,6 +172,10 @@ export function FamilyView() {
             ))}
           </ul>
         )}
+        <Link href="/family/receita" className={buttonClass({ variant: "secondary" })}>
+          <CameraIcon size={22} />
+          Adicionar receita
+        </Link>
         {data.medications.some((m) => m.freeInFarmaciaPopular) ? (
           <p className="text-[15px] leading-snug text-muted">
             Grátis: retire no Farmácia Popular com a receita e o documento da {patientName}.
