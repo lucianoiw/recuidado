@@ -1,0 +1,1 @@
+ALTER TABLE "members" ADD COLUMN "emergency_contact" boolean DEFAULT false NOT NULL;

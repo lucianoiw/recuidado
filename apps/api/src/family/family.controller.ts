@@ -65,6 +65,13 @@ export class FamilyController {
     await this.family.join(familyOf(familyId), id);
   }
 
+  /** The one caregiver phoned when she reports an emergency on the call. */
+  @Put('members/:id/emergency-contact')
+  @HttpCode(204)
+  async setEmergencyContact(@Param('id', new ParseUUIDPipe()) id: string, @Query('familyId') familyId?: string) {
+    await this.family.setEmergencyContact(familyOf(familyId), id);
+  }
+
   /** "Pegar grátis" or "Comprar" for a medication that is free in Farmácia Popular. */
   @Put('medications/:id/buy-choice')
   @HttpCode(204)

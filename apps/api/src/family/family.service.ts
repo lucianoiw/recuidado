@@ -7,7 +7,7 @@ import {
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { findFreeAccess, highCostGuide, type FreeAccess } from '@recuidado/data';
-import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, ne, sql } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
@@ -23,6 +23,7 @@ import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 export const DEMO_FAMILY = 'Família Demo';
 const DEMO_PATIENT = 'Dona Maria';
 const DEMO_CAREGIVERS = ['Ana', 'Carlos'];
+const DEMO_FIRST_CONTACT = 'Carlos';
 
 /** The family a request works on. Without an id it is the demo family. */
 export interface FamilyRef {
@@ -43,6 +44,15 @@ export function maskPhone(phone: string | null): string | null {
   return `${ddd}•••••-${digits.slice(-4)}`;
 }
 
+/**
+ * Marks the one caregiver the emergency call goes to, the same rule as VoiceCallService.callCaregivers:
+ * the chosen one with a phone, else the oldest caregiver with a phone. Caregivers come oldest first.
+ */
+export function withFirstContact<T extends { emergencyContact: boolean; hasPhone: boolean }>(caregivers: T[]): T[] {
+  const first = caregivers.find((c) => c.emergencyContact && c.hasPhone) ?? caregivers.find((c) => c.hasPhone);
+  return caregivers.map((c) => ({ ...c, emergencyContact: c === first }));
+}
+
 @Injectable()
 export class FamilyService implements OnApplicationBootstrap {
   private readonly logger = new Logger(FamilyService.name);
@@ -57,6 +67,7 @@ export class FamilyService implements OnApplicationBootstrap {
 
   async onApplicationBootstrap() {
     const ids = await this.ensureDemoFamily();
+    await this.resetDemoFirstContact(ids.familyId);
     if (!this.config.get<boolean>('DEMO_SEED_ENABLED')) return;
     try {
       // Fixed story of Dona Maria: three medicines, times, stock and a week of history.
@@ -67,6 +78,14 @@ export class FamilyService implements OnApplicationBootstrap {
       // The app works without the demo story; never block the boot on it.
       this.logger.error(`Demo family seed failed: ${String(error)}`);
     }
+  }
+
+  /** Carlos is the demo family's first contact in an emergency, set again on every API boot. */
+  private async resetDemoFirstContact(familyId: string): Promise<void> {
+    await this.db
+      .update(members)
+      .set({ emergencyContact: sql`${members.name} = ${DEMO_FIRST_CONTACT}` })
+      .where(and(eq(members.familyId, familyId), eq(members.role, 'caregiver')));
   }
 
   /** Creates the demo family if missing. Returns its id and the patient id. */
@@ -149,6 +168,7 @@ export class FamilyService implements OnApplicationBootstrap {
         relation: members.relation,
         relationOther: members.relationOther,
         phone: members.phone,
+        emergencyContact: members.emergencyContact,
         consentAt: members.consentAt,
         consentSource: members.consentSource,
         // Added as an invite by another caregiver (only the one who signed up exports or deletes).
@@ -188,7 +208,7 @@ export class FamilyService implements OnApplicationBootstrap {
       familyId,
       isDemo,
       patient: shown.find((p) => p.id === patientId)!,
-      caregivers: shown.filter((p) => p.role === 'caregiver'),
+      caregivers: withFirstContact(shown.filter((p) => p.role === 'caregiver')),
       medications: meds.map(
         ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, ...med }) => {
           const access = freeAccessOf(activeIngredient ?? med.name, med.strength);
@@ -500,6 +520,26 @@ export class FamilyService implements OnApplicationBootstrap {
     if (!row.joinedAt) {
       await this.db.update(members).set({ joinedAt: new Date() }).where(eq(members.id, memberId));
     }
+  }
+
+  /**
+   * The one caregiver phoned when she reports an emergency on the call; the others get only the push.
+   * Allowed on the demo family too, so the choice can be shown; the API boot sets Carlos again.
+   */
+  async setEmergencyContact(familyIdOrDemo: string | null | undefined, memberId: string): Promise<void> {
+    const { familyId } = await this.resolveFamily(familyIdOrDemo);
+    await this.db.transaction(async (tx) => {
+      const [row] = await tx
+        .update(members)
+        .set({ emergencyContact: true })
+        .where(and(eq(members.id, memberId), eq(members.familyId, familyId), eq(members.role, 'caregiver')))
+        .returning({ id: members.id });
+      if (!row) throw new NotFoundException('Pessoa não encontrada.');
+      await tx
+        .update(members)
+        .set({ emergencyContact: false })
+        .where(and(eq(members.familyId, familyId), ne(members.id, memberId)));
+    });
   }
 
   /** Free in Farmácia Popular, but the family chose to buy it (buy = true) or to get it free. */
