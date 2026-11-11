@@ -31,12 +31,23 @@ function doseName(d: Dose): string {
   return [d.medicationName, d.strength?.replace(/ /g, "\u00a0")].filter(Boolean).join(" ");
 }
 
+function groupByTime(doses: Dose[]): { time: string; doses: Dose[] }[] {
+  const groups = new Map<string, Dose[]>();
+  for (const d of doses) groups.set(d.scheduledAt, [...(groups.get(d.scheduledAt) ?? []), d]);
+  return [...groups.entries()].map(([at, ds]) => ({ time: formatTime(at), doses: ds }));
+}
+
+function namesOf(doses: Dose[]): string {
+  const names = doses.map(doseName);
+  return names.length > 1 ? `${names.slice(0, -1).join(", ")} e ${names.at(-1)}` : names[0];
+}
+
 export function PatientView() {
   const [data, setData] = useState<FamilyOverview | null>(null);
   const [error, setError] = useState(false);
   const [now, setNow] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [justTaken, setJustTaken] = useState<Dose | null>(null);
+  const [justTaken, setJustTaken] = useState<Dose[] | null>(null);
 
   const load = useCallback(() => {
     getFamily().then(
@@ -60,21 +71,24 @@ export function PatientView() {
   }
   if (!data) return <p className="text-[24px] text-muted">Carregando...</p>;
 
-  const firstName = data.patient.name.split(" ")[0];
-  // The dose to confirm: the earliest one not taken whose time has come.
-  const due = data.today.find(
+  const patientName = data.patient.name;
+  // Doses at the same time are taken together: the earliest time whose doses are not taken yet.
+  const first = data.today.find(
     (d) => d.status !== "taken" && new Date(d.scheduledAt).getTime() <= now,
   );
-  const later = data.today.filter(
-    (d) => d.status === "pending" && new Date(d.scheduledAt).getTime() > now,
+  const due = first
+    ? data.today.filter((d) => d.status !== "taken" && d.scheduledAt === first.scheduledAt)
+    : [];
+  const later = groupByTime(
+    data.today.filter((d) => d.status === "pending" && new Date(d.scheduledAt).getTime() > now),
   );
   const next = later[0];
 
-  async function confirm(dose: Dose) {
+  async function confirm(doses: Dose[]) {
     setBusy(true);
     try {
-      await confirmDose(dose.id);
-      setJustTaken(dose);
+      await Promise.all(doses.map((d) => confirmDose(d.id)));
+      setJustTaken(doses);
       load();
     } finally {
       setBusy(false);
@@ -89,9 +103,10 @@ export function PatientView() {
           <span className="flex size-36 items-center justify-center rounded-full bg-brand text-white">
             <CheckIcon size={84} aria-hidden={false} role="img" aria-label="Confirmado" />
           </span>
-          <h1 className="text-[40px] font-bold leading-tight">Pronto, {firstName}!</h1>
+          <h1 className="text-[40px] font-bold leading-tight">Pronto, {patientName}!</h1>
           <p className="text-[26px] leading-snug">
-            Anotei o remédio das {formatTime(justTaken.scheduledAt)}.
+            Anotei {justTaken.length > 1 ? "os remédios" : doseName(justTaken[0])} das{" "}
+            {formatTime(justTaken[0].scheduledAt)}.
             {names.length > 0 ? (
               <>
                 <br />
@@ -103,8 +118,8 @@ export function PatientView() {
         {next ? (
           <Card className="flex flex-col gap-1 p-5">
             <p className="text-muted">Próximo remédio</p>
-            <p className="text-[28px] font-bold leading-tight">{doseName(next)}</p>
-            <p className="text-[24px] font-semibold text-brand">às {formatTime(next.scheduledAt)}</p>
+            <p className="text-[28px] font-bold leading-tight">{namesOf(next.doses)}</p>
+            <p className="text-[24px] font-semibold text-brand">às {next.time}</p>
           </Card>
         ) : null}
         <Button variant="secondary" size="lg" onClick={() => setJustTaken(null)}>
@@ -116,23 +131,27 @@ export function PatientView() {
 
   return (
     <>
-      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={`${greeting()}, ${firstName}`} />
+      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={`${greeting()}, ${patientName}`} />
 
-      {due ? (
+      {due.length > 0 ? (
         <Card className="flex flex-col gap-5 border-2 border-line px-4 py-6" aria-live="polite">
           <p className="flex items-center gap-2.5 text-[26px] font-bold text-brand">
             <ClockIcon size={30} strokeWidth={2.2} />
-            Agora, {formatTime(due.scheduledAt)}
+            Agora, {formatTime(due[0].scheduledAt)}
           </p>
-          <div className="flex items-center gap-4">
-            <span className="flex size-18 shrink-0 items-center justify-center rounded-[20px] bg-brand-soft text-brand">
-              <PillIcon size={40} />
-            </span>
-            <h2 className="text-[32px] font-bold leading-tight">{doseName(due)}</h2>
-          </div>
+          <ul className="flex flex-col gap-3.5">
+            {due.map((d) => (
+              <li key={d.id} className="flex items-center gap-4">
+                <span className="flex size-16 shrink-0 items-center justify-center rounded-[18px] bg-brand-soft text-brand">
+                  <PillIcon size={36} />
+                </span>
+                <h2 className="text-[28px] font-bold leading-tight">{doseName(d)}</h2>
+              </li>
+            ))}
+          </ul>
           <Button size="xl" onClick={() => confirm(due)} disabled={busy}>
             <CheckIcon size={32} />
-            {busy ? "Anotando..." : "Tomei o remédio"}
+            {busy ? "Anotando..." : due.length > 1 ? `Tomei os ${due.length}` : "Tomei o remédio"}
           </Button>
         </Card>
       ) : (
@@ -143,7 +162,7 @@ export function PatientView() {
           </p>
           {next ? (
             <p className="text-[24px]">
-              Próximo: {doseName(next)} às {formatTime(next.scheduledAt)}
+              Próximo: {namesOf(next.doses)} às {next.time}
             </p>
           ) : (
             <p className="text-[24px]">Não tem mais remédio hoje.</p>
@@ -155,10 +174,14 @@ export function PatientView() {
         <section className="flex flex-col gap-2.5">
           <h2 className="text-[24px] font-bold">Mais tarde hoje</h2>
           <ul className="flex flex-col gap-2.5">
-            {later.map((d) => (
-              <li key={d.id} className="flex items-center justify-between gap-3 rounded-card bg-surface px-4 py-4">
-                <span className="font-semibold">{doseName(d)}</span>
-                <span className="font-bold">{formatTime(d.scheduledAt)}</span>
+            {later.map((g) => (
+              <li key={g.time} className="flex items-start justify-between gap-3 rounded-card bg-surface px-4 py-4">
+                <span className="flex flex-col font-semibold">
+                  {g.doses.map((d) => (
+                    <span key={d.id}>{doseName(d)}</span>
+                  ))}
+                </span>
+                <span className="font-bold">{g.time}</span>
               </li>
             ))}
           </ul>

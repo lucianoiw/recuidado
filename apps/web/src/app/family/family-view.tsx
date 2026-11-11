@@ -1,45 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
-import { EnableNotifications } from "@/components/enable-notifications";
 import {
   AlertIcon,
+  BellIcon,
   CameraIcon,
   Card,
+  ChevronRightIcon,
   DoseList,
   DoseRow,
-  ScreenHeader,
-  StatusPill,
+  PhoneIcon,
   buttonClass,
-  cn,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
-import { formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
-
-const ME_KEY = "recuidado:caregiver";
-
-const meListeners = new Set<() => void>();
-
-function readMe(): string | null {
-  try {
-    return localStorage.getItem(ME_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function writeMe(id: string) {
-  try {
-    localStorage.setItem(ME_KEY, id);
-  } catch {}
-  meListeners.forEach((l) => l());
-}
-
-function subscribeMe(listener: () => void) {
-  meListeners.add(listener);
-  return () => meListeners.delete(listener);
-}
+import { formatTime, type Dose } from "@/lib/api";
+import { medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
   if (d.status === "taken") {
@@ -48,83 +23,120 @@ function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
     return { status: "taken", text: `Tomou${via}${at}` };
   }
   if (d.status === "missed") return { status: "missed", text: "Não tomou" };
-  if (new Date(d.scheduledAt).getTime() <= now) return { status: "pending", text: "Esperando" };
+  if (new Date(d.scheduledAt).getTime() <= now)
+    return { status: "pending", text: "Esperando" };
   return { status: "upcoming", text: "Mais tarde" };
 }
 
-const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-
-function doseName(d: Dose): string {
-  // Keep "50 mg" on one line.
-  return [d.medicationName, d.strength?.replace(/ /g, "\u00a0")].filter(Boolean).join(" ");
+function todayLabel(): string {
+  const t = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(new Date());
+  return t.charAt(0).toUpperCase() + t.slice(1).replace("-feira", "");
 }
 
 export function FamilyView() {
-  const [data, setData] = useState<FamilyOverview | null>(null);
-  const [error, setError] = useState(false);
-  const [now, setNow] = useState(0);
-  const me = useSyncExternalStore(subscribeMe, readMe, () => null);
-
-  const load = useCallback(() => {
-    getFamily().then(
-      (d) => {
-        setData(d);
-        setNow(Date.now());
-        setError(false);
-      },
-      () => setError(true),
-    );
-  }, []);
-
-  useEffect(() => {
-    load();
-    const timer = setInterval(load, 30_000);
-    return () => clearInterval(timer);
-  }, [load]);
+  const { data, error, now } = useFamily();
 
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
 
-  const caregiver = data.caregivers.find((c) => c.id === me);
-  const patientName = data.patient.name.split(" ")[0];
-  const missed = data.today.filter((d) => d.status === "missed");
-  const monthlyCents = data.medications.reduce((sum, m) => sum + m.monthlyCostCents, 0);
-  const shareCents = data.caregivers.length > 0 ? Math.ceil(monthlyCents / data.caregivers.length) : 0;
+  const name = data.patient.name;
+  // One alert per time: doses at the same time are taken together.
+  const missedByTime = new Map<string, Dose[]>();
+  for (const d of data.today.filter((x) => x.status === "missed")) {
+    missedByTime.set(d.scheduledAt, [
+      ...(missedByTime.get(d.scheduledAt) ?? []),
+      d,
+    ]);
+  }
+  const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
+  const free = data.medications.filter((m) => m.freeInFarmaciaPopular).length;
 
   return (
     <>
-      <ScreenHeader
-        audience="family"
-        eyebrow={caregiver ? `Olá, ${caregiver.name.split(" ")[0]}` : undefined}
-        title={`${patientName} hoje`}
-      />
+      <header className="flex items-center gap-3">
+        <span
+          aria-hidden="true"
+          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f3dcc8] text-[19px] font-extrabold text-warn"
+        >
+          {name.replace(/^(Dona|Seu)\s+/i, "").charAt(0)}
+        </span>
+        <div className="flex flex-1 flex-col">
+          <h1 className="text-[22px] font-extrabold leading-tight">{name}</h1>
+          <span className="text-[15px] text-muted">{todayLabel()}</span>
+        </div>
+        <Link
+          href="/family/familia"
+          className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface"
+        >
+          <BellIcon size={22} />
+          <span className="sr-only">Alertas</span>
+        </Link>
+      </header>
 
-      {missed.map((d) => (
-        <Card key={d.id} tone="danger" className="flex flex-col gap-2.5" role="alert">
-          <p className="flex items-center gap-2 font-bold text-danger">
-            <AlertIcon size={22} strokeWidth={2.4} />
-            Dose não confirmada
-          </p>
-          <p className="leading-snug">
-            {doseName(d)} das {formatTime(d.scheduledAt)}.
-            {d.familyAlertedAt ? ` Avisamos a família às ${formatTime(d.familyAlertedAt)}.` : ""}
-          </p>
-        </Card>
-      ))}
+      {missed.map((group) => {
+        const d = group[0];
+        const names = group.map((x) => medLabel(x.medicationName, x.strength));
+        return (
+          <section
+            key={d.scheduledAt}
+            role="alert"
+            className="flex flex-col gap-3 rounded-card border-[1.5px] border-danger bg-danger-soft p-4"
+          >
+            <div className="flex items-start gap-2.5">
+              <AlertIcon
+                size={22}
+                strokeWidth={2.4}
+                className="mt-0.5 shrink-0 text-danger"
+              />
+              <div className="flex flex-col gap-0.5">
+                <b className="text-danger">
+                  Não confirmou {names.length > 1 ? "os remédios" : names[0]}{" "}
+                  das {formatTime(d.scheduledAt)}
+                </b>
+                {names.length > 1 ? (
+                  <span className="text-[15px] font-semibold">
+                    {names.join(", ")}
+                  </span>
+                ) : null}
+                <span className="text-[15px] leading-snug">
+                  {d.familyAlertedAt
+                    ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}. Vale ligar para ela.`
+                    : "Vale ligar para ela."}
+                </span>
+              </div>
+            </div>
+            <a href="tel:" className={buttonClass({ variant: "danger" })}>
+              <PhoneIcon size={20} />
+              Ligar para ela
+            </a>
+          </section>
+        );
+      })}
 
       <section className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-[19px] font-bold">Doses de hoje</h2>
+          <h2 className="text-[18px] font-extrabold">Doses de hoje</h2>
           {data.today.length > 0 ? (
-            <span className="text-[15px] text-muted">
+            <span className="text-[14px] text-muted">
               {taken} de {data.today.length} tomadas
             </span>
           ) : null}
         </div>
         {data.today.length === 0 ? (
-          <Card>
-            <p className="text-muted">Nenhuma dose hoje.</p>
+          <Card className="flex flex-col gap-3">
+            <p className="text-muted">
+              Nenhuma dose hoje. Comece pela foto da receita.
+            </p>
+            <Link href="/family/receita" className={buttonClass()}>
+              <CameraIcon size={22} />
+              Foto da receita
+            </Link>
           </Card>
         ) : (
           <DoseList>
@@ -133,7 +145,7 @@ export function FamilyView() {
               return (
                 <DoseRow
                   key={d.id}
-                  name={doseName(d)}
+                  name={medLabel(d.medicationName, d.strength)}
                   time={formatTime(d.scheduledAt)}
                   status={s.status}
                   statusText={s.text}
@@ -144,91 +156,42 @@ export function FamilyView() {
         )}
       </section>
 
-      <section className="flex flex-col gap-2">
-        <h2 className="text-[19px] font-bold">Remédios do mês</h2>
-        {data.medications.length === 0 ? (
-          <Card>
-            <p className="text-muted">Nenhum remédio cadastrado ainda.</p>
+      {data.medications.length > 0 ? (
+        <section className="grid grid-cols-2 gap-3">
+          <Card className="flex flex-col gap-0.5">
+            <span className="text-[14px] text-muted">
+              Grátis no Farmácia Popular
+            </span>
+            <span className="text-[26px] font-extrabold text-brand">
+              {free} de {data.medications.length}
+            </span>
+            <span className="text-[13px] text-muted">remédios da receita</span>
           </Card>
-        ) : (
-          <ul className="flex flex-col rounded-card bg-surface px-4 py-1">
-            {data.medications.map((m) => (
-              <li
-                key={m.id}
-                className="flex items-center justify-between gap-3 border-b border-line-soft py-3.5 last:border-b-0"
-              >
-                <div className="flex min-w-0 flex-col">
-                  <span className="font-semibold">{[m.name, m.strength?.replace(/ /g, "\u00a0")].filter(Boolean).join(" ")}</span>
-                  <span className="text-[15px] text-muted">
-                    {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
-                  </span>
-                </div>
-                {m.freeInFarmaciaPopular ? (
-                  <StatusPill tone="ok">Grátis</StatusPill>
-                ) : (
-                  <span className="whitespace-nowrap font-bold">{brl.format(m.monthlyCostCents / 100)}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-        <Link href="/family/receita" className={buttonClass({ variant: "secondary" })}>
-          <CameraIcon size={22} />
-          Adicionar receita
-        </Link>
-        {data.medications.some((m) => m.freeInFarmaciaPopular) ? (
-          <p className="text-[15px] leading-snug text-muted">
-            Grátis: retire no Farmácia Popular com a receita e o documento da {patientName}.
-          </p>
-        ) : null}
-      </section>
-
-      {monthlyCents > 0 && data.caregivers.length > 0 ? (
-        <Card className="flex flex-col gap-3">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-[19px] font-bold">Conta da família</h2>
-            <span className="text-[19px] font-bold">{brl.format(monthlyCents / 100)}</span>
-          </div>
-          <ul className="flex flex-col gap-2">
-            {data.caregivers.map((c) => (
-              <li key={c.id} className="flex items-center justify-between">
-                <span>{c.name.split(" ")[0]}</span>
-                <span className="font-semibold">{brl.format(shareCents / 100)}</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
+          <Card className="flex flex-col gap-0.5">
+            <span className="text-[14px] text-muted">Doses hoje</span>
+            <span className="text-[26px] font-extrabold">
+              {taken} de {data.today.length}
+            </span>
+            <span className="text-[13px] text-muted">confirmadas</span>
+          </Card>
+        </section>
       ) : null}
 
-      <Card className="flex flex-col gap-3">
-        <h2 className="text-[19px] font-bold">Alertas no celular</h2>
-        <p className="text-[15px] leading-snug text-muted">
-          Se a {patientName} não confirmar um remédio, avisamos você por notificação.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {data.caregivers.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              aria-pressed={c.id === me}
-              onClick={() => writeMe(c.id)}
-              className={cn(
-                buttonClass({ variant: c.id === me ? "primary" : "secondary" }),
-                "w-auto min-h-11 rounded-full px-4 text-[15px]",
-              )}
-            >
-              Sou {c.name.split(" ")[0]}
-            </button>
-          ))}
-        </div>
-        {caregiver ? (
-          <EnableNotifications
-            key={caregiver.id}
-            memberId={caregiver.id}
-            label={`Ativar alertas para ${caregiver.name.split(" ")[0]}`}
-          />
-        ) : null}
-      </Card>
+      <Link
+        href="/family/receita"
+        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+      >
+        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+          <CameraIcon size={24} />
+        </span>
+        <span className="flex flex-1 flex-col">
+          <b>Receita nova</b>
+          <span className="text-[15px] text-muted">
+            Tire a foto e a IA atualiza os horários
+          </span>
+        </span>
+        <ChevronRightIcon size={20} className="text-muted" />
+      </Link>
     </>
   );
 }

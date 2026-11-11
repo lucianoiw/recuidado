@@ -1,0 +1,93 @@
+{
+ "source": "CNES, REMUME e CEAF (packages/data/seed/sus-units.json)",
+ "units": [
+  {
+   "kind": "ubs",
+   "cnes": "2788144",
+   "name": "UBS Nossa Senhora do Brasil Armando Darienzo",
+   "address": "Rua Almirante Marques de Leao, 684",
+   "district": "Bela Vista",
+   "distanceKm": 0.44,
+   "lat": -23.5628052,
+   "lng": -46.6491895,
+   "hours": "Manhã e tarde"
+  },
+  {
+   "kind": "ubs",
+   "cnes": "2787113",
+   "name": "UBS Humaita Dr Joao de Azevedo Lage",
+   "address": "Rua Humaita, 520",
+   "district": "Bela Vista",
+   "distanceKm": 1.38,
+   "lat": -23.5569312,
+   "lng": -46.6419632,
+   "hours": "Manhã, tarde e noite"
+  },
+  {
+   "kind": "ceaf_pharmacy",
+   "cnes": "6578640",
+   "name": "Farmácia de Alto Custo Dr Geraldo Bourroul",
+   "address": "Rua Martins Fontes, 208",
+   "district": "Centro",
+   "distanceKm": 1.86,
+   "lat": -23.54897115,
+   "lng": -46.64447168498984,
+   "hours": "Manhã e tarde"
+  },
+  {
+   "kind": "ceaf_pharmacy",
+   "cnes": "6503829",
+   "name": "Farmácia de Alto Custo HCFMUSP Sao Paulo",
+   "address": "Av Dr Eneas de Carvalho Aguiar, 255",
+   "district": "Cerqueira Cesar",
+   "distanceKm": 2.07,
+   "lat": -23.556748955429022,
+   "lng": -46.672325134277344,
+   "hours": "Manhã e tarde"
+  },
+  {
+   "kind": "ubs",
+   "cnes": "2091321",
+   "name": "CSE Geraldo de Paula Souza",
+   "address": "Av Dr Arnaldo, 925",
+   "district": "Pacaembu",
+   "distanceKm": 2.36,
+   "lat": -23.55316,
+   "lng": -46.67359,
+   "hours": "Manhã e tarde"
+  },
+  {
+   "kind": "ubs",
+   "cnes": "6090621",
+   "name": "UBS Republica Fernanda Sante Limeira",
+   "address": "Rua Libero Badaro, 282",
+   "district": "Centro",
+   "distanceKm": 2.48,
+   "lat": -23.54800557623506,
+   "lng": -46.635983884334564,
+   "hours": "Manhã e tarde"
+  },
+  {
+   "kind": "ubs",
+   "cnes": "5975220",
+   "name": "UBS Se",
+   "address": "Rua Frederico Alvarenga, 259",
+   "district": "Se",
+   "distanceKm": 2.89,
+   "lat": -23.5508397,
+   "lng": -46.628688,
+   "hours": "Manhã e tarde"
+  },
+  {
+   "kind": "ceaf_pharmacy",
+   "cnes": "3554503",
+   "name": "Farmácia de Alto Custo DRS I Grande Sao Paulo NGA Varzea do Carmo",
+   "address": "Rua Leopoldo Miguez, 327",
+   "district": "Glicerio",
+   "distanceKm": 2.99,
+   "lat": -23.556659117569996,
+   "lng": -46.625052973973396,
+   "hours": "Manhã e tarde"
+  }
+ ]
+}

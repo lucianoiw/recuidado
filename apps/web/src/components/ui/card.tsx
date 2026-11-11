@@ -7,7 +7,7 @@ type CardProps = HTMLAttributes<HTMLElement> & {
 };
 
 const tones = {
-  default: "bg-surface",
+  default: "border border-line-soft bg-surface",
   danger: "border-2 border-danger bg-danger-soft",
   warn: "border-2 border-warn bg-warn-soft",
   brand: "bg-brand-soft",

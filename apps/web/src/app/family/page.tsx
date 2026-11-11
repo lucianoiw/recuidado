@@ -3,7 +3,7 @@ import { FamilyView } from "./family-view";
 
 export default function FamilyPage() {
   return (
-    <Screen audience="family">
+    <Screen audience="family" withNav>
       <FamilyView />
     </Screen>
   );

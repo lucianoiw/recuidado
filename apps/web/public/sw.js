@@ -7,7 +7,7 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(title, {
       body: data.body || "",
       icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      badge: "/icon-badge-96.png",
       tag: data.doseId ? `${data.url}-${data.doseId}` : "recuidado",
       requireInteraction: true,
       data: { url: data.url || "/" },
