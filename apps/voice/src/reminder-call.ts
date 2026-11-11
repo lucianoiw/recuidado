@@ -80,7 +80,7 @@ export class ReminderCall {
   }
 
   private log(msg: string, extra?: unknown) {
-    this.opts.log?.(`[${this.opts.sessionId}] ${msg}`, extra);
+    this.opts.log?.(`${new Date().toISOString()} [${this.opts.sessionId}] ${msg}`, extra);
   }
 
   private send(event: Record<string, unknown>) {
@@ -103,6 +103,9 @@ export class ReminderCall {
   }
 
   handle(event: LiveEvent) {
+    if (!String(event.type).endsWith(".delta") && event.type !== "session.usage.updated") {
+      this.log(`event ${String(event.type)}`);
+    }
     switch (event.type) {
       case "transport.ringing":
         if (this.status === "dialing") this.status = "ringing";
@@ -141,7 +144,7 @@ export class ReminderCall {
       case "session.closed": {
         const usage = event.usage as { seconds?: number } | undefined;
         if (typeof usage?.seconds === "number") this.durationSeconds = usage.seconds;
-        this.log(`session closed: ${String(event.reason ?? "")}`);
+        this.log(`session closed: ${JSON.stringify({ ...event, usage: undefined })}`);
         this.finish();
         break;
       }
