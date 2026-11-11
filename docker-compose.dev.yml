@@ -1,0 +1,18 @@
+# Local Postgres and Redis for development: pnpm db:up
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      - POSTGRES_USER=recuidado
+      - POSTGRES_PASSWORD=recuidado
+      - POSTGRES_DB=recuidado
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-dev:/var/lib/postgresql
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
+volumes:
+  postgres-dev:
