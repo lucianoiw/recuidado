@@ -34,10 +34,34 @@ Result posted to `{API_URL}/doses/:doseId/voice-result`:
   "outcome": "confirmed | not_taken | unclear | no_answer | failed",
   "confirmed": true,
   "note": "optional detail from the patient",
+  "feelsUnwell": false,
   "transcript": [{ "speaker": "assistant", "text": "…" }, { "speaker": "patient", "text": "…" }],
-  "durationSeconds": 42
+  "durationSeconds": 42,
+  "endReason": "hung_up_after_answer"
 }
 ```
+
+`feelsUnwell` is what she answered to "E a senhora, está bem?" (self-report, no diagnosis).
+`endReason` says why the call ended: `hung_up_after_answer`, `voicemail`, `max_duration`,
+`session_closed: <reason>`, `sideband_closed` or `error`.
+
+The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and, when
+`feelsUnwell` is true, pushes the caregivers right away even if the dose was taken.
+
+## Call script
+
+1. "Boa noite, Dona Maria, aqui é do Recuidado. Já tomou a Losartana?" (bom dia / boa tarde by São Paulo time)
+2. "E a senhora, está bem?"
+3. "Obrigada, tchau!"
+
+A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
+call as `no_answer`. A phone's call-screening assistant gets "Recuidado, lembrete do remédio".
+
+## Debugging a call
+
+- Voice service log: one line per Live event with timestamp, plus the full `session.closed` event.
+- Asterisk log: `Call ended: dialstatus=… cause=… source=… answered=…s` on every hangup.
+- Container logs are lost on redeploy; `voice_calls` keeps the result.
 
 ## Run
 

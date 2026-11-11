@@ -48,6 +48,9 @@ export interface ReminderCallOptions {
   onStatusChange?: (status: CallStatus) => void;
 }
 
+/** Phrases from carrier voicemail greetings. Talking to a recording helps nobody, so the call ends. */
+const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o sinal|caixa postal|caixa de mensagens/i;
+
 /** High-frequency events left out of the log. */
 const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
 
@@ -67,6 +70,7 @@ export class ReminderCall {
   private durationSeconds?: number;
   private hangupRequested = false;
   private endReason?: string;
+  private voicemail = false;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
   private resolveResult!: (r: CallResult) => void;
@@ -147,6 +151,7 @@ export class ReminderCall {
       }
       case "session.input_transcript.delta":
         this.appendTranscript("patient", String(event.delta ?? ""));
+        this.checkVoicemail();
         break;
       case "session.output_transcript.delta":
         this.appendTranscript("assistant", String(event.delta ?? ""));
@@ -211,6 +216,19 @@ export class ReminderCall {
     );
   }
 
+  private checkVoicemail() {
+    if (this.voicemail || this.answer || this.hangupRequested) return;
+    const heard = this.transcript
+      .filter((l) => l.speaker === "patient")
+      .map((l) => l.text)
+      .join(" ");
+    if (!VOICEMAIL.test(heard)) return;
+    this.voicemail = true;
+    this.endReason ??= "voicemail";
+    this.log("voicemail detected, hanging up");
+    void this.endCall();
+  }
+
   private appendTranscript(speaker: TranscriptLine["speaker"], delta: string) {
     if (!delta) return;
     const last = this.transcript.at(-1);
@@ -232,6 +250,7 @@ export class ReminderCall {
 
   private outcome(): CallOutcome {
     if (this.answer) return this.answer.taken ? "confirmed" : "not_taken";
+    if (this.voicemail) return "no_answer";
     if (this.answered) return "unclear";
     return this.error ? "failed" : "no_answer";
   }
