@@ -10,6 +10,10 @@ describe('validateEnv', () => {
     const env = validateEnv(base);
     expect(env.PORT).toBe(4000);
     expect(env.DOSE_CALL_AFTER_MINUTES).toBe(15);
+    expect(env.PRESCRIPTION_LIMIT_PER_IP).toBe(10);
+    expect(env.PRESCRIPTION_LIMIT_TOTAL).toBe(100);
+    expect(env.PRESCRIPTION_MODEL).toBeUndefined();
+    expect(env.DEMO_RUN_LOCK_SECONDS).toBe(240);
   });
 
   it('treats an empty VOICE_URL as unset', () => {

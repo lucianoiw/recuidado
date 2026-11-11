@@ -29,6 +29,15 @@ export interface FamilyRef {
 export const DEMO_READ_ONLY =
   'Esta é a família de demonstração e ela não muda. Faça o seu cadastro para testar com a sua família.';
 
+/** "(11) •••••-5678": only the last 4 digits, so it can not be called or copied. */
+export function maskPhone(phone: string | null): string | null {
+  let digits = phone?.replace(/\D/g, '') ?? '';
+  if (digits.length >= 12 && digits.startsWith('55')) digits = digits.slice(2);
+  if (digits.length < 4) return null;
+  const ddd = digits.length >= 10 ? `(${digits.slice(0, 2)}) ` : '';
+  return `${ddd}•••••-${digits.slice(-4)}`;
+}
+
 @Injectable()
 export class FamilyService implements OnApplicationBootstrap {
   constructor(
@@ -144,11 +153,17 @@ export class FamilyService implements OnApplicationBootstrap {
       .where(eq(medications.patientId, patientId))
       .orderBy(asc(medications.createdAt));
     const stock = await this.stock.statusFor(meds);
+    // Anyone can open the demo family without logging in: its phones are never sent in full.
+    const shown = people.map((p) => ({
+      ...p,
+      phone: isDemo ? maskPhone(p.phone) : p.phone,
+      hasPhone: (p.phone?.replace(/\D/g, '').length ?? 0) >= 10,
+    }));
     return {
       familyId,
       isDemo,
-      patient: people.find((p) => p.id === patientId)!,
-      caregivers: people.filter((p) => p.role === 'caregiver'),
+      patient: shown.find((p) => p.id === patientId)!,
+      caregivers: shown.filter((p) => p.role === 'caregiver'),
       medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => ({
         ...med,
         ...freeAccessOf(activeIngredient ?? med.name, med.strength),

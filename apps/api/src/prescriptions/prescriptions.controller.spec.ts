@@ -2,6 +2,8 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PrescriptionReadError } from '@recuidado/prescription-reader';
 import request from 'supertest';
+import { HttpException } from '@nestjs/common';
+import { PrescriptionLimitService } from './prescription-limit.service.js';
 import { PrescriptionsController } from './prescriptions.controller.js';
 import { PrescriptionsService } from './prescriptions.service.js';
 
@@ -9,12 +11,14 @@ describe('POST /prescriptions/parse', () => {
   let app: INestApplication;
   const parse = vi.fn();
   const confirm = vi.fn();
+  const consume = vi.fn();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [PrescriptionsController],
       providers: [
         { provide: PrescriptionsService, useValue: { parse, confirm } },
+        { provide: PrescriptionLimitService, useValue: { consume } },
       ],
     }).compile();
     app = moduleRef.createNestApplication();
@@ -25,6 +29,25 @@ describe('POST /prescriptions/parse', () => {
   beforeEach(() => {
     parse.mockReset();
     confirm.mockReset();
+    consume.mockReset();
+  });
+
+  it('answers 429 and skips the reader when the read limit is reached', async () => {
+    consume.mockRejectedValue(new HttpException('Limite', 429));
+    const res = await request(app.getHttpServer())
+      .post('/prescriptions/parse?familyId=8b0c5f8e-6a43-4f7e-9d2b-1c3a5e7f9b10')
+      .attach('file', Buffer.from('png-bytes'), { filename: 'receita.png', contentType: 'image/png' });
+    expect(res.status).toBe(429);
+    expect(parse).not.toHaveBeenCalled();
+    expect(consume.mock.calls[0]![1]).toBe('8b0c5f8e-6a43-4f7e-9d2b-1c3a5e7f9b10');
+  });
+
+  it('counts a read without a valid familyId by IP only', async () => {
+    parse.mockResolvedValue({ reading: { items: [] }, model: 'm', usage: { input_tokens: 1, output_tokens: 1 } });
+    await request(app.getHttpServer())
+      .post('/prescriptions/parse?familyId=nope')
+      .attach('file', Buffer.from('png-bytes'), { filename: 'receita.png', contentType: 'image/png' });
+    expect(consume.mock.calls[0]![1]).toBeNull();
   });
 
   it('passes the uploaded image to the reader and returns its result', async () => {
@@ -97,6 +120,7 @@ describe('POST /prescriptions/parse', () => {
 });
 
 describe('PrescriptionsController error mapping', () => {
+  const limits = { consume: vi.fn(async () => {}) } as unknown as PrescriptionLimitService;
   const file = { buffer: Buffer.from('jpg'), mimetype: 'image/jpeg', size: 3 };
 
   it.each([
@@ -111,8 +135,8 @@ describe('PrescriptionsController error mapping', () => {
     });
     const controller = new PrescriptionsController({
       parse,
-    } as unknown as PrescriptionsService);
-    await expect(controller.parse(file)).rejects.toMatchObject({
+    } as unknown as PrescriptionsService, limits);
+    await expect(controller.parse(file, '127.0.0.1')).rejects.toMatchObject({
       status,
       message: 'mensagem',
     });
@@ -124,7 +148,7 @@ describe('PrescriptionsController error mapping', () => {
       parse: vi.fn(async () => {
         throw boom;
       }),
-    } as unknown as PrescriptionsService);
-    await expect(controller.parse(file)).rejects.toBe(boom);
+    } as unknown as PrescriptionsService, limits);
+    await expect(controller.parse(file, '127.0.0.1')).rejects.toBe(boom);
   });
 });

@@ -133,7 +133,7 @@ export function DemoView() {
 
   const name = data ? callName(data.patient) : "Dona Maria";
   const running = doseId !== null;
-  const hasPhone = (data?.patient.phone?.replace(/\D/g, "").length ?? 0) >= 10;
+  const hasPhone = data?.patient.hasPhone ?? (data?.patient.phone?.replace(/\D/g, "").length ?? 0) >= 10;
 
   return (
     <>

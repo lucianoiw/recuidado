@@ -31,6 +31,15 @@ export const envSchema = z.object({
     (v) => (v === '' ? undefined : v),
     z.string().optional(),
   ),
+  // Claude model that reads prescriptions. Empty uses the reader's default.
+  PRESCRIPTION_MODEL: optionalString,
+  // Prescription reading is open (no login) and each read costs money (about US$ 0.06).
+  // Reads allowed in 24 hours per IP, per family and in total. 0 turns that limit off; total 0 turns reading off.
+  PRESCRIPTION_LIMIT_PER_IP: z.coerce.number().int().nonnegative().default(10),
+  PRESCRIPTION_LIMIT_PER_FAMILY: z.coerce.number().int().nonnegative().default(10),
+  PRESCRIPTION_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(100),
+  // Reverse proxies in front of the API (Traefik in Coolify), so the client IP comes from X-Forwarded-For.
+  TRUST_PROXY_HOPS: z.coerce.number().int().nonnegative().default(1),
   // Web Push (VAPID). Without the keys, pushes are skipped and only logged.
   VAPID_PUBLIC_KEY: optionalString,
   VAPID_PRIVATE_KEY: optionalString,
@@ -48,6 +57,8 @@ export const envSchema = z.object({
     (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
     z.boolean(),
   ),
+  // Seconds a demo run holds the button: a second press in this time follows the same run.
+  DEMO_RUN_LOCK_SECONDS: z.coerce.number().int().positive().default(240),
   // Seconds after the demo reminder before the call.
   DEMO_CALL_AFTER_SECONDS: z.coerce.number().int().positive().default(20),
   // Seconds after the demo call starts before the family is alerted if the call never reports back.
