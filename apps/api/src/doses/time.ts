@@ -37,3 +37,7 @@ export function upcomingDoseTimes(times: string[], now: Date, days = 2): Date[] 
   }
   return result;
 }
+
+/** Minutes between the scheduled time and now; negative if early. */
+export const minutesSince = (scheduledAt: Date, now = new Date()) =>
+  Math.round((now.getTime() - scheduledAt.getTime()) / 60000);

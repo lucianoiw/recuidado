@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { captureError } from "./analytics";
 import { getFamily, type FamilyOverview } from "./api";
 
 /** Loads GET /family and refreshes it every 30 seconds. */
@@ -16,7 +17,10 @@ export function useFamily() {
         setNow(Date.now());
         setError(false);
       },
-      () => setError(true),
+      (e) => {
+        captureError(e, { hook: "useFamily" });
+        setError(true);
+      },
     );
   }, []);
 

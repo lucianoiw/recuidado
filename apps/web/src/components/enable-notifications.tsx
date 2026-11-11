@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BellIcon, buttonClass } from "@/components/ui";
+import { captureError, track } from "@/lib/analytics";
 import { currentPushState, enablePush, sendTestPush, type PushState } from "@/lib/push";
 
 const MESSAGES: Record<PushState, string> = {
@@ -34,9 +35,11 @@ export function EnableNotifications({
     setError(null);
     try {
       const next = await enablePush(memberId);
+      track("notifications_permission", { result: next });
       setState(next);
       if (next === "on") await sendTestPush(memberId);
-    } catch {
+    } catch (e) {
+      captureError(e, { screen: "notifications" });
       setError("Não deu para ativar agora. Tente de novo.");
     } finally {
       setBusy(false);
