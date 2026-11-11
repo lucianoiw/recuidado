@@ -1,4 +1,5 @@
 import { toE164 } from "./phone.js";
+import { defaultGateway, type AmiConfig } from "./ami.js";
 
 export interface VoiceConfig {
   openaiApiKey: string;
@@ -23,6 +24,10 @@ export interface VoiceConfig {
   port: number;
   voiceApiToken: string;
   apiUrl?: string;
+  /** Asterisk Manager Interface, to mute the AI toward a recorded menu. Off when no secret is set. */
+  ami?: AmiConfig;
+  /** Classify the other side of a pharmacy call (menu, hold, person...) with GPT-Live Decisions. */
+  pharmacyDecisions: boolean;
 }
 
 function required(env: NodeJS.ProcessEnv, name: string): string {
@@ -64,5 +69,20 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     port: Number(env.PORT ?? 5000),
     voiceApiToken: required(env, "VOICE_API_TOKEN"),
     apiUrl: env.API_URL?.trim() || undefined,
+    ami: loadAmi(env),
+    pharmacyDecisions: (env.PHARMACY_DECISIONS?.trim() || "on") !== "off",
+  };
+}
+
+function loadAmi(env: NodeJS.ProcessEnv): AmiConfig | undefined {
+  const secret = env.ASTERISK_AMI_SECRET?.trim();
+  if (!secret) return undefined;
+  const host = env.ASTERISK_AMI_HOST?.trim() || defaultGateway();
+  if (!host) return undefined;
+  return {
+    host,
+    port: Number(env.ASTERISK_AMI_PORT ?? 5038),
+    username: env.ASTERISK_AMI_USER?.trim() || "recuidado",
+    secret,
   };
 }

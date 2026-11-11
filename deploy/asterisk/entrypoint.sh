@@ -56,7 +56,14 @@ else
   export EXTERNAL_ADDR_LINES=""
 fi
 
-VARS='$SIP_TLS_PORT $NVOIP_LOCAL_PORT $NVOIP_SIP_HOST $NVOIP_SIP_USER $NVOIP_SIP_PASSWORD $OPENAI_SIP_USERNAME $OPENAI_SIP_PASSWORD $RTP_START $RTP_END $ALLOWED_REGEX $EXTERNAL_ADDR_LINES'
+# AMI (manager.conf) only when a secret is set: recuidado/voice uses it to mute the AI toward a recorded menu.
+if [ -n "${AMI_SECRET:-}" ]; then
+  export AMI_ENABLED=yes
+else
+  export AMI_ENABLED=no AMI_SECRET=unused
+fi
+
+VARS='$AMI_ENABLED $AMI_SECRET $SIP_TLS_PORT $NVOIP_LOCAL_PORT $NVOIP_SIP_HOST $NVOIP_SIP_USER $NVOIP_SIP_PASSWORD $OPENAI_SIP_USERNAME $OPENAI_SIP_PASSWORD $RTP_START $RTP_END $ALLOWED_REGEX $EXTERNAL_ADDR_LINES'
 for f in /opt/recuidado/templates/*.conf; do
   envsubst "$VARS" < "$f" > "/etc/asterisk/$(basename "$f")"
 done
