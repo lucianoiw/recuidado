@@ -294,3 +294,51 @@ test("voicemail greeting ends the call as no answer", async () => {
   assert.equal(result.endReason, "voicemail");
   assert.equal(hangups(), 1);
 });
+
+test("an emergency is reported and counts as unwell", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "e1" });
+  socket.emitEvent({
+    type: "response.event",
+    event_id: "e_tool",
+    event: {
+      type: "response.output_item.done",
+      item: {
+        type: "function_call",
+        name: "record_dose_answer",
+        call_id: "call_e",
+        arguments: JSON.stringify({ taken: true, feels_unwell: false, emergency: true, note: "Caí no banheiro" }),
+      },
+    },
+  });
+  const result = await call.result;
+  assert.equal(result.emergency, true);
+  assert.equal(result.feelsUnwell, true);
+});
+
+test("alert call speaks the message and hangs up after it", async () => {
+  const { AlertCall, buildEmergencyMessage } = await import("./alert-call.js");
+  const socket = new FakeSocket();
+  let hangups = 0;
+  const message = buildEmergencyMessage("Dona Maria", "Caí no banheiro");
+  assert.match(message, /Dona Maria disse agora na ligação do remédio: "Caí no banheiro"/);
+  const call = new AlertCall({
+    sessionId: "live_alert",
+    message,
+    socket,
+    hangup: async () => {
+      hangups++;
+      socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" });
+    },
+    maxCallMs: 60_000,
+    tailMs: 10,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  assert.equal(socket.sent[0].type, "session.commentary.append");
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "a2", delta: message });
+  const result = await call.result;
+  assert.equal(hangups, 1);
+  assert.equal(result.delivered, true);
+  assert.equal(result.endReason, "message_delivered");
+});

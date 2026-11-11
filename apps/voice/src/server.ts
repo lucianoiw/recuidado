@@ -173,6 +173,32 @@ const server = createServer(async (req, res) => {
       }
     }
 
+    if (req.method === "POST" && url.pathname === "/alert-calls") {
+      const b = ((await readJson(req)) ?? {}) as Record<string, unknown>;
+      if (typeof b.phone !== "string" || !b.phone) return json(res, 400, { error: "phone is required" });
+      if (typeof b.message !== "string" || !b.message.trim() || b.message.length > 600) {
+        return json(res, 400, { error: "message is required (at most 600 characters)" });
+      }
+      const props = { dose_id: typeof b.doseId === "string" ? b.doseId : undefined };
+      try {
+        const { sessionId, call } = await service.startAlert(b.phone, b.message.trim());
+        telemetry.capture("alert_call_started", { ...props, call_id: sessionId }, telemetry.systemId);
+        void call.result.then((result) => {
+          telemetry.info(`alert call ${sessionId} ended: delivered=${result.delivered}`, { ...props, call_id: sessionId });
+          telemetry.capture(
+            "alert_call_ended",
+            { ...props, call_id: sessionId, answered: result.answered, delivered: result.delivered, end_reason: result.endReason },
+            telemetry.systemId,
+          );
+        });
+        return json(res, 202, { callId: sessionId });
+      } catch (err) {
+        if (err instanceof NumberNotAllowedError) return json(res, 403, { error: err.message });
+        telemetry.error(`failed to start alert call: ${(err as Error).message}`, props);
+        return json(res, 502, { error: "failed to start alert call" });
+      }
+    }
+
     if (req.method === "POST" && url.pathname === "/pharmacy-calls") {
       let input;
       try {
