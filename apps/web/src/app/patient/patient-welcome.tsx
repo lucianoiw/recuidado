@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   useEffect,
   useState,
@@ -120,6 +121,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
   );
   const [push, setPush] = useState<PushState | null>(null);
   const [busy, setBusy] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const onPrompt = (e: Event) => {
@@ -328,6 +330,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         onClick={() => {
           track("patient_welcome_done", { push: push ?? "skipped" });
           markReady();
+          router.push("/patient/remedios");
         }}
       >
         Ver meus remédios
