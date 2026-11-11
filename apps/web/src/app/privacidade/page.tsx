@@ -88,9 +88,9 @@ export default function PrivacyPage() {
           é na hora e não tem volta.
         </p>
         <p>
-          Dúvidas:{" "}
-          <a href="https://github.com/lucianoiw/recuidado/issues" className="font-bold text-brand underline">
-            abra uma conversa no repositório do projeto
+          Dúvidas, pedidos sobre os seus dados ou para falar com o encarregado de dados:{" "}
+          <a href="mailto:privacidade@recuidado.com.br" className="font-bold text-brand underline">
+            privacidade@recuidado.com.br
           </a>
           .
         </p>

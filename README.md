@@ -214,11 +214,11 @@ A região da demo é São Paulo capital. Detalhes em [packages/data/README.md](p
 - Segredos só em variáveis de ambiente, nunca no repositório ([.env.example](.env.example) lista os nomes).
 - Dado de saúde é sensível (LGPD, art. 11). Por isso a pessoa cuidada consente: a família declara no cadastro e ela confirma no primeiro acesso ao app dela, com "Aceito" ou "Não quero". Sem aceite, o Recuidado não liga.
 - Guardamos o mínimo (sem CPF, endereço completo ou diagnóstico, sem áudio). O texto das ligações é apagado depois de 90 dias.
-- Quem fez o cadastro baixa todos os dados da família ou apaga tudo em Família, Seus dados. O aviso de privacidade está em [/privacidade](https://recuidado.com.br/privacidade).
+- Quem fez o cadastro baixa todos os dados da família ou apaga tudo em Família, Seus dados. O aviso de privacidade está em [/privacidade](https://recuidado.com.br/privacidade). Contato do encarregado de dados: privacidade@recuidado.com.br.
 - O PostHog não recebe nomes de remédio nem transcrições, e o replay das telas esconde todo o texto.
 - A assistente da ligação diz que é uma assistente virtual na primeira frase.
 - O agente não faz diagnóstico, não recomenda tratamento e não muda dose. A família revisa a leitura da receita antes de salvar.
-- Antes de ter usuário real ainda faltaria: login de verdade (hoje o id salvo no aparelho identifica a família), retenção zero nos provedores de IA e um canal de contato do encarregado de dados.
+- Antes de ter usuário real ainda faltaria: login de verdade (hoje o id salvo no aparelho identifica a família), e retenção zero nos provedores de IA.
 
 ## Rodar localmente
 
