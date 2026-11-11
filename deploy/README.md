@@ -14,6 +14,7 @@ Coolify project "Recuidado", branch `main`, server 82.25.75.144. One resource pe
 Dockerfile resources use Base Directory `/` (build context is the repo root). Asterisk uses `/deploy/asterisk`, because Coolify resolves the compose build context from the base directory.
 
 - `api`: `DATABASE_URL` and `REDIS_URL` use the internal URLs of the Coolify databases. Migrations run on boot.
+- `api` and `web`: Web Push uses one VAPID key pair. `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` on api; the same public key as `NEXT_PUBLIC_VAPID_PUBLIC_KEY` on web, marked as build variable (Next inlines it at build time).
 - `voice`: keeps the domain `voz.recuidado.com.br` so Traefik issues the certificate that `asterisk` reads from `/data/coolify/proxy/acme.json`. Give it a longer stop grace period so a call in progress is not cut.
 - Firewall (Hostinger panel): open 5061/tcp and 10000-10200/udp for Asterisk.
 - Variables: see `.env.example`. Secrets never go in the repo.

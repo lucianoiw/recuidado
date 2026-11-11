@@ -11,7 +11,7 @@ import type { Queue } from 'bullmq';
 import { and, eq } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members } from '../db/schema.js';
-import { DOSES_QUEUE, type DoseJob } from '../doses/doses.queue.js';
+import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 
 /** Body that apps/voice posts to /doses/:id/voice-result. */
 export interface VoiceResult {
@@ -21,7 +21,7 @@ export interface VoiceResult {
   note?: string | null;
 }
 
-export const alertJobId = (doseId: string) => `alert-family-${doseId}`;
+export const alertJobId = (doseId: string) => doseJobId('alert-family', doseId);
 
 @Injectable()
 export class VoiceCallService {
