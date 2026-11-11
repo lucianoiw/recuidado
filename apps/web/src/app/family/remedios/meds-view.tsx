@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import {
   CameraIcon,
   CartIcon,
   ChevronRightIcon,
   GiftIcon,
+  PencilIcon,
   PinIcon,
   PlusIcon,
   buttonClass,
-  cn,
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
+import { EditMedSheet } from "@/components/edit-med-sheet";
 import { FreeOrBuy } from "@/components/free-or-buy";
 import { callName, isFree, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
@@ -26,17 +28,20 @@ function freeWhere(m: Medication): string | null {
   return null;
 }
 
-function MedRow({ m }: { m: Medication }) {
+function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
   const { getsFree, setBuy } = useBuyChoice();
   return (
-    <li
-      className={cn(
-        "flex gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0",
-        isFree(m) ? "flex-col" : "items-center justify-between",
-      )}
-    >
-      <div className="flex min-w-0 flex-col">
-        <span className="font-bold">{medLabel(m.name, m.strength)}</span>
+    <li className="flex flex-col gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0">
+      <button
+        type="button"
+        onClick={() => onEdit(m)}
+        aria-label={`Mudar ${medLabel(m.name, m.strength)}`}
+        className="flex min-w-0 flex-col text-left"
+      >
+        <span className="font-bold">
+          {medLabel(m.name, m.strength)}
+          <PencilIcon size={16} className="ml-1.5 inline align-[-2px] text-muted" />
+        </span>
         <span className="text-[15px] text-muted">
           {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
         </span>
@@ -48,14 +53,15 @@ function MedRow({ m }: { m: Medication }) {
             Pode ser grátis no Alto Custo, com laudo do médico
           </span>
         ) : null}
-      </div>
+        {!isFree(m) ? (
+          <span className="text-[15px] font-bold">
+            {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)} por mês` : "Sem preço ainda"}
+          </span>
+        ) : null}
+      </button>
       {isFree(m) ? (
         <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(free) => setBuy(m.id, !free)} />
-      ) : (
-        <span className="whitespace-nowrap font-bold">
-          {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : "Comprar"}
-        </span>
-      )}
+      ) : null}
     </li>
   );
 }
@@ -65,11 +71,13 @@ function Group({
   title,
   meds,
   link,
+  onEdit,
 }: {
   icon: React.ReactNode;
   title: string;
   meds: Medication[];
   link: { href: string; label: string };
+  onEdit: (m: Medication) => void;
 }) {
   return (
     <section className="flex flex-col gap-2">
@@ -80,7 +88,7 @@ function Group({
       <div className="overflow-hidden rounded-card border border-line-soft bg-surface">
         <ul>
           {meds.map((m) => (
-            <MedRow key={m.id} m={m} />
+            <MedRow key={m.id} m={m} onEdit={onEdit} />
           ))}
         </ul>
         <Link
@@ -96,8 +104,9 @@ function Group({
 }
 
 export function MedsView() {
-  const { data, error } = useFamily();
+  const { data, error, reload } = useFamily();
   const { getsFree } = useBuyChoice();
+  const [editing, setEditing] = useState<Medication | null>(null);
 
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
@@ -128,6 +137,7 @@ export function MedsView() {
           title="Grátis"
           meds={free}
           link={{ href: "/family/onde-pegar", label: "Ver onde pegar" }}
+          onEdit={setEditing}
         />
       ) : null}
 
@@ -137,17 +147,20 @@ export function MedsView() {
           title="Para comprar"
           meds={paid}
           link={{ href: "/family/comprar", label: "Ver preços e dividir" }}
+          onEdit={setEditing}
         />
       ) : null}
+
+      <EditMedSheet med={editing} onClose={() => setEditing(null)} onSaved={reload} />
 
       <Link href="/family/adicionar" className={buttonClass()}>
         <PlusIcon size={22} />
         Adicionar remédios
       </Link>
 
-      {data.medications.some(isFree) ? (
+      {data.medications.length > 0 ? (
         <p className="text-[15px] leading-snug text-muted">
-          Prefere comprar um remédio que pode sair grátis? Toque em Comprar e ele entra na conta da família.
+          Toque no nome de um remédio para mudar a dose, o horário ou parar. Prefere comprar um que pode sair grátis? Toque em Comprar.
         </p>
       ) : null}
 

@@ -2,17 +2,19 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
 import { z } from 'zod';
 import { FamilyService } from './family.service.js';
-import { buyChoiceBody, onboardingBody } from './onboarding.schema.js';
+import { buyChoiceBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
 
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
@@ -53,5 +55,19 @@ export class FamilyController {
   @HttpCode(204)
   async setBuyChoice(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: unknown) {
     await this.family.setBuyChoice(id, parse(buyChoiceBody, body).buy);
+  }
+
+  /** Family edits the dose or the times of a medication. */
+  @Patch('medications/:id')
+  @HttpCode(204)
+  async updateMedication(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: unknown) {
+    await this.family.updateMedication(id, parse(medicationUpdateBody, body));
+  }
+
+  /** Family stops a medication. */
+  @Delete('medications/:id')
+  @HttpCode(204)
+  async removeMedication(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.family.removeMedication(id);
   }
 }

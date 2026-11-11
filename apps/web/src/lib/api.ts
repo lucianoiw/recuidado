@@ -24,6 +24,8 @@ export interface Member {
   relationOther?: string | null;
   /** Invited during sign-up and has not opened the app yet. */
   pending?: boolean;
+  /** Digits only, e.g. "11987654321". */
+  phone?: string | null;
 }
 
 /** The name screens show for the patient: the nickname when there is one. */
@@ -52,6 +54,14 @@ export interface FamilyOverview {
   caregivers: Member[];
   medications: Medication[];
   today: Dose[];
+  /** Calls of the last 24 hours where she said she is not feeling well. */
+  unwellReports?: { at: string; note: string | null; doseId: string }[];
+}
+
+/** tel: link for a member, or null when there is no phone. */
+export function telHref(m: Member): string | null {
+  const digits = m.phone?.replace(/\D/g, "") ?? "";
+  return digits.length >= 10 ? `tel:+55${digits}` : null;
 }
 
 /** Free somewhere: Farmácia Popular or the UBS pharmacy. */
@@ -173,4 +183,18 @@ export async function getOnboarding(caregiverId: string): Promise<OnboardingReco
 export async function saveOnboarding(body: unknown): Promise<{ caregiverId: string }> {
   const res = await send("PUT", "/family/onboarding", body, "Não deu para salvar o cadastro.");
   return res.json();
+}
+
+/** Family edits the dose text or the times of a medication. */
+export async function updateMedication(
+  id: string,
+  body: { strength?: string | null; times?: string[] },
+): Promise<void> {
+  await send("PATCH", `/family/medications/${id}`, body, "Não deu para salvar a mudança.");
+}
+
+/** Family stops a medication. */
+export async function removeMedication(id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/family/medications/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para tirar o remédio."));
 }

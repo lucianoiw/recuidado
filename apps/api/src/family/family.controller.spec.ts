@@ -22,11 +22,13 @@ describe('FamilyController', () => {
   const saveOnboarding = vi.fn();
   const setBuyChoice = vi.fn();
   const join = vi.fn();
+  const updateMedication = vi.fn();
+  const removeMedication = vi.fn();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [FamilyController],
-      providers: [{ provide: FamilyService, useValue: { saveOnboarding, setBuyChoice, join } }],
+      providers: [{ provide: FamilyService, useValue: { saveOnboarding, setBuyChoice, join, updateMedication, removeMedication } }],
     }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
@@ -84,5 +86,36 @@ describe('FamilyController', () => {
       .put('/family/medications/7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11/buy-choice')
       .send({ buy: 'yes' });
     expect(res.status).toBe(400);
+  });
+
+  it('updates the times of a medication', async () => {
+    const id = '7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11';
+    const res = await request(app.getHttpServer())
+      .patch(`/family/medications/${id}`)
+      .send({ times: ['08:00', '20:00'] });
+    expect(res.status).toBe(204);
+    expect(updateMedication).toHaveBeenCalledWith(id, { times: ['08:00', '20:00'] });
+  });
+
+  it('rejects a time that is not HH:MM', async () => {
+    const res = await request(app.getHttpServer())
+      .patch('/family/medications/7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11')
+      .send({ times: ['8h'] });
+    expect(res.status).toBe(400);
+    expect(updateMedication).not.toHaveBeenCalled();
+  });
+
+  it('rejects an empty update', async () => {
+    const res = await request(app.getHttpServer())
+      .patch('/family/medications/7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11')
+      .send({});
+    expect(res.status).toBe(400);
+  });
+
+  it('removes a medication', async () => {
+    const id = '7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11';
+    const res = await request(app.getHttpServer()).delete(`/family/medications/${id}`);
+    expect(res.status).toBe(204);
+    expect(removeMedication).toHaveBeenCalledWith(id);
   });
 });

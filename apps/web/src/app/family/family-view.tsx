@@ -9,11 +9,12 @@ import {
   ChevronRightIcon,
   DoseList,
   DoseRow,
+  HeartIcon,
   PhoneIcon,
   buttonClass,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
-import { callName, formatTime, isFree, type Dose } from "@/lib/api";
+import { callName, formatTime, isFree, telHref, type Dose } from "@/lib/api";
 import { medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
@@ -56,6 +57,8 @@ export function FamilyView() {
   const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
   const free = data.medications.filter(isFree).length;
+  const tel = telHref(data.patient);
+  const unwell = data.unwellReports?.[0];
 
   return (
     <>
@@ -78,6 +81,39 @@ export function FamilyView() {
           <span className="sr-only">Alertas</span>
         </Link>
       </header>
+
+      {unwell ? (
+        <section
+          role="alert"
+          className="flex flex-col gap-3 rounded-card border-[1.5px] border-warn bg-warn-soft p-4"
+        >
+          <div className="flex items-start gap-2.5">
+            <HeartIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
+            <div className="flex flex-col gap-0.5">
+              <b className="text-warn">{name} não está bem</b>
+              <span className="text-[15px] leading-snug">
+                Na ligação das {formatTime(unwell.at)}
+                {unwell.note ? (
+                  <>
+                    : <q className="font-semibold">{unwell.note}</q>
+                  </>
+                ) : (
+                  "."
+                )}
+              </span>
+              <span className="text-[14px] text-muted">
+                Ela mesma contou. O app não avalia a saúde dela.
+              </span>
+            </div>
+          </div>
+          {tel ? (
+            <a href={tel} className={buttonClass()}>
+              <PhoneIcon size={20} />
+              Ligar para ela
+            </a>
+          ) : null}
+        </section>
+      ) : null}
 
       {missed.map((group) => {
         const d = group[0];
@@ -111,10 +147,12 @@ export function FamilyView() {
                 </span>
               </div>
             </div>
-            <a href="tel:" className={buttonClass({ variant: "danger" })}>
-              <PhoneIcon size={20} />
-              Ligar para ela
-            </a>
+            {tel ? (
+              <a href={tel} className={buttonClass({ variant: "danger" })}>
+                <PhoneIcon size={20} />
+                Ligar para ela
+              </a>
+            ) : null}
           </section>
         );
       })}
