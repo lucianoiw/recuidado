@@ -54,7 +54,7 @@ export class AlertsService {
         caregivers.map((c) => c.id),
         { title: alert.title, body: alert.body, url: alert.url, doseId: alert.doseId },
       ),
-      this.email.sendAlert(addresses, { title: alert.title, body: alert.body, link }, alert.kind),
+      this.email.sendAlert(addresses, { kind: alert.kind, title: alert.title, body: alert.body, link }),
     ]);
     await this.record(familyId, alert, sent, emails);
     return { caregivers: caregivers.length, sent, emails };
