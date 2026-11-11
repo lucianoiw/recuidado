@@ -9,6 +9,7 @@ import {
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import Anthropic from '@anthropic-ai/sdk';
 import { ConfigService } from '@nestjs/config';
 import { and, desc, eq, gte, inArray } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
@@ -16,6 +17,7 @@ import { medications, pharmacyInquiries } from '../db/schema.js';
 import { FamilyService } from '../family/family.service.js';
 import { VoiceCallService } from '../voice/voice.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
+import { readPharmacyTranscript } from './transcript-reader.js';
 
 /** At most this many medicines per call, so the call stays short. */
 export const MAX_MEDICATIONS_PER_CALL = 3;
@@ -49,6 +51,7 @@ const LIMIT_MESSAGE =
 @Injectable()
 export class PharmacyService {
   private readonly logger = new Logger(PharmacyService.name);
+  private client: Anthropic | undefined;
 
   constructor(
     @Inject(DB) private readonly db: Database,
@@ -186,7 +189,11 @@ export class PharmacyService {
         finishedAt: new Date(),
       })
       .where(and(eq(pharmacyInquiries.id, id), eq(pharmacyInquiries.status, 'calling')))
-      .returning({ id: pharmacyInquiries.id, familyId: pharmacyInquiries.familyId });
+      .returning({
+        id: pharmacyInquiries.id,
+        familyId: pharmacyInquiries.familyId,
+        medications: pharmacyInquiries.medications,
+      });
     if (!row) {
       const [exists] = await this.db
         .select({ id: pharmacyInquiries.id })
@@ -202,7 +209,40 @@ export class PharmacyService {
       items_with_price: result.items.filter((i) => i.priceCents != null).length,
       keys_pressed: result.keysPressed?.length ?? 0,
     });
+    // The call can end (the pharmacy hangs up) before the voice model records the answer.
+    // Then Claude reads the answer from the transcript, in the background so apps/voice is not held.
+    const heard = (result.transcript ?? []).some((l) => l.speaker === 'patient' && l.text.trim());
+    if (result.outcome === 'unclear' && result.items.length === 0 && heard) {
+      void this.readTranscript(
+        id,
+        row.medications.map((m) => [m.name, m.strength].filter(Boolean).join(' ')),
+        result.transcript ?? [],
+      );
+    }
     return 'recorded' as const;
+  }
+
+  /** Fills the answer from the call transcript. Never throws: on any problem the inquiry stays unclear. */
+  async readTranscript(id: string, meds: string[], transcript: NonNullable<PharmacyVoiceResult['transcript']>) {
+    const apiKey = this.config.get<string>('ANTHROPIC_API_KEY');
+    if (!apiKey) return;
+    try {
+      this.client ??= new Anthropic({ apiKey });
+      const { items, note } = await readPharmacyTranscript(this.client, meds, transcript);
+      const useful = items.some((i) => i.available !== 'unknown' || i.priceCents != null);
+      if (!useful) return;
+      await this.db
+        .update(pharmacyInquiries)
+        .set({ status: 'answered', answers: items, note })
+        .where(and(eq(pharmacyInquiries.id, id), eq(pharmacyInquiries.status, 'unclear')));
+      telemetry.capture('pharmacy_answer_from_transcript', {
+        inquiry_id: id,
+        items: items.length,
+        items_with_price: items.filter((i) => i.priceCents != null).length,
+      });
+    } catch (error) {
+      this.logger.warn(`reading pharmacy transcript failed: ${(error as Error).message}`);
+    }
   }
 
   private async fail(id: string, error: string) {

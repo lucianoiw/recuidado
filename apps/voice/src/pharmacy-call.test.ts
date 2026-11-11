@@ -285,3 +285,44 @@ test("presses the menu key itself after the menu pauses", async () => {
   await call.endCall();
   assert.deepEqual((await call.result).keysPressed, ["2"]);
 });
+
+test("waits for the other side to pause before introducing, so a slow menu is not taken for a person", async () => {
+  const socket = new FakeSocket();
+  const call = new PharmacyCall({
+    sessionId: "live_slow_menu",
+    context,
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    openingWaitMs: 60_000,
+    introduceAfterMs: 50,
+    menuPauseMs: 60_000,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  for (const [i, delta] of ["Bem-vindo à Farmácia Pet.", " Para receita", " de", " documentos", " tecle um"].entries()) {
+    socket.emitEvent({ type: "session.input_transcript.delta", event_id: `i${i}`, delta });
+    await new Promise((r) => setTimeout(r, 20));
+  }
+  await new Promise((r) => setTimeout(r, 100));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  await call.endCall();
+  await call.result;
+});
+
+test("hangs up soon when the goodbye came before the answer was recorded", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Tem sim, 18,90." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: "Muito obrigada, tchau!" });
+  socket.emitEvent(
+    fnCall("r1", "record_pharmacy_answer", {
+      items: [{ medication: "Losartana 50 mg", available: "yes", price_reais: 18.9, package: "", farmacia_popular: "unknown" }],
+      note: "",
+    }),
+  );
+  const result = await call.result;
+  assert.equal(result.outcome, "answered");
+  assert.equal(result.endReason, "hung_up_after_goodbye");
+});
