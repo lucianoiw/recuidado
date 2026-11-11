@@ -25,7 +25,8 @@ function bounds(points: { lat: number; lng: number }[]) {
     south: Math.min(...lats),
     east: Math.max(...lngs),
     west: Math.min(...lngs),
-    padding: 24,
+    // Extra room on the right for the zoom buttons.
+    padding: { top: 36, bottom: 36, left: 36, right: 72 },
   };
 }
 
