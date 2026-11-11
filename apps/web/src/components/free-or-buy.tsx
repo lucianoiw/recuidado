@@ -19,7 +19,7 @@ export function FreeOrBuy({
       aria-checked={free === value}
       onClick={() => onChange(value)}
       className={cn(
-        "min-h-10 rounded-[9px] px-2.5 text-[14px] font-bold",
+        "min-h-11 flex-1 whitespace-nowrap rounded-[9px] px-2.5 text-[15px] font-bold",
         free === value
           ? cn("bg-surface shadow-sm", value ? "text-brand" : "text-warn")
           : "text-muted",
@@ -29,7 +29,7 @@ export function FreeOrBuy({
     </button>
   );
   return (
-    <div role="radiogroup" aria-label={`Como conseguir ${name}`} className="inline-flex shrink-0 rounded-xl bg-line-soft p-[3px]">
+    <div role="radiogroup" aria-label={`Como conseguir ${name}`} className="flex w-full rounded-xl bg-line-soft p-[3px]">
       {option(true, "Pegar grátis")}
       {option(false, "Comprar")}
     </div>

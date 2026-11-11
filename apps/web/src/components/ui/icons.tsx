@@ -205,3 +205,12 @@ export function XIcon(props: IconProps) {
     </Icon>
   );
 }
+
+export function ShareIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3v12M7 8l5-5 5 5" />
+      <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+    </Icon>
+  );
+}

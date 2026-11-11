@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { setBuyChoice, type Medication } from "./api";
+import { isFree, setBuyChoice, type Medication } from "./api";
 
 // Choices made on this page, shown right away while GET /family catches up.
 let pending: Record<string, boolean> = {};
@@ -36,7 +36,7 @@ export function useBuyChoice() {
 
   /** True when the family will get this medication for free. */
   const getsFree = (m: Medication) =>
-    m.freeInFarmaciaPopular && !(choices[m.id] ?? m.buyInsteadOfFree ?? false);
+    isFree(m) && !(choices[m.id] ?? m.buyInsteadOfFree ?? false);
 
   return { getsFree, setBuy };
 }

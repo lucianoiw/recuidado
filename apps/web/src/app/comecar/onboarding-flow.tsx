@@ -11,14 +11,16 @@ import {
   InfoIcon,
   PlusIcon,
   SelectField,
+  ShareIcon,
   Sheet,
   StatusPill,
   TopBar,
-  buttonClass,
   cn,
 } from "@/components/ui";
+import { QRCodeSVG } from "qrcode.react";
 import { captureError, track } from "@/lib/analytics";
 import { lookupCep, type CepLookup } from "@/lib/cep";
+import { useCanShare, useOrigin } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
 import { getOnboarding, saveOnboarding } from "@/lib/api";
@@ -94,7 +96,7 @@ export function OnboardingFlow() {
     }
     track("onboarding_step_completed", { step, total: TOTAL });
     if (step < TOTAL) setStep(step + 1);
-    else router.push("/family/receita");
+    else router.push("/family/adicionar");
   }
 
   const nickname = p.nickname.trim() || p.name.trim().split(" ")[0] || "ela";
@@ -231,7 +233,7 @@ export function OnboardingFlow() {
 
       <div className="mt-auto flex flex-col gap-1.5 pt-2">
         <Button onClick={next} disabled={saving}>
-          {saving ? "Salvando..." : step === TOTAL ? "Pronto, adicionar a receita" : "Continuar"}
+          {saving ? "Salvando..." : step === TOTAL ? "Pronto, adicionar os remédios" : "Continuar"}
         </Button>
         {step === TOTAL ? (
           <Link href="/family" className="py-3 text-center font-bold text-brand">
@@ -262,25 +264,48 @@ function InviteStep({
   nickname: string;
 }) {
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [relation, setRelation] = useState<Relation | null>(null);
   const [adding, setAdding] = useState(false);
-  const [copied, setCopied] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(null);
+  const canShare = useCanShare();
 
-  async function copy(who: string) {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/family`);
-      setCopied(who);
-    } catch {}
-  }
-
-  function add() {
+  function add(): string | null {
     const who = name.trim();
-    if (!who) return;
-    setData((d) => ({ ...d, invites: [...d.invites, { name: who, relation }] }));
+    if (!who || (phone && !isPhone(phone))) return null;
+    setData((d) => ({ ...d, invites: [...d.invites, { name: who, phone, relation }] }));
     setName("");
+    setPhone("");
     setRelation(null);
     setAdding(false);
-    void copy(who);
+    return who;
+  }
+
+  const link = () => `${window.location.origin}/family`;
+  const message = (who: string) =>
+    `${who}, estou cuidando dos remédios da ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link()}`;
+
+  async function send() {
+    const who = add();
+    if (!who) return;
+    try {
+      // The phone's own share sheet: WhatsApp, SMS or e-mail, chosen by the user.
+      await navigator.share({ title: "Convite do Recuidado", text: message(who) });
+      setDone(`Convite enviado para ${who}.`);
+    } catch {
+      setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
+    }
+  }
+
+  async function copy() {
+    const who = add();
+    if (!who) return;
+    try {
+      await navigator.clipboard.writeText(message(who));
+      setDone(`Convite de ${who} copiado. Cole na conversa com a pessoa.`);
+    } catch {
+      setDone(`${who} foi adicionado(a).`);
+    }
   }
 
   const me = data.caregiver;
@@ -315,27 +340,46 @@ function InviteStep({
         <PlusIcon size={20} />
         Chamar mais alguém
       </button>
-      {copied ? (
+      {done ? (
         <p aria-live="polite" className="flex items-center gap-2 text-[15px] font-bold text-brand">
           <CheckIcon size={18} strokeWidth={2.6} />
-          Convite de {copied} copiado. Cole na conversa com a pessoa.
+          {done}
         </p>
       ) : null}
       <Sheet open={adding} onClose={() => setAdding(false)} title="Chamar mais alguém">
         <Field label="Nome" value={name} onValue={setName} autoComplete="off" />
+        <Field
+          label="Celular"
+          value={phone}
+          onValue={setPhone}
+          mask={maskPhone}
+          inputMode="tel"
+          placeholder="(11) 90000-0000"
+          aria-invalid={phone !== "" && !isPhone(phone)}
+        />
         <SelectField<Relation>
           label={`Quem é para a ${nickname}?`}
           options={RELATIONS}
           value={relation}
           onValue={setRelation}
         />
-        <p className="text-[15px] leading-snug text-muted">
-          Depois de adicionar, o link do convite fica copiado. É só colar na conversa com a pessoa.
-        </p>
-        <Button onClick={add} disabled={!name.trim()}>
-          <CopyIcon size={20} />
-          Adicionar e copiar convite
-        </Button>
+        {canShare ? (
+          <p className="text-[15px] leading-snug text-muted">
+            &quot;Enviar convite&quot; abre as opções do celular: WhatsApp, SMS ou e-mail.
+          </p>
+        ) : null}
+        <div className="flex flex-col gap-2">
+          {canShare ? (
+            <Button onClick={send} disabled={!name.trim()}>
+              <ShareIcon size={20} />
+              Enviar convite
+            </Button>
+          ) : null}
+          <Button variant={canShare ? "secondary" : "primary"} onClick={copy} disabled={!name.trim()}>
+            <CopyIcon size={20} />
+            Copiar convite
+          </Button>
+        </div>
       </Sheet>
       <p className="flex gap-2.5 rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
         <InfoIcon size={22} className="shrink-0 text-brand" />
@@ -346,18 +390,34 @@ function InviteStep({
 }
 
 function PatientLink() {
+  const origin = useOrigin();
+  const url = `${origin}/patient`;
   const [copied, setCopied] = useState(false);
   async function copy() {
     try {
-      await navigator.clipboard.writeText(`${window.location.origin}/patient`);
+      await navigator.clipboard.writeText(url);
       setCopied(true);
     } catch {}
   }
   return (
-    <button type="button" onClick={copy} className={buttonClass({ variant: "secondary" })}>
-      <CopyIcon size={20} />
-      {copied ? "Link copiado" : "Copiar o link do app dela"}
-    </button>
+    <section className="flex items-stretch gap-4 rounded-card border border-line-soft bg-surface p-4">
+      <span className="flex size-[132px] shrink-0 items-center justify-center rounded-xl border border-line bg-white p-2">
+        {origin ? (
+          <QRCodeSVG value={url} size={114} fgColor="#16201f" title="QR code do app dela" />
+        ) : null}
+      </span>
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5">
+        <p className="text-[16px] leading-snug">Aponte a câmera do celular dela para o código.</p>
+        <button
+          type="button"
+          onClick={copy}
+          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface text-[16px] font-bold"
+        >
+          <CopyIcon size={18} />
+          <span aria-live="polite">{copied ? "Copiado" : "Copiar link"}</span>
+        </button>
+      </div>
+    </section>
   );
 }
 

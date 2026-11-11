@@ -46,6 +46,15 @@ describe('FamilyController', () => {
     expect(input.invites).toEqual([{ name: 'Carlos', relation: 'Neto(a)' }]);
   });
 
+  it('keeps the invite phone as digits', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/family/onboarding')
+      .send({ ...body, invites: [{ name: 'Carlos', relation: 'Neto(a)', phone: '(11) 98888-7777' }] });
+    expect(res.status).toBe(200);
+    const [input] = saveOnboarding.mock.calls.at(-1)!;
+    expect(input.invites).toEqual([{ name: 'Carlos', relation: 'Neto(a)', phone: '11988887777' }]);
+  });
+
   it('asks which relation when "Outro" has no text', async () => {
     const res = await request(app.getHttpServer())
       .put('/family/onboarding')

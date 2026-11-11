@@ -57,7 +57,13 @@ export const onboardingBody = z
       usesPhone: z.boolean(),
     }),
     invites: z
-      .array(z.object({ name, relation: relation.nullable().default(null) }))
+      .array(
+        z.object({
+          name,
+          relation: relation.nullable().default(null),
+          phone: z.union([phone, z.literal('')]).optional(),
+        }),
+      )
       .max(20)
       .default([]),
   })

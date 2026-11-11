@@ -54,6 +54,11 @@ export interface FamilyOverview {
   today: Dose[];
 }
 
+/** Free somewhere: Farmácia Popular or the UBS pharmacy. */
+export function isFree(m: Medication): boolean {
+  return m.freeInFarmaciaPopular || (m.freeAt?.length ?? 0) > 0;
+}
+
 export async function getFamily(): Promise<FamilyOverview> {
   const res = await fetch(`${API_URL}/family`, { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
@@ -154,7 +159,7 @@ export interface OnboardingRecord {
   caregiverId: string;
   caregiver: { name: string; phone: string; relation: string | null; relationOther: string };
   patient: { name: string; nickname: string; phone: string; birth: string; cep: string; usesPhone: boolean };
-  invites: { id: string; name: string; relation: string | null; joined: boolean }[];
+  invites: { id: string; name: string; relation: string | null; phone?: string; joined: boolean }[];
 }
 
 /** Null when this caregiver is not in the family anymore. */

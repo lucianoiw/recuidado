@@ -124,7 +124,13 @@ export class FamilyService implements OnApplicationBootstrap {
       },
       invites: people
         .filter((m) => m.invitedById === caregiverId)
-        .map((m) => ({ id: m.id, name: m.name, relation: m.relation, joined: m.joinedAt !== null })),
+        .map((m) => ({
+          id: m.id,
+          name: m.name,
+          relation: m.relation,
+          phone: m.phone ?? '',
+          joined: m.joinedAt !== null,
+        })),
     };
   }
 
@@ -193,7 +199,7 @@ export class FamilyService implements OnApplicationBootstrap {
       for (const m of invited) {
         const invite = wanted.get(key(m.name));
         if (!invite) continue;
-        await tx.update(members).set({ relation: invite.relation }).where(eq(members.id, m.id));
+        await tx.update(members).set({ relation: invite.relation, phone: invite.phone || null }).where(eq(members.id, m.id));
         wanted.delete(key(m.name));
       }
       if (wanted.size > 0) {
@@ -202,6 +208,7 @@ export class FamilyService implements OnApplicationBootstrap {
             familyId,
             name: i.name,
             relation: i.relation,
+            phone: i.phone || null,
             role: 'caregiver' as const,
             invitedById: caregiverId,
           })),

@@ -5,7 +5,8 @@ import { BottomNav, HomeIcon, PillIcon, PinIcon, UsersIcon } from "@/components/
 
 export function FamilyNav() {
   // The prescription flow is full screen, like the onboarding.
-  if (usePathname().startsWith("/family/receita")) return null;
+  const path = usePathname();
+  if (path.startsWith("/family/receita") || path.startsWith("/family/adicionar")) return null;
   return (
     <BottomNav
       items={[

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CartIcon, ChevronLeftIcon, InfoIcon, StatusPill } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
+import { isFree } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { useMe } from "@/lib/me";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
@@ -55,7 +56,7 @@ export function BuyView() {
                   <span className="font-bold">{medLabel(m.name, m.strength)}</span>
                   <span className="text-[15px] text-muted">
                     {m.times.length} {m.times.length === 1 ? "vez" : "vezes"} ao dia
-                    {m.freeInFarmaciaPopular ? ". Sai grátis, mas vocês escolheram comprar" : ""}
+                    {isFree(m) ? ". Vocês escolheram comprar" : ""}
                   </span>
                 </div>
                 <span className="whitespace-nowrap font-bold">

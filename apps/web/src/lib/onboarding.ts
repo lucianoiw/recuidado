@@ -21,7 +21,7 @@ export type Relation = (typeof RELATIONS)[number];
 export interface Onboarding {
   caregiver: { name: string; phone: string; relation: Relation | null; relationOther: string };
   patient: { name: string; nickname: string; phone: string; birth: string; cep: string; usesPhone: boolean };
-  invites: { name: string; relation: Relation | null }[];
+  invites: { name: string; phone?: string; relation: Relation | null }[];
 }
 
 export const emptyOnboarding: Onboarding = {
@@ -50,6 +50,10 @@ export function fromRecord(r: OnboardingRecord): Onboarding {
       cep: maskCep(r.patient.cep),
       birth: d ? `${d}/${m}/${y}` : "",
     },
-    invites: r.invites.map((i) => ({ name: i.name, relation: asRelation(i.relation) })),
+    invites: r.invites.map((i) => ({
+      name: i.name,
+      phone: i.phone ?? "",
+      relation: asRelation(i.relation),
+    })),
   };
 }

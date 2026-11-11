@@ -11,9 +11,7 @@ import {
   ChevronRightIcon,
   GiftIcon,
   PencilIcon,
-  PlusIcon,
   TopBar,
-  XIcon,
   buttonClass,
   cn,
   inputClass,
@@ -22,11 +20,13 @@ import { captureError, track } from "@/lib/analytics";
 import {
   confirmPrescription,
   getFamily,
+  isFree,
   parsePrescription,
   type FamilyOverview,
   type ReadItem,
 } from "@/lib/api";
 import { FreeOrBuy } from "@/components/free-or-buy";
+import { TimeChips, normalizeTime } from "@/components/time-chips";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel } from "@/lib/use-family";
 
@@ -42,14 +42,7 @@ interface Draft {
   editing: boolean;
 }
 
-const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
 
-function normalizeTime(raw: string): string | null {
-  const m = /^(\d{1,2})(?:[:h](\d{2})?)?h?$/i.exec(raw.trim());
-  if (!m) return null;
-  const t = `${m[1].padStart(2, "0")}:${m[2] ?? "00"}`;
-  return TIME.test(t) ? t : null;
-}
 
 function toDraft(item: ReadItem, key: number): Draft {
   const times = item.schedule
@@ -110,78 +103,10 @@ function ReadingSteps() {
   );
 }
 
-function TimeChips({
-  times,
-  onChange,
-}: {
-  times: string[];
-  onChange: (times: string[]) => void;
-}) {
-  const [adding, setAdding] = useState(false);
-  const [value, setValue] = useState("");
-
-  function add() {
-    const t = normalizeTime(value);
-    if (t) onChange([...new Set([...times, t])].sort());
-    setValue("");
-    setAdding(false);
-  }
-
-  return (
-    <div className="flex flex-wrap items-center gap-2">
-      {times.map((t) => (
-        <span
-          key={t}
-          className="inline-flex min-h-11 items-center gap-1 rounded-xl bg-brand-soft pl-3.5 pr-1 text-[17px] font-bold text-brand"
-        >
-          {t}
-          <button
-            type="button"
-            onClick={() => onChange(times.filter((x) => x !== t))}
-            className="flex size-9 items-center justify-center rounded-lg hover:bg-white/60"
-          >
-            <XIcon size={16} />
-            <span className="sr-only">Tirar {t}</span>
-          </button>
-        </span>
-      ))}
-      {adding ? (
-        <span className="inline-flex items-center gap-2">
-          <input
-            type="time"
-            autoFocus
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && add()}
-            aria-label="Novo horário"
-            className={cn(inputClass, "h-11 w-32")}
-          />
-          <button
-            type="button"
-            onClick={add}
-            className="min-h-11 rounded-xl bg-brand px-3.5 text-[16px] font-bold text-white"
-          >
-            Pôr
-          </button>
-        </span>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setAdding(true)}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-dashed border-[#cfc8ba] px-3.5 text-[16px] font-bold text-muted"
-        >
-          <PlusIcon size={16} />
-          horário
-        </button>
-      )}
-    </div>
-  );
-}
-
 function Result({ family, count }: { family: FamilyOverview | null; count: number }) {
   const { getsFree, setBuy } = useBuyChoice();
   const meds = family?.medications ?? [];
-  const free = meds.filter((m) => m.freeInFarmaciaPopular);
+  const free = meds.filter(isFree);
   const paid = meds.filter((m) => !getsFree(m));
   return (
     <>
@@ -204,7 +129,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           <p className="text-[22px] font-extrabold text-brand">
             {free.length} de {meds.length} remédios saem de graça
           </p>
-          <p className="text-[15px]">no Farmácia Popular, com receita e documento.</p>
+          <p className="text-[15px]">no Farmácia Popular ou na UBS, com receita e documento.</p>
         </section>
       ) : null}
 
@@ -216,7 +141,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           </h2>
           <ul className="px-4 py-1">
             {free.map((m) => (
-              <li key={m.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5">
+              <li key={m.id} className="flex flex-col gap-2.5 py-2.5">
                 <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
                 <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
               </li>

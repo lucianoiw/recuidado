@@ -13,7 +13,7 @@ import {
   buttonClass,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
-import { callName, formatTime, type Dose } from "@/lib/api";
+import { callName, formatTime, isFree, type Dose } from "@/lib/api";
 import { medLabel, useFamily } from "@/lib/use-family";
 
 function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
@@ -55,7 +55,7 @@ export function FamilyView() {
   }
   const missed = [...missedByTime.values()];
   const taken = data.today.filter((d) => d.status === "taken").length;
-  const free = data.medications.filter((m) => m.freeInFarmaciaPopular).length;
+  const free = data.medications.filter(isFree).length;
 
   return (
     <>
@@ -131,11 +131,11 @@ export function FamilyView() {
         {data.today.length === 0 ? (
           <Card className="flex flex-col gap-3">
             <p className="text-muted">
-              Nenhuma dose hoje. Comece pela foto da receita.
+              Nenhuma dose hoje. Comece adicionando os remédios.
             </p>
-            <Link href="/family/receita" className={buttonClass()}>
+            <Link href="/family/adicionar" className={buttonClass()}>
               <CameraIcon size={22} />
-              Foto da receita
+              Adicionar remédios
             </Link>
           </Card>
         ) : (
@@ -160,7 +160,7 @@ export function FamilyView() {
         <section className="grid grid-cols-2 gap-3">
           <Card className="flex flex-col gap-0.5">
             <span className="text-[14px] text-muted">
-              Grátis no Farmácia Popular
+              Saem grátis
             </span>
             <span className="text-[26px] font-extrabold text-brand">
               {free} de {data.medications.length}
@@ -178,16 +178,16 @@ export function FamilyView() {
       ) : null}
 
       <Link
-        href="/family/receita"
+        href="/family/adicionar"
         className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
       >
         <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
           <CameraIcon size={24} />
         </span>
         <span className="flex flex-1 flex-col">
-          <b>Receita nova</b>
+          <b>Adicionar remédios</b>
           <span className="text-[15px] text-muted">
-            Tire a foto e a IA atualiza os horários
+            Pela foto da receita ou um por um
           </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />
