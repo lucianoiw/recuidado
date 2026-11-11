@@ -23,12 +23,17 @@ interface Index {
 
 let index: Index | null = null;
 
+function isHighCost(row: Record<string, string>): boolean {
+  return row.ceaf_sp ? row.ceaf_sp === "true" : row.ceaf === "true";
+}
+
 function load(path = join(SEED_DIR, "free-access.csv")): Index {
   if (index) return index;
   const rows = readCsv(path);
   index = {
     byMatch: new Map(rows.map((row) => [row.loose_match_key!, row])),
-    ceafDrugs: new Set(rows.filter((row) => row.ceaf_drug === "true").map((row) => row.loose_key!)),
+    // Prefer the São Paulo state list when the seed has it.
+    ceafDrugs: new Set(rows.filter((row) => isHighCost(row)).map((row) => row.loose_key!)),
   };
   return index;
 }
@@ -47,6 +52,6 @@ export function findFreeAccess(activeIngredient: string, strength: string | null
   const freeAt: FreePlace[] = [];
   if (row?.farmacia_popular === "true") freeAt.push("farmacia_popular");
   if (row?.ubs === "true") freeAt.push("ubs");
-  const highCost = row ? row.ceaf === "true" : loose !== null && ceafDrugs.has(loose);
+  const highCost = row ? isHighCost(row) : loose !== null && ceafDrugs.has(loose);
   return { freeAt, highCost };
 }

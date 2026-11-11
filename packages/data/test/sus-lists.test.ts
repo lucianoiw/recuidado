@@ -77,3 +77,14 @@ describe("free access", () => {
     expect(rows[0]).toMatchObject({ farmacia_popular: true, ubs: true, ceaf: false });
   });
 });
+
+describe("state CEAF list", () => {
+  it("matches drugs against the São Paulo slugs", async () => {
+    const { inStateList } = await import("../src/link-free-access.ts");
+    const state = [new Set(["formoterol", "budesonida"]), new Set(["betainterferona"]), new Set(["enoxaparina"])];
+    expect(inStateList("budesonida + formoterol", state)).toBe(true);
+    expect(inStateList("betainterferona 1a", state)).toBe(true);
+    expect(inStateList("enoxaparina", state)).toBe(true);
+    expect(inStateList("fluconazol", state)).toBe(false);
+  });
+});

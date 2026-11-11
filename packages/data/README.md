@@ -26,7 +26,7 @@ caches raw downloads in `.cache/` (not versioned). Output goes to `seed/`
 | `seed/remume-sp.json` | REMUME: the 304 medicines São Paulo hands out for free in its network. `access: "ubs"` (173) means any UBS; `"restricted"` means only reference services (IST/AIDS, TB, ophthalmology) for their own patients | Prefeitura de São Paulo, [REMUME](https://prefeitura.sp.gov.br/web/saude/w/atencao_basica/rela%C3%A7%C3%A3o-municipal-de-medicamentos-remume), PDF updated in October 2026 |
 | `seed/ceaf.json` | CEAF ("Farmácia de Alto Custo"): 313 presentations of 176 drugs, groups 1A, 1B and 2 | Groups defined by the Ministério da Saúde ([CEAF](https://www.gov.br/saude/pt-br/composicao/sectics/daf/ceaf)), read from the [REMEME of SESA/ES](https://farmaciacidada.es.gov.br/media/Arquivos/Componente%20Especializado/REMEME/REMEME_17.0_jan.2026.pdf), January 2026 (see below) |
 | `seed/sus-units.json` | SUS units within 3 km of the demo centre: 5 UBS and 3 state Alto Custo pharmacies (Farmácia Medex), with address, coordinates and what each hands out | CNES (same API), types 2 and 43 |
-| `seed/free-access.csv` | One row per drug and strength with where it is free: `farmacia_popular`, `ubs`, `ubs_restricted`, `ceaf` (and `ceaf_group`, `ceaf_drug`) | join of the three lists above |
+| `seed/free-access.csv` | One row per drug and strength with where it is free: `farmacia_popular`, `ubs`, `ubs_restricted`, `ceaf` (and `ceaf_group`, `ceaf_drug`, `ceaf_sp`) | join of the three lists above, plus `raw/ceaf-sp-drugs.txt` |
 
 The official list of the 41 free items (39 medicines plus geriatric diapers and
 sanitary pads) is [this PDF](https://www.gov.br/saude/pt-br/composicao/sectics/farmacia-popular/arquivos/elenco-de-medicamentos-e-insumos-pfpb.pdf).
@@ -97,6 +97,11 @@ dipropionato"), sorts combinations and ignores "/dose" in inhaler strengths. To
 look up a prescription item, call `looseMatchKey(ingredients, strengths)` from
 this package. When the strength does not match, `ceaf_drug` still tells that the
 drug is in the CEAF list in another strength.
+
+`ceaf_sp` narrows the national list to the drugs the São Paulo state health
+department lists (`raw/ceaf-sp-drugs.txt`, read from its "Consulta por
+MEDICAMENTO" page on 11/11/2026; that site only answers from Brazilian
+networks). The API flags `highCost` from `ceaf_sp`.
 
 Why the CEAF list comes from Espírito Santo: the São Paulo state list
 (saude.sp.gov.br) did not answer from our network on 11/11/2026. CEAF groups 1A,
