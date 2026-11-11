@@ -1,4 +1,5 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { findFreeAccess, type FreeAccess } from '@recuidado/data';
 import { asc, eq } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { families, medications, members } from '../db/schema.js';
@@ -57,6 +58,7 @@ export class FamilyService implements OnApplicationBootstrap {
       .select({
         id: medications.id,
         name: medications.name,
+        activeIngredient: medications.activeIngredient,
         strength: medications.strength,
         times: medications.times,
         freeInFarmaciaPopular: medications.freeInFarmaciaPopular,
@@ -69,8 +71,24 @@ export class FamilyService implements OnApplicationBootstrap {
       familyId,
       patient: people.find((p) => p.id === patientId)!,
       caregivers: people.filter((p) => p.role === 'caregiver'),
-      medications: meds,
+      medications: meds.map(({ activeIngredient, ...med }) => ({
+        ...med,
+        ...freeAccessOf(activeIngredient ?? med.name, med.strength),
+      })),
       today: await this.doses.listForDay(patientId),
     };
+  }
+}
+
+/**
+ * Where the medicine is free (Farmácia Popular, UBS) and whether it is in the
+ * Alto Custo list, from the public lists in @recuidado/data. Never throws: a
+ * missing seed file only hides the badges.
+ */
+export function freeAccessOf(activeIngredient: string, strength: string | null): Partial<FreeAccess> {
+  try {
+    return findFreeAccess(activeIngredient, strength);
+  } catch {
+    return {};
   }
 }
