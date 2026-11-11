@@ -275,7 +275,7 @@ Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coo
 - `recuidado/worker` no Coolify está parado (nunca ficou online). A fila roda dentro da `api` (sem `APP_ROLE`), então nada parou. Não mudar a `api` para `APP_ROLE=api` antes do worker subir.
 - Corrigido no mesmo dia: a atendente da URA de teste dizia que a Rosuvastatina "sai pelo Farmácia Popular", contradizendo o "Para comprar" do app. Agora diz que não sai.
 - Corrigido no mesmo dia: os avisos da família demo estavam cheios de testes (falso "não está bem", ponto duplo, resumo no lugar das palavras dela). O texto foi corrigido no PR #108 e os avisos antigos foram apagados com `DEMO_CLEAR_ALERTS_BEFORE`.
-- "Vale ligar para ela" fixo, sem respeitar "O senhor".
+- Corrigido no PR #108: "Vale ligar para ela" agora respeita "O senhor".
 - Sem medição: custo por ligação. Temos só a duração (18 ligações, média 21 s, mediana 17 s); o custo do GPT-Live não vai para o PostHog.
 - Não testados ao vivo nesta revisão: "ainda dói" na ligação de volta, roteiro novo do PR #104, segunda ligação em 15 min, demo de 2 minutos (liga para o celular real), push chegando no aparelho.
 
