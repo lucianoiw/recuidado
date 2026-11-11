@@ -15,8 +15,8 @@ Read `docs/context.md` first: product, Hack Brasil rules and scope.
 - Use the latest stable version of each package.
 - pnpm workspaces: `apps/*` (deployable services) and `packages/*` (shared libraries). Package names use the `@recuidado/` scope.
 - `apps/web`: Next.js 16 App Router, PWA. See `apps/web/AGENTS.md`: this Next.js is newer than your training data.
-- `apps/api`: NestJS 12, ESM (relative imports end in `.js`), Vitest, Drizzle ORM on Postgres, BullMQ on Redis. See `apps/api/AGENTS.md`.
-- Schema changes: edit `apps/api/src/db/schema.ts`, then `pnpm --filter @recuidado/api db:generate`. Migrations run on API boot.
+- `apps/api` (HTTP) and `apps/worker` (doses queue, no HTTP) share code only through `packages/core` (`@recuidado/core`). `apps/api`: NestJS 12, ESM (relative imports end in `.js`), Vitest, Drizzle ORM on Postgres, BullMQ on Redis. See `apps/api/AGENTS.md`.
+- Schema changes: edit `packages/core/src/db/schema.ts`, then `pnpm --filter @recuidado/api db:generate`. Migrations run on API boot.
 - New deployable service: add `apps/<name>/Dockerfile` (built from the repo root). Each one is its own Coolify resource (`recuidado/<name>`), see `deploy/README.md`.
 
 ## Checks before pushing

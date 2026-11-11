@@ -2,8 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { PrivacyController } from './privacy.controller.js';
-import { PrivacyService, mayContact } from './privacy.service.js';
-import { DEMO_FAMILY } from '../family/family.service.js';
+import { PrivacyService } from './privacy.service.js';
 
 const id = '11111111-1111-4111-8111-111111111111';
 
@@ -47,13 +46,5 @@ describe('PrivacyController', () => {
     await request(app.getHttpServer()).delete('/privacy/family').expect(400);
     await request(app.getHttpServer()).delete(`/privacy/family?caregiverId=${id}`).expect(204);
     expect(deleteFamily).toHaveBeenCalledWith(id);
-  });
-});
-
-describe('mayContact', () => {
-  it('calls only with consent, except the synthetic demo family', () => {
-    expect(mayContact(null, 'Família de Maria')).toBe(false);
-    expect(mayContact(new Date(), 'Família de Maria')).toBe(true);
-    expect(mayContact(null, DEMO_FAMILY)).toBe(true);
   });
 });

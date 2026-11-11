@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import type { Request } from 'express';
-import { telemetry } from './telemetry.js';
+import { telemetry } from '@recuidado/core';
 
 /** Sends unexpected errors (5xx and non-HTTP) to PostHog error tracking, then answers as Nest does. */
 @Catch()

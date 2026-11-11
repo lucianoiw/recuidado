@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable, type OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
-import { telemetry } from '../telemetry/telemetry.js';
+import { telemetry } from '@recuidado/core';
 import { consumeRead, LIMIT_MESSAGES, type CounterStore } from './usage-limit.js';
 
 export const PRESCRIPTION_COUNTERS = Symbol('PRESCRIPTION_COUNTERS');

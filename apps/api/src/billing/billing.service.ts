@@ -9,10 +9,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { eq, or } from 'drizzle-orm';
-import { DB, type Database } from '../db/db.module.js';
-import { families } from '../db/schema.js';
+import { type Database, DB, families, telemetry } from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
 import { AbacatePay } from './abacatepay.js';
 import { patchFromEvent, webhookBody } from './webhook.js';
 

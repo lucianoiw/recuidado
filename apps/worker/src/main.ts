@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { TelemetryLogger } from '../telemetry/telemetry.logger.js';
-import { telemetry } from '../telemetry/telemetry.js';
+import { telemetry, TelemetryLogger } from '@recuidado/core';
 import { WorkerModule } from './worker.module.js';
 
 /** Touched every 30 s; the Docker health check fails when it gets old (the process is stuck or gone). */

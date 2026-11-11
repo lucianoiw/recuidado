@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PushController } from './push.controller.js';
-import { PushService } from './push.service.js';
+import { PushService } from '@recuidado/core';
 
 @Module({
   controllers: [PushController],

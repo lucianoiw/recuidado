@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AlertsModule } from '../alerts/alerts.module.js';
-import { StockService } from './stock.service.js';
+import { StockService } from '@recuidado/core';
 
 @Module({
   imports: [AlertsModule],

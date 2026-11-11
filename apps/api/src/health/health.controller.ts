@@ -1,7 +1,7 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { Pool } from 'pg';
-import { PG_POOL } from '../db/db.module.js';
+import { PG_POOL } from '@recuidado/core';
 
 // Coolify checks health often from one address.
 @SkipThrottle()

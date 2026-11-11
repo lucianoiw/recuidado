@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { VoiceController } from './voice.controller.js';
 import { VoiceTokenGuard } from './voice-token.guard.js';
-import { VoiceCallService } from './voice.service.js';
+import { VoiceCallService } from '@recuidado/core';
 
 const TOKEN = 'test-token-0123456789';
 const DOSE = '6f1c1b0e-7a51-4c55-9a43-2f2d0f8b9e10';

@@ -1,6 +1,6 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { DOSES_QUEUE } from '../doses/doses.queue.js';
+import { DOSES_QUEUE } from '@recuidado/core';
 import { FamilyModule } from '../family/family.module.js';
 import { DemoController } from './demo.controller.js';
 import { DemoService } from './demo.service.js';

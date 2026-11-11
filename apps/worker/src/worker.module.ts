@@ -2,17 +2,19 @@ import { BullModule } from '@nestjs/bullmq';
 import { Module, type OnApplicationShutdown } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
-import { PlanGate } from '../billing/plan-gate.js';
-import { AlertsService } from '../alerts/alerts.service.js';
-import { validateEnv } from '../config/env.js';
-import { DbModule } from '../db/db.module.js';
-import { DOSES_QUEUE } from '../doses/doses.queue.js';
-import { DosesService } from '../doses/doses.service.js';
-import { EmailService } from '../email/email.service.js';
-import { PushService } from '../push/push.service.js';
-import { StockService } from '../stock/stock.service.js';
-import { telemetry } from '../telemetry/telemetry.js';
-import { VoiceCallService } from '../voice/voice.service.js';
+import {
+  AlertsService,
+  DbModule,
+  DOSES_QUEUE,
+  DosesService,
+  EmailService,
+  PlanGate,
+  PushService,
+  StockService,
+  telemetry,
+  validateEnv,
+  VoiceCallService,
+} from '@recuidado/core';
 import { DosesProcessor } from './doses.processor.js';
 
 /**

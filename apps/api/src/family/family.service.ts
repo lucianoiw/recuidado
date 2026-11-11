@@ -9,12 +9,20 @@ import {
 import { findFreeAccess, highCostGuide, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, sql } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
-import { DB, type Database } from '../db/db.module.js';
-import { alerts, doses, families, medications, members, voiceCalls } from '../db/schema.js';
-import { AlertsService } from '../alerts/alerts.service.js';
-import { DosesService } from '../doses/doses.service.js';
-import { StockService } from '../stock/stock.service.js';
-import { DEMO_FAMILY } from './demo-family.js';
+import {
+  alerts,
+  AlertsService,
+  type Database,
+  DB,
+  DEMO_FAMILY,
+  doses,
+  DosesService,
+  families,
+  medications,
+  members,
+  StockService,
+  voiceCalls,
+} from '@recuidado/core';
 import { seedDemoFamily } from './demo-seed.js';
 import { highCostStatus, todayInSaoPaulo, type HighCostStatus } from './high-cost.js';
 import type { HighCostBody, MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';

@@ -14,8 +14,8 @@ import { doses, families, medications, members, pharmacyInquiries, voiceCalls } 
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { PlanGate } from '../billing/plan-gate.js';
-import { DEMO_FAMILY } from '../family/family.service.js';
-import { mayContact } from '../privacy/privacy.service.js';
+import { DEMO_FAMILY } from '../family/demo-family.js';
+import { mayContact } from '../privacy/consent.js';
 import { StockService } from '../stock/stock.service.js';
 import { minutesSince } from '../doses/time.js';
 import { telemetry } from '../telemetry/telemetry.js';
