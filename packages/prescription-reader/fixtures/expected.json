@@ -1,0 +1,37 @@
+{
+  "receita-01-ubs-digitada.png": {
+    "patient_name": "Maria Helena Duarte",
+    "issued_on": "2026-11-03",
+    "items": [
+      { "match_key": ["losartana 50 mg"], "as_needed": false, "continuous": true, "schedule": [["08:00", 1], ["20:00", 1]], "monthly_units": 60 },
+      { "match_key": ["metformina 850 mg"], "as_needed": false, "continuous": true, "schedule": [["08:30", 1], ["19:30", 1]], "monthly_units": 60 },
+      { "match_key": ["rosuvastatina 10 mg"], "as_needed": false, "continuous": true, "schedule": [["21:00", 1]], "monthly_units": 30 }
+    ],
+    "min_other_instructions": 0
+  },
+  "receita-02-manuscrita.png": {
+    "patient_name": "Maria Helena Duarte",
+    "issued_on": "2026-11-10",
+    "items": [
+      { "match_key": ["metformina 500 mg"], "as_needed": false, "continuous": true, "schedule": [["19:00", 2]], "monthly_units": 60 },
+      { "match_key": ["hidroclorotiazida 25 mg"], "as_needed": false, "continuous": null, "schedule": [["08:00", 1]], "monthly_units": 30 },
+      { "match_key": ["acido acetilsalicilico 100 mg"], "as_needed": false, "continuous": null, "schedule": [["12:30", 1]], "monthly_units": 30 }
+    ],
+    "min_other_instructions": 0
+  },
+  "receita-03-insulina-e-sos.png": {
+    "patient_name": "Maria Helena Duarte",
+    "issued_on": "2026-11-05",
+    "items": [
+      {
+        "match_key": ["insulina humana nph 100 ui/ml", "insulina nph 100 ui/ml", "insulina humana isofana 100 ui/ml", "insulina isofana 100 ui/ml"],
+        "as_needed": false,
+        "continuous": true,
+        "schedule": [["07:30", 10], ["18:30", 6]],
+        "monthly_units": null
+      },
+      { "match_key": ["dipirona 500 mg", "dipirona sodica 500 mg"], "as_needed": true, "continuous": false, "schedule": [], "monthly_units": null }
+    ],
+    "min_other_instructions": 1
+  }
+}
