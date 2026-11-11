@@ -2,13 +2,41 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
-import { confirmDose, formatTime, getFamily, type FamilyOverview } from "@/lib/api";
+import { Button, Card, CheckIcon, ClockIcon, PillIcon, ScreenHeader } from "@/components/ui";
+import { confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
+
+function todayLabel(): string {
+  const text = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(new Date());
+  return text.charAt(0).toUpperCase() + text.slice(1).replace("-feira", "");
+}
+
+function greeting(): string {
+  const hour = Number(
+    new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", hour: "numeric", hourCycle: "h23" }).format(
+      new Date(),
+    ),
+  );
+  if (hour < 12) return "Bom dia";
+  if (hour < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
+function doseName(d: Dose): string {
+  // Keep "50 mg" on one line.
+  return [d.medicationName, d.strength?.replace(/ /g, "\u00a0")].filter(Boolean).join(" ");
+}
 
 export function PatientView() {
   const [data, setData] = useState<FamilyOverview | null>(null);
   const [error, setError] = useState(false);
   const [now, setNow] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [justTaken, setJustTaken] = useState<Dose | null>(null);
 
   const load = useCallback(() => {
     getFamily().then(
@@ -27,74 +55,119 @@ export function PatientView() {
     return () => clearInterval(timer);
   }, [load]);
 
-  if (error) return <p className="text-xl text-zinc-600">Sem conexão. Tente de novo em instantes.</p>;
-  if (!data) return <p className="text-xl text-zinc-600">Carregando...</p>;
+  if (error) {
+    return <p className="text-[24px] text-muted">Sem conexão. Tente de novo em instantes.</p>;
+  }
+  if (!data) return <p className="text-[24px] text-muted">Carregando...</p>;
 
+  const firstName = data.patient.name.split(" ")[0];
   // The dose to confirm: the earliest one not taken whose time has come.
   const due = data.today.find(
     (d) => d.status !== "taken" && new Date(d.scheduledAt).getTime() <= now,
   );
-  const next = data.today.find(
+  const later = data.today.filter(
     (d) => d.status === "pending" && new Date(d.scheduledAt).getTime() > now,
   );
+  const next = later[0];
 
-  async function confirm(id: string) {
+  async function confirm(dose: Dose) {
     setBusy(true);
     try {
-      await confirmDose(id);
+      await confirmDose(dose.id);
+      setJustTaken(dose);
       load();
     } finally {
       setBusy(false);
     }
   }
 
+  if (justTaken) {
+    const names = data.caregivers.map((c) => c.name.split(" ")[0]);
+    return (
+      <div className="flex flex-1 flex-col gap-6">
+        <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
+          <span className="flex size-36 items-center justify-center rounded-full bg-brand text-white">
+            <CheckIcon size={84} aria-hidden={false} role="img" aria-label="Confirmado" />
+          </span>
+          <h1 className="text-[40px] font-bold leading-tight">Pronto, {firstName}!</h1>
+          <p className="text-[26px] leading-snug">
+            Anotei o remédio das {formatTime(justTaken.scheduledAt)}.
+            {names.length > 0 ? (
+              <>
+                <br />
+                {names.join(" e ")} {names.length > 1 ? "já sabem" : "já sabe"}.
+              </>
+            ) : null}
+          </p>
+        </div>
+        {next ? (
+          <Card className="flex flex-col gap-1 p-5">
+            <p className="text-muted">Próximo remédio</p>
+            <p className="text-[28px] font-bold leading-tight">{doseName(next)}</p>
+            <p className="text-[24px] font-semibold text-brand">às {formatTime(next.scheduledAt)}</p>
+          </Card>
+        ) : null}
+        <Button variant="secondary" size="lg" onClick={() => setJustTaken(null)}>
+          Voltar
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex w-full flex-col gap-8">
-      <p className="text-2xl text-zinc-700">Olá, {data.patient.name}</p>
+    <>
+      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={`${greeting()}, ${firstName}`} />
+
       {due ? (
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-xl text-zinc-600">Remédio das {formatTime(due.scheduledAt)}</p>
-            <h1 className="mt-2 text-4xl font-semibold">
-              {due.medicationName} {due.strength}
-            </h1>
+        <Card className="flex flex-col gap-5 border-2 border-line px-4 py-6" aria-live="polite">
+          <p className="flex items-center gap-2.5 text-[26px] font-bold text-brand">
+            <ClockIcon size={30} strokeWidth={2.2} />
+            Agora, {formatTime(due.scheduledAt)}
+          </p>
+          <div className="flex items-center gap-4">
+            <span className="flex size-18 shrink-0 items-center justify-center rounded-[20px] bg-brand-soft text-brand">
+              <PillIcon size={40} />
+            </span>
+            <h2 className="text-[32px] font-bold leading-tight">{doseName(due)}</h2>
           </div>
-          <button
-            type="button"
-            onClick={() => confirm(due.id)}
-            disabled={busy}
-            className="w-full rounded-2xl bg-teal-700 py-8 text-3xl font-semibold text-white active:bg-teal-800 disabled:opacity-60"
-          >
-            Tomei
-          </button>
-        </div>
+          <Button size="xl" onClick={() => confirm(due)} disabled={busy}>
+            <CheckIcon size={32} />
+            {busy ? "Anotando..." : "Tomei o remédio"}
+          </Button>
+        </Card>
       ) : (
-        <div>
-          <h1 className="text-3xl font-semibold text-teal-700">Tudo certo por agora</h1>
+        <Card className="flex flex-col gap-2 px-5 py-6">
+          <p className="flex items-center gap-2.5 text-[30px] font-bold leading-tight text-brand">
+            <CheckIcon size={34} />
+            Tudo certo por agora
+          </p>
           {next ? (
-            <p className="mt-3 text-xl text-zinc-600">
-              Próximo: {next.medicationName} às {formatTime(next.scheduledAt)}
+            <p className="text-[24px]">
+              Próximo: {doseName(next)} às {formatTime(next.scheduledAt)}
             </p>
-          ) : null}
-        </div>
+          ) : (
+            <p className="text-[24px]">Não tem mais remédio hoje.</p>
+          )}
+        </Card>
       )}
 
-      {data.today.length > 0 ? (
-        <ul className="flex flex-col gap-3 text-left text-lg">
-          {data.today.map((d) => (
-            <li key={d.id} className="flex justify-between border-b border-zinc-200 pb-2">
-              <span>
-                {formatTime(d.scheduledAt)} {d.medicationName}
-              </span>
-              <span className={d.status === "taken" ? "text-teal-700" : "text-zinc-500"}>
-                {d.status === "taken" ? "Tomado" : d.status === "missed" ? "Não confirmado" : "A tomar"}
-              </span>
-            </li>
-          ))}
-        </ul>
+      {later.length > 0 ? (
+        <section className="flex flex-col gap-2.5">
+          <h2 className="text-[24px] font-bold">Mais tarde hoje</h2>
+          <ul className="flex flex-col gap-2.5">
+            {later.map((d) => (
+              <li key={d.id} className="flex items-center justify-between gap-3 rounded-card bg-surface px-4 py-4">
+                <span className="font-semibold">{doseName(d)}</span>
+                <span className="font-bold">{formatTime(d.scheduledAt)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
 
-      <EnableNotifications memberId={data.patient.id} label="Receber lembretes no celular" large />
-    </div>
+      <div className="mt-auto pt-2">
+        <EnableNotifications memberId={data.patient.id} label="Receber lembretes no celular" large />
+      </div>
+    </>
   );
 }

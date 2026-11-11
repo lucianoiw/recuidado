@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { BellIcon, buttonClass } from "@/components/ui";
 import { currentPushState, enablePush, sendTestPush, type PushState } from "@/lib/push";
 
 const MESSAGES: Record<PushState, string> = {
@@ -51,15 +52,14 @@ export function EnableNotifications({
           type="button"
           onClick={enable}
           disabled={busy}
-          className={`rounded-xl border border-teal-700 font-medium text-teal-800 disabled:opacity-50 ${
-            large ? "py-5 text-xl" : "px-4 py-3"
-          }`}
+          className={buttonClass({ variant: "secondary", size: large ? "lg" : "md" })}
         >
+          <BellIcon size={large ? 28 : 22} />
           {busy ? "Ativando..." : state === "on" ? "Testar notificação" : label}
         </button>
       ) : null}
-      {MESSAGES[state] ? <p className="text-sm text-zinc-600">{MESSAGES[state]}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {MESSAGES[state] ? <p className={large ? "text-[20px] text-muted" : "text-[15px] text-muted"}>{MESSAGES[state]}</p> : null}
+      {error ? <p className="text-[15px] font-semibold text-danger">{error}</p> : null}
     </div>
   );
 }
