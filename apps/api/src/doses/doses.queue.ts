@@ -13,7 +13,7 @@ export type DoseJob =
   | { kind: 'call'; doseId: string }
   | { kind: 'alert-family'; doseId: string }
   // She reported an emergency on the call: call her back a few minutes later.
-  | { kind: 'check-in'; doseId: string };
+  | { kind: 'check-in'; doseId: string; attempt?: number };
 
 export function doseJobId(kind: 'remind' | 'call' | 'alert-family' | 'check-in', doseId: string) {
   return `${kind}-${doseId}`;

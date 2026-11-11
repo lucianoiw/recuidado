@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import type { Job } from 'bullmq';
-import { VoiceCallService } from '../voice/voice.service.js';
+import { MAX_CHECK_INS, VoiceCallService } from '../voice/voice.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
 import { DOSES_QUEUE, type DoseJob } from './doses.queue.js';
 import { DosesService } from './doses.service.js';
@@ -54,7 +54,9 @@ export class DosesProcessor extends WorkerHost {
         return this.doses.alertFamily(data.doseId);
       case 'check-in':
         try {
-          return (await this.voice.call(data.doseId, { checkIn: true })) ? 'called' : 'skipped';
+          return (await this.voice.call(data.doseId, { checkIn: true, callBack: (data.attempt ?? 1) < MAX_CHECK_INS }))
+            ? 'called'
+            : 'skipped';
         } catch (error) {
           telemetry.captureException(error, { job_kind: 'check-in', dose_id: data.doseId });
           return 'failed';

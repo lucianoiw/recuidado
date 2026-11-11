@@ -38,6 +38,32 @@ export interface VoiceResult {
 
 export const alertJobId = (doseId: string) => doseJobId('alert-family', doseId);
 
+/** After an emergency, Recuidado calls her back at most this many times. */
+export const MAX_CHECK_INS = 3;
+
+/** What she said on the call, in her own words (the patient lines of the transcript), else the model's note. */
+export function patientWords(result: Pick<VoiceResult, 'transcript' | 'note'>): string | undefined {
+  const said = (result.transcript ?? [])
+    .filter((l) => l.speaker === 'patient')
+    .map((l) => l.text.trim())
+    .filter(Boolean)
+    .join(' ');
+  const words = said || result.note?.trim() || '';
+  return words ? words.slice(0, 200) : undefined;
+}
+
+export type CaregiverCallReason = 'emergency' | 'still_unwell' | 'no_answer';
+
+/** What the first contact hears: her own words and a request to call her. */
+export function caregiverMessage(name: string, reason: CaregiverCallReason, words?: string): string {
+  const intro = 'Olá, aqui é a assistente virtual da Recuidado.';
+  const end = 'Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.';
+  if (reason === 'no_answer') return `${intro} Liguei de novo para ${name} e ela não atendeu. ${end}`;
+  const said = words ? `: "${words}"` : ' que não está bem';
+  if (reason === 'still_unwell') return `${intro} Liguei de novo para ${name} e ela disse${said}. ${end}`;
+  return `${intro} ${name} disse agora na ligação do remédio${said}. ${end}`;
+}
+
 @Injectable()
 export class VoiceCallService {
   private readonly logger = new Logger(VoiceCallService.name);
@@ -54,7 +80,7 @@ export class VoiceCallService {
    * Asks apps/voice to call the patient. Does nothing if the dose is no longer pending.
    * With checkIn, it is the call back after an emergency: the dose status does not matter.
    */
-  async call(doseId: string, opts: { checkIn?: boolean } = {}): Promise<{ callId: string } | null> {
+  async call(doseId: string, opts: { checkIn?: boolean; callBack?: boolean } = {}): Promise<{ callId: string } | null> {
     const checkIn = Boolean(opts.checkIn);
     const voiceUrl = this.config.get<string>('VOICE_URL');
     const token = this.config.get<string>('VOICE_API_TOKEN');
@@ -119,6 +145,7 @@ export class VoiceCallService {
         patientName: row.patientName,
         medications: [{ name: row.medication, dose: row.strength ?? undefined }],
         checkIn,
+        callBack: opts.callBack ?? true,
       }),
     });
     if (res.status === 403) {
@@ -187,16 +214,13 @@ export class VoiceCallService {
         dose.patientId,
       );
     }
-    if (saved && result.emergency) {
-      try {
-        await this.callCaregivers(doseId, result.note);
-      } catch (error) {
-        telemetry.captureException(error, { step: 'emergency_call', dose_id: doseId });
-      }
-      if (!result.checkIn) await this.scheduleCheckIn(doseId);
+    if (saved && result.emergency && !result.checkIn) {
+      await this.safeCallCaregivers(doseId, 'emergency', patientWords(result));
+      await this.scheduleCheckIn(doseId);
     }
     // The call back after an emergency only reports how she is; the dose was already settled.
     if (result.checkIn) {
+      if (saved) await this.followCheckIn(doseId, result);
       telemetry.capture(
         'emergency_checkin_result',
         { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome, feels_unwell: Boolean(result.feelsUnwell), demo: dose.demo },
@@ -264,14 +288,60 @@ export class VoiceCallService {
   }
 
   /** She told the assistant it would call back: queue that call (EMERGENCY_CHECKIN_MINUTES). */
-  private async scheduleCheckIn(doseId: string): Promise<void> {
+  private async scheduleCheckIn(doseId: string, attempt = 1): Promise<void> {
     const minutes = this.config.get<number>('EMERGENCY_CHECKIN_MINUTES') ?? 10;
     await this.queue.add(
       'check-in',
-      { kind: 'check-in', doseId },
-      { jobId: doseJobId('check-in', doseId), delay: minutes * 60_000 },
+      { kind: 'check-in', doseId, attempt },
+      { jobId: `${doseJobId('check-in', doseId)}-${attempt}`, delay: minutes * 60_000 },
     );
-    this.logger.log(`Dose ${doseId}: calling her back in ${minutes} min.`);
+    this.logger.log(`Dose ${doseId}: calling her back in ${minutes} min (call back ${attempt}).`);
+  }
+
+  /**
+   * After a call back: better or with family → tell the family and stop. Still not well, or no answer →
+   * tell the first contact what she said and call her again, up to MAX_CHECK_INS call backs.
+   */
+  private async followCheckIn(doseId: string, result: VoiceResult): Promise<void> {
+    const [{ n }] = await this.db.select({ n: count() }).from(voiceCalls).where(eq(voiceCalls.doseId, doseId));
+    const done = Math.max(0, n - 1);
+    const answered = result.outcome !== 'no_answer' && result.outcome !== 'failed';
+    const words = patientWords(result);
+    if (answered && result.feelsUnwell === false && !result.emergency) {
+      await this.notifyFamily(doseId, (name) => ({
+        title: `${name} disse que está melhor`,
+        body: words ? `Na ligação de volta, ela disse: "${words}".` : 'Na ligação de volta, ela disse que está melhor.',
+      }));
+      this.logger.log(`Dose ${doseId}: she is better after ${done} call back(s); stopping.`);
+      return;
+    }
+    if (!answered) {
+      await this.notifyFamily(doseId, (name) => ({
+        title: `${name} não atendeu a ligação de volta`,
+        body: 'Vale ligar para ela.',
+      }));
+    }
+    await this.safeCallCaregivers(doseId, answered ? 'still_unwell' : 'no_answer', words);
+    if (done < MAX_CHECK_INS) await this.scheduleCheckIn(doseId, done + 1);
+  }
+
+  private async notifyFamily(doseId: string, text: (name: string) => { title: string; body: string }): Promise<void> {
+    const [row] = await this.db
+      .select({ patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`, familyId: members.familyId })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .innerJoin(members, eq(medications.patientId, members.id))
+      .where(eq(doses.id, doseId));
+    if (!row) return;
+    await this.alerts.notifyCaregivers(row.familyId, { kind: 'unwell', url: '/family', doseId, ...text(row.patientName) });
+  }
+
+  private async safeCallCaregivers(doseId: string, reason: CaregiverCallReason, words?: string): Promise<void> {
+    try {
+      await this.callCaregivers(doseId, reason, words);
+    } catch (error) {
+      telemetry.captureException(error, { step: 'emergency_call', dose_id: doseId });
+    }
   }
 
   /**
@@ -279,7 +349,7 @@ export class VoiceCallService {
    * else the oldest caregiver with a phone) with a short recorded-style message. Calling everyone causes alarm.
    * Only numbers in the voice CALL_ALLOWED_NUMBERS get through; the push already went out either way.
    */
-  private async callCaregivers(doseId: string, note?: string | null): Promise<void> {
+  private async callCaregivers(doseId: string, reason: CaregiverCallReason, words?: string): Promise<void> {
     const voiceUrl = this.config.get<string>('VOICE_URL');
     const token = this.config.get<string>('VOICE_API_TOKEN');
     if (!voiceUrl || !token) return;
@@ -296,8 +366,7 @@ export class VoiceCallService {
       .where(and(eq(members.familyId, patient.familyId), eq(members.role, 'caregiver'), isNotNull(members.phone), ne(members.phone, '')))
       .orderBy(desc(members.emergencyContact), asc(members.createdAt))
       .limit(1);
-    const said = note?.trim() ? ` disse agora na ligação do remédio: "${note.trim().slice(0, 200)}"` : ' disse agora na ligação do remédio que não está bem';
-    const message = `Olá, aqui é a assistente virtual da Recuidado. ${patient.name}${said}. Por favor, ligue para ela agora. Se for grave, ligue para o SAMU, 192. Obrigada, tchau.`;
+    const message = caregiverMessage(patient.name, reason, words);
     for (const c of caregivers) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',

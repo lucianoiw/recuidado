@@ -8,6 +8,8 @@ export interface ReminderContext {
   medications: Medication[];
   /** Call back a few minutes after she reported an emergency: only ask how she is now. */
   checkIn?: boolean;
+  /** On a call back: whether Recuidado will call her again if she is still not well. */
+  callBack?: boolean;
 }
 
 export const DOSE_TOOL_NAME = "record_dose_answer";
@@ -34,7 +36,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     "If she says she does not want these calls, say kindly that you will tell the family, and put that in note.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell, only say kindly that the family will be told. Do not tell her what to do (no \"sit down\", \"drink water\", \"it will pass\").",
-    `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: stay calm and do not react with alarm or pity (never "ai, meu Deus", "nossa", "que susto", "sinto muito"): right away, with nothing before it, say exactly "${emergencyLine(ctx)}" and delegate at the same time.`,
+    `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: stay calm and do not react with alarm or pity (never "ai, meu Deus", "nossa", "que susto", "sinto muito"): right away, with nothing before it and nothing after it, say exactly "${emergencyLine(ctx)}" and delegate at the same time.`,
     "After the goodbye, say nothing else, even when the delegated result arrives.",
     NO_SOUNDS,
   ].join("\n");
@@ -49,13 +51,22 @@ const NO_SOUNDS =
  * and Recuidado really calls back a few minutes later (EMERGENCY_CHECKIN_MINUTES in apps/api).
  */
 export function emergencyLine(ctx: ReminderContext): string {
-  return `Eu vou avisar a sua família agora. Se achar necessário, ligue para o SAMU, 192. Vou desligar para deixar a sua linha livre, e daqui a pouco eu ligo de novo. Tchau, ${ctx.patientName}!`;
+  return `Tá bom, ${ctx.patientName}, eu vou avisar a sua família. Já te ligo para saber como a senhora está. Tchau, ${ctx.patientName}!`;
 }
 
 /** Said on the call back when she is still not well. */
 export function checkInUnwellLine(ctx: ReminderContext): string {
-  return `Vou avisar a sua família de novo. Se achar necessário, ligue para o SAMU, 192. ${goodbyeLine(ctx)}`;
+  const again = ctx.callBack === false ? "" : " Já te ligo de novo.";
+  return `Tá bom, ${ctx.patientName}, eu vou avisar a sua família de novo.${again} ${goodbyeLine(ctx)}`;
 }
+
+/** Said on the call back when she is better or someone is with her. */
+export function checkInBetterLine(ctx: ReminderContext): string {
+  return `Que bom, ${ctx.patientName}. Vou avisar a sua família. ${goodbyeLine(ctx)}`;
+}
+
+/** Words that show the required line of an emergency or a call back was said. */
+export const FAMILY_LINE = /avisar a sua fam[íi]lia/i;
 
 /** The call back after an emergency: how is she now. Nothing about the medicine. */
 function buildCheckInInstructions(ctx: ReminderContext): string {
@@ -64,12 +75,13 @@ function buildCheckInInstructions(ctx: ReminderContext): string {
     "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm and warm tone.",
     `Call the person by this name: "${ctx.patientName}".`,
     "You already greeted her, said that her family was told, and asked how she is now. Listen to her answer.",
-    `If she is better or someone is with her, say one short warm sentence, then exactly "${goodbyeLine(ctx)}", and delegate once at the same time.`,
-    `If she is still unwell or alone, say exactly "${checkInUnwellLine(ctx)}", and delegate once at the same time.`,
+    `If she is better or someone from the family is already with her, say exactly "${checkInBetterLine(ctx)}", and delegate once at the same time.`,
+    `If she is still not well and alone, say exactly "${checkInUnwellLine(ctx)}", and delegate once at the same time.`,
+    "Stay calm: never \"ai, meu Deus\", \"nossa\" or \"sinto muito\".",
     "As soon as she answers, delegate first, then speak. Never say anything after the goodbye (no \"já faço isso\").",
     "Do not ask about the medicine. Do not ask anything else.",
     "You are an AI. If she asks, say honestly that you are a virtual assistant. Never pretend to be human.",
-    "Never give medical advice and never tell her what to do besides calling SAMU.",
+    "Never give medical advice and never tell her what to do.",
     "After the goodbye, say nothing else, even when the delegated result arrives.",
     NO_SOUNDS,
   ].join("\n");
@@ -94,7 +106,7 @@ function periodOf(now: Date): "manhã" | "tarde" | "noite" {
 export function greetingLine(ctx: ReminderContext, now: Date = new Date()): string {
   // The AI says it is an AI before anything else (transparency, LGPD art. 9 and art. 20).
   if (ctx.checkIn) {
-    return `Oi, ${ctx.patientName}! É a assistente virtual da Recuidado de novo. A sua família já foi avisada. Como a senhora está agora?`;
+    return `Oi, ${ctx.patientName}! É a assistente virtual da Recuidado de novo. Já avisei a sua família. Como a senhora está agora?`;
   }
   return `Oi, ${ctx.patientName}, ${greetingFor(now)}! É a assistente virtual da Recuidado. Como a senhora está?`;
 }
@@ -134,7 +146,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
   if (ctx.checkIn) {
     return [
       `Your only job is to record how the patient is now by calling ${DOSE_TOOL_NAME}. This call is not about the medicine: set taken=false.`,
-      "Set feels_unwell=true if she is still not well in any way. Set false only if she says she is better.",
+      "Set feels_unwell=false if she says she is better or that someone from the family is already with her (\"meu filho já veio\"). Otherwise true.",
       "Set emergency=true only if it is still a possible emergency: she fell and cannot get up, chest pain, shortness of breath, fainting, or she asks for urgent help.",
       "Put what she said in note, in Portuguese, close to her own words.",
       "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
