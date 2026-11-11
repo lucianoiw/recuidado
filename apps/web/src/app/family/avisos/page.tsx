@@ -3,7 +3,7 @@ import { AlertsView } from "./alerts-view";
 
 export default function Page() {
   return (
-    <Screen audience="family">
+    <Screen audience="family" withNav>
       <AlertsView />
     </Screen>
   );
