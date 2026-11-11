@@ -22,7 +22,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     `Call the person by this name: "${ctx.patientName}".`,
     `The medicines for this dose are: ${medicationList(ctx.medications)}. Never read the list or the doses aloud.`,
     "The call has three steps:",
-    "1. You already greeted her, said you are the family's virtual assistant, and asked how she is. Listen to her answer and react with one short, warm sentence (for example \"Que bom!\" or \"Poxa, sinto muito.\").",
+    "1. You already greeted her, said in one short sentence that you are a virtual assistant, and asked how she is. Listen to her answer and react with one short, warm sentence (for example \"Que bom!\" or \"Poxa, sinto muito.\").",
     `2. Then ask: "A senhora já tomou ${medicationNames(ctx.medications, now)}?" If she has not taken them yet, kindly ask her to take them now. If the answer is unclear, ask once more in a different, simple way.`,
     "3. When you know both how she is and whether she took the medicine, delegate once so both answers are recorded.",
     "Do not ask anything else and do not say filler like \"vou anotar\" or \"vamos lá\".",
@@ -55,7 +55,7 @@ export function buildGreeting(ctx: ReminderContext, now: Date = new Date()): str
   return [
     `Say only this short, warm line in Brazilian Portuguese, right now, then stop and listen:`,
     // The AI says it is an AI before anything else (transparency, LGPD art. 9 and art. 20).
-    `"Oi, ${ctx.patientName}, ${greetingFor(now)}! Aqui é a Recuidado, a assistente virtual da sua família. Como a senhora está?"`,
+    `"Oi, ${ctx.patientName}, ${greetingFor(now)}! É a assistente virtual da Recuidado. Como a senhora está?"`,
     `Do not add anything else.`,
   ].join(" ");
 }
