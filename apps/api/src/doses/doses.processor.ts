@@ -52,6 +52,13 @@ export class DosesProcessor extends WorkerHost {
         }
       case 'alert-family':
         return this.doses.alertFamily(data.doseId);
+      case 'check-in':
+        try {
+          return (await this.voice.call(data.doseId, { checkIn: true })) ? 'called' : 'skipped';
+        } catch (error) {
+          telemetry.captureException(error, { job_kind: 'check-in', dose_id: data.doseId });
+          return 'failed';
+        }
     }
   }
 }

@@ -58,7 +58,7 @@ export class CallService {
     if (!isAllowed(this.config, destination)) {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
     }
-    const context: ReminderContext = { patientName: input.patientName, medications: input.medications };
+    const context: ReminderContext = { patientName: input.patientName, medications: input.medications, checkIn: input.checkIn };
     const now = new Date();
     const line = greetingLine(context, now);
     const greetingAudio = this.greetings.get(this.config.liveVoice, line);
@@ -127,7 +127,7 @@ export class CallService {
   }
 
   /** Sends the result to the Recuidado API, which alerts the family when confirmed is false. */
-  report(doseId: string, result: CallResult): Promise<void> {
+  report(doseId: string, result: CallResult & { checkIn?: boolean }): Promise<void> {
     return this.post(`/doses/${encodeURIComponent(doseId)}/voice-result`, result);
   }
 

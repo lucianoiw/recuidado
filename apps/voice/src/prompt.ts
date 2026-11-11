@@ -6,6 +6,8 @@ export interface Medication {
 export interface ReminderContext {
   patientName: string;
   medications: Medication[];
+  /** Call back a few minutes after she reported an emergency: only ask how she is now. */
+  checkIn?: boolean;
 }
 
 export const DOSE_TOOL_NAME = "record_dose_answer";
@@ -16,6 +18,7 @@ function medicationList(medications: Medication[]): string {
 
 /** Frontend instructions for GPT-Live. Text the patient hears stays in Portuguese. */
 export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date()): string {
+  if (ctx.checkIn) return buildCheckInInstructions(ctx);
   return [
     "You are Recuidado, a warm assistant that calls an older adult to remind them to take their medicine.",
     "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm, warm and friendly tone, like someone who cares about her. Never make long introductions.",
@@ -31,7 +34,31 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     "If she says she does not want these calls, say kindly that you will tell the family, and put that in note.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell, only say kindly that the family will be told. Do not tell her what to do (no \"sit down\", \"drink water\", \"it will pass\").",
-    `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: say "Vou avisar a sua família agora. Se precisar, ligue para o SAMU, 192." then "${goodbyeLine(ctx)}", and delegate at the same time.`,
+    `In a possible emergency (a fall, chest pain, shortness of breath, fainting), do not ask about the medicine: say exactly "${emergencyLine(ctx)}" and delegate at the same time.`,
+    "After the goodbye, say nothing else, even when the delegated result arrives.",
+  ].join("\n");
+}
+
+/**
+ * Said when she reports a possible emergency. The call ends so her line is free for the family,
+ * and Recuidado really calls back a few minutes later (EMERGENCY_CHECKIN_MINUTES in apps/api).
+ */
+export function emergencyLine(ctx: ReminderContext): string {
+  return `Ligue para o SAMU, 192. Eu vou avisar a sua família agora. Vou desligar para deixar a sua linha livre, e daqui a pouco eu ligo de novo. Tchau, ${ctx.patientName}!`;
+}
+
+/** The call back after an emergency: how is she now. Nothing about the medicine. */
+function buildCheckInInstructions(ctx: ReminderContext): string {
+  return [
+    "You are Recuidado, a warm virtual assistant. A few minutes ago this older adult said on the phone that she might need help; her family was told. You are calling back to know how she is now.",
+    "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm and warm tone.",
+    `Call the person by this name: "${ctx.patientName}".`,
+    "You already greeted her, said that her family was told, and asked how she is now. Listen to her answer.",
+    `If she is better or someone is with her, say one short warm sentence, then exactly "${goodbyeLine(ctx)}", and delegate once at the same time.`,
+    `If she is still unwell or alone, say exactly "Vou avisar a sua família de novo. Se precisar, ligue para o SAMU, 192." then "${goodbyeLine(ctx)}", and delegate once at the same time.`,
+    "Do not ask about the medicine. Do not ask anything else.",
+    "You are an AI. If she asks, say honestly that you are a virtual assistant. Never pretend to be human.",
+    "Never give medical advice and never tell her what to do besides calling SAMU.",
     "After the goodbye, say nothing else, even when the delegated result arrives.",
   ].join("\n");
 }
@@ -54,6 +81,9 @@ function periodOf(now: Date): "manhã" | "tarde" | "noite" {
 /** The first line she hears: a warm hello, that it is a virtual assistant, and how she is. */
 export function greetingLine(ctx: ReminderContext, now: Date = new Date()): string {
   // The AI says it is an AI before anything else (transparency, LGPD art. 9 and art. 20).
+  if (ctx.checkIn) {
+    return `Oi, ${ctx.patientName}! É a assistente virtual da Recuidado de novo. A sua família já foi avisada. Como a senhora está agora?`;
+  }
   return `Oi, ${ctx.patientName}, ${greetingFor(now)}! É a assistente virtual da Recuidado. Como a senhora está?`;
 }
 
@@ -83,11 +113,21 @@ export function medicationNames(medications: Medication[], now: Date = new Date(
 
 /** The last line of the call, e.g. "Obrigada, tchau, Dona Maria!". */
 export function goodbyeLine(ctx: ReminderContext): string {
+  if (ctx.checkIn) return `Tchau, ${ctx.patientName}!`;
   return `Obrigada, tchau, ${ctx.patientName}!`;
 }
 
 /** Backend prompt for the delegated Responses model. */
 export function buildDelegateInstructions(ctx: ReminderContext): string {
+  if (ctx.checkIn) {
+    return [
+      `Your only job is to record how the patient is now by calling ${DOSE_TOOL_NAME}. This call is not about the medicine: set taken=false.`,
+      "Set feels_unwell=true if she is still not well in any way. Set false only if she says she is better.",
+      "Set emergency=true only if it is still a possible emergency: she fell and cannot get up, chest pain, shortness of breath, fainting, or she asks for urgent help.",
+      "Put what she said in note, in Portuguese, close to her own words.",
+      "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
+    ].join("\n");
+  }
   return [
     `Your only job is to record the patient's answer by calling ${DOSE_TOOL_NAME}.`,
     "Set taken=true only if she clearly said she already took the medicine (all of them, when there are several).",

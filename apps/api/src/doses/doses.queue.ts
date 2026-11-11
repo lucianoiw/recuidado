@@ -11,8 +11,10 @@ export type DoseJob =
   // The demo run (apps/api/src/demo) passes short waits; real doses use the env minutes.
   | { kind: 'remind'; doseId: string; callAfterMs?: number; alertAfterMs?: number }
   | { kind: 'call'; doseId: string }
-  | { kind: 'alert-family'; doseId: string };
+  | { kind: 'alert-family'; doseId: string }
+  // She reported an emergency on the call: call her back a few minutes later.
+  | { kind: 'check-in'; doseId: string };
 
-export function doseJobId(kind: 'remind' | 'call' | 'alert-family', doseId: string) {
+export function doseJobId(kind: 'remind' | 'call' | 'alert-family' | 'check-in', doseId: string) {
   return `${kind}-${doseId}`;
 }

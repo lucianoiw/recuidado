@@ -61,6 +61,8 @@ export const envSchema = z.object({
   PHARMACY_CALL_NAME: z.string().default('Farmácia de teste'),
   // Minutes to wait after the call before alerting the family.
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
+  // After she reports an emergency on a call, Recuidado calls her back this many minutes later.
+  EMERGENCY_CHECKIN_MINUTES: z.coerce.number().int().positive().default(2),
   // Demo run (POST /demo/run): the whole dose flow in about two minutes. "false" turns it off.
   DEMO_RUN_ENABLED: z.preprocess(
     (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
