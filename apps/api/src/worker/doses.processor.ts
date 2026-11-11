@@ -1,14 +1,14 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
+import { Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import type { Job } from 'bullmq';
 import { MAX_CHECK_INS, VoiceCallService } from '../voice/voice.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
-import { DOSES_QUEUE, type DoseJob } from './doses.queue.js';
-import { DosesService } from './doses.service.js';
+import { DOSES_QUEUE, type DoseJob } from '../doses/doses.queue.js';
+import { DosesService } from '../doses/doses.service.js';
 
 /** The only worker of the doses queue: every job kind goes through here. */
 @Processor(DOSES_QUEUE)
-export class DosesProcessor extends WorkerHost {
+export class DosesProcessor extends WorkerHost implements OnApplicationBootstrap {
   private readonly logger = new Logger(DosesProcessor.name);
 
   constructor(
@@ -16,6 +16,11 @@ export class DosesProcessor extends WorkerHost {
     private readonly voice: VoiceCallService,
   ) {
     super();
+  }
+
+  /** The hourly dose planner lives with the queue it feeds. */
+  async onApplicationBootstrap() {
+    await this.doses.schedulePlanner();
   }
 
   async process(job: Job<DoseJob>): Promise<string | void> {

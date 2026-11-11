@@ -21,7 +21,9 @@
     "dev": "nest start --watch",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "dev:worker": "nest start --watch --entryFile worker/main",
+    "start:worker": "node dist/worker/main"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.8.0",
