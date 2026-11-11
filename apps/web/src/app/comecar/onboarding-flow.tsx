@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -17,10 +16,9 @@ import {
   TopBar,
   cn,
 } from "@/components/ui";
-import { QRCodeSVG } from "qrcode.react";
 import { captureError, track } from "@/lib/analytics";
 import { lookupCep, type CepLookup } from "@/lib/cep";
-import { useCanShare, useOrigin } from "@/lib/origin";
+import { useCanShare } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
 import { getOnboarding, saveOnboarding } from "@/lib/api";
@@ -34,7 +32,7 @@ import {
   type Relation,
 } from "@/lib/onboarding";
 
-const TOTAL = 4;
+const TOTAL = 3;
 
 export function OnboardingFlow() {
   const router = useRouter();
@@ -71,7 +69,6 @@ export function OnboardingFlow() {
     1: c.name.trim().length > 1 && isPhone(c.phone) && c.relation !== null && (c.relation !== "Outro" || c.relationOther.trim() !== ""),
     2: p.name.trim().length > 1 && isPhone(p.phone) && isDate(p.birth) && isCep(p.cep) && cepOk,
     3: true,
-    4: true,
   };
 
   async function next() {
@@ -198,28 +195,6 @@ export function OnboardingFlow() {
         <InviteStep data={data} setData={setData} nickname={nickname} />
       ) : null}
 
-      {step === 4 ? (
-        <>
-          <Header title={`Agora, o celular da ${nickname}.`} text="Leva 1 minuto. Faça junto ou na próxima visita." />
-          <PatientLink />
-          <ol className="flex flex-col gap-3.5">
-            {["Abra o link no celular dela.", "Toque em Adicionar à Tela de Início.", "Toque em Permitir as notificações."].map((t, i) => (
-              <li key={t} className="flex items-center gap-3">
-                <span className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-brand text-[15px] font-extrabold text-white">
-                  {i + 1}
-                </span>
-                {t}
-              </li>
-            ))}
-          </ol>
-          {!p.usesPhone ? (
-            <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
-              Ela não usa celular? Tudo bem: a gente liga no horário de cada remédio.
-            </p>
-          ) : null}
-        </>
-      ) : null}
-
       {tried && !valid[step] ? (
         <p className="font-semibold text-danger" role="alert">
           Confira os campos marcados.
@@ -234,13 +209,8 @@ export function OnboardingFlow() {
 
       <div className="mt-auto flex flex-col gap-1.5 pt-2">
         <Button onClick={next} disabled={saving}>
-          {saving ? "Salvando..." : step === TOTAL ? "Pronto, adicionar os remédios" : "Continuar"}
+          {saving ? "Salvando..." : step === TOTAL ? "Continuar, adicionar os remédios" : "Continuar"}
         </Button>
-        {step === TOTAL ? (
-          <Link href="/family" className="py-3 text-center font-bold text-brand">
-            Fazer depois
-          </Link>
-        ) : null}
       </div>
     </main>
   );
@@ -418,38 +388,6 @@ function InviteStep({
         Toque em Enviar para mandar o link a quem você chamou. A pessoa abre e já acompanha a {nickname}.
       </p>
     </>
-  );
-}
-
-function PatientLink() {
-  const origin = useOrigin();
-  const url = origin ? familyLink(origin, "/patient") : "";
-  const [copied, setCopied] = useState(false);
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-    } catch {}
-  }
-  return (
-    <section className="flex items-stretch gap-4 rounded-card border border-line-soft bg-surface p-4">
-      <span className="flex size-[132px] shrink-0 items-center justify-center rounded-xl border border-line bg-white p-2">
-        {origin ? (
-          <QRCodeSVG value={url} size={114} fgColor="#16201f" title="QR code do app dela" />
-        ) : null}
-      </span>
-      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5">
-        <p className="text-[16px] leading-snug">Aponte a câmera do celular dela para o código.</p>
-        <button
-          type="button"
-          onClick={copy}
-          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface text-[16px] font-bold"
-        >
-          <CopyIcon size={18} />
-          <span aria-live="polite">{copied ? "Copiado" : "Copiar link"}</span>
-        </button>
-      </div>
-    </section>
   );
 }
 

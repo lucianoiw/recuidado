@@ -3,7 +3,8 @@
 import { callName, joinFamily } from "@/lib/api";
 import { CopyLinkButton } from "@/components/copy-button";
 import { EnableNotifications } from "@/components/enable-notifications";
-import { BellIcon, CheckIcon, StatusPill, cn } from "@/components/ui";
+import Link from "next/link";
+import { BellIcon, CheckIcon, StatusPill, buttonClass, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
@@ -97,7 +98,9 @@ export function CircleView() {
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
         <h2 className="text-[18px] font-extrabold">Convidar e instalar</h2>
         <CopyLinkButton path="/family" label="Copiar convite" />
-        <CopyLinkButton path="/patient" label="Copiar link do app dela" />
+        <Link href="/family/celular" className={buttonClass({ variant: "secondary" })}>
+          Celular de {patient}
+        </Link>
       </section>
     </>
   );

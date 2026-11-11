@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { afterMedsHref } from "@/components/patient-link";
 import { useEffect, useState } from "react";
 import {
   AlertIcon,
@@ -106,6 +108,7 @@ function ReadingSteps() {
 }
 
 function Result({ family, count }: { family: FamilyOverview | null; count: number }) {
+  const router = useRouter();
   const { getsFree, setBuy } = useBuyChoice();
   const meds = family?.medications ?? [];
   const free = meds.filter(isFree);
@@ -192,9 +195,13 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
         </p>
       ) : null}
 
-      <Link href="/family" className={cn(buttonClass(), "mt-auto")}>
-        Ir para o painel
-      </Link>
+      <button
+        type="button"
+        onClick={() => router.push(afterMedsHref("/family"))}
+        className={cn(buttonClass(), "mt-auto")}
+      >
+        Continuar
+      </button>
     </>
   );
 }
