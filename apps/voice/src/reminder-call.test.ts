@@ -52,7 +52,7 @@ test("confirmed dose: greets on answer, records tool call, hangs up", async () =
   const { socket, call, hangups } = setup();
   socket.emitEvent({ type: "transport.ringing", event_id: "e1" });
   socket.emitEvent({ type: "transport.answered", event_id: "e2" });
-  assert.equal(socket.sent[0].type, "session.commentary.append");
+  assert.equal(socket.sent[1].type, "session.commentary.append");
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e3", delta: "Bom dia, Maria. " });
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "e4", delta: "Já tomou o remédio?" });
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "e5", delta: "Tomei sim." });
@@ -70,7 +70,8 @@ test("confirmed dose: greets on answer, records tool call, hangs up", async () =
     { speaker: "patient", text: "Tomei sim." },
   ]);
   const types = socket.sent.map((e) => e.type);
-  assert.deepEqual(types, ["session.commentary.append", "response.item.create", "response.create"]);
+  assert.deepEqual(types.slice(0, 2), ["session.input_audio.mute", "session.commentary.append"]);
+  assert.ok(types.includes("response.item.create") && types.includes("response.create"));
   assert.equal(hangups(), 1);
   assert.equal(socket.closed, true);
 });
@@ -133,7 +134,55 @@ test("greeting is one short line", async () => {
     { patientName: "Dona Maria", medications: [{ name: "Losartana", dose: "50 mg" }] },
     new Date("2026-11-11T02:30:00Z"),
   );
-  assert.match(g, /"Boa noite, Dona Maria, aqui é do Recuidado\. Já tomou a Losartana\?"/);
+  assert.match(g, /"Oi, Dona Maria, boa noite! Como a senhora está\?"/);
+  assert.doesNotMatch(g, /Losartana/);
+});
+
+test("three or more medicines are not read one by one", async () => {
+  const { medicationNames } = await import("./prompt.js");
+  const morning = new Date("2026-11-11T12:00:00Z");
+  assert.equal(medicationNames([{ name: "Losartana" }], morning), "a Losartana");
+  assert.equal(medicationNames([{ name: "Losartana" }, { name: "AAS" }], morning), "a Losartana e o AAS");
+  assert.equal(medicationNames([{ name: "A" }, { name: "B" }, { name: "C" }], morning), "os remédios da manhã");
+});
+
+test("mutes her microphone during the greeting and unmutes after the question", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "m1" });
+  assert.deepEqual(socket.sent.slice(0, 2).map((e) => e.type), ["session.input_audio.mute", "session.commentary.append"]);
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "m2", delta: "Oi, Maria! Como a senhora está?" });
+  await new Promise((r) => setTimeout(r, 900));
+  assert.equal(socket.sent.filter((e) => e.type === "session.input_audio.unmute").length, 1);
+  socket.emit("close");
+  await call.result;
+});
+
+test("hangs up after the goodbye is spoken, not before", async () => {
+  const socket = new FakeSocket();
+  let hangups = 0;
+  const call = new ReminderCall({
+    sessionId: "live_bye",
+    context: { patientName: "Maria", medications: [{ name: "Losartana" }] },
+    socket,
+    hangup: async () => {
+      hangups++;
+      socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" });
+    },
+    maxCallMs: 60_000,
+    goodbyeMs: 2000,
+    goodbyeNudgeMs: 50,
+    goodbyeTailMs: 30,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "b1" });
+  socket.emitEvent(toolCall(true));
+  await new Promise((r) => setTimeout(r, 100));
+  assert.equal(hangups, 0);
+  assert.ok(socket.sent.some((e) => e.event_id === "goodbye_call_1"), "asks for the goodbye");
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b2", delta: "Obrigada, tchau!" });
+  const result = await call.result;
+  assert.equal(hangups, 1);
+  assert.equal(result.endReason, "hung_up_after_goodbye");
 });
 
 test("records that she is not feeling well", async () => {

@@ -41,8 +41,9 @@ Result posted to `{API_URL}/doses/:doseId/voice-result`:
 }
 ```
 
-`feelsUnwell` is what she answered to "E a senhora, está bem?" (self-report, no diagnosis).
-`endReason` says why the call ended: `hung_up_after_answer`, `voicemail`, `max_duration`,
+`feelsUnwell` is what she answered to "Como a senhora está?" (self-report, no diagnosis).
+`endReason` says why the call ended: `hung_up_after_goodbye`, `hung_up_after_answer` (answer
+recorded but no goodbye heard within 15 s), `voicemail`, `max_duration`,
 `session_closed: <reason>`, `sideband_closed` or `error`.
 
 The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and, when
@@ -50,12 +51,15 @@ The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and,
 
 ## Call script
 
-1. "Boa noite, Dona Maria, aqui é do Recuidado. Já tomou a Losartana?" (bom dia / boa tarde by São Paulo time)
-2. "E a senhora, está bem?"
-3. "Obrigada, tchau!"
+1. "Oi, Dona Maria, bom dia! Como a senhora está?" (bom dia / boa tarde / boa noite by São Paulo time).
+   Her microphone is muted while this plays, so an "alô" does not make the model wait.
+2. A short reaction, then "A senhora já tomou a Losartana?". With three or more medicines it asks
+   about "os remédios da manhã" instead of reading the list.
+3. "Obrigada, tchau!". The call hangs up 2.5 s after the goodbye is heard, not on a fixed timer.
+   If no goodbye after 5 s it is asked for again; after 15 s the call hangs up anyway.
 
-A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
-call as `no_answer`. A phone's call-screening assistant gets "Recuidado, lembrete do remédio".
+If she asks who is calling: "É a Recuidado, do lembrete do remédio." A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
+call as `no_answer`.
 
 ## Debugging a call
 

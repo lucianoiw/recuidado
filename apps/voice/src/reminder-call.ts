@@ -19,7 +19,7 @@ export interface CallResult {
   transcript: TranscriptLine[];
   error?: string;
   durationSeconds?: number;
-  /** Why the call ended, e.g. "session_closed: <reason>", "max_duration", "hung_up_after_answer". */
+  /** Why the call ended, e.g. "hung_up_after_goodbye", "hung_up_after_answer" (no goodbye heard), "session_closed: <reason>", "max_duration". */
   endReason?: string;
 }
 
@@ -39,8 +39,14 @@ export interface ReminderCallOptions {
   socket: SidebandSocket;
   hangup: () => Promise<void>;
   maxCallMs: number;
-  /** Time for the goodbye after the answer is recorded. */
+  /** Longest wait for the goodbye after the answer is recorded, then the call is hung up anyway. */
   goodbyeMs?: number;
+  /** If no goodbye was heard this long after the answer is recorded, ask for it again. */
+  goodbyeNudgeMs?: number;
+  /** Silence after the goodbye before hanging up, so its audio finishes playing. */
+  goodbyeTailMs?: number;
+  /** Longest time the patient's microphone stays muted while the greeting plays. */
+  greetingMuteMs?: number;
   /** Time to wait for session.closed after hanging up. */
   closeGraceMs?: number;
   log?: (msg: string, extra?: unknown) => void;
@@ -50,6 +56,9 @@ export interface ReminderCallOptions {
 
 /** Phrases from carrier voicemail greetings. Talking to a recording helps nobody, so the call ends. */
 const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o sinal|caixa postal|caixa de mensagens/i;
+
+/** The goodbye the assistant is told to say at the end. */
+const GOODBYE = /tchau/i;
 
 /** High-frequency events left out of the log. */
 const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
@@ -71,6 +80,11 @@ export class ReminderCall {
   private hangupRequested = false;
   private endReason?: string;
   private voicemail = false;
+  private greetingMuted = false;
+  private greetingText = "";
+  private assistantAfterAnswer = "";
+  private goodbyeTimer?: NodeJS.Timeout;
+  private firstAssistantLogged = false;
   private finished = false;
   private timers: NodeJS.Timeout[] = [];
   private resolveResult!: (r: CallResult) => void;
@@ -135,12 +149,16 @@ export class ReminderCall {
         this.status = "answered";
         this.answered = true;
         this.opts.onStatusChange?.("answered");
+        // Mute her microphone while the greeting plays, so an "alô" does not make the model wait or restart.
+        this.greetingMuted = true;
+        this.send({ type: "session.input_audio.mute", event_id: `mute_${this.opts.sessionId}` });
         this.send({
           type: "session.commentary.append",
           event_id: `greeting_${this.opts.sessionId}`,
           delegation_id: null,
           content: buildGreeting(this.opts.context),
         });
+        this.timers.push(setTimeout(() => this.unmuteAfterGreeting("timeout"), this.opts.greetingMuteMs ?? 6000));
         break;
       case "transport.failed": {
         const err = event.error as { code?: string; message?: string } | undefined;
@@ -154,7 +172,7 @@ export class ReminderCall {
         this.checkVoicemail();
         break;
       case "session.output_transcript.delta":
-        this.appendTranscript("assistant", String(event.delta ?? ""));
+        this.onAssistantSpeech(String(event.delta ?? ""), event.start_ms);
         break;
       case "response.event":
         this.handleResponseEvent(event.event as LiveEvent | undefined);
@@ -208,12 +226,58 @@ export class ReminderCall {
     });
     this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
+    // Hang up only after the goodbye is spoken; the timers below are fallbacks.
+    this.assistantAfterAnswer = "";
     this.timers.push(
       setTimeout(() => {
+        if (GOODBYE.test(this.assistantAfterAnswer) || this.hangupRequested) return;
+        this.log("no goodbye yet, asking for it");
+        this.send({
+          type: "session.commentary.append",
+          event_id: `goodbye_${item.call_id}`,
+          delegation_id: null,
+          content: 'Say now, in Brazilian Portuguese, exactly: "Obrigada, tchau!"',
+        });
+      }, this.opts.goodbyeNudgeMs ?? 5000),
+      setTimeout(() => {
         this.endReason ??= "hung_up_after_answer";
+        this.log("goodbye not heard in time, hanging up");
         void this.endCall();
-      }, this.opts.goodbyeMs ?? 9000),
+      }, this.opts.goodbyeMs ?? 15000),
     );
+  }
+
+  private onAssistantSpeech(delta: string, startMs: unknown) {
+    if (!delta) return;
+    if (!this.firstAssistantLogged) {
+      this.firstAssistantLogged = true;
+      this.log(`assistant started speaking (session ms ${String(startMs ?? "?")})`);
+    }
+    this.appendTranscript("assistant", delta);
+    if (this.greetingMuted) {
+      this.greetingText += delta;
+      // The greeting ends with the question; leave a moment for its audio to finish.
+      if (this.greetingText.includes("?")) {
+        this.timers.push(setTimeout(() => this.unmuteAfterGreeting("question asked"), 800));
+      }
+    }
+    if (!this.answer) return;
+    this.assistantAfterAnswer += delta;
+    if (!GOODBYE.test(this.assistantAfterAnswer)) return;
+    // Wait until the assistant stops talking, then hang up.
+    if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
+    this.goodbyeTimer = setTimeout(() => {
+      this.endReason ??= "hung_up_after_goodbye";
+      void this.endCall();
+    }, this.opts.goodbyeTailMs ?? 2500);
+    this.timers.push(this.goodbyeTimer);
+  }
+
+  private unmuteAfterGreeting(why: string) {
+    if (!this.greetingMuted) return;
+    this.greetingMuted = false;
+    this.log(`unmuting patient (${why})`);
+    this.send({ type: "session.input_audio.unmute", event_id: `unmute_${this.opts.sessionId}` });
   }
 
   private checkVoicemail() {
