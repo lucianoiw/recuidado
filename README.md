@@ -273,7 +273,7 @@ Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coo
 
 **Quebrado ou não testado**
 - `recuidado/worker` no Coolify está parado (nunca ficou online). A fila roda dentro da `api` (sem `APP_ROLE`), então nada parou. Não mudar a `api` para `APP_ROLE=api` antes do worker subir.
-- A atendente da URA de teste diz que a Rosuvastatina "sai pelo Farmácia Popular", mas o app mostra ela em "Para comprar". Contradição visível no vídeo.
+- Corrigido no mesmo dia: a atendente da URA de teste dizia que a Rosuvastatina "sai pelo Farmácia Popular", contradizendo o "Para comprar" do app. Agora diz que não sai.
 - Avisos da família demo estão cheios de testes (22 novos, emergências repetidas, um falso "não está bem" para "Eu tô aguardando", ponto duplo `".` no fim da fala, resumo em terceira pessoa no lugar das palavras dela).
 - "Vale ligar para ela" fixo, sem respeitar "O senhor".
 - Sem medição: custo por ligação. Temos só a duração (18 ligações, média 21 s, mediana 17 s); o custo do GPT-Live não vai para o PostHog.
@@ -294,8 +294,8 @@ Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coo
 
 **Próximos passos até o vídeo (por prioridade)**
 1. Subir o worker ou apagar o recurso, para o Coolify não mostrar serviço parado.
-2. Trocar a fala da URA para "não sai pelo Farmácia Popular" e refazer uma ligação, para a tela ficar coerente.
-3. Limpar os avisos da família demo antes de gravar.
+2. Feito: fala da URA corrigida e nova ligação feita.
+3. Limpar os avisos da família demo antes de gravar: `DEMO_CLEAR_ALERTS_BEFORE` na `api` apaga, no boot, os avisos dela criados antes dessa hora (o seed devolve o histórico dele). Usado em 11/11; repetir antes do vídeo.
 4. Testar ao vivo o roteiro novo: segunda ligação, emergência com "ainda dói" e ligação de volta.
 5. Medir custo por ligação (minuto Nvoip e GPT-Live) em 10 ligações e colocar na tabela de resultados.
 6. Garantir doses do dia na família do vídeo entre 26 e 29/11.

@@ -8,10 +8,10 @@ import {
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { findFreeAccess, highCostGuide, type FreeAccess } from '@recuidado/data';
-import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, ne, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, sql } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
 import { DB, type Database } from '../db/db.module.js';
-import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
+import { alerts, doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { AlertsService } from '../alerts/alerts.service.js';
 import { DosesService } from '../doses/doses.service.js';
 import { StockService } from '../stock/stock.service.js';
@@ -71,6 +71,7 @@ export class FamilyService implements OnApplicationBootstrap {
     if (!runsApi()) return;
     const ids = await this.ensureDemoFamily();
     await this.resetDemoFirstContact(ids.familyId);
+    await this.clearDemoAlerts(ids.familyId);
     if (!this.config.get<boolean>('DEMO_SEED_ENABLED')) return;
     try {
       // Fixed story of Dona Maria: three medicines, times, stock and a week of history.
@@ -81,6 +82,17 @@ export class FamilyService implements OnApplicationBootstrap {
       // The app works without the demo story; never block the boot on it.
       this.logger.error(`Demo family seed failed: ${String(error)}`);
     }
+  }
+
+  /** Deletes the demo family alerts older than DEMO_CLEAR_ALERTS_BEFORE (test calls), before the seed adds its history back. */
+  private async clearDemoAlerts(familyId: string): Promise<void> {
+    const before = this.config.get<string>('DEMO_CLEAR_ALERTS_BEFORE');
+    if (!before) return;
+    const removed = await this.db
+      .delete(alerts)
+      .where(and(eq(alerts.familyId, familyId), lt(alerts.createdAt, new Date(before))))
+      .returning({ id: alerts.id });
+    if (removed.length) this.logger.log(`Demo family: ${removed.length} alerts before ${before} deleted.`);
   }
 
   /** Carlos is the demo family's first contact in an emergency, set again on every API boot. */

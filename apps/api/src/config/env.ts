@@ -76,6 +76,8 @@ export const envSchema = z.object({
     (v) => (v === '' || v === undefined ? true : v !== 'false' && v !== false),
     z.boolean(),
   ),
+  // On boot, delete the demo family alerts created before this time (ISO date), so test calls do not show in the video. The seed puts its own history back.
+  DEMO_CLEAR_ALERTS_BEFORE: z.preprocess((v) => (v === '' ? undefined : v), z.iso.datetime({ offset: true }).optional()),
   // Scheduled doses of the demo family also call its phone. Off: only the demo run button calls.
   DEMO_SCHEDULED_CALLS: z.preprocess(
     (v) => v === true || v === 'true',
