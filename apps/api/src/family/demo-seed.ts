@@ -5,15 +5,28 @@ import { localDate, localDateTime, localTime } from '../doses/time.js';
 
 /**
  * The fixed story of the demo family (synthetic data, Hack Brasil rule 6.9):
- * Dona Maria, 68, hypertensive and diabetic. Two of her three medicines are free
- * in Farmácia Popular; the statin is not and is almost over. The price comes from
- * CMED at read time, from activeIngredient and strength.
+ * Dona Maria, 68, hypertensive and diabetic, with heart failure. Two of her four medicines
+ * are free in Farmácia Popular; the statin is not and is almost over; sacubitril valsartana
+ * can be free in the Alto Custo and the family is halfway through its checklist. The price
+ * comes from CMED at read time, from activeIngredient and strength.
  */
 export const DEMO_MEDICATIONS = [
   { name: 'Losartana', activeIngredient: 'Losartana potássica', strength: '50 mg', times: ['08:00', '20:00'], stockUnits: 40 },
   { name: 'Metformina', activeIngredient: 'Cloridrato de metformina', strength: '850 mg', times: ['08:00', '20:00'], stockUnits: 52 },
   { name: 'Rosuvastatina', activeIngredient: 'Rosuvastatina cálcica', strength: '10 mg', times: ['20:00'], stockUnits: 4 },
+  { name: 'Sacubitril valsartana', activeIngredient: 'Sacubitril valsartana sódica', strength: '50 mg', times: ['08:00', '20:00'], stockUnits: 30 },
 ] as const;
+
+/**
+ * Alto Custo path of the demo: items the family already has (ids of the SES-SP leaflet in
+ * @recuidado/data) and how long ago the doctor filled the LME, so Hoje always shows
+ * "Entregar o laudo até" with about 20 days left.
+ */
+export const DEMO_HIGH_COST = {
+  medication: 'Sacubitril valsartana',
+  checked: ['lme', 'prescription', 'id_document', 'sus_card'],
+  lmeFilledDaysAgo: 70,
+} as const;
 
 export const DEMO_PATIENT_PROFILE = { nickname: 'Dona Maria', birthDate: '1958-03-14', cep: '01310100' };
 export const DEMO_CAREGIVER_RELATION = 'Filho(a)';
@@ -108,6 +121,13 @@ export async function seedDemoFamily(
       buyInsteadOfFree: false,
       stockUnits: med.stockUnits,
       stockCountedAt: now,
+      ...(med.name === DEMO_HIGH_COST.medication
+        ? {
+            highCostChecked: [...DEMO_HIGH_COST.checked],
+            lmeFilledOn: localDate(now, -DEMO_HIGH_COST.lmeFilledDaysAgo),
+            highCostSince: null,
+          }
+        : {}),
     };
     const found = existing.find((m) => m.name === med.name);
     if (found) {
