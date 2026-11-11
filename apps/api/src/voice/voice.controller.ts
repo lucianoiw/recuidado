@@ -18,6 +18,12 @@ const voiceResultSchema = z.object({
   outcome: z.enum(['confirmed', 'not_taken', 'unclear', 'no_answer', 'failed']),
   confirmed: z.boolean(),
   note: z.string().nullish(),
+  transcript: z
+    .array(z.object({ speaker: z.enum(['assistant', 'patient']), text: z.string() }))
+    .default([]),
+  durationSeconds: z.number().nonnegative().nullish(),
+  endReason: z.string().nullish(),
+  error: z.string().nullish(),
 });
 
 const demoSchema = z.object({
@@ -53,6 +59,11 @@ export class VoiceController {
     const doseId = await this.voice.createDemoDose(input);
     const call = await this.voice.call(doseId);
     return { doseId, callId: call?.callId ?? null };
+  }
+
+  @Get('doses/:id/voice-calls')
+  listCalls(@Param('id', ParseUUIDPipe) id: string) {
+    return this.voice.listCalls(id);
   }
 
   @Get('demo/doses/:id')

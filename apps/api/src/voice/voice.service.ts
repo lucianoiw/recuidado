@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
 import { and, eq } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
-import { doses, families, medications, members } from '../db/schema.js';
+import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
 
 /** Body that apps/voice posts to /doses/:id/voice-result. */
@@ -19,6 +19,10 @@ export interface VoiceResult {
   outcome: 'confirmed' | 'not_taken' | 'unclear' | 'no_answer' | 'failed';
   confirmed: boolean;
   note?: string | null;
+  transcript?: { speaker: 'assistant' | 'patient'; text: string }[];
+  durationSeconds?: number | null;
+  endReason?: string | null;
+  error?: string | null;
 }
 
 export const alertJobId = (doseId: string) => doseJobId('alert-family', doseId);
@@ -85,6 +89,7 @@ export class VoiceCallService {
   async applyResult(doseId: string, result: VoiceResult): Promise<'taken' | 'missed' | 'ignored'> {
     const [dose] = await this.db.select({ status: doses.status }).from(doses).where(eq(doses.id, doseId));
     if (!dose) throw new NotFoundException('Dose não encontrada.');
+    await this.saveCall(doseId, result);
     // Confirmed in the app while the phone was ringing: the app wins.
     if (dose.status === 'taken') return 'ignored';
 
@@ -104,6 +109,32 @@ export class VoiceCallService {
     await this.alertNow(doseId);
     this.logger.log(`Dose ${doseId} not confirmed by voice (${result.outcome}); alerting family.`);
     return 'missed';
+  }
+
+  /** Stores the call. apps/voice retries the POST, so the same session is written once. */
+  private async saveCall(doseId: string, result: VoiceResult): Promise<void> {
+    await this.db
+      .insert(voiceCalls)
+      .values({
+        doseId,
+        sessionId: result.sessionId,
+        outcome: result.outcome,
+        confirmed: result.confirmed,
+        note: result.note ?? null,
+        transcript: result.transcript ?? [],
+        durationSeconds: result.durationSeconds == null ? null : Math.round(result.durationSeconds),
+        endReason: result.endReason ?? null,
+        error: result.error ?? null,
+      })
+      .onConflictDoNothing({ target: voiceCalls.sessionId });
+  }
+
+  /** Calls made for a dose, newest first. */
+  listCalls(doseId: string) {
+    return this.db.query.voiceCalls.findMany({
+      where: eq(voiceCalls.doseId, doseId),
+      orderBy: (c, { desc }) => [desc(c.createdAt)],
+    });
   }
 
   private async alertNow(doseId: string): Promise<void> {
