@@ -22,9 +22,10 @@ export function buildLiveInstructions(ctx: ReminderContext): string {
     `Call the person by this name: "${ctx.patientName}".`,
     `The medicines for this dose are: ${medicationList(ctx.medications)}.`,
     "Goal of the call: remind her of the medicines and find out if she has taken them now.",
-    "As soon as she clearly says she took them, or clearly says she did not or will not, delegate so the answer is recorded.",
-    "If she says she has not taken it yet, even if she says she will take it later, kindly ask her to take it now and delegate so the answer is recorded as not taken, with what she said.",
-    "If the answer is unclear, ask once more in a different, simple way.",
+    "First find out if she took them. If she has not taken them yet, kindly ask her to take them now.",
+    "If the answer about the medicine is unclear, ask once more in a different, simple way.",
+    "Then ask only: \"E a senhora, está bem?\" and listen to her answer.",
+    "After she answers how she is, delegate once so both answers are recorded. Do not ask anything else.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell or an emergency, tell her the family will be notified and suggest calling SAMU 192.",
     "After the answer is recorded, say only a very short goodbye (for example \"Obrigada, tchau!\") and stop talking.",
@@ -66,7 +67,8 @@ export function buildDelegateInstructions(): string {
     `Your only job is to record the patient's answer by calling ${DOSE_TOOL_NAME}.`,
     "Set taken=true only if she clearly said she already took the medicine.",
     "Set taken=false if she has not taken it yet (even if she plans to take it later), will not take it, or ran out.",
-    "Put any relevant detail she mentioned (feeling unwell, ran out of medicine) in note, in Portuguese.",
+    "Set feels_unwell=true if she reports any pain, dizziness, a fall, shortness of breath, feeling sick, sad or not well. Otherwise false.",
+    "Put what she said about how she feels, and any other relevant detail (ran out of medicine), in note, in Portuguese, close to her own words.",
     "After the tool result, reply with one short sentence telling the voice assistant to say goodbye.",
   ].join("\n");
 }
@@ -74,15 +76,16 @@ export function buildDelegateInstructions(): string {
 export const doseTool = {
   type: "function" as const,
   name: DOSE_TOOL_NAME,
-  description: "Records whether the patient took the medicines for this dose.",
+  description: "Records whether the patient took the medicines for this dose and how she says she feels.",
   strict: true,
   parameters: {
     type: "object",
     properties: {
       taken: { type: "boolean", description: "true if she confirmed she took the medicines" },
-      note: { type: "string", description: "Relevant detail from the patient, in Portuguese, or empty" },
+      feels_unwell: { type: "boolean", description: "true if she said she is not feeling well" },
+      note: { type: "string", description: "What she said about how she feels and other relevant detail, in Portuguese, or empty" },
     },
-    required: ["taken", "note"],
+    required: ["taken", "feels_unwell", "note"],
     additionalProperties: false,
   },
 };

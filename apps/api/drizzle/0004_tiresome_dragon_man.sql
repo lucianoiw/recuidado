@@ -1,0 +1,1 @@
+ALTER TABLE "voice_calls" ADD COLUMN "feels_unwell" boolean;
