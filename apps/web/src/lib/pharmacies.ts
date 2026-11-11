@@ -15,6 +15,9 @@ export interface Pharmacy {
 /** Nearest pharmacies to the demo address, from CNES (public data). */
 export const pharmacies: Pharmacy[] = data.pharmacies as Pharmacy[];
 
+/** Demo home address (synthetic): the center used to measure every distance. */
+export const home: { lat: number; lng: number } = data.center;
+
 export function formatDistance(km: number): string {
   return km < 1 ? `${Math.round(km * 100) * 10} m` : `${km.toFixed(1).replace(".", ",")} km`;
 }

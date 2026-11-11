@@ -1,5 +1,5 @@
 {
-  "id": "922fc63d-6278-4c0b-aac5-30f5bc0d996d",
+  "id": "f3856288-f300-4862-82ca-bf38d72d61dd",
   "prevId": "fad8c1e5-fa80-429c-8073-a5ff6aa2ae06",
   "version": "7",
   "dialect": "postgresql",
@@ -54,6 +54,13 @@
         },
         "pushes_delivered": {
           "name": "pushes_delivered",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "emails_delivered": {
+          "name": "emails_delivered",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -313,36 +320,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "subscription_status": {
-          "name": "subscription_status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "subscription_checkout_id": {
-          "name": "subscription_checkout_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "subscription_id": {
-          "name": "subscription_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "subscription_trial_ends_at": {
-          "name": "subscription_trial_ends_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "subscription_updated_at": {
-          "name": "subscription_updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -651,15 +628,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "members_email_unique": {
-          "name": "members_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

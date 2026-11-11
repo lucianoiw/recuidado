@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource-variable/atkinson-hyperlegible-next": "5.3.0",
+    "@vis.gl/react-google-maps": "^1.10.2",
     "next": "16.4.6",
     "posthog-js": "1.447.10",
     "qrcode.react": "^4.2.0",

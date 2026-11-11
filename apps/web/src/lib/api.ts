@@ -150,6 +150,8 @@ export interface FamilyAlert {
   body: string;
   /** Phones that got the push. 0 for entries that were a phone call. */
   pushesDelivered: number;
+  /** E-mails Resend accepted for this alert. */
+  emailsDelivered: number;
   createdAt: string;
 }
 
@@ -290,7 +292,7 @@ export async function joinFamily(memberId: string): Promise<void> {
 export interface OnboardingRecord {
   familyId: string;
   caregiverId: string;
-  caregiver: { name: string; phone: string; relation: string | null; relationOther: string };
+  caregiver: { name: string; phone: string; email?: string; relation: string | null; relationOther: string };
   patient: { name: string; nickname: string; gender: "female" | "male"; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
   invites: { id: string; name: string; relation: string | null; phone?: string; joined: boolean }[];
 }

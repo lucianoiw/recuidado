@@ -39,7 +39,8 @@ export const members = pgTable('members', {
     .notNull()
     .references(() => families.id, { onDelete: 'cascade' }),
   name: text().notNull(),
-  email: text().unique(),
+  // Caregivers get alerts by e-mail too (Resend). Not unique: the same person may sign up more than one family.
+  email: text(),
   phone: text(),
   role: memberRole().notNull(),
   // Patients who do not use the app get a voice call instead of a push.
@@ -192,6 +193,8 @@ export const alerts = pgTable('alerts', {
   doseId: uuid().references(() => doses.id, { onDelete: 'set null' }),
   medicationId: uuid().references(() => medications.id, { onDelete: 'set null' }),
   pushesDelivered: integer().notNull().default(0),
+  // E-mails Resend accepted for this alert.
+  emailsDelivered: integer().notNull().default(0),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
