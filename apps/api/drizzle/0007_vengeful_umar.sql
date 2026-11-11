@@ -1,0 +1,1 @@
+ALTER TABLE "doses" ADD COLUMN "call_requested_at" timestamp with time zone;

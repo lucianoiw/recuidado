@@ -78,7 +78,7 @@ describe('FamilyController', () => {
       .put(`/family/medications/${id}/buy-choice`)
       .send({ buy: true });
     expect(res.status).toBe(204);
-    expect(setBuyChoice).toHaveBeenCalledWith(id, true);
+    expect(setBuyChoice).toHaveBeenCalledWith(null, id, true);
   });
 
   it('rejects a buy choice without boolean', async () => {
@@ -94,7 +94,7 @@ describe('FamilyController', () => {
       .patch(`/family/medications/${id}`)
       .send({ times: ['08:00', '20:00'] });
     expect(res.status).toBe(204);
-    expect(updateMedication).toHaveBeenCalledWith(id, { times: ['08:00', '20:00'] });
+    expect(updateMedication).toHaveBeenCalledWith(null, id, { times: ['08:00', '20:00'] });
   });
 
   it('rejects a time that is not HH:MM', async () => {
@@ -116,6 +116,19 @@ describe('FamilyController', () => {
     const id = '7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11';
     const res = await request(app.getHttpServer()).delete(`/family/medications/${id}`);
     expect(res.status).toBe(204);
-    expect(removeMedication).toHaveBeenCalledWith(id);
+    expect(removeMedication).toHaveBeenCalledWith(null, id);
+  });
+
+  it('passes the family of this device', async () => {
+    const id = '7f0c7c2e-2f7b-4a8e-9a43-0d2f1d6f3b11';
+    const familyId = '0b6f2a4c-9d1e-4f3a-8c2b-5e7d9a1b3c4d';
+    const res = await request(app.getHttpServer()).delete(`/family/medications/${id}?familyId=${familyId}`);
+    expect(res.status).toBe(204);
+    expect(removeMedication).toHaveBeenCalledWith(familyId, id);
+  });
+
+  it('rejects a familyId that is not a uuid', async () => {
+    const res = await request(app.getHttpServer()).get('/family?familyId=abc');
+    expect(res.status).toBe(400);
   });
 });

@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import Anthropic from '@anthropic-ai/sdk';
 import {
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -16,7 +17,8 @@ import {
 } from '@recuidado/prescription-reader';
 import { and, eq } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
-import { medications, members } from '../db/schema.js';
+import { families, medications, members } from '../db/schema.js';
+import { DEMO_FAMILY, DEMO_READ_ONLY } from '../family/family.service.js';
 import { DosesService } from '../doses/doses.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
 import type { ConfirmPrescriptionBody } from './confirm.schema.js';
@@ -87,10 +89,13 @@ export class PrescriptionsService {
    */
   async confirm(body: ConfirmPrescriptionBody) {
     const [patient] = await this.db
-      .select({ id: members.id })
+      .select({ id: members.id, familyName: families.name })
       .from(members)
+      .innerJoin(families, eq(members.familyId, families.id))
       .where(and(eq(members.id, body.patientId), eq(members.role, 'patient')));
     if (!patient) throw new NotFoundException('Paciente não encontrado.');
+    // The demo family stays as it is for every visitor.
+    if (patient.familyName === DEMO_FAMILY) throw new ForbiddenException(DEMO_READ_ONLY);
 
     const saved = await this.db
       .insert(medications)

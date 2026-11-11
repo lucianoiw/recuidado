@@ -16,6 +16,15 @@ import { z } from 'zod';
 import { FamilyService } from './family.service.js';
 import { buyChoiceBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
 
+// The family this device saved at sign-up. Missing means the demo family.
+const familyIdQuery = z.uuid().nullish();
+
+function familyOf(value: unknown): string | null {
+  const result = familyIdQuery.safeParse(value || null);
+  if (!result.success) throw new BadRequestException('familyId inválido.');
+  return result.data ?? null;
+}
+
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
   if (!result.success) throw new BadRequestException(z.prettifyError(result.error));
@@ -26,16 +35,16 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
 export class FamilyController {
   constructor(private readonly family: FamilyService) {}
 
-  /** Demo family: patient, caregivers, medications and today's doses. No login yet. */
+  /** Patient, caregivers, medications and today's doses of one family (the demo one without familyId). */
   @Get()
-  overview() {
-    return this.family.overview();
+  overview(@Query('familyId') familyId?: string) {
+    return this.family.overview(familyOf(familyId));
   }
 
   /** Alerts sent to the family (missed dose, not feeling well, running out), newest first. */
   @Get('alerts')
-  alerts() {
-    return this.family.alertHistory();
+  alerts(@Query('familyId') familyId?: string) {
+    return this.family.alertHistory(familyOf(familyId));
   }
 
   /** Sign-up answers saved by one caregiver (the id this device keeps). */
@@ -52,28 +61,36 @@ export class FamilyController {
 
   @Post('members/:id/join')
   @HttpCode(204)
-  async join(@Param('id', new ParseUUIDPipe()) id: string) {
-    await this.family.join(id);
+  async join(@Param('id', new ParseUUIDPipe()) id: string, @Query('familyId') familyId?: string) {
+    await this.family.join(familyOf(familyId), id);
   }
 
   /** "Pegar grátis" or "Comprar" for a medication that is free in Farmácia Popular. */
   @Put('medications/:id/buy-choice')
   @HttpCode(204)
-  async setBuyChoice(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: unknown) {
-    await this.family.setBuyChoice(id, parse(buyChoiceBody, body).buy);
+  async setBuyChoice(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Query('familyId') familyId?: string,
+  ) {
+    await this.family.setBuyChoice(familyOf(familyId), id, parse(buyChoiceBody, body).buy);
   }
 
   /** Family edits the dose or the times of a medication. */
   @Patch('medications/:id')
   @HttpCode(204)
-  async updateMedication(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: unknown) {
-    await this.family.updateMedication(id, parse(medicationUpdateBody, body));
+  async updateMedication(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Query('familyId') familyId?: string,
+  ) {
+    await this.family.updateMedication(familyOf(familyId), id, parse(medicationUpdateBody, body));
   }
 
   /** Family stops a medication. */
   @Delete('medications/:id')
   @HttpCode(204)
-  async removeMedication(@Param('id', new ParseUUIDPipe()) id: string) {
-    await this.family.removeMedication(id);
+  async removeMedication(@Param('id', new ParseUUIDPipe()) id: string, @Query('familyId') familyId?: string) {
+    await this.family.removeMedication(familyOf(familyId), id);
   }
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DemoBannerAuto } from "@/components/demo-banner";
 import { CameraIcon, ChevronRightIcon, PencilIcon, Screen, TopBar } from "@/components/ui";
 
 function Option({
@@ -44,6 +45,7 @@ export default function AddMedicationsPage() {
         <h1 className="text-[28px] font-extrabold leading-tight">Quais remédios ela toma?</h1>
         <p className="text-muted">Escolha como quer adicionar. Dá para misturar os dois.</p>
       </header>
+      <DemoBannerAuto />
       <Option
         href="/family/receita"
         icon={<CameraIcon size={30} />}

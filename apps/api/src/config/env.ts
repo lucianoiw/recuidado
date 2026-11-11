@@ -37,6 +37,10 @@ export const envSchema = z.object({
   VAPID_SUBJECT: z.string().default('https://recuidado.com.br'),
   // Minutes to wait for a dose confirmation before calling the patient.
   DOSE_CALL_AFTER_MINUTES: z.coerce.number().int().positive().default(15),
+  // Reminder calls cost money (Nvoip + OpenAI). Limits over the last 24 hours:
+  // per family (the demo family is exempt) and for the whole app. 0 turns calls off.
+  CALL_DAILY_LIMIT_PER_FAMILY: z.coerce.number().int().nonnegative().default(3),
+  CALL_DAILY_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(20),
   // Minutes to wait after the call before alerting the family.
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
   // Demo run (POST /demo/run): the whole dose flow in about two minutes. "false" turns it off.
