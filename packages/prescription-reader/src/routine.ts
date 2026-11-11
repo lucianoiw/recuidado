@@ -1,8 +1,29 @@
 import type { ScheduledDose } from "./schema.ts";
 
 /**
+ * Fixed reminder times. Doses close to one of these are grouped on it, so the
+ * patient takes several medicines at 08:00 instead of 08:00 and 08:30.
+ */
+export const ANCHOR_TIMES = ["08:00", "12:00", "20:00"] as const;
+
+/** A dose within this many minutes of an anchor time moves to it. */
+export const GROUPING_WINDOW_MINUTES = 60;
+
+/**
+ * Anchors whose clock time is a clinical instruction (fasting, before a meal)
+ * and must not be grouped with the meal itself.
+ */
+export const UNGROUPED_ANCHORS: ReadonlySet<ScheduledDose["anchor"]> = new Set([
+  "wake_up",
+  "before_breakfast",
+  "before_lunch",
+  "before_dinner",
+]);
+
+/**
  * Default daily routine used to turn "after breakfast" or "8/8h" into clock times.
- * It is a demo default for an older adult; the family can edit times in the app.
+ * Meals sit on the anchor times (08:00, 12:00, 20:00) so medicines taken with or
+ * after a meal share one reminder. It is a demo default; the family can edit times.
  */
 export const DEFAULT_ROUTINE: Record<ScheduledDose["anchor"], string | null> = {
   fixed_time: null,
@@ -10,15 +31,15 @@ export const DEFAULT_ROUTINE: Record<ScheduledDose["anchor"], string | null> = {
   morning: "08:00",
   before_breakfast: "07:30",
   breakfast: "08:00",
-  after_breakfast: "08:30",
+  after_breakfast: "08:00",
   before_lunch: "11:30",
   lunch: "12:00",
-  after_lunch: "12:30",
+  after_lunch: "12:00",
   afternoon: "15:00",
-  before_dinner: "18:30",
-  dinner: "19:00",
-  after_dinner: "19:30",
-  night: "21:00",
+  before_dinner: "19:30",
+  dinner: "20:00",
+  after_dinner: "20:00",
+  night: "20:00",
   bedtime: "22:00",
 };
 
@@ -51,5 +72,5 @@ export function routineTable(): string {
   const perDay = Object.entries(TIMES_PER_DAY)
     .map(([n, times]) => `- ${n}x/day with no other cue: ${times.join(", ")}`)
     .join("\n");
-  return `Meal and period anchors:\n${anchors}\n\nIntervals:\n${intervals}\n\nTimes per day:\n${perDay}`;
+  return `Meal and period anchors (with, after and during a meal share the meal time):\n${anchors}\n\nIntervals:\n${intervals}\n\nTimes per day:\n${perDay}`;
 }
