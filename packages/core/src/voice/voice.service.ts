@@ -60,25 +60,38 @@ export function quoted(words: string): string {
   return `"${words.trim().replace(/[.\s]+$/, '')}"`;
 }
 
+/**
+ * What she reported, retold in the third person for the first contact ("caiu no banheiro"), from the
+ * model's note. Her exact words read back by the assistant sounded like mockery, so the call retells them.
+ */
+export function reported(note?: string | null): string | undefined {
+  const s = (note ?? '')
+    .trim()
+    .replace(/^(ela|ele)\s+(falou|disse)\s+que\s+/i, '')
+    .replace(/^(ela|ele|que)\s+/i, '')
+    .replace(/[.\s]+$/, '');
+  return s ? s.charAt(0).toLowerCase() + s.slice(1, 200) : undefined;
+}
+
 /** "ela" or "ele", for text the family reads or hears. */
 export const pronoun = (gender?: 'female' | 'male' | null) => (gender === 'male' ? 'ele' : 'ela');
 
 export type CaregiverCallReason = 'emergency' | 'still_unwell' | 'no_answer';
 
-/** What the first contact hears: her own words and a request to call her. */
+/** What the first contact hears: what she reported, retold, and a request to call her. */
 export function caregiverMessage(
   name: string,
   reason: CaregiverCallReason,
-  words?: string,
+  summary?: string,
   gender: 'female' | 'male' = 'female',
 ): string {
   const she = pronoun(gender);
   const intro = 'Olá, aqui é a assistente virtual da Recuidado.';
-  const end = `Por favor, entre em contato com ${she} agora. Se for grave, ligue para o SAMU, 192.`;
+  const end = `Seria interessante você ligar para ${she} agora. Se for grave, ligue para o SAMU, 192.`;
   if (reason === 'no_answer') return `${intro} Liguei de novo para ${name} e ${she} não atendeu. ${end}`;
-  const said = words ? `: ${quoted(words)}` : ' que não está bem';
-  if (reason === 'still_unwell') return `${intro} Liguei de novo para ${name} e ${she} disse${said}. ${end}`;
-  return `${intro} Liguei para ${name} para saber sobre o medicamento, e ${she} disse${said}. ${end}`;
+  const said = `${she} falou que ${summary ?? 'não está se sentindo bem'}`;
+  if (reason === 'still_unwell') return `${intro} Liguei de novo para ${name} e ${said}. ${end}`;
+  return `${intro} Eu conversei com ${name} e ${said}. ${end}`;
 }
 
 @Injectable()
@@ -255,7 +268,7 @@ export class VoiceCallService {
       );
     }
     if (saved && result.emergency && !result.checkIn) {
-      await this.safeCallCaregivers(doseId, 'emergency', patientWords(result));
+      await this.safeCallCaregivers(doseId, 'emergency', reported(result.note));
       await this.scheduleCheckIn(doseId);
     }
     // The call back after an emergency only reports how she is; the dose was already settled.
@@ -386,7 +399,7 @@ export class VoiceCallService {
         body: `Vale ligar para ${she}.`,
       }));
     }
-    await this.safeCallCaregivers(doseId, answered ? 'still_unwell' : 'no_answer', words);
+    await this.safeCallCaregivers(doseId, answered ? 'still_unwell' : 'no_answer', reported(result.note));
     if (done < MAX_CHECK_INS) await this.scheduleCheckIn(doseId, done + 1);
   }
 
