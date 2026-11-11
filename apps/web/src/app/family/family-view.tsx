@@ -21,6 +21,7 @@ import {
 } from "@/components/ui";
 import { DemoBanner } from "@/components/demo-banner";
 import { callName, confirmDose, formatTime, isFree, telHref, type Dose } from "@/lib/api";
+import { dueText } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
@@ -81,6 +82,7 @@ export function FamilyView() {
   const tel = telHref(data.patient);
   const unwell = data.unwellReports?.[0];
   const runningOut = data.medications.filter((m) => m.stock?.low);
+  const highCostDue = data.medications.filter((m) => m.highCostPath?.due);
 
   return (
     <>
@@ -189,6 +191,21 @@ export function FamilyView() {
           </section>
         );
       })}
+
+      {highCostDue.map((m) => (
+        <Link
+          key={m.id}
+          href={`/family/alto-custo/${m.id}`}
+          className="flex items-start gap-2.5 rounded-card border-[1.5px] border-warn bg-warn-soft p-4 text-ink no-underline"
+        >
+          <AlertIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
+          <span className="flex flex-1 flex-col gap-0.5">
+            <b className="text-warn">Alto Custo: {medLabel(m.name, m.strength)}</b>
+            <span className="text-[15px] leading-snug">{dueText(m.highCostPath!.due!)}</span>
+          </span>
+          <ChevronRightIcon size={20} className="mt-0.5 shrink-0 text-warn" />
+        </Link>
+      ))}
 
       {runningOut.length > 0 ? (
         <section className="flex flex-col gap-3 rounded-card border-[1.5px] border-warn bg-warn-soft p-4">

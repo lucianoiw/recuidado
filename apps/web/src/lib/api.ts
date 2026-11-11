@@ -57,6 +57,8 @@ export interface Medication {
   highCost?: boolean;
   /** Pills left at home and how many days they last; null when nobody counted them. */
   stock?: Stock | null;
+  /** Where the family is in the Alto Custo path; null when it is not in the list. */
+  highCostPath?: HighCostStatus | null;
   /** CMED ceiling price (PMC, São Paulo); null when the list has no match. */
   price?: MedicationPrice | null;
 }
@@ -70,6 +72,63 @@ export interface MedicationPrice {
   product: string;
   /** "2026-11-09": publication date of the CMED list. */
   listDate: string | null;
+}
+
+export interface HighCostItem {
+  id: string;
+  who: "doctor" | "family";
+  label: string;
+  detail?: string;
+}
+
+/** What SES-SP asks to give a medicine through the Alto Custo (CEAF), from its leaflets. */
+export interface HighCostGuide {
+  disease: string | null;
+  pageUrl: string;
+  leafletUrl: string | null;
+  updatedOn: string | null;
+  specific: boolean;
+  lmeValidDays: number;
+  renewalMonths: number | null;
+  firstRequest: HighCostItem[];
+  renewal: HighCostItem[];
+  notes: string[];
+  representative: string[];
+  sources: { ministry: string; lmeForm: string; stock: string };
+}
+
+export interface HighCostStatus {
+  checked: string[];
+  /** aaaa-mm-dd */
+  lmeFilledOn: string | null;
+  since: string | null;
+  stage: "first" | "renewal";
+  done: number;
+  total: number;
+  lmeDeliverBy: string | null;
+  renewBy: string | null;
+  due: { kind: "lme" | "renewal"; by: string; daysLeft: number } | null;
+}
+
+export interface HighCostPath {
+  medication: { id: string; name: string; strength: string | null; monthlyCostCents: number; highCost: boolean };
+  guide: HighCostGuide;
+  status: HighCostStatus;
+}
+
+export async function getHighCost(medicationId: string): Promise<HighCostPath> {
+  const res = await fetch(`${API_URL}${withFamily(`/family/medications/${medicationId}/high-cost`)}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para abrir o caminho do Alto Custo."));
+  return res.json();
+}
+
+export async function saveHighCost(
+  medicationId: string,
+  body: { checked?: string[]; lmeFilledOn?: string | null; since?: string | null },
+): Promise<void> {
+  await send("PUT", withFamily(`/family/medications/${medicationId}/high-cost`), body, "Não deu para salvar.");
 }
 
 export interface Stock {
@@ -307,6 +366,44 @@ export function exportDataUrl(caregiverId: string): string {
 export async function deleteFamilyData(caregiverId: string): Promise<void> {
   const res = await fetch(`${API_URL}/privacy/family?caregiverId=${caregiverId}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para apagar os dados."));
+}
+
+export type TriState = "yes" | "no" | "unknown";
+
+/** A voice call to a pharmacy asking stock, price and Farmácia Popular. */
+export interface PharmacyInquiry {
+  id: string;
+  pharmacyName: string;
+  status: "calling" | "answered" | "unclear" | "no_answer" | "failed";
+  medications: { medicationId: string; name: string; strength: string | null }[];
+  answers: {
+    medication: string;
+    available: TriState;
+    /** Price of one box said on the phone. Reference, not an offer. */
+    priceCents: number | null;
+    package?: string;
+    farmaciaPopular: TriState;
+  }[];
+  note: string | null;
+  /** The call went through a recorded menu (keys pressed). */
+  usedPhoneMenu: boolean;
+  transcript: { speaker: "assistant" | "patient"; text: string }[];
+  durationSeconds: number | null;
+  createdAt: string;
+  finishedAt: string | null;
+}
+
+/** "Perguntar à farmácia": the voice agent calls the pharmacy about these medicines. */
+export async function askPharmacy(medicationIds: string[]): Promise<PharmacyInquiry> {
+  const res = await send("POST", withFamily("/pharmacy-inquiries"), { medicationIds }, "Não deu para ligar agora.");
+  return res.json();
+}
+
+/** The family's most recent pharmacy call, or null. */
+export async function getLatestPharmacyInquiry(): Promise<PharmacyInquiry | null> {
+  const res = await fetch(`${API_URL}${withFamily("/pharmacy-inquiries/latest")}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return ((await res.json()) as { inquiry: PharmacyInquiry | null }).inquiry;
 }
 
 export interface MonthItem {

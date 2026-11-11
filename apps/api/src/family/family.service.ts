@@ -6,7 +6,7 @@ import {
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
-import { findFreeAccess, type FreeAccess } from '@recuidado/data';
+import { findFreeAccess, highCostGuide, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
 import { DB, type Database } from '../db/db.module.js';
@@ -15,7 +15,8 @@ import { AlertsService } from '../alerts/alerts.service.js';
 import { DosesService } from '../doses/doses.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { seedDemoFamily } from './demo-seed.js';
-import type { MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
+import { highCostStatus, todayInSaoPaulo, type HighCostStatus } from './high-cost.js';
+import type { HighCostBody, MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
 import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
@@ -169,6 +170,9 @@ export class FamilyService implements OnApplicationBootstrap {
         monthlyCostCents: medications.monthlyCostCents,
         buyInsteadOfFree: medications.buyInsteadOfFree,
         stockUnits: medications.stockUnits,
+        highCostChecked: medications.highCostChecked,
+        lmeFilledOn: medications.lmeFilledOn,
+        highCostSince: medications.highCostSince,
       })
       .from(medications)
       .where(eq(medications.patientId, patientId))
@@ -185,18 +189,29 @@ export class FamilyService implements OnApplicationBootstrap {
       isDemo,
       patient: shown.find((p) => p.id === patientId)!,
       caregivers: shown.filter((p) => p.role === 'caregiver'),
-      medications: meds.map(({ activeIngredient, stockUnits: _counted, ...med }) => {
-        const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
-        return {
-          ...med,
-          ...freeAccessOf(activeIngredient ?? med.name, med.strength),
-          // Saved price, else the CMED ceiling of the cheapest pack for a month of doses.
-          monthlyCostCents: monthlyCostOf(med.monthlyCostCents, price),
-          price,
-          // Pills left and days they last; null when the family has not counted them.
-          stock: stock.get(med.id) ?? null,
-        };
-      }),
+      medications: meds.map(
+        ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, ...med }) => {
+          const access = freeAccessOf(activeIngredient ?? med.name, med.strength);
+          const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
+          return {
+            ...med,
+            ...access,
+            // Saved price, else the CMED ceiling of the cheapest pack for a month of doses.
+            monthlyCostCents: monthlyCostOf(med.monthlyCostCents, price),
+            price,
+            // Pills left and days they last; null when the family has not counted them.
+            stock: stock.get(med.id) ?? null,
+            // Where the family is in the Alto Custo path, for the reminders.
+            highCostPath: access.highCost
+              ? highCostPathOf(activeIngredient ?? med.name, {
+                  checked: highCostChecked,
+                  lmeFilledOn,
+                  since: highCostSince,
+                }, now)
+              : null,
+          };
+        },
+      ),
       today: await this.doses.listForDay(patientId),
       unwellReports: await this.unwellReports(patientId, now),
     };
@@ -256,6 +271,48 @@ export class FamilyService implements OnApplicationBootstrap {
         .where(and(eq(doses.medicationId, medicationId), eq(doses.status, 'pending'), gte(doses.scheduledAt, now)));
       await this.doses.scheduleForMedication(medicationId, now);
     }
+  }
+
+  /** Checklist, deadlines and nearest steps to get one medication from the Alto Custo. */
+  async highCost(familyId: string | null | undefined, medicationId: string, now = new Date()) {
+    const { patientId } = await this.resolveFamily(familyId);
+    const [med] = await this.db
+      .select()
+      .from(medications)
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)));
+    if (!med) throw new NotFoundException('Remédio não encontrado.');
+    const ingredient = med.activeIngredient ?? med.name;
+    const guide = highCostGuide(ingredient);
+    return {
+      medication: {
+        id: med.id,
+        name: med.name,
+        strength: med.strength,
+        monthlyCostCents: med.monthlyCostCents,
+        highCost: freeAccessOf(ingredient, med.strength).highCost ?? false,
+      },
+      guide,
+      status: highCostStatus(
+        { checked: med.highCostChecked, lmeFilledOn: med.lmeFilledOn, since: med.highCostSince },
+        guide,
+        todayInSaoPaulo(now),
+      ),
+    };
+  }
+
+  /** Family ticks checklist items or tells the LME and approval dates. */
+  async saveHighCost(familyId: string | null | undefined, medicationId: string, input: HighCostBody): Promise<void> {
+    const { patientId } = await this.writableFamily(familyId);
+    const [row] = await this.db
+      .update(medications)
+      .set({
+        ...(input.checked !== undefined ? { highCostChecked: [...new Set(input.checked)] } : {}),
+        ...(input.lmeFilledOn !== undefined ? { lmeFilledOn: input.lmeFilledOn } : {}),
+        ...(input.since !== undefined ? { highCostSince: input.since } : {}),
+      })
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
+      .returning({ id: medications.id });
+    if (!row) throw new NotFoundException('Remédio não encontrado.');
   }
 
   /** Family stops a medication: it and its doses are removed. */
@@ -468,5 +525,14 @@ export function freeAccessOf(activeIngredient: string, strength: string | null):
     return findFreeAccess(activeIngredient, strength);
   } catch {
     return {};
+  }
+}
+
+/** Alto Custo status for GET /family. Never throws: a missing seed file only hides the reminder. */
+export function highCostPathOf(ingredient: string, saved: Parameters<typeof highCostStatus>[0], now: Date): HighCostStatus | null {
+  try {
+    return highCostStatus(saved, highCostGuide(ingredient), todayInSaoPaulo(now));
+  } catch {
+    return null;
   }
 }

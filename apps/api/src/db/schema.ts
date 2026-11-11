@@ -76,6 +76,12 @@ export const medications = pgTable('medications', {
   stockCountedAt: timestamp({ withTimezone: true }),
   // Set when the family was told it is running out; cleared when the stock is counted again.
   lowStockAlertedAt: timestamp({ withTimezone: true }),
+  // Alto Custo (CEAF) path: ids of the checklist items the family already has.
+  highCostChecked: jsonb().$type<string[]>().notNull().default([]),
+  // Day the doctor filled the LME form: it is valid for 90 days to ask for the medicine.
+  lmeFilledOn: date(),
+  // Day the state approved it (or last renewed it): the next renewal counts from here.
+  highCostSince: date(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -165,4 +171,49 @@ export const alerts = pgTable('alerts', {
   medicationId: uuid().references(() => medications.id, { onDelete: 'set null' }),
   pushesDelivered: integer().notNull().default(0),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
+export const pharmacyInquiryStatus = pgEnum('pharmacy_inquiry_status', [
+  'calling',
+  'answered',
+  'unclear',
+  'no_answer',
+  'failed',
+]);
+
+// A voice call to a pharmacy asking stock, price and Farmácia Popular for some medicines.
+// The phone dialed is never stored: it comes from PHARMACY_CALL_PHONE (a number the team controls).
+export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
+  id: uuid().primaryKey().defaultRandom(),
+  familyId: uuid()
+    .notNull()
+    .references(() => families.id, { onDelete: 'cascade' }),
+  pharmacyName: text().notNull(),
+  // What was asked, e.g. [{ medicationId, name: "Losartana", strength: "50 mg" }].
+  medications: jsonb()
+    .$type<{ medicationId: string; name: string; strength: string | null }[]>()
+    .notNull(),
+  status: pharmacyInquiryStatus().notNull().default('calling'),
+  sessionId: text().unique(),
+  // What the attendant said, one item per medicine. Prices are a phone reference, not an offer.
+  answers: jsonb()
+    .$type<
+      {
+        medication: string;
+        available: 'yes' | 'no' | 'unknown';
+        priceCents: number | null;
+        package?: string;
+        farmaciaPopular: 'yes' | 'no' | 'unknown';
+      }[]
+    >()
+    .notNull()
+    .default([]),
+  note: text(),
+  keysPressed: jsonb().$type<string[]>().notNull().default([]),
+  transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
+  durationSeconds: integer(),
+  endReason: text(),
+  error: text(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  finishedAt: timestamp({ withTimezone: true }),
 });

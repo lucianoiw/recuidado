@@ -7,6 +7,7 @@ import { PageTitle } from "@/components/page-title";
 import { isFree } from "@/lib/api";
 import { formatDistance, mapsUrl, pharmacies } from "@/lib/pharmacies";
 import { useBuyChoice } from "@/lib/buy-choice";
+import { PharmacyCallCard } from "./pharmacy-call-card";
 import { useMonth } from "@/lib/use-month";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
@@ -65,6 +66,8 @@ export function BuyView() {
           {month && month.costCents > 0 && month.split.shares.length > 0 ? (
             <SplitPix month={month} isDemo={data.isDemo ?? false} onChanged={reloadMonth} />
           ) : null}
+
+          <PharmacyCallCard medications={paid} />
 
           <section className="flex flex-col gap-2">
             <h2 className="text-[18px] font-extrabold">Farmácias perto dela</h2>

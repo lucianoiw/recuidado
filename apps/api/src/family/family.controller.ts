@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { z } from 'zod';
 import { FamilyService } from './family.service.js';
-import { buyChoiceBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
+import { buyChoiceBody, highCostBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
 
 // The family this device saved at sign-up. Missing means the demo family.
 const familyIdQuery = z.uuid().nullish();
@@ -85,6 +85,23 @@ export class FamilyController {
     @Query('familyId') familyId?: string,
   ) {
     await this.family.updateMedication(familyOf(familyId), id, parse(medicationUpdateBody, body));
+  }
+
+  /** Alto Custo (CEAF) path of a medication: SES-SP checklist, saved progress and deadlines. */
+  @Get('medications/:id/high-cost')
+  highCost(@Param('id', new ParseUUIDPipe()) id: string, @Query('familyId') familyId?: string) {
+    return this.family.highCost(familyOf(familyId), id);
+  }
+
+  /** Family ticks what it already has and tells the LME and approval dates. */
+  @Put('medications/:id/high-cost')
+  @HttpCode(204)
+  async saveHighCost(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Query('familyId') familyId?: string,
+  ) {
+    await this.family.saveHighCost(familyOf(familyId), id, parse(highCostBody, body));
   }
 
   /** Family stops a medication. */

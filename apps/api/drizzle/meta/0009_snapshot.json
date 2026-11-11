@@ -1,5 +1,5 @@
 {
-  "id": "f2d29039-955d-4002-87b1-507d386f079c",
+  "id": "2735731b-9393-43ee-951e-95440ebab289",
   "prevId": "d1d75561-7b9c-4c68-8e03-24e50f74b0bf",
   "version": "7",
   "dialect": "postgresql",
@@ -187,17 +187,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "cost_shares_familyId_memberId_month_unique": {
-          "name": "cost_shares_familyId_memberId_month_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "family_id",
-            "member_id",
-            "month"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -411,6 +401,25 @@
           "primaryKey": false,
           "notNull": false
         },
+        "high_cost_checked": {
+          "name": "high_cost_checked",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "lme_filled_on": {
+          "name": "lme_filled_on",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "high_cost_since": {
+          "name": "high_cost_since",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -516,12 +525,6 @@
         },
         "relation_other": {
           "name": "relation_other",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "pix_key": {
-          "name": "pix_key",
           "type": "text",
           "primaryKey": false,
           "notNull": false
