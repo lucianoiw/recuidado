@@ -41,8 +41,10 @@ export interface ReminderCallOptions {
   maxCallMs: number;
   /** After the answer is recorded, hang up when the assistant has said nothing for this long and no goodbye came. */
   goodbyeMs?: number;
-  /** Silence after the goodbye before hanging up, so its audio finishes playing. */
+  /** After the goodbye, how long to wait for her to answer before hanging up. */
   goodbyeTailMs?: number;
+  /** After the goodbye, hang up this long after she stops answering. */
+  replyTailMs?: number;
   /** Longest time the patient's microphone stays muted while the greeting plays. */
   greetingMuteMs?: number;
   /** Time to wait for session.closed after hanging up. */
@@ -169,6 +171,8 @@ export class ReminderCall {
       case "session.input_transcript.delta":
         this.appendTranscript("patient", String(event.delta ?? ""));
         this.checkVoicemail();
+        // She answered the goodbye: hang up shortly after she stops talking.
+        if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(this.opts.replyTailMs ?? 1000);
         break;
       case "session.output_transcript.delta":
         this.onAssistantSpeech(String(event.delta ?? ""), event.start_ms);
@@ -262,12 +266,16 @@ export class ReminderCall {
       return;
     }
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
-    // Wait until the assistant stops talking, then hang up.
+    // Give her a moment to say goodbye back; minutes are paid, so do not wait long.
+    this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+  }
+
+  private armGoodbyeHangup(ms: number) {
     if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
     this.goodbyeTimer = setTimeout(() => {
       this.endReason ??= "hung_up_after_goodbye";
       void this.endCall();
-    }, this.opts.goodbyeTailMs ?? 2000);
+    }, ms);
     this.timers.push(this.goodbyeTimer);
   }
 
