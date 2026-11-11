@@ -1,6 +1,7 @@
 # Production stack for Coolify (Docker Compose build pack).
 # Domains are set in Coolify: web -> https://recuidado.com.br,
-# api -> https://api.recuidado.com.br. Secrets go in Coolify env vars.
+# api -> https://api.recuidado.com.br, voice -> https://voz.recuidado.com.br
+# (the voice domain also gives Asterisk its TLS certificate). Secrets go in Coolify env vars.
 services:
   web:
     build:
@@ -24,7 +25,8 @@ services:
       - DATABASE_URL=postgres://recuidado:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/recuidado
       - REDIS_URL=redis://redis:6379
       - WEB_URL=${WEB_URL:-https://recuidado.com.br}
-      - VOICE_URL=${VOICE_URL:-}
+      - VOICE_URL=${VOICE_URL:-http://voice:5000}
+      - VOICE_API_TOKEN=${VOICE_API_TOKEN:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY:-}
       - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY:-}
@@ -33,6 +35,47 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    restart: unless-stopped
+
+  voice:
+    build:
+      context: .
+      dockerfile: apps/voice/Dockerfile
+    environment:
+      - SERVICE_FQDN_VOICE_5000
+      - VOICE_API_TOKEN=${VOICE_API_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_LIVE_MODEL=${OPENAI_LIVE_MODEL:-gpt-live-1}
+      - OPENAI_LIVE_VOICE=${OPENAI_LIVE_VOICE:-marin}
+      - OPENAI_DELEGATE_MODEL=${OPENAI_DELEGATE_MODEL:-gpt-6-luna}
+      - SIP_PROVIDER_URL=${SIP_PROVIDER_URL:-sips:voz.recuidado.com.br:5061}
+      - SIP_USERNAME=${OPENAI_SIP_USERNAME:-openai}
+      - SIP_PASSWORD=${OPENAI_SIP_PASSWORD}
+      - SIP_CALLER_NUMBER=${SIP_CALLER_NUMBER}
+      - CALL_ALLOWED_NUMBERS=${CALL_ALLOWED_NUMBERS}
+      - CALL_MAX_SECONDS=${CALL_MAX_SECONDS:-150}
+      - API_URL=http://api:4000
+      - API_TOKEN=${VOICE_API_TOKEN}
+    restart: unless-stopped
+
+  # SIP bridge: GPT-Live (TLS, SRTP, Opus) <-> Nvoip (G.711). Host network so RTP
+  # ports reach the internet. Open 5061/tcp and 10000-10200/udp on the VPS firewall.
+  asterisk:
+    build:
+      context: infra/asterisk
+    network_mode: host
+    environment:
+      - SIP_DOMAIN=${SIP_DOMAIN:-voz.recuidado.com.br}
+      - PUBLIC_IP=${PUBLIC_IP:-}
+      - OPENAI_SIP_USERNAME=${OPENAI_SIP_USERNAME:-openai}
+      - OPENAI_SIP_PASSWORD=${OPENAI_SIP_PASSWORD}
+      - NVOIP_SIP_USER=${NVOIP_SIP_USER}
+      - NVOIP_SIP_PASSWORD=${NVOIP_SIP_PASSWORD}
+      - CALL_ALLOWED_NUMBERS=${CALL_ALLOWED_NUMBERS}
+      - ACME_JSON=/acme/acme.json
+    volumes:
+      # Certificate Traefik (Coolify proxy) issued for SIP_DOMAIN.
+      - /data/coolify/proxy/acme.json:/acme/acme.json:ro
     restart: unless-stopped
 
   postgres:
