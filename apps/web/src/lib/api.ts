@@ -57,6 +57,65 @@ export interface Medication {
   highCost?: boolean;
   /** Pills left at home and how many days they last; null when nobody counted them. */
   stock?: Stock | null;
+  /** Where the family is in the Alto Custo path; null when it is not in the list. */
+  highCostPath?: HighCostStatus | null;
+}
+
+export interface HighCostItem {
+  id: string;
+  who: "doctor" | "family";
+  label: string;
+  detail?: string;
+}
+
+/** What SES-SP asks to give a medicine through the Alto Custo (CEAF), from its leaflets. */
+export interface HighCostGuide {
+  disease: string | null;
+  pageUrl: string;
+  leafletUrl: string | null;
+  updatedOn: string | null;
+  specific: boolean;
+  lmeValidDays: number;
+  renewalMonths: number | null;
+  firstRequest: HighCostItem[];
+  renewal: HighCostItem[];
+  notes: string[];
+  representative: string[];
+  sources: { ministry: string; lmeForm: string; stock: string };
+}
+
+export interface HighCostStatus {
+  checked: string[];
+  /** aaaa-mm-dd */
+  lmeFilledOn: string | null;
+  since: string | null;
+  stage: "first" | "renewal";
+  done: number;
+  total: number;
+  lmeDeliverBy: string | null;
+  renewBy: string | null;
+  due: { kind: "lme" | "renewal"; by: string; daysLeft: number } | null;
+}
+
+export interface HighCostPath {
+  medication: { id: string; name: string; strength: string | null; monthlyCostCents: number; highCost: boolean };
+  guide: HighCostGuide;
+  status: HighCostStatus;
+}
+
+export async function getHighCost(medicationId: string): Promise<HighCostPath> {
+  const res = await fetch(`${API_URL}${withFamily(`/family/medications/${medicationId}/high-cost`)}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para abrir o caminho do Alto Custo."));
+  return res.json();
+}
+
+export async function saveHighCost(
+  medicationId: string,
+  body: { checked?: string[]; lmeFilledOn?: string | null; since?: string | null },
+): Promise<void> {
+  await send("PUT", withFamily(`/family/medications/${medicationId}/high-cost`), body, "Não deu para salvar.");
 }
 
 export interface Stock {
