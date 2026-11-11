@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Same list as apps/web/src/lib/onboarding.ts.
+// Same list as apps/app/src/lib/onboarding.ts.
 export const RELATIONS = [
   'Filho(a)',
   'Neto(a)',

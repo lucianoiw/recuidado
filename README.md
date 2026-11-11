@@ -48,7 +48,8 @@ flowchart LR
   end
 
   subgraph app [Recuidado]
-    W[apps/web<br/>Next.js 16 PWA]
+    W[apps/app<br/>Next.js 16 PWA]
+    S[apps/web<br/>site]
     A[apps/api<br/>NestJS 12]
     Q[apps/worker<br/>fila de doses]
     V[apps/voice<br/>agente de voz]
@@ -91,7 +92,8 @@ flowchart LR
 
 | Parte | O que faz | Tecnologia |
 | --- | --- | --- |
-| `apps/web` | App instalável (PWA). A família cadastra a Dona Maria, lê a receita e acompanha as doses. A Dona Maria vê o remédio da hora e confirma com um toque. | Next.js 16, React 19, Tailwind 4, Web Push |
+| `apps/app` | App instalável (PWA) em app.recuidado.com.br. A família cadastra a Dona Maria, lê a receita e acompanha as doses. A Dona Maria vê o remédio da hora e confirma com um toque. | Next.js 16, React 19, Tailwind 4, Web Push |
+| `apps/web` | Site do produto em recuidado.com.br e www. Enquanto o site não fica pronto, manda todo acesso para o app mantendo o caminho, então links antigos continuam valendo. | Next.js 16 |
 | `apps/api` | Família, remédios, doses, leitura de receita e escalonamento. Agenda lembrete, ligação e aviso em uma fila. | NestJS 12, PostgreSQL, Drizzle, Redis, BullMQ, Resend |
 | `apps/worker` | Executa a fila na hora certa: lembrete, ligação, segunda ligação, aviso à família, ligação de volta, e agenda as doses de hora em hora. App próprio, com package.json, Dockerfile e imagem próprios, sem servidor HTTP e sem controllers: três arquivos (entrada, módulo e processador da fila). A API não consome a fila e não tem nada do worker. Separado para um não derrubar o outro, o deploy da API não parar a fila e cada um escalar sozinho. Os jobs ficam no Redis e sobrevivem a reinício. | NestJS 12 (application context), BullMQ |
 | `apps/voice` | Liga para a Dona Maria, conversa por voz e devolve o resultado para a API. | OpenAI GPT-Live por SIP, Asterisk, Nvoip |

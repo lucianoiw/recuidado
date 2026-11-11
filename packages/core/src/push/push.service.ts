@@ -6,7 +6,7 @@ import { DB, type Database } from '../db/db.module.js';
 import { pushSubscriptions } from '../db/schema.js';
 import { telemetry } from '../telemetry/telemetry.js';
 
-/** What the service worker (apps/web/public/sw.js) reads from a push. */
+/** What the service worker (apps/app/public/sw.js) reads from a push. */
 export interface PushPayload {
   title: string;
   body: string;
