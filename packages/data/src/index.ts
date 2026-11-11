@@ -15,6 +15,7 @@ export type { SusUnit } from "./fetch-sus-units.ts";
 export type { FreeAccessRow } from "./link-free-access.ts";
 export { readCsv } from "./lib/csv.ts";
 export { findFreeAccess, type FreeAccess, type FreePlace } from "./free-access.ts";
+export { highCostGuide, slugFor, type HighCostGuide, type HighCostItem } from "./high-cost-guide.ts";
 export { searchMedicines, type MedicineKind, type MedicineResult, type MedicineStrength } from "./medicine-search.ts";
 export { buildIngredientKey, buildMatchKey, looseKey, looseMatchKey, normalizeIngredient, parseStrengths } from "./lib/normalize.ts";
 export { DEMO_REGION } from "./region.ts";
@@ -31,4 +32,5 @@ export const SEED_FILES = {
   ceaf: join(SEED_DIR, "ceaf.json"),
   susUnits: join(SEED_DIR, "sus-units.json"),
   freeAccess: join(SEED_DIR, "free-access.csv"),
+  ceafSpGuides: join(SEED_DIR, "ceaf-sp-guides.json"),
 } as const;

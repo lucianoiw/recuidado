@@ -1,0 +1,484 @@
+{
+  "source": {
+    "name": "Secretaria de Estado da Saúde de São Paulo (SES-SP), Coordenadoria de Assistência Farmacêutica: cartilhas do Componente Especializado (CEAF) por medicamento",
+    "url": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/relacao-estadual-de-medicamentos-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento",
+    "ministry": "https://www.gov.br/saude/pt-br/composicao/sectics/daf/ceaf",
+    "lme_form": "https://www.gov.br/saude/pt-br/composicao/sectics/daf/publicacoes/lme.pdf",
+    "stock": "https://plataformacaf.digital/consulta",
+    "fetched_at": "2026-11-11"
+  },
+  "lme_valid_days": 90,
+  "pages": {
+    "abatacepte": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/abatacepte",
+    "acetazolamida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/acetazolamida",
+    "acido-ursodesoxicolico": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/acido-ursodesoxicolico",
+    "acido-zoledronico": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/acido-zoledronico",
+    "acitretina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/acitretina",
+    "adalimumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/adalimumabe",
+    "alentuzumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alentuzumabe",
+    "alfagalsidase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfagalsidase",
+    "alfataliglicerase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfataliglicerase",
+    "alfaglicosidase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfaglicosidase",
+    "alfadornase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfadornase",
+    "alfaelosulfase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfaelosulfase",
+    "alfaepoetina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfaepoetina",
+    "alfainterferona-2b": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfainterferona-2b",
+    "alfavelaglicerase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfavelaglicerase",
+    "alfavestronidase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/alfavestronidase",
+    "amantadina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/amantadina",
+    "atorvastatina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/atorvastatina",
+    "azatioprina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/azatioprina",
+    "baricitinibe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/baricitinibe",
+    "beclometasona-formoterol-glicopirronio": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/beclometasona-formoterol-glicopirronio",
+    "benralizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/benralizumabe",
+    "betainterferona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/betainterferona",
+    "bezafibrato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/bezafibrato",
+    "biotina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/biotina",
+    "bosentana": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/bosentana",
+    "budesonida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/budesonida",
+    "burosumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/burosumabe",
+    "cabergolina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/cabergolina",
+    "calcipotriol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/calcipotriol",
+    "calcitonina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/calcitonina",
+    "calcitriol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/calcitriol",
+    "certolizumabe-pegol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/certolizumabe-pegol",
+    "ciclofosfamida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ciclofosfamida",
+    "ciclosporina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ciclosporina",
+    "cinacalcete": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/cinacalcete",
+    "ciprofibrato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ciprofibrato",
+    "ciproterona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ciproterona",
+    "cladribina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/cladribina",
+    "clobazam": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/clobazam",
+    "clobetasol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/clobetasol",
+    "clopidogrel": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/clopidogrel",
+    "cloroquina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/cloroquina",
+    "clozapina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/clozapina",
+    "codeina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/codeina",
+    "danazol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/danazol",
+    "dapagliflozina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/dapagliflozina",
+    "deferasirox": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/deferasirox",
+    "deferiprona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/deferiprona",
+    "desferroxamina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/desferroxamina",
+    "desmopressina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/desmopressina",
+    "donepezila": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/donepezila",
+    "eculizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/eculizumabe",
+    "eltrombopague-olamina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/eltrombopague-olamina",
+    "enoxaparina-sodica": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/enoxaparina-sodica",
+    "entacapona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/entacapona",
+    "etanercepte": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/etanercepte",
+    "etossuximida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/etossuximida",
+    "everolimo": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/everolimo",
+    "fenofibrato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/fenofibrato",
+    "fenoterol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/fenoterol",
+    "filgrastim": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/filgrastim",
+    "fingolimode": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/fingolimode",
+    "fludrocortisona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/fludrocortisona",
+    "formoterol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/formoterol",
+    "formoterol-budesonida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/formoterol-budesonida",
+    "fumarato-de-dimetila": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/fumarato-de-dimetila",
+    "furoato-de-fluticasonabrometo-de-umeclidiniotrifenato-de-vilanterol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/furoato-de-fluticasonabrometo-de-umeclidiniotrifenato-de-vilanterol",
+    "furoato-de-mometasona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/furoato-de-mometasona",
+    "gabapentina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/gabapentina",
+    "galantamina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/galantamina",
+    "galsulfase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/galsulfase",
+    "genfibrozila": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/genfibrozila",
+    "glatiramer": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/glatiramer",
+    "golimumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/golimumabe",
+    "gosserrelina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/gosserrelina",
+    "hidroxicloroquina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/hidroxicloroquina",
+    "hidroxiureia": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/hidroxiureia",
+    "idursulfase-alfa": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/idursulfase-alfa",
+    "iloprosta": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/iloprosta",
+    "imiglucerase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/imiglucerase",
+    "imunoglobulina-humana": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/imunoglobulina-humana",
+    "infliximabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/infliximabe",
+    "insulina-analoga-de-acao-prolongada": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/insulina-analoga-de-acao-prolongada",
+    "insulina-analoga-de-acao-rapida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/insulina-analoga-de-acao-rapida",
+    "isotretinoina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/isotretinoina",
+    "ivacaftor": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ivacaftor",
+    "lamotrigina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/lamotrigina",
+    "lanreotida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/lanreotida",
+    "laronidase": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/laronidase",
+    "leflunomida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/leflunomida",
+    "leuprorrelina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/leuprorrelina",
+    "levetiracetam": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/levetiracetam",
+    "memantina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/memantina",
+    "mesalazina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/mesalazina",
+    "mepolizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/mepolizumabe",
+    "metadona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/metadona",
+    "metilprednisolona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/metilprednisolona",
+    "metotrexato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/metotrexato",
+    "micofenolato-de-mofetila": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/micofenolato-de-mofetila",
+    "micofenolato-de-sodio": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/micofenolato-de-sodio",
+    "miglustate": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/miglustate",
+    "morfina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/morfina",
+    "naproxeno": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/naproxeno",
+    "natalizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/natalizumabe",
+    "nusinersena": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/nusinersena",
+    "octreotida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/octreotida",
+    "olanzapina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/olanzapina",
+    "omalizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/omalizumabe",
+    "pamidronato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/pamidronato",
+    "pancreatina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/pancreatina",
+    "paricalcitol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/paricalcitol",
+    "penicilamina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/penicilamina",
+    "piridostigmina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/piridostigmina",
+    "pramipexol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/pramipexol",
+    "pravastatina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/pravastatina",
+    "primidona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/primidona",
+    "quetiapina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/quetiapina",
+    "raloxifeno": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/raloxifeno",
+    "rasagilina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/rasagilina",
+    "risanquizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/risanquizumabe",
+    "riluzol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/riluzol",
+    "risdiplam": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/risdiplam",
+    "risedronato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/risedronato",
+    "risperidona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/risperidona",
+    "rituximabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/rituximabe",
+    "rivastigmina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/rivastigmina",
+    "romosozumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/romosozumabe",
+    "sacarato-de-hidroxido-ferrico": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/sacarato-de-hidroxido-ferrico",
+    "sacubitril-valsartana-sodica-hidratada": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/sacubitril-valsartana-sodica-hidratada",
+    "dicloridrato-de-sapropterina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/dicloridrato-de-sapropterina",
+    "secuquinumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/secuquinumabe",
+    "selexipague": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/selexipague",
+    "sevelamer": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/sevelamer",
+    "sildenafila": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/sildenafila",
+    "sirolimo": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/sirolimo",
+    "somatropina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/somatropina",
+    "sulfassalazina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/sulfassalazina",
+    "tafamidis": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/tafamidis",
+    "tacrolimo": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/tacrolimo",
+    "teriflunomida": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/teriflunomida",
+    "tiotropio-olodaterol": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/tiotropio-olodaterol",
+    "tobramicina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/tobramicina",
+    "tocilizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/tocilizumabe",
+    "tofacitinibe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/tofacitinibe",
+    "topiramato": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/topiramato",
+    "toxina-botulinica-tipo-a": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/toxina-botulinica-tipo-a",
+    "trientina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/trientina",
+    "triexifinidil": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/triexifinidil",
+    "triptorrelina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/triptorrelina",
+    "upadacitinibe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/upadacitinibe",
+    "ustequinumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ustequinumabe",
+    "vedolizumabe": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/vedolizumabe",
+    "vigabatrina": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/vigabatrina",
+    "ziprasidona": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/ziprasidona"
+  },
+  "guides": [
+    {
+      "slug": "atorvastatina",
+      "disease": "Dislipidemia (colesterol alto), para prevenir problemas do coração",
+      "pdf": "https://www.saude.sp.gov.br/resources/ses/perfil/cidadao/acesso-rapido/medicamentos/relacao-estadual-de-medicamentos-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/22_atorvastatina_dislipidemia_v8.pdf",
+      "updated_on": "2025-08-20",
+      "renewal_months": 6,
+      "notes": [
+        "Mulheres de até 55 anos têm exigências a mais. Veja a cartilha."
+      ],
+      "first": [
+        {
+          "id": "lme",
+          "who": "doctor",
+          "label": "Laudo LME original, preenchido pelo médico",
+          "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+        },
+        {
+          "id": "lme_risk",
+          "who": "doctor",
+          "label": "No LME, o médico descreve o risco do coração",
+          "detail": "Diabetes, escore de Framingham ou doença aterosclerótica."
+        },
+        {
+          "id": "prescription",
+          "who": "doctor",
+          "label": "Receita original em duas vias"
+        },
+        {
+          "id": "exams",
+          "who": "family",
+          "label": "Cópia dos exames de sangue",
+          "detail": "TGO, TGP, CPK, TSH, colesterol total, HDL, triglicerídeos e LDL."
+        },
+        {
+          "id": "id_document",
+          "who": "family",
+          "label": "Cópia do documento com foto e número do CPF"
+        },
+        {
+          "id": "address",
+          "who": "family",
+          "label": "Cópia do comprovante de residência com CEP",
+          "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+        },
+        {
+          "id": "sus_card",
+          "who": "family",
+          "label": "Cópia do Cartão Nacional de Saúde (cartão do SUS)"
+        }
+      ],
+      "renewal": [
+        {
+          "id": "lme",
+          "who": "doctor",
+          "label": "Novo laudo LME, a cada 6 meses",
+          "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+        },
+        {
+          "id": "prescription",
+          "who": "doctor",
+          "label": "Nova receita em duas vias, a cada 6 meses"
+        },
+        {
+          "id": "exams",
+          "who": "family",
+          "label": "Cópia dos exames TGO, TGP e CPK",
+          "detail": "A cada 6 meses ou quando a dose muda."
+        },
+        {
+          "id": "address",
+          "who": "family",
+          "label": "Cópia do comprovante de residência com CEP",
+          "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+        },
+        {
+          "id": "id_document",
+          "who": "family",
+          "label": "Cópia do documento com foto e número do CPF",
+          "detail": "Só se o documento foi emitido nos últimos 6 meses."
+        }
+      ]
+    },
+    {
+      "slug": "donepezila",
+      "disease": "Doença de Alzheimer",
+      "pdf": "https://www.saude.sp.gov.br/resources/ses/perfil/cidadao/acesso-rapido/medicamentos/relacao-estadual-de-medicamentos-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento/cartilhas-medicamentos/109_donepezila_alzheimer_v24_1_.pdf",
+      "updated_on": "2026-03-11",
+      "renewal_months": 6,
+      "notes": [
+        "É remédio de controle especial: a receita vale 30 dias e serve para uma retirada."
+      ],
+      "first": [
+        {
+          "id": "lme",
+          "who": "doctor",
+          "label": "Laudo LME original, preenchido pelo médico",
+          "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu. No LME, o médico descreve como a doença começou e evoluiu."
+        },
+        {
+          "id": "prescription",
+          "who": "doctor",
+          "label": "Receita de controle especial em duas vias",
+          "detail": "Vale 30 dias."
+        },
+        {
+          "id": "cognitive_tests",
+          "who": "doctor",
+          "label": "Testes MEEM e CDR feitos pelo médico"
+        },
+        {
+          "id": "imaging",
+          "who": "family",
+          "label": "Cópia do laudo da ressonância ou tomografia do encéfalo"
+        },
+        {
+          "id": "exams",
+          "who": "family",
+          "label": "Cópia dos exames de sangue",
+          "detail": "Hemograma, sódio, potássio, cálcio, glicemia de jejum, TSH, ácido fólico, vitamina B12 e VDRL (sífilis)."
+        },
+        {
+          "id": "id_document",
+          "who": "family",
+          "label": "Cópia do documento com foto e número do CPF"
+        },
+        {
+          "id": "address",
+          "who": "family",
+          "label": "Cópia do comprovante de residência com CEP",
+          "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+        },
+        {
+          "id": "sus_card",
+          "who": "family",
+          "label": "Cópia do Cartão Nacional de Saúde (cartão do SUS)"
+        }
+      ],
+      "renewal": [
+        {
+          "id": "lme",
+          "who": "doctor",
+          "label": "Novo laudo LME, a cada 6 meses",
+          "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+        },
+        {
+          "id": "prescription",
+          "who": "doctor",
+          "label": "Receita de controle especial em duas vias, todo mês"
+        },
+        {
+          "id": "cognitive_tests",
+          "who": "doctor",
+          "label": "Testes MEEM e CDR, a cada 6 meses"
+        },
+        {
+          "id": "address",
+          "who": "family",
+          "label": "Cópia do comprovante de residência com CEP",
+          "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+        },
+        {
+          "id": "id_document",
+          "who": "family",
+          "label": "Cópia do documento com foto e número do CPF",
+          "detail": "Só se o documento foi emitido nos últimos 6 meses."
+        }
+      ]
+    },
+    {
+      "slug": "sacubitril-valsartana-sodica-hidratada",
+      "disease": "Insuficiência cardíaca com fração de ejeção reduzida",
+      "pdf": "https://saude.sp.gov.br/resources/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-do-componente-especializado-da-assistencia-farmaceutica/502_sacubitril_valsartana_insuficiencia_cardiaca_v18_3_.pdf",
+      "updated_on": "2025-06-17",
+      "renewal_months": 6,
+      "notes": [
+        "Para começar pelo SUS, a pessoa precisa ter entre 18 e 74 anos. Quem começou antes dos 75 continua recebendo."
+      ],
+      "first": [
+        {
+          "id": "lme",
+          "who": "doctor",
+          "label": "Laudo LME original, preenchido pelo médico",
+          "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+        },
+        {
+          "id": "prescription",
+          "who": "doctor",
+          "label": "Receita original em duas vias",
+          "detail": "De preferência feita por um cardiologista."
+        },
+        {
+          "id": "medical_report",
+          "who": "doctor",
+          "label": "Relatório médico com os critérios do diagnóstico"
+        },
+        {
+          "id": "echo",
+          "who": "family",
+          "label": "Cópia do laudo do ecocardiograma com a fração de ejeção"
+        },
+        {
+          "id": "bnp",
+          "who": "family",
+          "label": "Cópia do exame BNP ou NT-proBNP"
+        },
+        {
+          "id": "id_document",
+          "who": "family",
+          "label": "Cópia do documento com foto e número do CPF"
+        },
+        {
+          "id": "address",
+          "who": "family",
+          "label": "Cópia do comprovante de residência com CEP",
+          "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+        },
+        {
+          "id": "sus_card",
+          "who": "family",
+          "label": "Cópia do Cartão Nacional de Saúde (cartão do SUS)"
+        }
+      ],
+      "renewal": [
+        {
+          "id": "lme",
+          "who": "doctor",
+          "label": "Novo laudo LME, a cada 6 meses",
+          "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+        },
+        {
+          "id": "prescription",
+          "who": "doctor",
+          "label": "Nova receita em duas vias, a cada 6 meses"
+        },
+        {
+          "id": "address",
+          "who": "family",
+          "label": "Cópia do comprovante de residência com CEP",
+          "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+        },
+        {
+          "id": "id_document",
+          "who": "family",
+          "label": "Cópia do documento com foto e número do CPF",
+          "detail": "Só se o documento foi emitido nos últimos 6 meses."
+        }
+      ]
+    }
+  ],
+  "general": {
+    "first": [
+      {
+        "id": "lme",
+        "who": "doctor",
+        "label": "Laudo LME original, preenchido pelo médico",
+        "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+      },
+      {
+        "id": "prescription",
+        "who": "doctor",
+        "label": "Receita original em duas vias"
+      },
+      {
+        "id": "exams",
+        "who": "family",
+        "label": "Exames pedidos para esse remédio",
+        "detail": "A lista muda por remédio e doença. Veja a cartilha da Secretaria."
+      },
+      {
+        "id": "id_document",
+        "who": "family",
+        "label": "Cópia do documento com foto e número do CPF"
+      },
+      {
+        "id": "address",
+        "who": "family",
+        "label": "Cópia do comprovante de residência com CEP",
+        "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+      },
+      {
+        "id": "sus_card",
+        "who": "family",
+        "label": "Cópia do Cartão Nacional de Saúde (cartão do SUS)"
+      }
+    ],
+    "renewal": [
+      {
+        "id": "lme",
+        "who": "doctor",
+        "label": "Novo laudo LME",
+        "detail": "Vale 90 dias para pedir o remédio, contados da data em que o médico preencheu."
+      },
+      {
+        "id": "prescription",
+        "who": "doctor",
+        "label": "Nova receita"
+      },
+      {
+        "id": "exams",
+        "who": "family",
+        "label": "Exames de acompanhamento, se a cartilha pedir"
+      },
+      {
+        "id": "address",
+        "who": "family",
+        "label": "Cópia do comprovante de residência com CEP",
+        "detail": "No nome dela. Se estiver no nome de outra pessoa, leve uma carta ou documento que mostre o vínculo."
+      }
+    ]
+  },
+  "representative": [
+    "Declaração autorizadora assinada",
+    "Cópia do documento de identidade de quem vai retirar",
+    "Telefone de quem vai retirar"
+  ]
+}
