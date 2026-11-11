@@ -18,7 +18,7 @@ function medicationList(medications: Medication[]): string {
 export function buildLiveInstructions(ctx: ReminderContext): string {
   return [
     "You are Recuidado, a warm assistant that calls an older adult to remind them to take their medicine.",
-    "Speak only Brazilian Portuguese, slowly, in short and simple sentences, with a calm and friendly tone.",
+    "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm and friendly tone. Never make long introductions.",
     `Call the person by this name: "${ctx.patientName}".`,
     `The medicines for this dose are: ${medicationList(ctx.medications)}.`,
     "Goal of the call: remind her of the medicines and find out if she has taken them now.",
@@ -27,7 +27,7 @@ export function buildLiveInstructions(ctx: ReminderContext): string {
     "If the answer is unclear, ask once more in a different, simple way.",
     "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
     "If she reports feeling unwell or an emergency, tell her the family will be notified and suggest calling SAMU 192.",
-    "After the answer is recorded, say a short goodbye and stop talking.",
+    "After the answer is recorded, say only a very short goodbye (for example \"Obrigada, tchau!\") and stop talking.",
   ].join("\n");
 }
 
@@ -41,12 +41,23 @@ export function greetingFor(now: Date = new Date()): string {
   return "boa noite";
 }
 
-/** Spoken immediately when the call is answered. */
+/** Spoken immediately when the call is answered. Kept as short as possible. */
 export function buildGreeting(ctx: ReminderContext, now: Date = new Date()): string {
   return [
-    `Greet her now in Brazilian Portuguese: say "${greetingFor(now)}", that you are the Recuidado assistant calling on behalf of her family,`,
-    `that it is time for ${medicationList(ctx.medications)}, and ask if she has already taken it. Then pause and listen.`,
+    `Say only this short line in Brazilian Portuguese, then stop and listen:`,
+    `"${capitalize(greetingFor(now))}, ${ctx.patientName}, aqui é do Recuidado. Já tomou ${medicationNames(ctx.medications)}?"`,
+    `Do not add anything else: no mention of family, dose or explanations.`,
   ].join(" ");
+}
+
+function capitalize(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** Names only, e.g. "a Losartana" or "a Losartana e a Metformina", for a short spoken line. */
+function medicationNames(medications: Medication[]): string {
+  const names = medications.map((m) => `o ${m.name}`.replace(/^o (.*a)$/i, "a $1"));
+  return names.length > 1 ? `${names.slice(0, -1).join(", ")} e ${names.at(-1)}` : (names[0] ?? "o remédio");
 }
 
 /** Backend prompt for the delegated Responses model. */

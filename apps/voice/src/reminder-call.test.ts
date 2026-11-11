@@ -126,3 +126,12 @@ test("call closed by the far side keeps the Live close reason", async () => {
   assert.equal(result.outcome, "unclear");
   assert.equal(result.endReason, "session_closed: remote_hangup");
 });
+
+test("greeting is one short line", async () => {
+  const { buildGreeting } = await import("./prompt.js");
+  const g = buildGreeting(
+    { patientName: "Dona Maria", medications: [{ name: "Losartana", dose: "50 mg" }] },
+    new Date("2026-11-11T02:30:00Z"),
+  );
+  assert.match(g, /"Boa noite, Dona Maria, aqui é do Recuidado\. Já tomou a Losartana\?"/);
+});
