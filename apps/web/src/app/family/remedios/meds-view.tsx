@@ -18,16 +18,23 @@ import { EditMedSheet } from "@/components/edit-med-sheet";
 import { FreeOrBuy } from "@/components/free-or-buy";
 import { callName, isFree, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
+import { formatDistance, pharmacies } from "@/lib/pharmacies";
 import { stockText } from "@/lib/stock";
+import { ubsUnits } from "@/lib/sus-units";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
+/** Nearest places where it can be free, e.g. "Drogasil, 240 m (Farmácia Popular) ou UBS Sé, 440 m". */
 function freeWhere(m: Medication): string | null {
   const fp = m.freeInFarmaciaPopular || m.freeAt?.includes("farmacia_popular");
   const ubs = m.freeAt?.includes("ubs");
-  if (fp && ubs) return "No Farmácia Popular ou na UBS";
-  if (fp) return "No Farmácia Popular";
-  if (ubs) return "Só na UBS";
-  return null;
+  const places: string[] = [];
+  const pharmacy = fp ? pharmacies.find((p) => p.fpAccredited) : undefined;
+  if (pharmacy) places.push(`${pharmacy.name}, ${formatDistance(pharmacy.distanceKm)} (Farmácia Popular)`);
+  else if (fp) places.push("Farmácia Popular");
+  const unit = ubs ? ubsUnits[0] : undefined;
+  if (unit) places.push(`${unit.name}, ${formatDistance(unit.distanceKm)}`);
+  else if (ubs) places.push("UBS");
+  return places.length > 0 ? places.join(" ou ") : null;
 }
 
 function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
@@ -48,7 +55,9 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
         </span>
         {freeWhere(m) ? (
-          <span className="text-[14px] font-bold text-brand">{freeWhere(m)}</span>
+          <span className="mt-1 text-[14px] leading-snug text-brand">
+            <b>Grátis em:</b> {freeWhere(m)}
+          </span>
         ) : null}
         {m.highCost ? (
           <span className="text-[14px] font-bold text-warn">
