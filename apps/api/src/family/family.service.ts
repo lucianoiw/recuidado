@@ -14,13 +14,14 @@ import { alerts, doses, families, medications, members, voiceCalls } from '../db
 import { AlertsService } from '../alerts/alerts.service.js';
 import { DosesService } from '../doses/doses.service.js';
 import { StockService } from '../stock/stock.service.js';
+import { DEMO_FAMILY } from './demo-family.js';
 import { seedDemoFamily } from './demo-seed.js';
 import { highCostStatus, todayInSaoPaulo, type HighCostStatus } from './high-cost.js';
 import type { HighCostBody, MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
 import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
-export const DEMO_FAMILY = 'Família Demo';
+export { DEMO_FAMILY };
 const DEMO_PATIENT = 'Dona Maria';
 const DEMO_CAREGIVERS = ['Ana', 'Carlos'];
 const DEMO_FIRST_CONTACT = 'Carlos';
@@ -380,6 +381,7 @@ export class FamilyService implements OnApplicationBootstrap {
       caregiver: {
         name: caregiver.name,
         phone: caregiver.phone ?? '',
+        email: caregiver.email ?? '',
         relation: caregiver.relation,
         relationOther: caregiver.relationOther ?? '',
       },
@@ -452,6 +454,7 @@ export class FamilyService implements OnApplicationBootstrap {
       const caregiverValues = {
         name: c.name,
         phone: c.phone,
+        email: c.email || null,
         relation: c.relation,
         relationOther: c.relation === 'Outro' ? c.relationOther : null,
       };

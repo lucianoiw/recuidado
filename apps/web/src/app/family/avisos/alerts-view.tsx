@@ -19,9 +19,12 @@ const KINDS: Record<AlertKind, { label: string; icon: typeof AlertIcon; tone: st
 /** How the alert reached the family. */
 function channel(a: FamilyAlert): string {
   if (a.kind === "emergency_call") return "Por ligação de voz";
-  if (a.pushesDelivered === 1) return "Notificação em 1 celular";
-  if (a.pushesDelivered > 1) return `Notificação em ${a.pushesDelivered} celulares`;
-  return "Só no app: ninguém com notificação ligada";
+  const parts: string[] = [];
+  if (a.pushesDelivered > 0) parts.push(`notificação em ${a.pushesDelivered} ${a.pushesDelivered === 1 ? "celular" : "celulares"}`);
+  if (a.emailsDelivered > 0) parts.push(`e-mail para ${a.emailsDelivered} ${a.emailsDelivered === 1 ? "pessoa" : "pessoas"}`);
+  if (parts.length === 0) return "Só no app: ninguém com notificação ou e-mail";
+  const text = parts.join(" e ");
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 type Tab = "avisos" | "mes";

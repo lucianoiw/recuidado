@@ -21,7 +21,7 @@ import { captureError, track } from "@/lib/analytics";
 import { lookupCep, type CepLookup } from "@/lib/cep";
 import { useCanShare } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
-import { isCep, isDate, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
+import { isCep, isDate, isEmail, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
 import { getOnboarding, saveOnboarding } from "@/lib/api";
 import { familyLink } from "@/lib/family-id";
 import { readMe, setMe } from "@/lib/me";
@@ -67,7 +67,7 @@ export function OnboardingFlow() {
   const c = data.caregiver;
   const p = data.patient;
   const valid: Record<number, boolean> = {
-    1: c.name.trim().length > 1 && isPhone(c.phone) && c.relation !== null && (c.relation !== "Outro" || c.relationOther.trim() !== ""),
+    1: c.name.trim().length > 1 && isPhone(c.phone) && (c.email.trim() === "" || isEmail(c.email)) && c.relation !== null && (c.relation !== "Outro" || c.relationOther.trim() !== ""),
     2: p.name.trim().length > 1 && isPhone(p.phone) && isDate(p.birth) && isCep(p.cep) && cepOk && p.consent,
     3: true,
   };
@@ -123,6 +123,17 @@ export function OnboardingFlow() {
               value={c.phone}
               onValue={(v) => patch("caregiver", { phone: v })}
               aria-invalid={tried && !isPhone(c.phone)}
+            />
+            <Field
+              label="E-mail (opcional)"
+              hint="Os avisos também chegam por e-mail."
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              placeholder="voce@exemplo.com"
+              value={c.email}
+              onValue={(v) => patch("caregiver", { email: v })}
+              aria-invalid={tried && c.email.trim() !== "" && !isEmail(c.email)}
             />
             <SelectField<Relation>
               label="Quem é você para a pessoa cuidada?"
