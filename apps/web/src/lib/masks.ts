@@ -26,6 +26,7 @@ export function maskDate(value: string): string {
 }
 
 export const isPhone = (v: string) => /^\(\d{2}\) \d{4,5}-\d{4}$/.test(v);
+export const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 export const isCep = (v: string) => /^\d{5}-\d{3}$/.test(v);
 export function isDate(v: string): boolean {
   const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v);

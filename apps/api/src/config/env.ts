@@ -46,6 +46,12 @@ export const envSchema = z.object({
   VAPID_PUBLIC_KEY: optionalString,
   VAPID_PRIVATE_KEY: optionalString,
   VAPID_SUBJECT: z.string().default('https://recuidado.com.br'),
+  // Family alerts by e-mail (Resend). Without the key, e-mails are skipped and only logged.
+  RESEND_API_KEY: optionalString,
+  // Sender of the alert e-mails. The domain must be verified in Resend.
+  EMAIL_FROM: z.string().default('Recuidado <avisos@recuidado.com.br>'),
+  // Comma-separated addresses that get the demo family alerts (its caregivers are synthetic). Empty: no e-mail for the demo.
+  DEMO_ALERT_EMAILS: optionalString,
   // Minutes to wait for a dose confirmation before calling the patient.
   DOSE_CALL_AFTER_MINUTES: z.coerce.number().int().positive().default(15),
   // Reminder calls cost money (Nvoip + OpenAI). Limits over the last 24 hours:

@@ -45,6 +45,8 @@ export const onboardingBody = z
     caregiver: z.object({
       name,
       phone,
+      // Optional: alerts also go by e-mail.
+      email: z.union([z.email('E-mail inválido.').trim().toLowerCase().max(120), z.literal('')]).default(''),
       relation,
       relationOther: z.string().trim().max(60).default(''),
     }),

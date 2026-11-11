@@ -19,13 +19,13 @@ export const RELATIONS = [
 export type Relation = (typeof RELATIONS)[number];
 
 export interface Onboarding {
-  caregiver: { name: string; phone: string; relation: Relation | null; relationOther: string };
+  caregiver: { name: string; phone: string; email: string; relation: Relation | null; relationOther: string };
   patient: { name: string; nickname: string; gender: "female" | "male"; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
   invites: { name: string; phone?: string; relation: Relation | null }[];
 }
 
 export const emptyOnboarding: Onboarding = {
-  caregiver: { name: "", phone: "", relation: null, relationOther: "" },
+  caregiver: { name: "", phone: "", email: "", relation: null, relationOther: "" },
   patient: { name: "", nickname: "", gender: "female", phone: "", birth: "", cep: "", usesPhone: true, consent: false },
   invites: [],
 };
@@ -41,6 +41,7 @@ export function fromRecord(r: OnboardingRecord): Onboarding {
     caregiver: {
       name: r.caregiver.name,
       phone: maskPhone(r.caregiver.phone),
+      email: r.caregiver.email ?? "",
       relation: asRelation(r.caregiver.relation),
       relationOther: r.caregiver.relationOther,
     },
