@@ -100,7 +100,7 @@ export class StockService {
     this.logger.log(`Low stock of ${med.id}: ${status.units} left (${sent} pushes).`);
   }
 
-  /** Confirmed doses since each medication was counted. */
+  /** Confirmed doses (demo run excluded) since each medication was counted. */
   private async takenSinceCount(medicationIds: string[]): Promise<Map<string, number>> {
     const rows = await this.db
       .select({ medicationId: doses.medicationId, n: count() })
@@ -110,6 +110,8 @@ export class StockService {
         and(
           inArray(doses.medicationId, medicationIds),
           eq(doses.status, 'taken'),
+          // Extra doses of the demo run do not use up pills, so repeated runs keep the count.
+          eq(doses.demo, false),
           gte(doses.confirmedAt, medications.stockCountedAt),
         ),
       )
