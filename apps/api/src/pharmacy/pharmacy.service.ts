@@ -168,10 +168,18 @@ export class PharmacyService {
 
   /** Stores what the pharmacy said. apps/voice retries the POST, so a finished inquiry is kept as is. */
   async applyResult(id: string, result: PharmacyVoiceResult) {
+    // The call can end (the pharmacy hangs up) before the voice model records the answer.
+    // Then Claude reads the answer from the transcript. Until it finishes, the family still sees "calling".
+    const heard = (result.transcript ?? []).some((l) => l.speaker === 'patient' && l.text.trim());
+    const readLater =
+      result.outcome === 'unclear' &&
+      result.items.length === 0 &&
+      heard &&
+      Boolean(this.config.get<string>('ANTHROPIC_API_KEY'));
     const [row] = await this.db
       .update(pharmacyInquiries)
       .set({
-        status: result.outcome,
+        status: readLater ? 'calling' : result.outcome,
         sessionId: result.sessionId,
         answers: result.items.map((i) => ({
           medication: i.medication,
@@ -209,10 +217,8 @@ export class PharmacyService {
       items_with_price: result.items.filter((i) => i.priceCents != null).length,
       keys_pressed: result.keysPressed?.length ?? 0,
     });
-    // The call can end (the pharmacy hangs up) before the voice model records the answer.
-    // Then Claude reads the answer from the transcript, in the background so apps/voice is not held.
-    const heard = (result.transcript ?? []).some((l) => l.speaker === 'patient' && l.text.trim());
-    if (result.outcome === 'unclear' && result.items.length === 0 && heard) {
+    // In the background, so apps/voice is not held.
+    if (readLater) {
       void this.readTranscript(
         id,
         row.medications.map((m) => [m.name, m.strength].filter(Boolean).join(' ')),
@@ -222,27 +228,28 @@ export class PharmacyService {
     return 'recorded' as const;
   }
 
-  /** Fills the answer from the call transcript. Never throws: on any problem the inquiry stays unclear. */
+  /** Fills the answer from the call transcript. Never throws: on any problem the inquiry ends as unclear. */
   async readTranscript(id: string, meds: string[], transcript: NonNullable<PharmacyVoiceResult['transcript']>) {
-    const apiKey = this.config.get<string>('ANTHROPIC_API_KEY');
-    if (!apiKey) return;
+    let update: Partial<Inquiry> = { status: 'unclear' };
     try {
-      this.client ??= new Anthropic({ apiKey });
+      this.client ??= new Anthropic({ apiKey: this.config.get<string>('ANTHROPIC_API_KEY') });
       const { items, note } = await readPharmacyTranscript(this.client, meds, transcript);
-      const useful = items.some((i) => i.available !== 'unknown' || i.priceCents != null);
-      if (!useful) return;
-      await this.db
-        .update(pharmacyInquiries)
-        .set({ status: 'answered', answers: items, note })
-        .where(and(eq(pharmacyInquiries.id, id), eq(pharmacyInquiries.status, 'unclear')));
-      telemetry.capture('pharmacy_answer_from_transcript', {
-        inquiry_id: id,
-        items: items.length,
-        items_with_price: items.filter((i) => i.priceCents != null).length,
-      });
+      if (items.some((i) => i.available !== 'unknown' || i.priceCents != null)) {
+        update = { status: 'answered', answers: items, note };
+        telemetry.capture('pharmacy_answer_from_transcript', {
+          inquiry_id: id,
+          items: items.length,
+          items_with_price: items.filter((i) => i.priceCents != null).length,
+        });
+      }
     } catch (error) {
       this.logger.warn(`reading pharmacy transcript failed: ${(error as Error).message}`);
     }
+    await this.db
+      .update(pharmacyInquiries)
+      .set(update)
+      .where(and(eq(pharmacyInquiries.id, id), eq(pharmacyInquiries.status, 'calling')))
+      .catch((error: Error) => this.logger.warn(`saving pharmacy transcript reading failed: ${error.message}`));
   }
 
   private async fail(id: string, error: string) {

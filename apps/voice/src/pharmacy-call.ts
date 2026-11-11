@@ -127,6 +127,8 @@ export class PharmacyCall {
   private lastKeyAt = 0;
   /** Transcript length when the last key was pressed. */
   private transcriptAtKey = 0;
+  /** Start a new transcript line, so what is heard after a key press is not glued to the menu. */
+  private newLine = false;
   private error?: string;
   private durationSeconds?: number;
   private hangupRequested = false;
@@ -259,17 +261,20 @@ export class PharmacyCall {
     if (!this.menuPending || this.answer || this.hangupRequested || this.finished) return;
     const key = menuChoice(this.otherSideSinceKey());
     if (!key) {
+      // A word like "tecle" with no options is not a menu (often the tail of the last one): treat it as a person.
       this.log("no menu option fits, leaving it to the model");
+      this.menuPending = false;
+      this.introduceIfNeeded(true);
       return;
     }
     this.log(`menu option chosen by rule: ${key}`);
     this.sendKeys(`menu_${this.keysPressed.length}`, [key]);
   }
 
-  private introduceIfNeeded() {
+  private introduceIfNeeded(notAMenu = false) {
     if (this.introduced || this.answer || this.hangupRequested || this.finished || this.menuPending) return;
     // Menus arrive in small pieces mixed with the assistant's words: look at everything heard since the last key.
-    if (MENU.test(this.otherSideSinceKey())) return;
+    if (!notAMenu && MENU.test(this.otherSideSinceKey())) return;
     this.introduced = true;
     this.log("person on the line and no introduction yet, introducing");
     this.send({
@@ -333,6 +338,7 @@ export class PharmacyCall {
     this.lastKeyAt = Date.now();
     if (this.menuTimer) clearTimeout(this.menuTimer);
     this.transcriptAtKey = this.transcript.length;
+    this.newLine = true;
     this.assistantSinceMenu = "";
     const gap = this.opts.keyGapMs ?? 300;
     digits.forEach((key, i) => {
@@ -436,7 +442,9 @@ export class PharmacyCall {
   private appendTranscript(speaker: TranscriptLine["speaker"], delta: string) {
     if (!delta) return;
     const last = this.transcript.at(-1);
-    if (last && last.speaker === speaker) last.text += delta;
+    const glue = last && last.speaker === speaker && !this.newLine;
+    this.newLine = false;
+    if (glue) last.text += delta;
     else this.transcript.push({ speaker, text: delta });
   }
 
