@@ -11,7 +11,8 @@ Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração us
 
 - Demo: https://recuidado.com.br
 - Contexto completo do projeto: [docs/context.md](docs/context.md)
-- Monitoria: [docs/monitoring.md](docs/monitoring.md)
+- Painel de monitoria ao vivo (público, sem login): https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg
+- Como a monitoria funciona: [docs/monitoring.md](docs/monitoring.md)
 
 ## O que já funciona em produção
 
@@ -129,7 +130,7 @@ Tudo vai para o PostHog: logs de todos os serviços (que sobrevivem a deploy e r
 
 O painel mostra adesão às doses, o funil do lembrete até o "Tomei", ligações por resultado, latência da IA e erros por serviço. Um alerta por e-mail dispara quando aparece um erro novo ou quando uma ligação falha. A transcrição da ligação não vai para o PostHog: ela fica só no Postgres.
 
-Detalhes em [docs/monitoring.md](docs/monitoring.md).
+[Abrir o painel ao vivo](https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg) (público, sem login). Detalhes em [docs/monitoring.md](docs/monitoring.md).
 
 ## Dados públicos
 
