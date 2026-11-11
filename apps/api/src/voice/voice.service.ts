@@ -12,6 +12,7 @@ import { and, eq, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, families, medications, members, voiceCalls } from '../db/schema.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from '../doses/doses.queue.js';
+import { PushService } from '../push/push.service.js';
 
 /** Body that apps/voice posts to /doses/:id/voice-result. */
 export interface VoiceResult {
@@ -19,6 +20,7 @@ export interface VoiceResult {
   outcome: 'confirmed' | 'not_taken' | 'unclear' | 'no_answer' | 'failed';
   confirmed: boolean;
   note?: string | null;
+  feelsUnwell?: boolean | null;
   transcript?: { speaker: 'assistant' | 'patient'; text: string }[];
   durationSeconds?: number | null;
   endReason?: string | null;
@@ -35,6 +37,7 @@ export class VoiceCallService {
     @Inject(DB) private readonly db: Database,
     @InjectQueue(DOSES_QUEUE) private readonly queue: Queue<DoseJob>,
     private readonly config: ConfigService,
+    private readonly push: PushService,
   ) {}
 
   /** Asks apps/voice to call the patient. Does nothing if the dose is no longer pending. */
@@ -89,7 +92,8 @@ export class VoiceCallService {
   async applyResult(doseId: string, result: VoiceResult): Promise<'taken' | 'missed' | 'ignored'> {
     const [dose] = await this.db.select({ status: doses.status }).from(doses).where(eq(doses.id, doseId));
     if (!dose) throw new NotFoundException('Dose não encontrada.');
-    await this.saveCall(doseId, result);
+    const saved = await this.saveCall(doseId, result);
+    if (saved && result.feelsUnwell) await this.alertUnwell(doseId, result.note);
     // Confirmed in the app while the phone was ringing: the app wins.
     if (dose.status === 'taken') return 'ignored';
 
@@ -112,8 +116,8 @@ export class VoiceCallService {
   }
 
   /** Stores the call. apps/voice retries the POST, so the same session is written once. */
-  private async saveCall(doseId: string, result: VoiceResult): Promise<void> {
-    await this.db
+  private async saveCall(doseId: string, result: VoiceResult): Promise<boolean> {
+    const rows = await this.db
       .insert(voiceCalls)
       .values({
         doseId,
@@ -121,12 +125,36 @@ export class VoiceCallService {
         outcome: result.outcome,
         confirmed: result.confirmed,
         note: result.note ?? null,
+        feelsUnwell: result.feelsUnwell ?? null,
         transcript: result.transcript ?? [],
         durationSeconds: result.durationSeconds == null ? null : Math.round(result.durationSeconds),
         endReason: result.endReason ?? null,
         error: result.error ?? null,
       })
-      .onConflictDoNothing({ target: voiceCalls.sessionId });
+      .onConflictDoNothing({ target: voiceCalls.sessionId })
+      .returning({ id: voiceCalls.id });
+    return rows.length > 0;
+  }
+
+  /** She said she is not well: tell the caregivers right away, with her words. */
+  private async alertUnwell(doseId: string, note?: string | null): Promise<void> {
+    const [row] = await this.db
+      .select({ patientName: members.name, familyId: members.familyId })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .innerJoin(members, eq(medications.patientId, members.id))
+      .where(eq(doses.id, doseId));
+    if (!row) return;
+    const caregivers = await this.db
+      .select({ id: members.id })
+      .from(members)
+      .where(and(eq(members.familyId, row.familyId), eq(members.role, 'caregiver')));
+    const said = note?.trim() ? `Ela disse: "${note.trim()}".` : 'Ela disse que não está bem.';
+    const sent = await this.push.sendToMembers(
+      caregivers.map((c) => c.id),
+      { title: `${row.patientName} não está se sentindo bem`, body: `${said} Vale ligar para ela.`, url: '/family', doseId },
+    );
+    this.logger.log(`Dose ${doseId}: patient reported feeling unwell; ${sent} pushes sent.`);
   }
 
   /** Calls made for a dose, newest first. */

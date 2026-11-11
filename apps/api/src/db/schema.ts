@@ -109,6 +109,8 @@ export const voiceCalls = pgTable('voice_calls', {
   sessionId: text().notNull().unique(),
   outcome: voiceCallOutcome().notNull(),
   confirmed: boolean().notNull(),
+  // Self-reported in the call ("E a senhora, está bem?"). Not a diagnosis.
+  feelsUnwell: boolean(),
   note: text(),
   transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
   durationSeconds: integer(),

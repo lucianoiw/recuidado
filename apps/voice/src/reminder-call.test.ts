@@ -36,14 +36,14 @@ function setup() {
   return { socket, call, hangups: () => hangups };
 }
 
-function toolCall(taken: boolean, note = "") {
+function toolCall(taken: boolean, note = "", feels_unwell = false) {
   return {
     type: "response.event",
     event_id: `ev_tool_${taken}`,
     delegation_id: "item_1",
     event: {
       type: "response.output_item.done",
-      item: { type: "function_call", name: "record_dose_answer", call_id: "call_1", arguments: JSON.stringify({ taken, note }) },
+      item: { type: "function_call", name: "record_dose_answer", call_id: "call_1", arguments: JSON.stringify({ taken, feels_unwell, note }) },
     },
   };
 }
@@ -134,4 +134,14 @@ test("greeting is one short line", async () => {
     new Date("2026-11-11T02:30:00Z"),
   );
   assert.match(g, /"Boa noite, Dona Maria, aqui é do Recuidado\. Já tomou a Losartana\?"/);
+});
+
+test("records that she is not feeling well", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "w1" });
+  socket.emitEvent(toolCall(true, "Estou com tontura", true));
+  const result = await call.result;
+  assert.equal(result.outcome, "confirmed");
+  assert.equal(result.feelsUnwell, true);
+  assert.equal(result.note, "Estou com tontura");
 });
