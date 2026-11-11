@@ -1,0 +1,208 @@
+import { InjectQueue } from '@nestjs/bullmq';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { Queue } from 'bullmq';
+import { and, asc, eq, gte, lt } from 'drizzle-orm';
+import { DB, type Database } from '../db/db.module.js';
+import { doses, medications, members } from '../db/schema.js';
+import { PushService } from '../push/push.service.js';
+import { DOSES_QUEUE, doseJobId, type DoseJob } from './doses.queue.js';
+import { localDate, localDateTime, localTime, upcomingDoseTimes } from './time.js';
+
+const KEEP_FINISHED = { removeOnComplete: { age: 7 * 24 * 3600 }, removeOnFail: { age: 7 * 24 * 3600 } };
+
+@Injectable()
+export class DosesService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(DosesService.name);
+
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    @InjectQueue(DOSES_QUEUE) private readonly queue: Queue<DoseJob>,
+    private readonly push: PushService,
+    private readonly config: ConfigService,
+  ) {}
+
+  async onApplicationBootstrap() {
+    // Hourly safety net, plus one run on every boot.
+    await this.queue.upsertJobScheduler(
+      'plan-doses',
+      { every: 60 * 60 * 1000 },
+      { name: 'plan', data: { kind: 'plan' } },
+    );
+    await this.queue.add('plan', { kind: 'plan' }, KEEP_FINISHED);
+  }
+
+  /** Creates the doses of the next two local days for every medication. */
+  async planAll(now = new Date()): Promise<void> {
+    const meds = await this.db.select({ id: medications.id }).from(medications);
+    for (const med of meds) await this.scheduleForMedication(med.id, now);
+  }
+
+  /** Creates the upcoming doses of one medication and queues their reminders. Safe to call again. */
+  async scheduleForMedication(medicationId: string, now = new Date()): Promise<void> {
+    const [med] = await this.db
+      .select({ times: medications.times })
+      .from(medications)
+      .where(eq(medications.id, medicationId));
+    if (!med) throw new NotFoundException('Medicação não encontrada.');
+
+    const times = upcomingDoseTimes(med.times, now);
+    if (times.length === 0) return;
+    await this.db
+      .insert(doses)
+      .values(times.map((scheduledAt) => ({ medicationId, scheduledAt })))
+      .onConflictDoNothing();
+
+    const upcoming = await this.db
+      .select({ id: doses.id, scheduledAt: doses.scheduledAt })
+      .from(doses)
+      .where(
+        and(
+          eq(doses.medicationId, medicationId),
+          eq(doses.status, 'pending'),
+          gte(doses.scheduledAt, now),
+        ),
+      );
+    for (const dose of upcoming) {
+      // Same jobId: BullMQ ignores the add if the reminder is already queued.
+      await this.queue.add(
+        'remind',
+        { kind: 'remind', doseId: dose.id },
+        {
+          jobId: doseJobId('remind', dose.id),
+          delay: Math.max(0, dose.scheduledAt.getTime() - now.getTime()),
+          ...KEEP_FINISHED,
+        },
+      );
+    }
+  }
+
+  /** Push to the patient, then queue the call and the family alert. */
+  async remind(doseId: string): Promise<void> {
+    const dose = await this.getDetails(doseId);
+    if (!dose || dose.status !== 'pending') return;
+
+    await this.push.sendToMembers([dose.patientId], {
+      title: 'Hora do remédio',
+      body: `${dose.medicationLabel}. Toque para confirmar que tomou.`,
+      url: '/patient',
+      doseId,
+    });
+
+    const minute = 60 * 1000;
+    const callAfter = this.config.getOrThrow<number>('DOSE_CALL_AFTER_MINUTES') * minute;
+    const alertAfter = this.config.getOrThrow<number>('DOSE_ALERT_AFTER_MINUTES') * minute;
+    await this.queue.add(
+      'call',
+      { kind: 'call', doseId },
+      { jobId: doseJobId('call', doseId), delay: callAfter, ...KEEP_FINISHED },
+    );
+    // Fallback in case the call never reports back. A "no" on the call promotes this job.
+    await this.queue.add(
+      'alert-family',
+      { kind: 'alert-family', doseId },
+      { jobId: doseJobId('alert-family', doseId), delay: callAfter + alertAfter, ...KEEP_FINISHED },
+    );
+  }
+
+  /** Push to the caregivers that the dose was not confirmed. Runs once per dose. */
+  async alertFamily(doseId: string): Promise<void> {
+    const dose = await this.getDetails(doseId);
+    if (!dose || dose.status === 'taken' || dose.familyAlertedAt) return;
+
+    await this.db
+      .update(doses)
+      .set({ status: 'missed' })
+      .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
+
+    const caregivers = await this.db
+      .select({ id: members.id })
+      .from(members)
+      .where(and(eq(members.familyId, dose.familyId), eq(members.role, 'caregiver')));
+    const sent = await this.push.sendToMembers(
+      caregivers.map((c) => c.id),
+      {
+        title: `${dose.patientName} não confirmou o remédio`,
+        body: `${dose.medicationLabel} das ${localTime(dose.scheduledAt)}. Vale ligar para ela.`,
+        url: '/family',
+        doseId,
+      },
+    );
+    await this.db.update(doses).set({ familyAlertedAt: new Date() }).where(eq(doses.id, doseId));
+    this.logger.log(`Family alerted for dose ${doseId} (${sent} pushes).`);
+  }
+
+  /** "Tomei" in the app. Cancels the call and the family alert. */
+  async confirmInApp(doseId: string): Promise<void> {
+    const [dose] = await this.db
+      .update(doses)
+      .set({ status: 'taken', confirmedVia: 'app', confirmedAt: new Date() })
+      .where(eq(doses.id, doseId))
+      .returning({ id: doses.id });
+    if (!dose) throw new NotFoundException('Dose não encontrada.');
+    for (const kind of ['call', 'alert-family'] as const) {
+      await (await this.queue.getJob(doseJobId(kind, doseId)))?.remove();
+    }
+  }
+
+  /** Doses of one patient on a local day (today by default). */
+  async listForDay(patientId: string, date = localDate(new Date())) {
+    const start = localDateTime(date, '00:00');
+    if (!start) return [];
+    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+    return this.db
+      .select({
+        id: doses.id,
+        scheduledAt: doses.scheduledAt,
+        status: doses.status,
+        confirmedVia: doses.confirmedVia,
+        confirmedAt: doses.confirmedAt,
+        familyAlertedAt: doses.familyAlertedAt,
+        medicationId: medications.id,
+        medicationName: medications.name,
+        strength: medications.strength,
+      })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .where(
+        and(
+          eq(medications.patientId, patientId),
+          gte(doses.scheduledAt, start),
+          lt(doses.scheduledAt, end),
+        ),
+      )
+      .orderBy(asc(doses.scheduledAt));
+  }
+
+  private async getDetails(doseId: string) {
+    const [row] = await this.db
+      .select({
+        status: doses.status,
+        scheduledAt: doses.scheduledAt,
+        familyAlertedAt: doses.familyAlertedAt,
+        medicationName: medications.name,
+        strength: medications.strength,
+        patientId: members.id,
+        patientName: members.name,
+        familyId: members.familyId,
+      })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .innerJoin(members, eq(medications.patientId, members.id))
+      .where(eq(doses.id, doseId));
+    if (!row) {
+      this.logger.warn(`Dose ${doseId} not found.`);
+      return null;
+    }
+    return {
+      ...row,
+      medicationLabel: [row.medicationName, row.strength].filter(Boolean).join(' '),
+    };
+  }
+}

@@ -1,31 +1,38 @@
 import Link from "next/link";
+import { HomeIcon, PillIcon } from "@/components/ui";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 p-6">
-      <div>
-        <h1 className="text-3xl font-semibold text-teal-700">Recuidado</h1>
-        <p className="mt-2 text-zinc-600">
-          Cuida do remédio do idoso junto com a família.
-        </p>
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-5 p-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-[38px] font-bold leading-tight text-brand">Recuidado</h1>
+        <p className="text-[20px] text-muted">Cuida do remédio do idoso junto com a família.</p>
       </div>
       <Link
-        href="/family"
-        className="rounded-xl border border-zinc-200 p-5 hover:border-teal-600"
+        href="/patient"
+        className="flex items-center gap-4 rounded-card border-2 border-line bg-surface p-5 no-underline hover:border-brand"
       >
-        <span className="block text-lg font-medium">Sou da família</span>
-        <span className="text-sm text-zinc-600">
-          Remédios, custos e doses da Dona Maria.
+        <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+          <PillIcon size={36} />
+        </span>
+        <span className="flex flex-col">
+          <span className="text-[24px] font-bold">Sou a Dona Maria</span>
+          <span className="text-muted">Ver e confirmar meus remédios.</span>
         </span>
       </Link>
       <Link
-        href="/patient"
-        className="rounded-xl border border-zinc-200 p-5 hover:border-teal-600"
+        href="/family"
+        className="flex items-center gap-4 rounded-card border-2 border-line bg-surface p-5 no-underline hover:border-brand"
       >
-        <span className="block text-lg font-medium">Sou a Dona Maria</span>
-        <span className="text-sm text-zinc-600">Ver e confirmar meus remédios.</span>
+        <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+          <HomeIcon size={34} />
+        </span>
+        <span className="flex flex-col">
+          <span className="text-[24px] font-bold">Sou da família</span>
+          <span className="text-muted">Doses, alertas e remédios da Dona Maria.</span>
+        </span>
       </Link>
-      <p className="text-xs text-zinc-500">
+      <p className="text-[15px] text-muted">
         Demonstração com dados fictícios. Não substitui orientação médica.
       </p>
     </main>
