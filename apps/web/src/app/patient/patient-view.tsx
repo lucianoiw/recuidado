@@ -164,9 +164,9 @@ export function PatientView() {
           </p>
           <ul className="flex flex-col gap-3.5">
             {due.map((d) => (
-              <li key={d.id} className="flex items-center gap-4">
-                <span className="flex size-16 shrink-0 items-center justify-center rounded-[18px] bg-brand-soft text-brand">
-                  <PillIcon size={36} />
+              <li key={d.id} className="flex items-start gap-2.5">
+                <span className="flex h-9 shrink-0 items-center text-brand">
+                  <PillIcon size={28} />
                 </span>
                 <div className="flex min-w-0 flex-col">
                   <h2 className="text-[30px] font-bold leading-tight">{d.medicationName}</h2>
