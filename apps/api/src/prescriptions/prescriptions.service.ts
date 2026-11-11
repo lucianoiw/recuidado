@@ -85,15 +85,17 @@ export class PrescriptionsService {
    * Saves the medicines the family confirmed and schedules their doses.
    * Times are stored exactly as confirmed; nothing is changed clinically.
    */
-  async confirm(body: ConfirmPrescriptionBody) {
+  async confirm(body: ConfirmPrescriptionBody, familyId: string | null) {
     const [patient] = await this.db
-      .select({ id: members.id, familyName: families.name })
+      .select({ id: members.id, familyId: members.familyId, familyName: families.name })
       .from(members)
       .innerJoin(families, eq(members.familyId, families.id))
       .where(and(eq(members.id, body.patientId), eq(members.role, 'patient')));
     if (!patient) throw new NotFoundException('Paciente não encontrado.');
     // The demo family stays as it is for every visitor.
     if (patient.familyName === DEMO_FAMILY) throw new ForbiddenException(DEMO_READ_ONLY);
+    // Only the signed-in family adds medicines to its own patient.
+    if (patient.familyId !== familyId) throw new NotFoundException('Paciente não encontrado.');
 
     const saved = await this.db
       .insert(medications)

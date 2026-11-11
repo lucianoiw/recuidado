@@ -67,6 +67,34 @@ export const members = pgTable('members', {
   // 'patient' when she accepted in her app, 'caregiver' when the family declared it at sign-up.
   consentAt: timestamp({ withTimezone: true }),
   consentSource: text().$type<'patient' | 'caregiver'>(),
+  // Patient only: the secret in the link the family sends to her phone (/m/<token>). Her app has no
+  // sign-up; this link is her login. Kept readable so the family can show the QR code again; a new
+  // link replaces it and the old one stops working.
+  accessToken: text().unique(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
+// E-mail sign-in: one row per code sent. The e-mail carries a 6 digit code and a link; only hashes are kept.
+export const loginCodes = pgTable('login_codes', {
+  id: uuid().primaryKey().defaultRandom(),
+  email: text().notNull(),
+  codeHash: text().notNull(),
+  linkHash: text().notNull().unique(),
+  // Wrong codes typed; after 5 this code stops working.
+  attempts: integer().notNull().default(0),
+  expiresAt: timestamp({ withTimezone: true }).notNull(),
+  usedAt: timestamp({ withTimezone: true }),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
+// A signed-in caregiver on one device. The app keeps the token; the database keeps its hash.
+// memberId is empty between the first sign-in and the end of the sign-up.
+export const sessions = pgTable('sessions', {
+  id: uuid().primaryKey().defaultRandom(),
+  tokenHash: text().notNull().unique(),
+  email: text().notNull(),
+  memberId: uuid().references(() => members.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp({ withTimezone: true }).notNull(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

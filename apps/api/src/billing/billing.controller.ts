@@ -1,15 +1,7 @@
-import { BadRequestException, Body, Controller, Get, Headers, HttpCode, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Post, Query } from '@nestjs/common';
+import { FamilyId } from '../auth/auth.context.js';
 import { SkipThrottle } from '@nestjs/throttler';
-import { z } from 'zod';
 import { BillingService } from './billing.service.js';
-
-const familyIdQuery = z.uuid().nullish();
-
-function familyOf(value: unknown): string | null {
-  const result = familyIdQuery.safeParse(value || null);
-  if (!result.success) throw new BadRequestException('familyId inválido.');
-  return result.data ?? null;
-}
 
 @Controller()
 export class BillingController {
@@ -17,20 +9,20 @@ export class BillingController {
 
   /** Plan of this family: free or Recuidado Família, price and trial. */
   @Get('family/plan')
-  status(@Query('familyId') familyId?: string) {
-    return this.billing.status(familyOf(familyId));
+  status(@FamilyId() familyId: string | null) {
+    return this.billing.status(familyId);
   }
 
   /** Starts the AbacatePay checkout; the web opens the returned URL. */
   @Post('family/plan/checkout')
-  checkout(@Query('familyId') familyId?: string) {
-    return this.billing.checkout(familyOf(familyId));
+  checkout(@FamilyId({ write: true }) familyId: string | null) {
+    return this.billing.checkout(familyId);
   }
 
   @Post('family/plan/cancel')
   @HttpCode(204)
-  async cancel(@Query('familyId') familyId?: string) {
-    await this.billing.cancel(familyOf(familyId));
+  async cancel(@FamilyId({ write: true }) familyId: string | null) {
+    await this.billing.cancel(familyId);
   }
 
   /** AbacatePay webhook: the secret comes in the X-Webhook-Secret header and in ?webhookSecret=. */

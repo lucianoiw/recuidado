@@ -5,7 +5,7 @@ import { InfoIcon } from "@/components/ui";
 import { useFamily } from "@/lib/use-family";
 
 /**
- * Shown while this device has no family of its own: the screens show the demo family,
+ * Shown while nobody is signed in on this device: the screens show the demo family,
  * which nobody can change. Signing up creates a separate family.
  */
 export function DemoBanner({ isDemo }: { isDemo?: boolean }) {
@@ -15,12 +15,12 @@ export function DemoBanner({ isDemo }: { isDemo?: boolean }) {
       <div className="flex items-start gap-2.5">
         <InfoIcon size={22} className="mt-0.5 shrink-0 text-brand" />
         <span>
-          Você está vendo a família de demonstração. Ela não muda. Para testar com a sua família, faça o
-          seu cadastro: os dados ficam separados.
+          Você está vendo a família de demonstração. Ela não muda. Para testar com a sua família, entre
+          com o seu e-mail: os dados ficam separados.
         </span>
       </div>
-      <Link href="/comecar" className="font-bold text-brand">
-        Fazer meu cadastro
+      <Link href="/entrar" className="font-bold text-brand">
+        Entrar ou criar conta
       </Link>
     </section>
   );

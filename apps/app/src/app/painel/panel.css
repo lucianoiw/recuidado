@@ -1,0 +1,11 @@
+/* devices.css makes every element inside a phone display: block. Inside the screen, give the
+   display back to the Tailwind utilities (and to the browser defaults). */
+.device .device-screen,
+.device .device-screen * {
+  display: revert-layer;
+}
+
+/* The decorations drawn over the phone (stripes, camera, buttons) never take a tap from the screen. */
+.device > :not(.device-frame) {
+  pointer-events: none;
+}

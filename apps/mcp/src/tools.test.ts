@@ -49,7 +49,8 @@ function fakeApi(status = "pending") {
   const calls: string[] = [];
   const fetchFn = (async (input: URL, init?: RequestInit) => {
     const url = new URL(input);
-    calls.push(`${init?.method ?? "GET"} ${url.pathname}${url.search}`);
+    const auth = (init?.headers as Record<string, string> | undefined)?.authorization;
+    calls.push(`${init?.method ?? "GET"} ${url.pathname}${url.search}${auth ? ` ${auth}` : ""}`);
     const json = (body: unknown, code = 200) => Response.json(body, { status: code });
     if (url.pathname === "/family") return json(overview(status));
     if (url.pathname === "/family/alerts")
@@ -99,7 +100,7 @@ describe("Recuidado MCP", () => {
     const { api, calls } = fakeApi();
     const c2 = await connect(api, FAMILY);
     const res = await c2.callTool({ name: "get_care_plan", arguments: {} });
-    expect(calls).toEqual([`GET /family?familyId=${FAMILY}`]);
+    expect(calls).toEqual([`GET /family Bearer p.${FAMILY}`]);
     expect(JSON.stringify(res.content)).not.toContain("9****");
     expect(data(res).remedios[0]).toMatchObject({
       remedio: "Losartana potássica",

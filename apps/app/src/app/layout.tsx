@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
+import { FrameBridge } from "@/components/frame-bridge";
 import { ServiceWorker } from "@/components/service-worker";
 import "@fontsource-variable/atkinson-hyperlegible-next";
 import "./globals.css";
@@ -18,6 +20,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="pt-BR" className="h-full antialiased">
       <body className="flex min-h-full flex-col bg-bg font-sans text-ink">
         <ServiceWorker />
+        <Suspense fallback={null}>
+          <FrameBridge />
+        </Suspense>
         {children}
       </body>
     </html>

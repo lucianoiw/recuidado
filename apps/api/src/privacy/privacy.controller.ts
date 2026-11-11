@@ -1,13 +1,11 @@
-import { BadRequestException, Body, Controller, Delete, Get, Header, HttpCode, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Header, HttpCode, Param, ParseUUIDPipe, Put } from '@nestjs/common';
+import { CaregiverId } from '../auth/auth.context.js';
 import { z } from 'zod';
 import { PrivacyService } from './privacy.service.js';
 
 const consentBody = z.object({ accepted: z.boolean() });
 
-/**
- * LGPD rights. There is no login yet: the caregiver id this device saved at sign-up
- * (the same id that restores the sign-up form) is what proves it is the family.
- */
+/** LGPD rights. Export and delete need the signed-in caregiver who created the family. */
 @Controller('privacy')
 export class PrivacyController {
   constructor(private readonly privacy: PrivacyService) {}
@@ -25,14 +23,14 @@ export class PrivacyController {
   @Get('export')
   @Header('Cache-Control', 'no-store')
   @Header('Content-Disposition', 'attachment; filename="recuidado-dados.json"')
-  export(@Query('caregiverId', new ParseUUIDPipe()) caregiverId: string) {
+  export(@CaregiverId() caregiverId: string) {
     return this.privacy.exportFamily(caregiverId);
   }
 
   /** Deletes the caregiver's family and everything under it. Cannot be undone. */
   @Delete('family')
   @HttpCode(204)
-  async deleteFamily(@Query('caregiverId', new ParseUUIDPipe()) caregiverId: string) {
+  async deleteFamily(@CaregiverId() caregiverId: string) {
     await this.privacy.deleteFamily(caregiverId);
   }
 }

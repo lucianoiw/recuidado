@@ -1,6 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { caregiverAuth, CAREGIVER, useFakeAuth } from '../auth/testing.js';
 import { PrivacyController } from './privacy.controller.js';
 import { PrivacyService } from './privacy.service.js';
 
@@ -18,6 +19,7 @@ describe('PrivacyController', () => {
       providers: [{ provide: PrivacyService, useValue: { setPatientConsent, exportFamily, deleteFamily } }],
     }).compile();
     app = moduleRef.createNestApplication();
+    useFakeAuth(app);
     await app.init();
   });
 
@@ -36,15 +38,15 @@ describe('PrivacyController', () => {
 
   it('exports as a download that is not cached', async () => {
     exportFamily.mockResolvedValue({ family: { id } });
-    const res = await request(app.getHttpServer()).get(`/privacy/export?caregiverId=${id}`).expect(200);
+    const res = await request(app.getHttpServer()).get('/privacy/export').set('x-test-auth', caregiverAuth()).expect(200);
     expect(res.headers['content-disposition']).toContain('attachment');
     expect(res.headers['cache-control']).toBe('no-store');
-    expect(exportFamily).toHaveBeenCalledWith(id);
+    expect(exportFamily).toHaveBeenCalledWith(CAREGIVER);
   });
 
-  it('needs a caregiver id to delete', async () => {
-    await request(app.getHttpServer()).delete('/privacy/family').expect(400);
-    await request(app.getHttpServer()).delete(`/privacy/family?caregiverId=${id}`).expect(204);
-    expect(deleteFamily).toHaveBeenCalledWith(id);
+  it('needs a signed-in caregiver to delete', async () => {
+    await request(app.getHttpServer()).delete(`/privacy/family?caregiverId=${id}`).expect(401);
+    await request(app.getHttpServer()).delete('/privacy/family').set('x-test-auth', caregiverAuth()).expect(204);
+    expect(deleteFamily).toHaveBeenCalledWith(CAREGIVER);
   });
 });
