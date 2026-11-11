@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import {
   AlertIcon,
   BellIcon,
   PillIcon,
   CameraIcon,
   Card,
+  CheckIcon,
   ChevronRightIcon,
   ClockIcon,
   DoseList,
@@ -17,7 +19,7 @@ import {
   type DoseStatus as RowStatus,
 } from "@/components/ui";
 import { DemoBanner } from "@/components/demo-banner";
-import { callName, formatTime, isFree, telHref, type Dose } from "@/lib/api";
+import { callName, confirmDose, formatTime, isFree, telHref, type Dose } from "@/lib/api";
 import { stockText } from "@/lib/stock";
 import { medLabel, useFamily } from "@/lib/use-family";
 
@@ -44,7 +46,18 @@ function todayLabel(): string {
 }
 
 export function FamilyView() {
-  const { data, error, now } = useFamily();
+  const { data, error, now, reload } = useFamily();
+  const [confirming, setConfirming] = useState<string | null>(null);
+
+  async function markTaken(group: Dose[]) {
+    setConfirming(group[0].scheduledAt);
+    try {
+      await Promise.all(group.map((x) => confirmDose(x.id)));
+      reload();
+    } finally {
+      setConfirming(null);
+    }
+  }
 
   if (error) return <p className="text-muted">Sem conexão com o servidor.</p>;
   if (!data) return <p className="text-muted">Carregando...</p>;
@@ -160,6 +173,15 @@ export function FamilyView() {
                 Ligar para ela
               </a>
             ) : null}
+            <button
+              type="button"
+              onClick={() => markTaken(group)}
+              disabled={confirming === d.scheduledAt}
+              className={buttonClass({ variant: "secondary" })}
+            >
+              <CheckIcon size={20} />
+              {confirming === d.scheduledAt ? "Anotando..." : "Ela já tomou"}
+            </button>
           </section>
         );
       })}
