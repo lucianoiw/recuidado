@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronRightIcon, InfoIcon, NavigationIcon, Segmented, StatusPill } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
+import { PlacesMap } from "@/components/places-map";
 import { formatDistance, mapsUrl, pharmacies, type Pharmacy } from "@/lib/pharmacies";
 import { highCostUnits, ubsUnits, type SusUnit } from "@/lib/sus-units";
 import { medLabel, useFamily } from "@/lib/use-family";
@@ -113,6 +114,7 @@ export function WhereView() {
 
       {tab === "fp" ? (
         <>
+          <PlacesMap places={list} homeLabel={`Casa de ${patient}`} />
           <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
             {list.map((p, i) => (
               <PharmacyRow key={p.cnes} p={p} index={i} freeMeds={freeMeds} />
@@ -126,6 +128,7 @@ export function WhereView() {
         </>
       ) : (
         <>
+          <PlacesMap places={ubsUnits.slice(0, 3)} homeLabel={`Casa de ${patient}`} />
           <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
             {ubsUnits.slice(0, 3).map((u, i) => (
               <UnitRow key={u.cnes} u={u} index={i} meds={ubsMeds} />
