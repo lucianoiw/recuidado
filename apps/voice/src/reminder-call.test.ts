@@ -169,20 +169,29 @@ test("hangs up after the goodbye is spoken, not before", async () => {
       socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" });
     },
     maxCallMs: 60_000,
-    goodbyeMs: 2000,
-    goodbyeNudgeMs: 50,
+    goodbyeMs: 150,
     goodbyeTailMs: 30,
     closeGraceMs: 5,
   });
   socket.emitEvent({ type: "transport.answered", event_id: "b1" });
   socket.emitEvent(toolCall(true));
   await new Promise((r) => setTimeout(r, 100));
-  assert.equal(hangups, 0);
-  assert.ok(socket.sent.some((e) => e.event_id === "goodbye_call_1"), "asks for the goodbye");
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b2", delta: "Obrigada, tchau!" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b1b", delta: "Vou avisar a família. " });
+  await new Promise((r) => setTimeout(r, 100));
+  assert.equal(hangups, 0, "still talking, no hangup yet");
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b2", delta: "Obrigada, tchau, Maria!" });
   const result = await call.result;
   assert.equal(hangups, 1);
   assert.equal(result.endReason, "hung_up_after_goodbye");
+});
+
+test("hangs up when no goodbye comes", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "n1" });
+  socket.emitEvent(toolCall(true));
+  const result = await call.result;
+  assert.equal(result.endReason, "hung_up_after_answer");
+  assert.ok(!socket.sent.some((e) => String(e.event_id).startsWith("goodbye_")), "does not ask again");
 });
 
 test("records that she is not feeling well", async () => {

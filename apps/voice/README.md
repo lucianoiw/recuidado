@@ -43,7 +43,7 @@ Result posted to `{API_URL}/doses/:doseId/voice-result`:
 
 `feelsUnwell` is what she answered to "Como a senhora está?" (self-report, no diagnosis).
 `endReason` says why the call ended: `hung_up_after_goodbye`, `hung_up_after_answer` (answer
-recorded but no goodbye heard within 15 s), `voicemail`, `max_duration`,
+recorded, then 5 s of silence without a goodbye), `voicemail`, `max_duration`,
 `session_closed: <reason>`, `sideband_closed` or `error`.
 
 The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and, when
@@ -55,8 +55,9 @@ The API stores every result in `voice_calls` (`GET /doses/:id/voice-calls`) and,
    Her microphone is muted while this plays, so an "alô" does not make the model wait.
 2. A short reaction, then "A senhora já tomou a Losartana?". With three or more medicines it asks
    about "os remédios da manhã" instead of reading the list.
-3. "Obrigada, tchau!". The call hangs up 2.5 s after the goodbye is heard, not on a fixed timer.
-   If no goodbye after 5 s it is asked for again; after 15 s the call hangs up anyway.
+3. "Obrigada, tchau, Dona Maria!". The call hangs up 2 s after the goodbye is heard. If the
+   assistant stays silent for 5 s without saying goodbye, it hangs up anyway (older people often
+   do not hang up themselves).
 
 If she asks who is calling: "É a Recuidado, do lembrete do remédio." A carrier voicemail greeting ("grave a sua mensagem", "após o sinal", "caixa postal") ends the
 call as `no_answer`.
