@@ -4,7 +4,8 @@ Coolify project "Recuidado", branch `main`, server 82.25.75.144. One resource pe
 
 | Service in Coolify | Type | Source | Domain:port |
 | --- | --- | --- | --- |
-| `recuidado/web` | Dockerfile | `/apps/web/Dockerfile` | https://recuidado.com.br:3000, https://www.recuidado.com.br:3000 |
+| `recuidado/app` | Dockerfile | `/apps/app/Dockerfile` | https://app.recuidado.com.br:3000, https://painel.recuidado.com.br:3000 |
+| `recuidado/web` | Dockerfile | `/apps/web/Dockerfile` | https://recuidado.com.br:3000, https://www.recuidado.com.br:3000 (site) |
 | `recuidado/api` | Dockerfile | `/apps/api/Dockerfile` | https://api.recuidado.com.br:4000 |
 | `recuidado/worker` | Dockerfile | `/apps/worker/Dockerfile` | none (no HTTP) |
 | `recuidado/voice` | Dockerfile | `/apps/voice/Dockerfile` | https://voz.recuidado.com.br:5000 |
@@ -17,11 +18,12 @@ Dockerfile resources use Base Directory `/` (build context is the repo root). As
 
 - `api`: `DATABASE_URL` and `REDIS_URL` use the internal URLs of the Coolify databases. Migrations run on boot.
 - `worker`: its own app (`apps/worker`, own package.json and Dockerfile), no HTTP server. It consumes the doses queue (BullMQ on Redis) and schedules the hourly dose planner; the api only serves HTTP, migrates and seeds the demo family. Code both need (env, schema, queue, dose/voice/alert/push/e-mail/stock services) lives in `packages/core`; the api has nothing of the worker and the worker nothing of the api. Both resources deploy on every push to main. Variables the queue jobs use (DATABASE_URL, REDIS_URL, VOICE_*, VAPID_*, DOSE_*, EMERGENCY_*, CALL_*, LOW_STOCK_DAYS, POSTHOG_*, RESEND_API_KEY, EMAIL_FROM, DEMO_ALERT_EMAILS) go on both. Health check: a heartbeat file the worker touches every 30 s.
-- `api` and `web`: Web Push uses one VAPID key pair. `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` on api; the same public key as `NEXT_PUBLIC_VAPID_PUBLIC_KEY` on web, marked as build variable (Next inlines it at build time).
+- `web`: the product site. Until it is ready it redirects every path to `APP_URL` (runtime, default https://app.recuidado.com.br).
+- `api` and `app`: Web Push uses one VAPID key pair. `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` on api; the same public key as `NEXT_PUBLIC_VAPID_PUBLIC_KEY` on app, marked as build variable (Next inlines it at build time).
 - `voice`: keeps the domain `voz.recuidado.com.br` so Traefik issues the certificate that `asterisk` reads from `/data/coolify/proxy/acme.json`. Give it a longer stop grace period so a call in progress is not cut.
 - `voice`: custom Docker options `-v recuidado-greetings:/data/greetings`, so the recorded call greetings survive redeploys.
 - Firewall (Hostinger panel): open 5061/tcp and 10000-10200/udp for Asterisk.
-- Monitoring: PostHog project "Recuidado". `POSTHOG_PROJECT_TOKEN` and `POSTHOG_HOST` on api and voice (runtime). `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` on web, marked as build variables. Container logs vanish on every redeploy; PostHog Logs keeps them. See `docs/monitoring.md`.
+- Monitoring: PostHog project "Recuidado". `POSTHOG_PROJECT_TOKEN` and `POSTHOG_HOST` on api and voice (runtime). `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` on app, marked as build variables. Container logs vanish on every redeploy; PostHog Logs keeps them. See `docs/monitoring.md`.
 - Variables: see `.env.example` (and `apps/voice/.env.example`). Secrets never go in the repo. Per resource:
 
 | Resource | Required | Optional (default in code) |
@@ -30,7 +32,8 @@ Dockerfile resources use Base Directory `/` (build context is the repo root). As
 | `voice` | `OPENAI_API_KEY`, `OPENAI_SIP_PASSWORD`, `SIP_PROVIDER_URL`, `SIP_CALLER_NUMBER`, `CALL_ALLOWED_NUMBERS`, `VOICE_API_TOKEN`, `API_URL`, `POSTHOG_PROJECT_TOKEN` | `PORT`, `OPENAI_SIP_USERNAME`, `OPENAI_LIVE_MODEL`, `OPENAI_LIVE_VOICE`, `OPENAI_DELEGATE_MODEL`, `OPENAI_DELEGATE_REASONING_EFFORT`, `GREETING_CACHE_DIR`, `CALL_MAX_SECONDS`, `POSTHOG_HOST` |
 | `mcp` | `API_URL`, `MCP_PUBLIC_URL`, `MCP_AUTH_SECRET` | `PORT`, `POSTHOG_PROJECT_TOKEN`, `POSTHOG_HOST` |
 | `asterisk` | `SIP_DOMAIN`, `OPENAI_SIP_USERNAME`, `OPENAI_SIP_PASSWORD`, `NVOIP_SIP_USER`, `NVOIP_SIP_PASSWORD`, `CALL_ALLOWED_NUMBERS`, `PUBLIC_IP` | `NVOIP_SIP_HOST`, `SIP_TLS_PORT`, `NVOIP_LOCAL_PORT`, `RTP_START`, `RTP_END` |
-| `web` (build variables) | `NEXT_PUBLIC_API_URL` | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`, `NEXT_PUBLIC_POSTHOG_HOST`, `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` |
+| `web` | | `APP_URL` |
+| `app` (build variables) | `NEXT_PUBLIC_API_URL` | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`, `NEXT_PUBLIC_POSTHOG_HOST`, `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` |
 
 `docker-compose.dev.yml` at the root is local infra only (Postgres and Redis).
 
