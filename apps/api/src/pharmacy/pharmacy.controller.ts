@@ -34,7 +34,6 @@ const voiceResultBody = z.object({
         available: triState,
         priceCents: z.number().int().nonnegative().nullable(),
         package: z.string().nullish(),
-        farmaciaPopular: triState,
       }),
     )
     .max(10)

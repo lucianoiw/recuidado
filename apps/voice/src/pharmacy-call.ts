@@ -19,7 +19,6 @@ export interface PharmacyItem {
   /** Price of one box in cents, as the attendant said it. Reference only, not an offer. */
   priceCents: number | null;
   package?: string;
-  farmaciaPopular: TriState;
 }
 
 export interface PharmacyCallResult {
@@ -459,7 +458,6 @@ export class PharmacyCall {
         available: triState(i.available),
         priceCents: toCents(i.price_reais),
         package: typeof i.package === "string" && i.package.trim() ? i.package.trim() : undefined,
-        farmaciaPopular: triState(i.farmacia_popular),
       }))
       .filter((i) => i.medication);
     const note = typeof args.note === "string" && args.note.trim() ? args.note.trim() : undefined;

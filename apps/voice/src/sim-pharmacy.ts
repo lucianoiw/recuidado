@@ -25,7 +25,6 @@ export const SIM_PHARMACIES: SimPharmacy[] = [
 export interface SimMedication extends Medication {
   refPackCents?: number;
   unitsPerPack?: number;
-  farmaciaPopular?: boolean;
 }
 
 /** +550000000001N is simulated pharmacy N. */
@@ -65,10 +64,7 @@ export function simFacts(p: SimPharmacy, meds: SimMedication[]): string[] {
   return meds.map((m, i) => {
     if (p.outOfStock === i && meds.length > 1) return `${spoken(m)}: está em falta, não tem hoje.`;
     const units = m.unitsPerPack ?? 30;
-    const popular = m.farmaciaPopular
-      ? "sai de graça pelo Farmácia Popular com receita"
-      : "não sai pelo Farmácia Popular";
-    return `${spoken(m)}: tem. ${reais(simPriceCents(p, m))} a caixa com ${units} comprimidos. ${popular}.`;
+    return `${spoken(m)}: tem. ${reais(simPriceCents(p, m))} a caixa com ${units} comprimidos.`;
   });
 }
 

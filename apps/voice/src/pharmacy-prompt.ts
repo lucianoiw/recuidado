@@ -31,7 +31,7 @@ export function buildPharmacyLiveInstructions(ctx: PharmacyContext, now: Date = 
     "If you hear a recorded menu (for example \"digite\", \"tecle\", \"pressione\", \"para falar com\", \"opção\"), it is a recording: stay completely silent while it plays and until a person speaks (the system usually picks the key for you). The only way to press a key is to delegate the key press; saying the number aloud does nothing and the menu will repeat. Listen to the options and delegate which key to press: the option to talk to an attendant, the pharmacy counter, prices or medicines. If no option fits, pick the one for an attendant or other subjects. If it asks for a CPF or other personal data, delegate to press the key for an attendant or to go back, never type personal data. Delegate one menu choice at a time and wait for the next menu or a person.",
     `Your first words to a person must always be exactly: "${pharmacyOpening(ctx, now)}" Say it even if the person already started talking or already gave some answers: they must hear that you are a virtual assistant before anything else.`,
     `Medicines to ask about, in this order: ${list}.`,
-    "For each medicine, find out: whether they have it in stock now, the price of one box and how many pills come in it, and whether it can be taken through Farmácia Popular there. Ask one short question at a time and only what is still missing.",
+    "For each medicine, find out: whether they have it in stock now, and the price of one box and how many pills come in it. Do not ask about Farmácia Popular: the app already knows which medicines are free there and which pharmacies are accredited. Ask one short question at a time and only what is still missing.",
     "If a person asks you to wait (for example \"só um minuto\", \"um momento\", \"já te atendo\"), say only \"Claro, eu aguardo.\" and then stay silent until they speak to you again.",
     "During a hold message or hold music, stay silent.",
     "If they say the price changes or they do not give prices by phone, accept it politely and move on.",
@@ -51,7 +51,6 @@ export function buildPharmacyDelegateInstructions(ctx: PharmacyContext): string 
     "available: \"yes\" only if they said they have it now, \"no\" if they said they do not, \"unknown\" otherwise.",
     "price_reais: the price of one box in reais as they said it (for example 18.9), or null if they did not say one. Never guess or compute a price.",
     "package: what the box has as they said it (for example \"caixa com 30 comprimidos\"), or empty.",
-    "farmacia_popular: \"yes\" if they said it can be taken through Farmácia Popular there, \"no\" if not, \"unknown\" otherwise.",
     "note: anything else useful the family should know, in Portuguese, short, or empty.",
     `After the ${PHARMACY_TOOL_NAME} result, reply only: Recorded. The goodbye was already said; say nothing else.`,
   ].join("\n");
@@ -77,7 +76,7 @@ const triState = { type: "string", enum: ["yes", "no", "unknown"] };
 export const pharmacyTool = {
   type: "function" as const,
   name: PHARMACY_TOOL_NAME,
-  description: "Records what the pharmacy said about stock, price and Farmácia Popular for each medicine.",
+  description: "Records what the pharmacy said about stock and price for each medicine.",
   strict: true,
   parameters: {
     type: "object",
@@ -91,9 +90,8 @@ export const pharmacyTool = {
             available: { ...triState, description: "Whether they have it in stock now" },
             price_reais: { type: ["number", "null"], description: "Price of one box in reais, as said, or null" },
             package: { type: "string", description: "What one box has, as said, or empty" },
-            farmacia_popular: { ...triState, description: "Whether it can be taken through Farmácia Popular there" },
           },
-          required: ["medication", "available", "price_reais", "package", "farmacia_popular"],
+          required: ["medication", "available", "price_reais", "package"],
           additionalProperties: false,
         },
       },

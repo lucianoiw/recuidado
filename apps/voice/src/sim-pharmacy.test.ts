@@ -21,12 +21,12 @@ test("each pharmacy says a different shelf price, ending in ,90", () => {
   assert.equal(simPriceCents(SIM_PHARMACIES[1], losartana), Math.min(...prices));
 });
 
-test("facts follow stock and Farmácia Popular", () => {
-  const meds = [losartana, { name: "Metformina", dose: "850 mg", farmaciaPopular: true }];
+test("facts follow stock and never mention Farmácia Popular", () => {
+  const meds = [losartana, { name: "Metformina", dose: "850 mg" }];
   const facts = simFacts(SIM_PHARMACIES[2], meds);
-  assert.match(facts[0], /^Losartana 50 mg: tem\. R\$ \d+,90 a caixa com 28 comprimidos\. não sai/);
+  assert.match(facts[0], /^Losartana 50 mg: tem\. R\$ \d+,90 a caixa com 28 comprimidos\.$/);
   assert.match(facts[1], /em falta/);
-  assert.match(simFacts(SIM_PHARMACIES[1], meds)[1], /sai de graça pelo Farmácia Popular/);
+  assert.doesNotMatch(simFacts(SIM_PHARMACIES[1], meds).join(" "), /Farmácia Popular/);
   assert.match(buildActorInstructions(SIM_PHARMACIES[0], [losartana]), /Drogaria Vida, (bom dia|boa tarde|boa noite), Rafael falando/);
 });
 

@@ -22,12 +22,6 @@ const STOCK: Record<TriState, { text: string; tone: "ok" | "danger" | "neutral" 
   unknown: { text: "Não disse", tone: "neutral" },
 };
 
-const POPULAR: Record<TriState, string | null> = {
-  yes: "Sai pelo Farmácia Popular lá",
-  no: "Não sai pelo Farmácia Popular lá",
-  unknown: null,
-};
-
 const ENDED: Partial<Record<PharmacyInquiry["status"], string>> = {
   unclear: "A farmácia atendeu, mas não deu para entender a resposta.",
   no_answer: "A farmácia não atendeu.",
@@ -190,7 +184,6 @@ function Comparison({
             <b className="text-[17px]">{medLabel(m.name, m.strength)}</b>
             <ul className="overflow-hidden rounded-xl border border-line-soft">
               {offers.map(({ inq, a }) => {
-                const popular = a ? POPULAR[a.farmaciaPopular] : null;
                 const compare = a?.priceCents != null && ceiling ? vsCeiling(a.priceCents, a.package, ceiling) : null;
                 return (
                   <li key={inq.id} className="flex flex-col gap-1 border-b border-line-soft px-3.5 py-3 last:border-b-0">
@@ -221,7 +214,6 @@ function Comparison({
                         )}
                       </span>
                     ) : null}
-                    {popular ? <span className="text-[15px] text-muted">{popular}</span> : null}
                   </li>
                 );
               })}

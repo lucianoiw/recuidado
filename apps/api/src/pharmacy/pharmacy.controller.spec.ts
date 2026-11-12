@@ -64,7 +64,7 @@ describe('PharmacyController', () => {
   const result = {
     sessionId: 'live_1',
     outcome: 'answered',
-    items: [{ medication: 'Losartana 50 mg', available: 'yes', priceCents: 1890, package: 'caixa com 30', farmaciaPopular: 'yes' }],
+    items: [{ medication: 'Losartana 50 mg', available: 'yes', priceCents: 1890, package: 'caixa com 30' }],
     keysPressed: ['2'],
   };
 
