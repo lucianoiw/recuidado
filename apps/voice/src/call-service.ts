@@ -7,7 +7,7 @@ import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.
 import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
-import { AsteriskVoiceGate, openGate, startRecording } from "./ami.js";
+import { AsteriskVoiceGate, openGate, startRecording, waitForGlobal } from "./ami.js";
 import { actorNumber, buildActorInstructions, simGreeting, simPharmacyFor, type SimMedication, type SimPharmacy } from "./sim-pharmacy.js";
 
 /** One step of a call for the calls panel: a log line of the call and when it happened. */
@@ -210,7 +210,12 @@ export class CallService {
 
   /** The attendant AI of a simulated pharmacy. Hangs up when the pharmacy call ends. Never throws. */
   private async startActor(sim: SimPharmacy, meds: SimMedication[], callerId: string, call: PharmacyCall) {
+    let ended = false;
+    void call.result.finally(() => (ended = true));
     try {
+      // Dial only when the caller gets past the menu (the line rings there), so the actor's call
+      // never times out ringing during a long menu or hold.
+      if (this.config.ami && !(await waitForGlobal(this.config.ami, `SIM_READY_${sim.index}`, () => ended))) return;
       const actorId = await this.live.createActorSipCall(
         actorNumber(sim),
         buildActorInstructions(sim, meds),
