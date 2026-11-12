@@ -190,7 +190,7 @@ export const faq = {
   items: [
     {
       question: "Precisa ter smartphone?",
-      answer: "Quem toma o remédio, não. Com smartphone, o lembrete aparece no celular e basta tocar em “Tomei”. Sem smartphone, o lembrete chega por ligação no telefone que a pessoa já usa, celular ou fixo. Já quem cuida precisa de um smartphone: é pelo app que a família cadastra a receita, acompanha o dia e recebe os avisos.",
+      answer: "Quem toma o remédio, não. Com smartphone, o lembrete aparece no celular e basta tocar em “Tomei”. Sem smartphone, o lembrete chega por ligação no telefone que a pessoa já usa, celular ou fixo. As ligações fazem parte do plano Recuidado Família. Já quem cuida precisa de um smartphone: é pelo app que a família cadastra a receita, acompanha o dia e recebe os avisos.",
     },
     {
       question: "Quem fala na ligação?",
