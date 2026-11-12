@@ -163,7 +163,7 @@ function Phone({
                 ref={frameRef}
                 src={src}
                 title={label}
-                allow="clipboard-read; clipboard-write; geolocation"
+                allow="clipboard-read; clipboard-write; geolocation; web-share"
                 className="w-full flex-1 border-0 bg-bg"
               />
             ) : (

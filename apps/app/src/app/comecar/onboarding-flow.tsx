@@ -409,10 +409,18 @@ function InviteStep({
   const [adding, setAdding] = useState(false);
   const [done, setDone] = useState<string | null>(null);
   const canShare = useCanShare();
+  const art = data.patient.gender === "male" ? "o" : "a";
+  // Name and a way to reach the person: a valid e-mail or a valid phone, nothing typed wrong.
+  const hasEmail = inviteEmail.trim() !== "";
+  const ready =
+    name.trim() !== "" &&
+    (hasEmail || phone !== "") &&
+    (!hasEmail || isEmail(inviteEmail)) &&
+    (phone === "" || isPhone(phone));
 
   function add(): string | null {
     const who = name.trim();
-    if (!who || (phone && !isPhone(phone)) || (inviteEmail.trim() && !isEmail(inviteEmail))) return null;
+    if (!ready) return null;
     setData((d) => ({ ...d, invites: [...d.invites, { name: who, phone, email: inviteEmail.trim(), relation }] }));
     setName("");
     setPhone("");
@@ -429,7 +437,7 @@ function InviteStep({
     return url.toString();
   };
   const message = (who: string) =>
-    `${who}, estou cuidando dos remédios da ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link(who)}`;
+    `${who}, estou cuidando dos remédios d${art} ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link(who)}`;
 
   async function send() {
     const who = add();
@@ -448,8 +456,18 @@ function InviteStep({
       // The phone's own share sheet: WhatsApp, SMS or e-mail, chosen by the user.
       await navigator.share({ title: "Convite do Recuidado", text: message(who) });
       setDone(`Convite enviado para ${who}.`);
-    } catch {
-      setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") {
+        setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
+        return;
+      }
+      // Sharing blocked (a computer browser, or inside the two phones page): copy instead.
+      try {
+        await navigator.clipboard.writeText(message(who));
+        setDone(`Convite de ${who} copiado. Cole na conversa com a pessoa.`);
+      } catch {
+        setDone(`Não deu para enviar daqui. Toque em Copiar convite em "Chamar mais alguém".`);
+      }
     }
   }
 
@@ -486,17 +504,17 @@ function InviteStep({
         {data.invites.map((i) => (
           <li key={i.name} className="flex items-center gap-3 border-t border-line-soft px-4 py-3.5">
             <Avatar name={i.name} tone="blue" />
-            <span className="flex flex-1 flex-col">
-              <b>{i.name}</b>
+            <span className="flex min-w-0 flex-1 flex-col">
+              <b className="truncate">{i.name}</b>
               {i.relation ? <span className="text-[15px] text-muted">{i.relation}</span> : null}
             </span>
             <button
               type="button"
               onClick={() => shareTo(i.name)}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-semibold"
+              aria-label={`${canShare ? "Enviar" : "Copiar"} o convite de ${i.name}`}
+              className="flex size-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-ink"
             >
               {canShare ? <ShareIcon size={18} /> : <CopyIcon size={18} />}
-              {canShare ? "Enviar" : "Copiar"}
             </button>
           </li>
         ))}
@@ -518,7 +536,7 @@ function InviteStep({
       <Sheet open={adding} onClose={() => setAdding(false)} title="Chamar mais alguém">
         <Field label="Nome" value={name} onValue={setName} autoComplete="off" />
         <Field
-          label="E-mail (opcional)"
+          label="E-mail"
           hint="Mandamos o convite por e-mail. A pessoa entra com ele."
           type="email"
           inputMode="email"
@@ -528,8 +546,8 @@ function InviteStep({
           aria-invalid={inviteEmail.trim() !== "" && !isEmail(inviteEmail)}
         />
         <Field
-          label="Celular (opcional)"
-          hint="Para enviar não precisa: você escolhe a pessoa no WhatsApp ou no SMS."
+          label="Celular"
+          hint="Preencha o e-mail, o celular ou os dois."
           value={phone}
           onValue={setPhone}
           mask={maskPhone}
@@ -538,7 +556,7 @@ function InviteStep({
           aria-invalid={phone !== "" && !isPhone(phone)}
         />
         <SelectField<Relation>
-          label={`Quem é para a ${nickname}?`}
+          label={`Quem é para ${art} ${nickname}?`}
           options={RELATIONS}
           value={relation}
           onValue={setRelation}
@@ -550,19 +568,19 @@ function InviteStep({
         ) : null}
         <div className="flex flex-col gap-2">
           {canShare ? (
-            <Button onClick={send} disabled={!name.trim()}>
+            <Button onClick={send} disabled={!ready}>
               <ShareIcon size={20} />
               Enviar convite
             </Button>
           ) : null}
-          <Button variant={canShare ? "secondary" : "primary"} onClick={copy} disabled={!name.trim()}>
+          <Button variant={canShare ? "secondary" : "primary"} onClick={copy} disabled={!ready}>
             <CopyIcon size={20} />
             Copiar convite
           </Button>
           <button
             type="button"
             onClick={later}
-            disabled={!name.trim()}
+            disabled={!ready}
             className="min-h-12 font-semibold text-brand disabled:opacity-40"
           >
             {inviteEmail.trim() ? "Mandar o convite por e-mail" : "Só adicionar, envio depois"}
@@ -571,7 +589,7 @@ function InviteStep({
       </Sheet>
       <p className="flex gap-2.5 rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
         <InfoIcon size={22} className="shrink-0 text-brand" />
-        Toque em Enviar para mandar o link a quem você chamou. A pessoa abre e já acompanha a {nickname}.
+        Toque no botão ao lado do nome para mandar o link. A pessoa abre e já acompanha {art} {nickname}.
       </p>
       {data.invites.length > 0 ? <PaymentStep data={data} setData={setData} /> : null}
     </>
