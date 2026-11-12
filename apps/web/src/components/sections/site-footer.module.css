@@ -13,6 +13,7 @@
 }
 
 .text {
+  margin: 0;
   max-width: 46em;
   color: var(--muted);
   font-size: 14px;
@@ -20,4 +21,8 @@
 
 .text a {
   color: var(--muted);
+}
+
+.line {
+  display: block;
 }
