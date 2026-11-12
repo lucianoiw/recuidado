@@ -107,9 +107,9 @@ export function InstallAppButton({ className }: { className?: string }) {
         className={buttonClass({ variant: "secondary", size: "lg", className })}
       >
         <HomeScreenIcon />
-        Pôr na tela do celular
+        Adicionar à tela inicial
       </button>
-      <Sheet open={open} onClose={() => setOpen(false)} title="Pôr na tela do celular">
+      <Sheet open={open} onClose={() => setOpen(false)} title="Adicionar à tela inicial">
         <p className="text-[22px] leading-snug text-muted">Assim você abre o Recuidado com um toque, como um aplicativo.</p>
         <InstallSteps platform={platform} card={false} />
         <Button size="lg" onClick={() => setOpen(false)}>
