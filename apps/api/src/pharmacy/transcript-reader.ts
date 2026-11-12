@@ -14,7 +14,6 @@ const ReadingSchema = z.object({
       available: TriState,
       price_reais: z.number().nullable(),
       package: z.string(),
-      farmacia_popular: TriState,
     }),
   ),
   note: z.string(),
@@ -25,16 +24,14 @@ export interface TranscriptAnswer {
   available: 'yes' | 'no' | 'unknown';
   priceCents: number | null;
   package?: string;
-  farmaciaPopular: 'yes' | 'no' | 'unknown';
 }
 
 const SYSTEM = [
   'You read the transcript of a phone call between a virtual assistant and a pharmacy in Brazil.',
-  'The assistant asked about stock, the price of one box and Farmácia Popular for some medicines.',
+  'The assistant asked about stock and the price of one box for some medicines.',
   'The transcript comes from speech recognition and the two sides may be interleaved in small pieces: read them together.',
   'Report only what the pharmacy side said. Never guess or compute a price: if no price was said, use null.',
   'available: "yes" only if they said they have it now, "no" if not, "unknown" otherwise.',
-  'farmacia_popular: "yes" if they said it can be taken through Farmácia Popular there, "no" if not, "unknown" otherwise.',
   'package: what the box has as they said it (for example "caixa com 30 comprimidos"), or empty.',
   'note: anything else useful for the family, in Portuguese, short, or empty.',
   'One item per medicine asked about, in the given order.',
@@ -42,7 +39,7 @@ const SYSTEM = [
 
 /**
  * Fallback when the call ended before the voice model recorded the answer:
- * reads stock, price and Farmácia Popular from the call transcript.
+ * reads stock and price from the call transcript.
  */
 export async function readPharmacyTranscript(
   client: Anthropic,
@@ -81,7 +78,6 @@ export async function readPharmacyTranscript(
             ? Math.round(i.price_reais * 100)
             : null,
         package: i.package.trim() || undefined,
-        farmaciaPopular: i.farmacia_popular,
       })),
     note: parsed.note.trim() || null,
   };

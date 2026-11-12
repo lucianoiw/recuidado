@@ -468,7 +468,6 @@ export interface PharmacyInquiry {
     /** Price of one box said on the phone. Reference, not an offer. */
     priceCents: number | null;
     package?: string;
-    farmaciaPopular: TriState;
   }[];
   note: string | null;
   /** The call went through a recorded menu (keys pressed). */

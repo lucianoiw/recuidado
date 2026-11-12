@@ -273,7 +273,6 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
         available: 'yes' | 'no' | 'unknown';
         priceCents: number | null;
         package?: string;
-        farmaciaPopular: 'yes' | 'no' | 'unknown';
       }[]
     >()
     .notNull()

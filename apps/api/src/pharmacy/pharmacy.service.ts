@@ -32,7 +32,6 @@ export interface PharmacyVoiceResult {
     available: 'yes' | 'no' | 'unknown';
     priceCents: number | null;
     package?: string | null;
-    farmaciaPopular: 'yes' | 'no' | 'unknown';
   }[];
   note?: string | null;
   keysPressed?: string[];
@@ -119,7 +118,6 @@ export class PharmacyService {
         name: medications.name,
         strength: medications.strength,
         activeIngredient: medications.activeIngredient,
-        freeInFarmaciaPopular: medications.freeInFarmaciaPopular,
       })
       .from(medications)
       .where(and(eq(medications.patientId, ref.patientId), inArray(medications.id, ids)));
@@ -160,7 +158,6 @@ export class PharmacyService {
         dose: m.strength ?? undefined,
         refPackCents: price?.packCents,
         unitsPerPack: price?.unitsPerPack,
-        farmaciaPopular: m.freeInFarmaciaPopular,
       };
     });
     const results = await Promise.allSettled(
@@ -181,7 +178,7 @@ export class PharmacyService {
     inquiry: Inquiry,
     phone: string,
     familyId: string,
-    meds: { name: string; dose?: string; refPackCents?: number; unitsPerPack?: number; farmaciaPopular: boolean }[],
+    meds: { name: string; dose?: string; refPackCents?: number; unitsPerPack?: number }[],
     voiceUrl: string,
     token: string,
   ) {
@@ -255,7 +252,6 @@ export class PharmacyService {
           available: i.available,
           priceCents: i.priceCents,
           package: i.package ?? undefined,
-          farmaciaPopular: i.farmaciaPopular,
         })),
         note: result.note ?? null,
         keysPressed: result.keysPressed ?? [],

@@ -109,7 +109,6 @@ function parsePharmacyCallRequest(body: unknown) {
       // Only used by the simulated pharmacies (sim-pharmacy.ts) to say a believable price.
       refPackCents: positiveInt(m.refPackCents),
       unitsPerPack: positiveInt(m.unitsPerPack),
-      farmaciaPopular: m.farmaciaPopular === true ? true : undefined,
     }));
   if (medications.length === 0) throw new Error("medications must have at least one item");
   if (medications.length > 3) throw new Error("at most 3 medications per call");

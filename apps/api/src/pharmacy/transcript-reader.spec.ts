@@ -15,7 +15,6 @@ describe('readPharmacyTranscript', () => {
           available: 'yes',
           price_reais: 32.5,
           package: 'caixa com 30 comprimidos',
-          farmacia_popular: 'yes',
         },
       ],
       note: '',
@@ -32,7 +31,6 @@ describe('readPharmacyTranscript', () => {
           available: 'yes',
           priceCents: 3250,
           package: 'caixa com 30 comprimidos',
-          farmaciaPopular: 'yes',
         },
       ],
       note: null,
@@ -43,7 +41,7 @@ describe('readPharmacyTranscript', () => {
 
   it('keeps a missing price as null', async () => {
     const { client } = fakeClient({
-      items: [{ medication: 'Losartana', available: 'no', price_reais: null, package: '', farmacia_popular: 'unknown' }],
+      items: [{ medication: 'Losartana', available: 'no', price_reais: null, package: '' }],
       note: 'Chega amanhã.',
     });
     const result = await readPharmacyTranscript(client, ['Losartana'], [{ speaker: 'patient', text: 'Não tem.' }]);
