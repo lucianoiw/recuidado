@@ -166,8 +166,8 @@ export function DemoView() {
 
       <Card className="flex flex-col gap-2 text-[16px] leading-snug">
         <p>
-          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular {pr.dela},
-          {data?.calls === false ? "" : " ligação da IA"} e aviso para a família. A espera, que no dia a dia é de minutos, aqui é de segundos.
+          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular {pr.dela}
+          {data?.calls === false ? "" : ", ligação da IA"} e aviso para a família. A espera, que no dia a dia é de minutos, aqui é de segundos.
         </p>
         <p className="text-muted">A agenda normal dos remédios continua igual.</p>
       </Card>
