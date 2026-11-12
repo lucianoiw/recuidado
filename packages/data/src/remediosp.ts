@@ -50,7 +50,8 @@ export function ageRules(note: string): ProgramRule[] {
     return [
       { kind: "min_age", value: Number(start[1]), text: `a partir de ${years(start[1]!)}` },
       {
-        kind: "note",
+        kind: "start_max_age",
+        value: Number(start[2]),
         text: `para começar o tratamento pelo SUS, até ${start[2]} anos; quem já recebe continua depois`,
       },
     ];

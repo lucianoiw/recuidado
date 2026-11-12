@@ -150,7 +150,8 @@ export function ceafSpProgram(sources: ProgramSources): ProgramFile {
     region: "35",
     channel: "Na Farmácia de Medicamentos Especializados do Estado, depois que o médico preenche o laudo (LME).",
     sourceUrl: sources.guides.source.url,
-    version: day(sources.remedioSp.source.fetched_at),
+    // "-r2": the age to start became a rule the engine checks; a later version makes the API reload the seed.
+    version: `${day(sources.remedioSp.source.fetched_at)}-r2`,
     documents: sources.guides.general.first.map((item) => item.label),
     rules: [{ kind: "note", text: "Só para as doenças do protocolo do Ministério da Saúde, com o laudo LME aprovado." }],
   };
