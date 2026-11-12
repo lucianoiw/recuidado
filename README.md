@@ -195,6 +195,14 @@ Os tempos são configuráveis (`DOSE_CALL_AFTER_MINUTES` e `DOSE_ALERT_AFTER_MIN
 
 Modo demo: na tela Hoje da família, "Demo em 2 minutos" (`/family/demo`) cria uma dose extra de agora e roda esse mesmo fluxo com esperas em segundos (`DEMO_CALL_AFTER_SECONDS` e `DEMO_ALERT_AFTER_SECONDS`): lembrete, ligação de verdade e aviso para a família. A tela mostra cada passo e o que foi dito na ligação. A agenda normal não muda, e os eventos dessa dose vão para o PostHog com `demo: true`. `DEMO_RUN_ENABLED=false` desliga o botão.
 
+### Remédio cadastrado no meio do dia (12/11/2026)
+
+Antes, quem cadastrava às 12h não via as doses das 8h: só as próximas eram criadas, e o app dela dizia "tudo certo". Agora, ao salvar um remédio, os horários de hoje que já passaram também viram dose, sem lembrete, sem ligação e sem aviso para a família (`DosesService.addEarlierToday`). A API marca essas doses com `beforeAdded` (horário anterior ao cadastro do remédio). O app dela pergunta uma por horário: "Sim, tomei" grava como tomada; "Não tomei" (`POST /doses/:id/not-taken`) só anota, sem nenhum conselho sobre a dose. A família vê "Perguntando a ela" até a resposta.
+
+### Tela da família atualiza em cerca de 2 segundos
+
+Medido no código antes da mudança: as telas recarregavam `GET /family` a cada 30 s, então o "Tomei" dela levava de 0 a 30 s para aparecer no celular do filho. Agora cada tela aberta pergunta a cada 2 s `GET /family/changes`, que devolve só um carimbo (md5 das doses de hoje, dos remédios e dos avisos), e recarrega tudo apenas quando ele muda. Com a tela escondida não pergunta; ao voltar, recarrega na hora. Escolhemos isso no lugar de SSE ou WebSocket porque a confirmação pode vir da API, do worker ou da ligação, a autenticação vai em cabeçalho (que o `EventSource` não manda) e o proxy do Coolify não precisa de nada novo. Custo: uma consulta pequena a cada 2 s por tela aberta.
+
 ## Avisos da família
 
 Toda mensagem para os cuidadores sai por push e por e-mail ao mesmo tempo e também fica salva (`alerts`) e aparece em `/family/avisos`, do mais novo para o mais antigo, agrupada por dia. Na tela Hoje, o sino mostra quantos avisos chegaram desde a última vez que a pessoa abriu a tela (contado no aparelho).

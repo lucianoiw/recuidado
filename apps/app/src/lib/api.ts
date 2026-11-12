@@ -24,6 +24,8 @@ export interface Dose {
   medicationId: string;
   medicationName: string;
   strength: string | null;
+  /** The time had passed when the family added the medicine: no reminder went out, her screen asks. */
+  beforeAdded?: boolean;
 }
 
 export interface Member {
@@ -215,6 +217,19 @@ export async function getFamily(): Promise<FamilyOverview> {
 export async function confirmDose(doseId: string): Promise<void> {
   const res = await apiFetch(`/doses/${doseId}/confirm`, { method: "POST" });
   if (!res.ok) throw new Error(`API ${res.status}`);
+}
+
+/** "Não tomei" on her screen, for a dose of earlier today. */
+export async function notTakenDose(doseId: string): Promise<void> {
+  const res = await apiFetch(`/doses/${doseId}/not-taken`, { method: "POST" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+}
+
+/** Stamp that changes when doses, medicines or alerts change. */
+export async function getChangeStamp(): Promise<string> {
+  const res = await apiFetch("/family/changes", { cache: "no-store" });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return ((await res.json()) as { stamp: string }).stamp;
 }
 
 export function formatTime(iso: string): string {

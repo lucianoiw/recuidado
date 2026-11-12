@@ -188,6 +188,12 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /** Everything the family and patient screens show. */
+  /** See DosesService.changeStamp. */
+  async changeStamp(familyId?: string | null): Promise<string> {
+    const ref = await this.resolveFamily(familyId);
+    return this.doses.changeStamp(ref.patientId, ref.familyId);
+  }
+
   async overview(familyId?: string | null, now = new Date()) {
     const ref = await this.resolveFamily(familyId);
     return this.overviewOf(ref, now);

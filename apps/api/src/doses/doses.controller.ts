@@ -11,4 +11,11 @@ export class DosesController {
   async confirm(@Param('id', ParseUUIDPipe) id: string) {
     await this.doses.confirmInApp(id);
   }
+
+  /** "Não tomei" on the patient screen, for a dose of earlier today. */
+  @Post(':id/not-taken')
+  @HttpCode(204)
+  async notTaken(@Param('id', ParseUUIDPipe) id: string) {
+    await this.doses.notTakenInApp(id);
+  }
 }
