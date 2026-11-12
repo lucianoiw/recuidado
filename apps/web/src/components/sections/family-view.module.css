@@ -1,0 +1,143 @@
+.band {
+  padding: 72px 0;
+  background: var(--blush);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 36px;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.title {
+  --h-size: 50px;
+  --h-max: 11em;
+}
+
+.phone {
+  justify-self: center;
+}
+
+.photo {
+  object-position: 45% 30%;
+}
+
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 16px 26px;
+  background: linear-gradient(180deg, var(--blush) 0%, #ffffff 38%);
+}
+
+.greeting {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.day {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.dose {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.check {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.taken {
+  background: var(--ink);
+}
+
+.doseName {
+  flex: 1;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.doseStatus {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.call {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--cream);
+}
+
+.callLabel {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.callText {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.stock {
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--ink);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+@media (min-width: 640px) {
+  .band {
+    padding: 120px 0;
+  }
+
+  .grid {
+    gap: 48px;
+  }
+
+  .photo {
+    height: 520px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.8fr);
+    gap: 56px;
+  }
+
+  .photo {
+    height: 600px;
+  }
+}

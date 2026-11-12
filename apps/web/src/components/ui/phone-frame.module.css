@@ -1,0 +1,97 @@
+.frame {
+  box-sizing: border-box;
+  flex: none;
+  padding: 3px;
+  box-shadow: 0 40px 70px -40px rgba(22, 19, 20, 0.55);
+}
+
+.dark {
+  width: 290px;
+  height: 603px;
+  border-radius: 41px;
+  background: #2b2c30;
+  --bezel-radius: 38px;
+  --screen-radius: 32px;
+}
+
+.light {
+  width: 280px;
+  height: 582px;
+  border-radius: 39px;
+  background: #e9e5dd;
+  --bezel-radius: 36px;
+  --screen-radius: 31px;
+}
+
+.bezel {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 7px;
+  border-radius: var(--bezel-radius);
+  background: #0c0c0e;
+}
+
+.screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--screen-radius);
+  background: #ffffff;
+}
+
+.statusBar {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  padding: 0 20px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.camera {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: #0c0c0e;
+}
+
+.icons {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.signal {
+  width: 10px;
+  height: 10px;
+  background: var(--ink);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.battery {
+  width: 7px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+.homeBar {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  width: 80px;
+  height: 4px;
+  margin-left: -40px;
+  border-radius: 2px;
+  background: var(--ink);
+  opacity: 0.75;
+}

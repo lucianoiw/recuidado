@@ -1,0 +1,23 @@
+.footer {
+  padding-bottom: 56px;
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.text {
+  max-width: 46em;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.text a {
+  color: var(--muted);
+}

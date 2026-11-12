@@ -1,0 +1,30 @@
+.button {
+  display: inline-block;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dark {
+  padding: 17px 30px;
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.dark:hover {
+  color: #ffffff;
+  opacity: 0.88;
+}
+
+.outline {
+  padding: 16px 28px;
+  border: 1px solid #d9d2cc;
+  color: var(--ink);
+}
+
+.light {
+  padding: 17px 30px;
+  background: #ffffff;
+  color: var(--ink);
+}

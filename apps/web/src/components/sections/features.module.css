@@ -1,0 +1,205 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  padding-top: 72px;
+  padding-bottom: 40px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 36px;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.title11 {
+  --h-size: 50px;
+  --h-max: 11em;
+}
+
+.title12 {
+  --h-size: 50px;
+  --h-max: 12em;
+}
+
+.visual {
+  position: relative;
+}
+
+.photo {
+  object-position: center 60%;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Card "read from the prescription", hanging off the photo. */
+.rxCard {
+  position: absolute;
+  right: 16px;
+  bottom: -36px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+}
+
+.cardLabel {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.rxRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+/* Cream box with a pill render. */
+.pillBox {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--cream);
+}
+
+.pillCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 510px;
+  height: 510px;
+  margin: -275px 0 0 -255px;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+
+.pillCorner {
+  position: absolute;
+  top: -108px;
+  right: -118px;
+  width: 476px;
+  height: 476px;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+
+.chips {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  left: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 15px;
+}
+
+.pharmCard {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 24px 48px -24px rgba(22, 19, 20, 0.4);
+}
+
+.pharmLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pharmName {
+  font-size: 22px;
+}
+
+.pharmRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.pharmName + .pharmRow {
+  padding-top: 10px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.pharmNote {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (min-width: 640px) {
+  .section {
+    gap: 112px;
+    padding-top: 128px;
+  }
+
+  .row {
+    gap: 48px;
+  }
+
+  .photo {
+    height: 520px;
+  }
+
+  .rxCard {
+    right: 24px;
+    bottom: -28px;
+    left: auto;
+    width: 300px;
+  }
+
+  .pillBox {
+    height: 440px;
+  }
+
+  .pharmCard {
+    right: auto;
+    bottom: 32px;
+    left: 32px;
+    width: 340px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 72px;
+  }
+
+  .photo {
+    height: 460px;
+  }
+
+  .rxCard {
+    bottom: -36px;
+  }
+}

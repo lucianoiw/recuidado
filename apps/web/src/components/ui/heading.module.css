@@ -1,0 +1,43 @@
+.h1,
+.h2 {
+  margin: 0;
+  font-weight: 400;
+  color: var(--h-color, var(--ink));
+  text-wrap: balance;
+}
+
+.h1 {
+  font-size: 42px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.h2 {
+  max-width: 16em;
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+@media (min-width: 640px) {
+  .h1 {
+    font-size: 60px;
+    line-height: 1.02;
+  }
+
+  .h2 {
+    font-size: 44px;
+    line-height: 1.04;
+  }
+}
+
+@media (min-width: 1024px) {
+  .h1 {
+    font-size: 72px;
+  }
+
+  .h2 {
+    max-width: var(--h-max, 14em);
+    font-size: var(--h-size, 54px);
+  }
+}
