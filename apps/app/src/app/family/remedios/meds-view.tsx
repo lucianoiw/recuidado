@@ -22,20 +22,34 @@ import { formatDistance, pharmacies } from "@/lib/pharmacies";
 import { pathLine } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { ubsUnits } from "@/lib/sus-units";
+import { freeWhere } from "@/lib/free-place";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
-/** Nearest places where it can be free, e.g. "Drogasil, 240 m (Farmácia Popular) ou UBS Sé, 440 m". */
-function freeWhere(m: Medication): string | null {
-  const fp = m.freeInFarmaciaPopular || m.freeAt?.includes("farmacia_popular");
-  const ubs = m.freeAt?.includes("ubs");
-  const places: string[] = [];
-  const pharmacy = fp ? pharmacies.find((p) => p.fpAccredited) : undefined;
-  if (pharmacy) places.push(`${pharmacy.name}, ${formatDistance(pharmacy.distanceKm)} (Farmácia Popular)`);
-  else if (fp) places.push("Farmácia Popular");
-  const unit = ubs ? ubsUnits[0] : undefined;
-  if (unit) places.push(`${unit.name}, ${formatDistance(unit.distanceKm)}`);
-  else if (ubs) places.push("UBS");
-  return places.length > 0 ? places.join(" ou ") : null;
+/**
+ * Where it is free, saying the place that does NOT have it, e.g.
+ * "Só no posto: UBS Sé, 440 m. Não tem no Farmácia Popular."
+ */
+function freePlaces(m: Medication): string | null {
+  const pharmacy = pharmacies.find((p) => p.fpAccredited);
+  const fp = pharmacy ? `${pharmacy.name}, ${formatDistance(pharmacy.distanceKm)}` : "drogaria credenciada";
+  const unit = ubsUnits[0];
+  const ubs = unit ? `${unit.name}, ${formatDistance(unit.distanceKm)}` : "UBS";
+  switch (freeWhere(m)) {
+    case "both":
+      return `No posto (${ubs}) ou no Farmácia Popular (${fp}).`;
+    case "ubs":
+      return `Só no posto: ${ubs}. Não tem no Farmácia Popular.`;
+    case "fp":
+      return `Só no Farmácia Popular: ${fp}. Não tem no posto.`;
+    default:
+      return null;
+  }
+}
+
+/** The family already started the Alto Custo path for it (checked an item or filled the LME). */
+function highCostStarted(m: Medication): boolean {
+  const p = m.highCostPath;
+  return Boolean(p && (p.done > 0 || p.lmeFilledOn || p.since));
 }
 
 function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
@@ -58,10 +72,13 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
         <span className="text-[14px] text-muted">
           {m.photoUrl ? "Com foto do remédio no app dela" : "Sem foto: toque para tirar a foto da caixa"}
         </span>
-        {freeWhere(m) ? (
+        {freePlaces(m) ? (
           <span className="mt-1 text-[14px] leading-snug text-brand">
-            <b>Grátis em:</b> {freeWhere(m)}
+            <b>Grátis:</b> {freePlaces(m)}
           </span>
+        ) : null}
+        {m.farmaciaPopularRule ? (
+          <span className="text-[14px] leading-snug text-warn">{m.farmaciaPopularRule}</span>
         ) : null}
         {m.stock?.low ? (
           <span className="flex items-center gap-1.5 text-[15px] font-bold text-warn">
@@ -89,7 +106,8 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           </span>
         )}
       </button>
-      {m.highCost ? (
+      {/* Free with just the prescription somewhere: the Alto Custo (with LME) is not the way. */}
+      {m.highCost && (!isFree(m) || highCostStarted(m)) ? (
         <Link
           href={`/family/alto-custo/${m.id}`}
           className={`flex items-center justify-between gap-2 rounded-xl border-[1.5px] px-3.5 py-2.5 text-[15px] font-bold leading-snug no-underline ${

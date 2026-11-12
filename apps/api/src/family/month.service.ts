@@ -98,7 +98,7 @@ export class MonthService implements OnApplicationBootstrap {
 
     let priceListDate: string | null = null;
     const items = meds.map((m) => {
-      const access = freeAccessOf(m.activeIngredient ?? m.name, m.strength);
+      const access = freeAccessOf(m.activeIngredient ?? m.name, m.strength, m.name);
       const price = cmedPriceOf(m.activeIngredient, m.name, m.strength, m.times.length);
       priceListDate ??= price?.listDate ?? null;
       const freeAt = access.freeAt ?? [];

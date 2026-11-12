@@ -67,6 +67,8 @@ export interface Medication {
   freeAt?: string[];
   /** In the state high cost program (CEAF): needs the LME form from the doctor. */
   highCost?: boolean;
+  /** Extra Farmácia Popular rule (age, diagnosis), already in pt-BR; null when none. */
+  farmaciaPopularRule?: string | null;
   /** Pills left at home and how many days they last; null when nobody counted them. */
   stock?: Stock | null;
   /** Where the family is in the Alto Custo path; null when it is not in the list. */

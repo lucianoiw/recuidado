@@ -25,8 +25,10 @@ import {
   isFree,
   parsePrescription,
   type FamilyOverview,
+  type Medication,
   type ReadItem,
 } from "@/lib/api";
+import { atUbs, freeWhere, freeWhereLine } from "@/lib/free-place";
 import { FreeOrBuy } from "@/components/free-or-buy";
 import { TimeChips, normalizeTime } from "@/components/time-chips";
 import { useBuyChoice } from "@/lib/buy-choice";
@@ -107,12 +109,64 @@ function ReadingSteps() {
   );
 }
 
+function FreeGroup({
+  title,
+  bring,
+  meds,
+  href,
+  linkLabel,
+}: {
+  title: string;
+  bring: string;
+  meds: Medication[];
+  href: string;
+  linkLabel: string;
+}) {
+  const { getsFree, setBuy } = useBuyChoice();
+  if (meds.length === 0) return null;
+  return (
+    <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
+      <div className="flex flex-col gap-0.5 px-4 pt-3.5">
+        <h2 className="flex items-center gap-2 text-[17px] font-semibold">
+          <FreeIcon size={20} className="text-brand" />
+          {title}
+        </h2>
+        <p className="text-[15px] leading-snug text-muted">{bring}</p>
+      </div>
+      <ul className="px-4 py-1">
+        {meds.map((m) => (
+          <li key={m.id} className="flex flex-col gap-2 py-2.5">
+            <div className="flex flex-col">
+              <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
+              <span className="text-[15px] leading-snug text-muted">{freeWhereLine(m)}</span>
+              {m.farmaciaPopularRule ? (
+                <span className="text-[15px] leading-snug text-warn">{m.farmaciaPopularRule}</span>
+              ) : null}
+            </div>
+            <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
+          </li>
+        ))}
+      </ul>
+      <Link
+        href={href}
+        className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
+      >
+        {linkLabel}
+        <ChevronRightIcon size={20} />
+      </Link>
+    </section>
+  );
+}
+
 function Result({ family, count }: { family: FamilyOverview | null; count: number }) {
   const router = useRouter();
-  const { getsFree, setBuy } = useBuyChoice();
+  const { getsFree } = useBuyChoice();
   const meds = family?.medications ?? [];
   const free = meds.filter(isFree);
-  const paid = meds.filter((m) => !getsFree(m));
+  const ubsMeds = meds.filter(atUbs);
+  const fpOnly = meds.filter((m) => freeWhere(m) === "fp");
+  const highCost = meds.filter((m) => freeWhere(m) === "high_cost");
+  const paid = meds.filter((m) => !getsFree(m) && freeWhere(m) !== "high_cost");
   return (
     <>
       <div className="flex flex-col items-center gap-3 pt-4 text-center">
@@ -134,31 +188,59 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           <p className="text-[22px] font-semibold text-brand">
             {free.length} de {meds.length} remédios podem sair de graça
           </p>
-          <p className="text-[15px]">no Farmácia Popular ou na UBS, com receita e documento.</p>
+          <p className="text-[15px]">
+            Cada um tem o seu lugar: veja abaixo o que é do posto e o que é do Farmácia Popular.
+            {highCost.length > 0
+              ? ` ${highCost.length === 1 ? "Mais 1 pode sair" : `Mais ${highCost.length} podem sair`} pelo Alto Custo, com laudo do médico.`
+              : ""}
+          </p>
         </section>
       ) : null}
 
-      {free.length > 0 ? (
+      <FreeGroup
+        title="Pegar no posto de saúde"
+        bring="Leve a receita e o cartão do SUS."
+        meds={ubsMeds}
+        href="/family/onde-pegar?tab=ubs"
+        linkLabel="Postos perto de casa"
+      />
+
+      <FreeGroup
+        title="Pegar no Farmácia Popular"
+        bring="Em drogaria credenciada. Leve a receita e um documento com foto."
+        meds={fpOnly}
+        href="/family/onde-pegar?tab=fp"
+        linkLabel="Drogarias credenciadas perto de casa"
+      />
+
+      {highCost.length > 0 ? (
         <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
-          <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
-            <FreeIcon size={20} className="text-brand" />
-            Grátis, se quiser pegar
-          </h2>
+          <div className="flex flex-col gap-0.5 px-4 pt-3.5">
+            <h2 className="flex items-center gap-2 text-[17px] font-semibold">
+              <AlertIcon size={20} className="text-warn" />
+              Alto Custo: precisa de laudo
+            </h2>
+            <p className="text-[15px] leading-snug text-muted">
+              Grátis na Farmácia de Alto Custo do Estado, depois que o médico preenche o laudo (LME).
+              Até sair, precisa comprar.
+            </p>
+          </div>
           <ul className="px-4 py-1">
-            {free.map((m) => (
-              <li key={m.id} className="flex flex-col gap-2.5 py-2.5">
-                <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
-                <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
+            {highCost.map((m) => (
+              <li key={m.id} className="flex items-center justify-between gap-3 py-2.5">
+                <Link href={`/family/alto-custo/${m.id}`} className="flex min-w-0 flex-col font-semibold text-ink no-underline">
+                  {medLabel(m.name, m.strength)}
+                  <span className="inline-flex items-center gap-1 text-[15px] font-bold text-brand">
+                    Ver o que levar
+                    <ChevronRightIcon size={16} />
+                  </span>
+                </Link>
+                <b className="whitespace-nowrap">
+                  {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : null}
+                </b>
               </li>
             ))}
           </ul>
-          <Link
-            href="/family/onde-pegar"
-            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
-          >
-            Onde pegar perto de casa
-            <ChevronRightIcon size={20} />
-          </Link>
         </section>
       ) : null}
 

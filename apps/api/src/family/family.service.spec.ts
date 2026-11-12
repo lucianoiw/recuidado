@@ -6,9 +6,23 @@ describe('freeAccessOf', () => {
     expect(freeAccessOf('Losartana Potássica', '50 mg')).toEqual({
       freeAt: ['farmacia_popular', 'ubs'],
       highCost: false,
+      farmaciaPopularRule: null,
     });
-    expect(freeAccessOf('atorvastatina', '20 mg')).toEqual({ freeAt: [], highCost: true });
-    expect(freeAccessOf('vitamina inventada', '1 mg')).toEqual({ freeAt: [], highCost: false });
+    expect(freeAccessOf('atorvastatina', '20 mg')).toMatchObject({ freeAt: [], highCost: true });
+    expect(freeAccessOf('vitamina inventada', '1 mg')).toMatchObject({ freeAt: [], highCost: false });
+  });
+
+  it('sends each medicine where it really is free (Luciano, 12/11)', () => {
+    // Plain metformina is at the UBS; the XR one only at the Farmácia Popular.
+    expect(freeAccessOf('cloridrato de metformina', '500 mg', 'Metformina').freeAt).toEqual(['farmacia_popular', 'ubs']);
+    expect(freeAccessOf('cloridrato de metformina', '500 mg', 'Metformina XR').freeAt).toEqual(['farmacia_popular']);
+    expect(freeAccessOf('ácido acetilsalicílico', '100 mg', 'AAS').freeAt).toEqual(['ubs']);
+    expect(freeAccessOf('espironolactona', '25 mg').freeAt).toEqual(['farmacia_popular', 'ubs']);
+    const dapa = freeAccessOf('dapagliflozina', '10 mg');
+    expect(dapa.freeAt).toEqual(['farmacia_popular']);
+    expect(dapa.farmaciaPopularRule).toContain('65 anos');
+    // Entresto: Alto Custo with LME, however the prescription writes the combo.
+    expect(freeAccessOf('sacubitril + valsartana', '50 mg', 'Entresto')).toMatchObject({ freeAt: [], highCost: true });
   });
 });
 

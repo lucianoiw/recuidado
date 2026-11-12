@@ -223,7 +223,7 @@ export function searchMedicines(query: string, limit = 10): MedicineResult[] {
     kind: entry.kind,
     laboratory: entry.laboratory,
     strengths: strengths
-      .map(({ strength, form }) => ({ strength, form, ...findFreeAccess(entry.activeIngredient, strength) }))
+      .map(({ strength, form }) => ({ strength, form, ...findFreeAccess(entry.activeIngredient, strength, `${entry.name} ${form ?? ""}`) }))
       .sort(strengthOrder),
   }));
 }
