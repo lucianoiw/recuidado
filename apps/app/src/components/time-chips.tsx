@@ -36,13 +36,13 @@ export function TimeChips({
       {times.map((t) => (
         <span
           key={t}
-          className="inline-flex min-h-11 items-center gap-1 rounded-xl bg-brand-soft pl-3.5 pr-1 text-[17px] font-bold text-brand"
+          className="inline-flex min-h-11 items-center gap-1 rounded-xl bg-brand-soft pl-3.5 pr-1 text-[17px] font-semibold text-brand"
         >
           {t}
           <button
             type="button"
             onClick={() => onChange(times.filter((x) => x !== t))}
-            className="flex size-9 items-center justify-center rounded-lg hover:bg-white/60"
+            className="flex size-9 items-center justify-center rounded-full hover:bg-white/60"
           >
             <XIcon size={16} />
             <span className="sr-only">Tirar {t}</span>
@@ -63,7 +63,7 @@ export function TimeChips({
           <button
             type="button"
             onClick={add}
-            className="min-h-11 rounded-xl bg-brand px-3.5 text-[16px] font-bold text-white"
+            className="min-h-11 rounded-xl bg-brand px-3.5 text-[16px] font-semibold text-white"
           >
             Pôr
           </button>
@@ -72,7 +72,7 @@ export function TimeChips({
         <button
           type="button"
           onClick={() => setAdding(true)}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-dashed border-[#cfc8ba] px-3.5 text-[16px] font-bold text-muted"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-dashed border-[#cfc8ba] px-3.5 text-[16px] font-semibold text-muted"
         >
           <PlusIcon size={16} />
           horário

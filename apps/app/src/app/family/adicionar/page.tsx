@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DemoBannerAuto } from "@/components/demo-banner";
 import { CameraIcon, ChevronRightIcon, PencilIcon, Screen, TopBar } from "@/components/ui";
+import { PatientWord } from "@/components/patient-word";
 
 function Option({
   href,
@@ -42,7 +43,7 @@ export default function AddMedicationsPage() {
     <Screen audience="family">
       <TopBar backHref="/family" />
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-[32px] leading-[1.08]">Quais remédios ela toma?</h1>
+        <h1 className="font-display text-[32px] leading-[1.08]">Quais remédios <PatientWord w="ela" /> toma?</h1>
         <p className="text-muted">Escolha como quer adicionar. Dá para misturar os dois.</p>
       </header>
       <DemoBannerAuto />

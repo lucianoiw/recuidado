@@ -16,7 +16,6 @@ import {
   TopBar,
   buttonClass,
   cn,
-  inputClass,
 } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
 import {
@@ -25,20 +24,25 @@ import {
   isFree,
   parsePrescription,
   type FamilyOverview,
-  type Medication,
   type ReadItem,
 } from "@/lib/api";
-import { atUbs, freeWhere, freeWhereLine } from "@/lib/free-place";
 import { FreeOrBuy } from "@/components/free-or-buy";
+import { MedPicker, matchMedication, matchStrength, pickComplete } from "@/components/med-picker";
+import type { MedResult } from "@/lib/med-search";
 import { TimeChips, normalizeTime } from "@/components/time-chips";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel } from "@/lib/use-family";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 interface Draft {
   key: number;
+  /** What the prescription says, kept to search the CMED list. */
   name: string;
   strength: string;
   activeIngredient: string;
+  /** The medicine picked from the CMED list: nothing is saved without one. */
+  med: MedResult | null;
+  query: string;
   times: string[];
   posology: string;
   instructions: string | null;
@@ -57,6 +61,8 @@ function toDraft(item: ReadItem, key: number): Draft {
     name: item.medication_name,
     strength: item.strength.text,
     activeIngredient: item.active_ingredient ?? "",
+    med: null,
+    query: item.medication_name,
     times: [...new Set(times)].sort(),
     posology: item.frequency.text,
     instructions: item.instructions,
@@ -90,7 +96,7 @@ function ReadingSteps() {
         <h1 className="font-display text-[32px] leading-[1.08]">Lendo a receita...</h1>
         <p className="text-muted">Leva uns 15 segundos.</p>
       </div>
-      <ul className="flex w-full flex-col gap-3 rounded-card border border-line-soft bg-surface p-4 text-left">
+      <ul className="flex w-full flex-col gap-3 rounded-card bg-surface p-4 text-left">
         {READING_STEPS.map((s, i) => (
           <li key={s} className={cn("flex items-center gap-3", i > done && "text-muted")}>
             <span
@@ -101,7 +107,7 @@ function ReadingSteps() {
             >
               {i < done ? <CheckIcon size={16} strokeWidth={3} /> : null}
             </span>
-            <span className={cn(i === done && "font-bold")}>{s}</span>
+            <span className={cn(i === done && "font-semibold")}>{s}</span>
           </li>
         ))}
       </ul>
@@ -109,68 +115,16 @@ function ReadingSteps() {
   );
 }
 
-function FreeGroup({
-  title,
-  bring,
-  meds,
-  href,
-  linkLabel,
-}: {
-  title: string;
-  bring: string;
-  meds: Medication[];
-  href: string;
-  linkLabel: string;
-}) {
-  const { getsFree, setBuy } = useBuyChoice();
-  if (meds.length === 0) return null;
-  return (
-    <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
-      <div className="flex flex-col gap-0.5 px-4 pt-3.5">
-        <h2 className="flex items-center gap-2 text-[17px] font-semibold">
-          <FreeIcon size={20} className="text-brand" />
-          {title}
-        </h2>
-        <p className="text-[15px] leading-snug text-muted">{bring}</p>
-      </div>
-      <ul className="px-4 py-1">
-        {meds.map((m) => (
-          <li key={m.id} className="flex flex-col gap-2 py-2.5">
-            <div className="flex flex-col">
-              <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
-              <span className="text-[15px] leading-snug text-muted">{freeWhereLine(m)}</span>
-              {m.farmaciaPopularRule ? (
-                <span className="text-[15px] leading-snug text-warn">{m.farmaciaPopularRule}</span>
-              ) : null}
-            </div>
-            <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
-          </li>
-        ))}
-      </ul>
-      <Link
-        href={href}
-        className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
-      >
-        {linkLabel}
-        <ChevronRightIcon size={20} />
-      </Link>
-    </section>
-  );
-}
-
 function Result({ family, count }: { family: FamilyOverview | null; count: number }) {
   const router = useRouter();
-  const { getsFree } = useBuyChoice();
+  const { getsFree, setBuy } = useBuyChoice();
   const meds = family?.medications ?? [];
   const free = meds.filter(isFree);
-  const ubsMeds = meds.filter(atUbs);
-  const fpOnly = meds.filter((m) => freeWhere(m) === "fp");
-  const highCost = meds.filter((m) => freeWhere(m) === "high_cost");
-  const paid = meds.filter((m) => !getsFree(m) && freeWhere(m) !== "high_cost");
+  const paid = meds.filter((m) => !getsFree(m));
   return (
     <>
       <div className="flex flex-col items-center gap-3 pt-4 text-center">
-        <span className="flex size-20 items-center justify-center rounded-full bg-brand text-white">
+        <span className="flex size-20 items-center justify-center rounded-full bg-ok-soft text-ok">
           <CheckIcon size={44} strokeWidth={2.8} />
         </span>
         <h1 className="font-display text-[32px] leading-[1.08]">
@@ -188,64 +142,36 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           <p className="text-[22px] font-semibold text-brand">
             {free.length} de {meds.length} remédios podem sair de graça
           </p>
-          <p className="text-[15px]">
-            Cada um tem o seu lugar: veja abaixo o que é do posto e o que é do Farmácia Popular.
-            {highCost.length > 0
-              ? ` ${highCost.length === 1 ? "Mais 1 pode sair" : `Mais ${highCost.length} podem sair`} pelo Alto Custo, com laudo do médico.`
-              : ""}
-          </p>
+          <p className="text-[15px]">no Farmácia Popular ou na UBS, com receita e documento.</p>
         </section>
       ) : null}
 
-      <FreeGroup
-        title="Pegar no posto de saúde"
-        bring="Leve a receita e o cartão do SUS."
-        meds={ubsMeds}
-        href="/family/onde-pegar?tab=ubs"
-        linkLabel="Postos perto de casa"
-      />
-
-      <FreeGroup
-        title="Pegar no Farmácia Popular"
-        bring="Em drogaria credenciada. Leve a receita e um documento com foto."
-        meds={fpOnly}
-        href="/family/onde-pegar?tab=fp"
-        linkLabel="Drogarias credenciadas perto de casa"
-      />
-
-      {highCost.length > 0 ? (
-        <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
-          <div className="flex flex-col gap-0.5 px-4 pt-3.5">
-            <h2 className="flex items-center gap-2 text-[17px] font-semibold">
-              <AlertIcon size={20} className="text-warn" />
-              Alto Custo: precisa de laudo
-            </h2>
-            <p className="text-[15px] leading-snug text-muted">
-              Grátis na Farmácia de Alto Custo do Estado, depois que o médico preenche o laudo (LME).
-              Até sair, precisa comprar.
-            </p>
-          </div>
+      {free.length > 0 ? (
+        <section className="overflow-hidden rounded-card bg-surface">
+          <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
+            <FreeIcon size={20} className="text-brand" />
+            Grátis, se quiser pegar
+          </h2>
           <ul className="px-4 py-1">
-            {highCost.map((m) => (
-              <li key={m.id} className="flex items-center justify-between gap-3 py-2.5">
-                <Link href={`/family/alto-custo/${m.id}`} className="flex min-w-0 flex-col font-semibold text-ink no-underline">
-                  {medLabel(m.name, m.strength)}
-                  <span className="inline-flex items-center gap-1 text-[15px] font-bold text-brand">
-                    Ver o que levar
-                    <ChevronRightIcon size={16} />
-                  </span>
-                </Link>
-                <b className="whitespace-nowrap">
-                  {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : null}
-                </b>
+            {free.map((m) => (
+              <li key={m.id} className="flex flex-col gap-2.5 py-2.5">
+                <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
+                <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(f) => setBuy(m.id, !f)} />
               </li>
             ))}
           </ul>
+          <Link
+            href="/family/onde-pegar"
+            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-semibold text-brand no-underline"
+          >
+            Onde pegar perto de casa
+            <ChevronRightIcon size={20} />
+          </Link>
         </section>
       ) : null}
 
       {paid.length > 0 ? (
-        <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
+        <section className="overflow-hidden rounded-card bg-surface">
           <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
             <CartIcon size={20} className="text-warn" />
             Precisa comprar
@@ -262,7 +188,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           </ul>
           <Link
             href="/family/comprar"
-            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
+            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-semibold text-brand no-underline"
           >
             Onde comprar e dividir
             <ChevronRightIcon size={20} />
@@ -292,6 +218,7 @@ export function PrescriptionReview() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [step, setStep] = useState<"pick" | "reading" | "review" | "saving" | "done">("pick");
+  useScrollTopOn(step === "saving" ? "review" : step);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -324,7 +251,16 @@ export function PrescriptionReview() {
         setStep("pick");
         return;
       }
-      setDrafts(reading.items.map(toDraft));
+      // Tie each item to one medicine of the CMED list; the family picks when it is unclear.
+      const drafts = await Promise.all(
+        reading.items.map(toDraft).map(async (d) => {
+          const med = await matchMedication(d.name, d.activeIngredient);
+          if (!med) return { ...d, editing: true };
+          const strength = matchStrength(med, d.strength);
+          return { ...d, med, strength, editing: d.editing || !pickComplete(med, strength) };
+        }),
+      );
+      setDrafts(drafts);
       setWarnings(reading.warnings);
       setStep("review");
     } catch (e) {
@@ -338,7 +274,7 @@ export function PrescriptionReview() {
     setDrafts((ds) => ds.map((d) => (d.key === key ? { ...d, ...patch } : d)));
   }
 
-  const invalid = drafts.filter((d) => !d.name.trim());
+  const invalid = drafts.filter((d) => !pickComplete(d.med, d.strength));
 
   async function save() {
     setStep("saving");
@@ -348,9 +284,9 @@ export function PrescriptionReview() {
       await confirmPrescription(
         patient.id,
         drafts.map((d) => ({
-          name: d.name.trim(),
-          activeIngredient: d.activeIngredient.trim() || null,
-          strength: d.strength.trim() || null,
+          name: d.med!.name,
+          activeIngredient: d.med!.activeIngredient || null,
+          strength: d.strength || null,
           times: d.times,
         })),
       );
@@ -381,7 +317,7 @@ export function PrescriptionReview() {
         {warnings.map((w) => (
           <div
             key={w}
-            className="flex gap-2 rounded-card border-[1.5px] border-warn bg-warn-soft p-3.5 text-[15px] leading-snug"
+            className="flex gap-2 rounded-card bg-warn-soft p-3.5 text-[15px] leading-snug"
           >
             <AlertIcon size={20} className="mt-0.5 shrink-0 text-warn" />
             {w}
@@ -392,13 +328,13 @@ export function PrescriptionReview() {
             key={d.key}
             className={cn(
               "flex flex-col gap-3 rounded-card bg-surface p-4",
-              d.review ? "border-[1.5px] border-warn" : "border border-line-soft",
+              d.review ? "" : "border border-line-soft",
             )}
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 flex-col">
                 <h2 className="text-[19px] font-semibold leading-snug">
-                  {medLabel(d.name || "Sem nome", d.strength || null)}
+                  {d.med ? medLabel(d.med.name, d.strength || null) : `Na receita: ${medLabel(d.name || "sem nome", d.strength || null)}`}
                 </h2>
                 <span className="text-[15px] text-muted">
                   {d.posology}
@@ -428,38 +364,19 @@ export function PrescriptionReview() {
             ) : null}
             {d.editing ? (
               <div className="flex flex-col gap-3 rounded-2xl bg-bg p-3">
-                <label className="flex flex-col gap-1">
-                  <span className="text-[15px] font-bold">Nome</span>
-                  <input
-                    className={inputClass}
-                    value={d.name}
-                    aria-invalid={!d.name.trim()}
-                    onChange={(e) => update(d.key, { name: e.target.value })}
-                  />
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1">
-                    <span className="text-[15px] font-bold">Dose</span>
-                    <input
-                      className={inputClass}
-                      value={d.strength}
-                      placeholder="50 mg"
-                      onChange={(e) => update(d.key, { strength: e.target.value })}
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="text-[15px] font-bold">Princípio ativo</span>
-                    <input
-                      className={inputClass}
-                      value={d.activeIngredient}
-                      onChange={(e) => update(d.key, { activeIngredient: e.target.value })}
-                    />
-                  </label>
-                </div>
+                <MedPicker
+                  query={d.query}
+                  onQuery={(query) => update(d.key, { query })}
+                  med={d.med}
+                  onMed={(med) => update(d.key, med ? { med, query: med.name } : { med: null })}
+                  strength={d.strength}
+                  onStrength={(strength) => update(d.key, { strength })}
+                  tried={!pickComplete(d.med, d.strength)}
+                />
                 <button
                   type="button"
                   onClick={() => setDrafts((ds) => ds.filter((x) => x.key !== d.key))}
-                  className="min-h-11 rounded-xl text-[16px] font-bold text-danger"
+                  className="min-h-11 rounded-xl text-[16px] font-semibold text-danger"
                 >
                   Tirar da lista
                 </button>
@@ -474,6 +391,11 @@ export function PrescriptionReview() {
         <p className="text-[15px] leading-snug text-muted">
           O Recuidado só organiza os horários. Dúvida sobre dose, fale com o médico.
         </p>
+        {invalid.length > 0 ? (
+          <p className="text-[15px] font-semibold text-danger">
+            Escolha na lista {invalid.length === 1 ? "o remédio marcado" : `os ${invalid.length} remédios marcados`} para salvar.
+          </p>
+        ) : null}
         {error ? <p className="font-semibold text-danger">{error}</p> : null}
         <Button onClick={save} disabled={step === "saving" || drafts.length === 0 || invalid.length > 0}>
           <CheckIcon size={22} />

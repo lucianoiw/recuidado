@@ -8,8 +8,8 @@ type CardProps = HTMLAttributes<HTMLElement> & {
 
 const tones = {
   default: "bg-surface shadow-[0_1px_2px_rgba(22,19,20,0.04)]",
-  danger: "border-2 border-danger bg-danger-soft",
-  warn: "border-2 border-warn bg-warn-soft",
+  danger: " bg-danger-soft",
+  warn: " bg-warn-soft",
   brand: "bg-blush",
 };
 

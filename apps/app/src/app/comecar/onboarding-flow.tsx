@@ -18,29 +18,58 @@ import {
   cn,
 } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
-import { lookupCep, type CepLookup } from "@/lib/cep";
+import { locateCep, lookupCep, type CepLookup } from "@/lib/cep";
+import { AreaMap } from "@/components/area-map";
 import { useCanShare } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isEmail, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
 import { getMe, getOnboarding, saveOnboarding } from "@/lib/api";
 import { readSession } from "@/lib/session";
-import { PaymentSetup } from "@/components/payment-setup";
 import {
   RELATIONS,
   emptyOnboarding,
   fromRecord,
   paymentOf,
-  thisMonthName,
   type Onboarding,
   type Relation,
 } from "@/lib/onboarding";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 const TOTAL = 3;
+
+
+/** How the family calls the patient: a title and the first name ("Dona Maria"), or just the name. */
+const TITLES = { female: ["Dona", "Senhora", "Doutora", ""], male: ["Seu", "Senhor", "Doutor", ""] } as const;
+type Title = (typeof TITLES)["female" | "male"][number];
+
+function titleOf(nickname: string, gender: "female" | "male"): Title {
+  const first = nickname.trim().split(/\s+/)[0] ?? "";
+  if (!nickname.trim()) return TITLES[gender][0];
+  return (TITLES[gender] as readonly string[]).includes(first) ? (first as Title) : "";
+}
+
+function swapTitle(t: Title, gender: "female" | "male"): Title {
+  const from = gender === "male" ? TITLES.female : TITLES.male;
+  const i = (from as readonly string[]).indexOf(t);
+  return i >= 0 ? TITLES[gender][i]! : t;
+}
+
+/** True when the family typed a name of its own ("Mariazinha"), which the buttons must keep. */
+function typedByHand(p: { nickname: string; name: string }): boolean {
+  const n = p.nickname.trim();
+  return n !== "" && !(["female", "male"] as const).some((g) => TITLES[g].some((t) => callAs(t, p.name) === n));
+}
+
+function callAs(title: Title, name: string): string {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  return [title, first].filter(Boolean).join(" ");
+}
 
 export function OnboardingFlow() {
   const router = useRouter();
   const params = useSearchParams();
   const [step, setStep] = useState(1);
+  useScrollTopOn(step);
   const [email, setEmail] = useState("");
   // Calls are the paid plan; without it the options say so instead of promising a call.
   const [calls, setCalls] = useState(false);
@@ -48,6 +77,7 @@ export function OnboardingFlow() {
   const [data, setData] = useState<Onboarding>(emptyOnboarding);
   const [tried, setTried] = useState(false);
   const [cepOk, setCepOk] = useState(true);
+  const [area, setArea] = useState<CepFound | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -174,25 +204,33 @@ export function OnboardingFlow() {
         <>
           <Header title="Quem vamos cuidar?" />
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Nome" value={p.name} onValue={(v) => patch("patient", { name: v })} placeholder="Maria Helena" aria-invalid={tried && p.name.trim().length < 2} />
-              <Field label="Como chamar" value={p.nickname} onValue={(v) => patch("patient", { nickname: v })} placeholder="Dona Maria" />
-            </div>
+            <Field
+              label="Nome"
+              value={p.name}
+              onValue={(v) => patch("patient", { name: v, nickname: typedByHand(p) ? p.nickname : callAs(titleOf(p.nickname, p.gender), v) })}
+              placeholder="Maria Helena"
+              aria-invalid={tried && p.name.trim().length < 2}
+            />
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-2 text-[15px] font-bold">Na ligação, a assistente fala</legend>
+              <legend className="mb-2 text-[15px] font-semibold">É ele ou ela?</legend>
               <div className="grid grid-cols-2 gap-3">
                 {([
-                  { value: "female", label: "A senhora" },
-                  { value: "male", label: "O senhor" },
+                  { value: "female", label: "Ela" },
+                  { value: "male", label: "Ele" },
                 ] as const).map((o) => (
                   <button
                     key={o.value}
                     type="button"
                     role="radio"
                     aria-checked={p.gender === o.value}
-                    onClick={() => patch("patient", { gender: o.value })}
+                    onClick={() =>
+                      patch("patient", {
+                        gender: o.value,
+                        nickname: typedByHand(p) ? p.nickname : callAs(swapTitle(titleOf(p.nickname, p.gender), o.value), p.name),
+                      })
+                    }
                     className={cn(
-                      "rounded-2xl bg-surface p-3.5 text-[15px] font-bold",
+                      "min-h-12 rounded-2xl bg-surface p-3 text-[16px] font-semibold",
                       p.gender === o.value ? "border-2 border-brand bg-[#f2f8f6]" : "border-[1.5px] border-line-soft",
                     )}
                   >
@@ -200,6 +238,40 @@ export function OnboardingFlow() {
                   </button>
                 ))}
               </div>
+            </fieldset>
+            <fieldset className="flex flex-col gap-2">
+              <legend className="mb-2 text-[15px] font-semibold">Como a família chama</legend>
+              <div className="flex flex-wrap gap-2" role="radiogroup">
+                {TITLES[p.gender].map((t) => {
+                  const on = p.nickname.trim() !== "" && p.nickname.trim() === callAs(t, p.name);
+                  return (
+                    <button
+                      key={t || "nome"}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      onClick={() => patch("patient", { nickname: callAs(t, p.name) })}
+                      className={cn(
+                        "min-h-11 rounded-full px-4 text-[16px] font-semibold",
+                        on ? "bg-ink text-white" : "border-[1.5px] border-line-soft bg-surface text-ink",
+                      )}
+                    >
+                      {t || "Só o nome"}
+                    </button>
+                  );
+                })}
+              </div>
+              <Field
+                label="Nome na ligação e no app"
+                value={p.nickname}
+                onValue={(v) => patch("patient", { nickname: v })}
+                placeholder="Dona Maria"
+                autoComplete="off"
+              />
+              <span className="text-[14px] text-muted">
+                Pode mudar, por exemplo para um apelido. A assistente começa com &ldquo;Oi,{" "}
+                {p.nickname.trim() || "Dona Maria"}&rdquo; e fala &ldquo;{p.gender === "male" ? "o senhor" : "a senhora"}&rdquo;.
+              </span>
             </fieldset>
             <Field
               label="Telefone, para a ligação"
@@ -212,10 +284,11 @@ export function OnboardingFlow() {
             />
             <div className="grid grid-cols-2 items-start gap-3">
               <Field label="Nascimento" inputMode="numeric" placeholder="dd/mm/aaaa" mask={maskDate} value={p.birth} onValue={(v) => patch("patient", { birth: v })} aria-invalid={tried && !isDate(p.birth)} />
-              <CepField value={p.cep} onValue={(v) => patch("patient", { cep: v })} invalid={tried && !isCep(p.cep)} onLookup={setCepOk} />
+              <CepField value={p.cep} onValue={(v) => patch("patient", { cep: v })} invalid={tried && !isCep(p.cep)} onLookup={setCepOk} onFound={setArea} />
             </div>
+            {area && isCep(p.cep) ? <CepArea found={area} /> : null}
             <fieldset className="flex flex-col gap-2.5">
-              <legend className="mb-2.5 text-[15px] font-bold">Usa celular com internet?</legend>
+              <legend className="mb-2.5 text-[15px] font-semibold">Usa celular com internet?</legend>
               {[
                 {
                   value: true,
@@ -264,7 +337,7 @@ export function OnboardingFlow() {
               onClick={() => patch("patient", { consent: !p.consent })}
               className={cn(
                 "flex items-start gap-3 rounded-2xl bg-surface p-3.5 text-left",
-                p.consent ? "border-2 border-brand bg-[#f2f8f6]" : tried ? "border-2 border-danger" : "border-[1.5px] border-line-soft",
+                p.consent ? "border-2 border-brand bg-[#f2f8f6]" : tried ? "" : "border-[1.5px] border-line-soft",
               )}
             >
               <span
@@ -280,7 +353,7 @@ export function OnboardingFlow() {
                 família veja se {she} tomou o remédio.{p.usesPhone ? ` ${she === "ele" ? "Ele" : "Ela"} também confirma isso no app.` : ""}
               </span>
             </button>
-            <Link href="/privacidade" className="text-[15px] font-bold text-brand">
+            <Link href="/privacidade" className="text-[15px] font-semibold text-brand">
               Como cuidamos dos dados {she === "ele" ? "dele" : "dela"}
             </Link>
           </div>
@@ -339,10 +412,18 @@ function InviteStep({
   const [adding, setAdding] = useState(false);
   const [done, setDone] = useState<string | null>(null);
   const canShare = useCanShare();
+  const art = data.patient.gender === "male" ? "o" : "a";
+  // Name and a way to reach the person: a valid e-mail or a valid phone, nothing typed wrong.
+  const hasEmail = inviteEmail.trim() !== "";
+  const ready =
+    name.trim() !== "" &&
+    (hasEmail || phone !== "") &&
+    (!hasEmail || isEmail(inviteEmail)) &&
+    (phone === "" || isPhone(phone));
 
   function add(): string | null {
     const who = name.trim();
-    if (!who || (phone && !isPhone(phone)) || (inviteEmail.trim() && !isEmail(inviteEmail))) return null;
+    if (!ready) return null;
     setData((d) => ({ ...d, invites: [...d.invites, { name: who, phone, email: inviteEmail.trim(), relation }] }));
     setName("");
     setPhone("");
@@ -359,7 +440,7 @@ function InviteStep({
     return url.toString();
   };
   const message = (who: string) =>
-    `${who}, estou cuidando dos remédios da ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link(who)}`;
+    `${who}, estou cuidando dos remédios d${art} ${nickname} pelo Recuidado. Entra aqui para acompanhar junto: ${link(who)}`;
 
   async function send() {
     const who = add();
@@ -378,8 +459,18 @@ function InviteStep({
       // The phone's own share sheet: WhatsApp, SMS or e-mail, chosen by the user.
       await navigator.share({ title: "Convite do Recuidado", text: message(who) });
       setDone(`Convite enviado para ${who}.`);
-    } catch {
-      setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") {
+        setDone(`${who} foi adicionado(a). Envie o convite quando quiser.`);
+        return;
+      }
+      // Sharing blocked (a computer browser, or inside the two phones page): copy instead.
+      try {
+        await navigator.clipboard.writeText(message(who));
+        setDone(`Convite de ${who} copiado. Cole na conversa com a pessoa.`);
+      } catch {
+        setDone(`Não deu para enviar daqui. Toque em Copiar convite em "Chamar mais alguém".`);
+      }
     }
   }
 
@@ -403,8 +494,8 @@ function InviteStep({
   const me = data.caregiver;
   return (
     <>
-      <Header title="Quem cuida junto?" text="Todo mundo aqui recebe os alertas. Depois de chamar, vocês escolhem como pagam o que não é grátis." />
-      <ul className="flex flex-col overflow-hidden rounded-card border border-line-soft bg-surface">
+      <Header title="Quem cuida junto?" text="Todo mundo aqui recebe os alertas. Como dividir o que não é grátis vocês escolhem depois, em Onde comprar e dividir." />
+      <ul className="flex flex-col overflow-hidden rounded-card bg-surface">
         <li className="flex items-center gap-3 px-4 py-3.5">
           <Avatar name={me.name || "Você"} tone="brand" />
           <span className="flex flex-1 flex-col">
@@ -416,17 +507,17 @@ function InviteStep({
         {data.invites.map((i) => (
           <li key={i.name} className="flex items-center gap-3 border-t border-line-soft px-4 py-3.5">
             <Avatar name={i.name} tone="blue" />
-            <span className="flex flex-1 flex-col">
-              <b>{i.name}</b>
+            <span className="flex min-w-0 flex-1 flex-col">
+              <b className="truncate">{i.name}</b>
               {i.relation ? <span className="text-[15px] text-muted">{i.relation}</span> : null}
             </span>
             <button
               type="button"
               onClick={() => shareTo(i.name)}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-bold"
+              aria-label={`${canShare ? "Enviar" : "Copiar"} o convite de ${i.name}`}
+              className="flex size-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-ink"
             >
               {canShare ? <ShareIcon size={18} /> : <CopyIcon size={18} />}
-              {canShare ? "Enviar" : "Copiar"}
             </button>
           </li>
         ))}
@@ -434,13 +525,13 @@ function InviteStep({
       <button
         type="button"
         onClick={() => setAdding(true)}
-        className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#8c8578] font-bold"
+        className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#8c8578] font-semibold"
       >
         <PlusIcon size={20} />
         Chamar mais alguém
       </button>
       {done ? (
-        <p aria-live="polite" className="flex items-center gap-2 text-[15px] font-bold text-brand">
+        <p aria-live="polite" className="flex items-center gap-2 text-[15px] font-semibold text-brand">
           <CheckIcon size={18} strokeWidth={2.6} />
           {done}
         </p>
@@ -448,7 +539,7 @@ function InviteStep({
       <Sheet open={adding} onClose={() => setAdding(false)} title="Chamar mais alguém">
         <Field label="Nome" value={name} onValue={setName} autoComplete="off" />
         <Field
-          label="E-mail (opcional)"
+          label="E-mail"
           hint="Mandamos o convite por e-mail. A pessoa entra com ele."
           type="email"
           inputMode="email"
@@ -458,8 +549,8 @@ function InviteStep({
           aria-invalid={inviteEmail.trim() !== "" && !isEmail(inviteEmail)}
         />
         <Field
-          label="Celular (opcional)"
-          hint="Para enviar não precisa: você escolhe a pessoa no WhatsApp ou no SMS."
+          label="Celular"
+          hint="Preencha o e-mail, o celular ou os dois."
           value={phone}
           onValue={setPhone}
           mask={maskPhone}
@@ -468,7 +559,7 @@ function InviteStep({
           aria-invalid={phone !== "" && !isPhone(phone)}
         />
         <SelectField<Relation>
-          label={`Quem é para a ${nickname}?`}
+          label={`Quem é para ${art} ${nickname}?`}
           options={RELATIONS}
           value={relation}
           onValue={setRelation}
@@ -480,20 +571,20 @@ function InviteStep({
         ) : null}
         <div className="flex flex-col gap-2">
           {canShare ? (
-            <Button onClick={send} disabled={!name.trim()}>
+            <Button onClick={send} disabled={!ready}>
               <ShareIcon size={20} />
               Enviar convite
             </Button>
           ) : null}
-          <Button variant={canShare ? "secondary" : "primary"} onClick={copy} disabled={!name.trim()}>
+          <Button variant={canShare ? "secondary" : "primary"} onClick={copy} disabled={!ready}>
             <CopyIcon size={20} />
             Copiar convite
           </Button>
           <button
             type="button"
             onClick={later}
-            disabled={!name.trim()}
-            className="min-h-12 font-bold text-brand disabled:opacity-40"
+            disabled={!ready}
+            className="min-h-12 font-semibold text-brand disabled:opacity-40"
           >
             {inviteEmail.trim() ? "Mandar o convite por e-mail" : "Só adicionar, envio depois"}
           </button>
@@ -501,44 +592,13 @@ function InviteStep({
       </Sheet>
       <p className="flex gap-2.5 rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
         <InfoIcon size={22} className="shrink-0 text-brand" />
-        Toque em Enviar para mandar o link a quem você chamou. A pessoa abre e já acompanha a {nickname}.
+        Toque no botão ao lado do nome para mandar o link. A pessoa abre e já acompanha {art} {nickname}.
       </p>
-      {data.invites.length > 0 ? <PaymentStep data={data} setData={setData} /> : null}
     </>
   );
 }
 
 /** How the family pays what is not free: split by Pix or one per month, and who stays out. */
-function PaymentStep({
-  data,
-  setData,
-}: {
-  data: Onboarding;
-  setData: (fn: (d: Onboarding) => Onboarding) => void;
-}) {
-  const payment = paymentOf(data);
-  const me = data.caregiver.name.trim().toLocaleLowerCase("pt-BR");
-  return (
-    <section className="flex flex-col gap-3">
-      <h2 className="text-[19px] font-semibold">Como vocês pagam o que não é grátis?</h2>
-      <PaymentSetup
-        mode={payment.mode}
-        monthName={thisMonthName()}
-        people={payment.people.map((p) => ({
-          key: p.name,
-          name: p.name,
-          excluded: p.excluded,
-          me: p.name.trim().toLocaleLowerCase("pt-BR") === me,
-        }))}
-        onChange={(mode, people) =>
-          setData((d) => ({ ...d, payment: { mode, people: people.map((p) => ({ name: p.name, excluded: p.excluded })) } }))
-        }
-      />
-      <p className="text-[14px] text-muted">Dá para mudar depois na tela Onde comprar e dividir.</p>
-    </section>
-  );
-}
-
 function Avatar({ name, tone }: { name: string; tone: "brand" | "blue" }) {
   return (
     <span
@@ -553,16 +613,42 @@ function Avatar({ name, tone }: { name: string; tone: "brand" | "blue" }) {
   );
 }
 
+type CepFound = Extract<CepLookup, { state: "found" }>;
+
+/** Full-width address of the CEP and a thin map of the area where we look for pharmacies. */
+function CepArea({ found }: { found: CepFound }) {
+  const [point, setPoint] = useState<{ key: string; lat: number; lng: number } | null>(null);
+  const key = [found.street, found.district, found.city, found.uf].join("|");
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    locateCep(found, ctrl.signal).then((p) => {
+      if (!ctrl.signal.aborted && p) setPoint({ key, ...p });
+    });
+    return () => ctrl.abort();
+  }, [found, key]);
+
+  const place = [found.street, found.district, `${found.city}/${found.uf}`].filter(Boolean).join(", ");
+  return (
+    <div className="-mt-1 flex flex-col gap-2">
+      <p className="text-[15px] font-semibold leading-snug text-brand">{place}</p>
+      {point?.key === key ? <AreaMap lat={point.lat} lng={point.lng} label={found.district || found.city} /> : null}
+    </div>
+  );
+}
+
 function CepField({
   value,
   onValue,
   invalid,
   onLookup,
+  onFound,
 }: {
   value: string;
   onValue: (v: string) => void;
   invalid: boolean;
   onLookup: (ok: boolean) => void;
+  onFound: (found: CepFound | null) => void;
 }) {
   const [lookup, setLookup] = useState<CepLookup>({ state: "idle" });
 
@@ -571,6 +657,7 @@ function CepField({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLookup({ state: "idle" });
       onLookup(true);
+      onFound(null);
       return;
     }
     const ctrl = new AbortController();
@@ -578,17 +665,18 @@ function CepField({
     lookupCep(value, ctrl.signal).then((r) => {
       if (ctrl.signal.aborted) return;
       setLookup(r);
+      onFound(r.state === "found" ? r : null);
       // A lookup that fails for network reasons does not block the form.
       onLookup(r.state !== "not-found");
     });
     return () => ctrl.abort();
-  }, [value, onLookup]);
+  }, [value, onLookup, onFound]);
 
   const found = lookup.state === "found";
   const missing = lookup.state === "not-found";
   return (
     <label className="flex min-w-0 flex-col gap-1.5">
-      <span className="text-[15px] font-bold">CEP</span>
+      <span className="text-[15px] font-semibold">CEP</span>
       <span className="relative">
         <input
           inputMode="numeric"
@@ -611,10 +699,8 @@ function CepField({
           </span>
         ) : null}
       </span>
-      <span id="cep-status" aria-live="polite" className={cn("text-[14px] font-bold", found ? "text-brand" : missing ? "text-danger" : "text-muted")}>
-        {lookup.state === "found"
-          ? [lookup.district, `${lookup.city}/${lookup.uf}`].filter(Boolean).join(", ")
-          : lookup.state === "not-found"
+      <span id="cep-status" aria-live="polite" className={cn("text-[14px] font-semibold", found ? "text-brand" : missing ? "text-danger" : "text-muted")}>
+        {lookup.state === "not-found"
             ? "CEP não encontrado"
             : lookup.state === "loading"
               ? "Procurando..."

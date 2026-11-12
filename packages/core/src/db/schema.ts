@@ -140,6 +140,8 @@ export const medications = pgTable('medications', {
   highCostSince: date(),
   // R2 key of the photo the family took of the real box or pill; her screen shows only this photo.
   photoKey: text(),
+  // Set when the family removes it from her list. The row stays so the dose history keeps its name.
+  stoppedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

@@ -45,6 +45,12 @@ export class FamilyController {
     return this.family.overview(familyId);
   }
 
+  /** A short stamp that changes when the doses, medicines or alerts change. Polled every few seconds. */
+  @Get('changes')
+  async changes(@FamilyId() familyId: string | null) {
+    return { stamp: await this.family.changeStamp(familyId) };
+  }
+
   /** Alerts sent to the family (missed dose, not feeling well, running out), newest first. */
   @Get('alerts')
   alerts(@FamilyId() familyId: string | null) {
@@ -148,7 +154,7 @@ export class FamilyController {
     await this.family.removeMedicationPhoto(familyId, id);
   }
 
-  /** Family stops a medication. */
+  /** Family removes a medication from her list. Kept, with its history, as stopped. */
   @Delete('medications/:id')
   @HttpCode(204)
   async removeMedication(@Param('id', new ParseUUIDPipe()) id: string, @FamilyId({ write: true }) familyId: string | null) {

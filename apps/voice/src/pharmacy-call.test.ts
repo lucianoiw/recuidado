@@ -63,6 +63,7 @@ function setup(openingWaitMs = 60_000, extra: Partial<ConstructorParameters<type
     closeGraceMs: 5,
     silentLineMs: 60_000,
     stallMs: 60_000,
+    speechCharMs: 1,
     ...extra,
   });
   return { socket, call, gate, hangups: () => hangups };
@@ -653,4 +654,22 @@ test("the introduction waits until the model stops its own muted introduction", 
   assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 1);
   await call.endCall();
   await call.result;
+});
+
+test("nothing heard after the introduction: the call ends as a silent line", async () => {
+  const { socket, call } = setup(5, { deadLineMs: 40 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  const result = await call.result;
+  assert.equal(result.endReason, "silent_line");
+});
+
+test("nothing heard after a menu key: 'Alô?' three times, then the call ends as a silent line", async () => {
+  const { socket, call } = setup(60_000, { silentLineMs: 20 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para preço e estoque de remédios, tecle 2." });
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "2" }));
+  const result = await call.result;
+  assert.equal(result.endReason, "silent_line");
+  const alo = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("alo_"));
+  assert.equal(alo.length, 3);
 });

@@ -52,6 +52,10 @@ export interface PharmacyCallOptions {
   overlapGlueMs?: number;
   /** Silence of the assistant after the pharmacy spoke before a nudge (and, again, before hanging up). Default 6000. */
   stallMs?: number;
+  /** Estimated ms of audio per character of the assistant's transcript. Default 65 (about 15 per second). */
+  speechCharMs?: number;
+  /** Nothing heard for this long after the introduction ends the call. Default 25000. */
+  deadLineMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -205,9 +209,12 @@ export class PharmacyCall {
   private voiceOpen = false;
   private mutedSpeech = "";
   private lastAssistantAt = 0;
+  /** When the audio of what the assistant said should end (estimated from the transcript). */
+  private speechEndsAt = 0;
   private introDefers = 0;
   private stallTimer?: NodeJS.Timeout;
   private stallPokes = 0;
+  private deadLineTimer?: NodeJS.Timeout;
   private openLines: Partial<Record<TranscriptLine["speaker"], { line: TranscriptLine; at: number }>> = {};
   private endReason?: string;
   private voicemail = false;
@@ -412,12 +419,16 @@ export class PharmacyCall {
     if (this.side && this.side !== "person" && this.side !== "unclear" && !(notAMenu && this.side === "menu")) return;
     // The model often starts its own introduction while still muted. Opening the voice in the middle
     // of it let the pharmacy hear only "...virtual da Recuidado": wait until it stops talking.
-    if (Date.now() - this.lastAssistantAt < 700 && this.introDefers < 15) {
+    // The transcript of its speech arrives faster than the audio plays: wait for the estimated end of
+    // the audio too (about 15 characters per second), not only for the last transcript piece.
+    const now = Date.now();
+    if ((now - this.lastAssistantAt < 700 || now < this.speechEndsAt + 300) && this.introDefers < 30) {
       this.introDefers++;
       this.timers.push(setTimeout(() => this.introduceIfNeeded(notAMenu), 300));
       return;
     }
     this.introduced = true;
+    this.armDeadLine();
     this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
     this.armQuietPerson();
     // The model usually already said its introduction while muted and would not repeat it: tell it so.
@@ -448,6 +459,7 @@ export class PharmacyCall {
     if (this.heardOtherSide || this.answer || this.hangupRequested) return;
     this.introduced = true;
     this.log("nobody spoke after answer, opening");
+    this.armDeadLine();
     void this.openVoice().then(() =>
       this.send({
         type: "session.commentary.append",
@@ -507,6 +519,9 @@ export class PharmacyCall {
     });
     this.keysPressed.push(...digits);
     this.log(`pressing keys ${digits.join("")}`);
+    // Measured 12/11: after a key, the attendant once never spoke and the line stayed open until the
+    // 3-minute cap. Silence after a key gets "Alô?" too, and the call ends if nobody ever answers.
+    this.armSilentLine();
   }
 
   private recordAnswer(callId: string, args: Record<string, unknown>) {
@@ -549,6 +564,7 @@ export class PharmacyCall {
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
     this.lastAssistantAt = Date.now();
+    this.speechEndsAt = Math.max(this.speechEndsAt, this.lastAssistantAt) + delta.length * (this.opts.speechCharMs ?? 65);
     if (this.stallTimer) clearTimeout(this.stallTimer);
     const heard = this.voiceOpen || this.gate.alwaysOpen === true;
     // What the AI says while muted never reaches the pharmacy: it stays out of the transcript (it read
@@ -626,10 +642,20 @@ export class PharmacyCall {
    */
   private armSilentLine() {
     if (this.silentLineTimer) clearTimeout(this.silentLineTimer);
-    if (this.introduced || this.silentLinePokes >= 3) return;
+    if (this.introduced) return;
     this.silentLineTimer = setTimeout(() => {
       if (this.introduced || this.answer || this.hangupRequested || this.finished || this.waiting) return;
-      if (this.menuPending || this.side === "menu" || this.keysPressed.length === 0) return;
+      if (this.menuPending || this.keysPressed.length === 0) return;
+      // Still "menu" only because nothing was heard since the key: that is a silent line too.
+      if (this.side === "menu" && this.otherSideSinceKey().trim()) return;
+      if (this.silentLinePokes >= 3) {
+        // A hold message was heard: the queue may be long, keep waiting (the 3-minute cap still holds).
+        if (this.otherSideSinceKey().trim()) return;
+        this.log("nothing heard since the key, even after 3 \"Alô?\", hanging up");
+        this.endReason ??= "silent_line";
+        void this.endCall();
+        return;
+      }
       this.silentLinePokes++;
       this.log(`line silent for ${this.opts.silentLineMs ?? 9000} ms after the menu or hold, saying "Alô?" (${this.silentLinePokes})`);
       this.side = "unclear";
@@ -676,6 +702,21 @@ export class PharmacyCall {
       this.armStall();
     }, this.opts.stallMs ?? 6000);
     this.timers.push(this.stallTimer);
+  }
+
+  /**
+   * Nothing at all heard for a long time after the introduction: the line is dead (once, the test
+   * Asterisk restarted in the middle of a call and it stayed open until the 3-minute cap). Hang up.
+   */
+  private armDeadLine() {
+    if (this.deadLineTimer) clearTimeout(this.deadLineTimer);
+    this.deadLineTimer = setTimeout(() => {
+      if (this.answer || this.hangupRequested || this.finished || this.waiting || this.side === "hold") return;
+      this.log(`nothing heard for ${this.opts.deadLineMs ?? 25000} ms after the introduction, hanging up`);
+      this.endReason ??= "silent_line";
+      void this.endCall();
+    }, this.opts.deadLineMs ?? 25000);
+    this.timers.push(this.deadLineTimer);
   }
 
   private armSilenceHangup() {
@@ -776,6 +817,7 @@ export class PharmacyCall {
     if (this.quietTimer) clearTimeout(this.quietTimer);
     this.armSilentLine();
     this.armStall();
+    if (this.deadLineTimer) this.armDeadLine();
     this.inputOrder++;
     if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
     this.utterance += delta;

@@ -37,3 +37,29 @@ export async function wipeIfAsked(databaseUrl: string, redisUrl: string, label: 
     redis.disconnect();
   }
 }
+
+/**
+ * Deletes every call log (calls panel: transcripts, steps, recordings in the row) and every pharmacy inquiry once,
+ * on boot, to measure a new version of the calls from a clean panel. Same label rule as WIPE_DATA_ON_BOOT.
+ * Reminder results on the doses (voice_calls) stay. Recordings in R2 stay, but nothing points to them.
+ */
+export async function wipeCallsIfAsked(databaseUrl: string, redisUrl: string, label: string | undefined): Promise<boolean> {
+  const tag = label?.trim();
+  if (!tag) return false;
+  const redis = new Redis(redisUrl, { maxRetriesPerRequest: null });
+  try {
+    if (await redis.get(`${MARKER}calls:${tag}`)) return false;
+    const pool = new Pool({ connectionString: databaseUrl });
+    try {
+      await pool.query('delete from call_logs');
+      await pool.query('delete from pharmacy_inquiries');
+    } finally {
+      await pool.end();
+    }
+    await redis.set(`${MARKER}calls:${tag}`, new Date().toISOString());
+    telemetry.warn(`Call logs and pharmacy inquiries deleted on boot (WIPE_CALLS_ON_BOOT=${tag}).`);
+    return true;
+  } finally {
+    redis.disconnect();
+  }
+}

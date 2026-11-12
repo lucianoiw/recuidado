@@ -1,4 +1,4 @@
-import { localDate, localDateTime, localTime, upcomingDoseTimes } from './time.js';
+import { earlierTodayDoseTimes, localDate, localDateTime, localTime, upcomingDoseTimes } from './time.js';
 
 describe('dose times in São Paulo', () => {
   it('uses the local date, not UTC', () => {
@@ -23,5 +23,11 @@ describe('dose times in São Paulo', () => {
       '2026-11-12T11:00:00.000Z',
       '2026-11-12T23:00:00.000Z',
     ]);
+  });
+
+  it('lists the times of today that already passed', () => {
+    const now = new Date('2026-11-12T15:12:00Z'); // 12:12 local
+    const times = earlierTodayDoseTimes(['08:00', '12:00', '20:00'], now).map((d) => d.toISOString());
+    expect(times).toEqual(['2026-11-12T11:00:00.000Z', '2026-11-12T15:00:00.000Z']);
   });
 });

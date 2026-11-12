@@ -89,7 +89,7 @@ export default function PrivacyPage() {
         </p>
         <p>
           Dúvidas, pedidos sobre os seus dados ou para falar com o encarregado de dados:{" "}
-          <a href="mailto:privacidade@recuidado.com.br" className="font-bold text-brand underline">
+          <a href="mailto:privacidade@recuidado.com.br" className="font-semibold text-brand underline">
             privacidade@recuidado.com.br
           </a>
           .

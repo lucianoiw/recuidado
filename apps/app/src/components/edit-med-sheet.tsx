@@ -9,6 +9,7 @@ import { searchMedications, strengthChoices } from "@/lib/med-search";
 import { removeMedication, updateMedication, type Medication } from "@/lib/api";
 import { parseUnits } from "@/lib/stock";
 import { medLabel } from "@/lib/use-family";
+import { usePronouns } from "@/lib/pronouns";
 
 /** Change the dose text, the times or the pills at home of a medication, or stop it. */
 export function EditMedSheet({
@@ -33,12 +34,12 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
   const initialUnits = med.stock ? String(med.stock.units) : "";
   const [units, setUnits] = useState(initialUnits);
   const parsedUnits = parseUnits(units);
+  const pr = usePronouns();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Strengths this medication is sold in, to pick instead of typing.
   const [choices, setChoices] = useState<string[]>([]);
-  const [other, setOther] = useState(false);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -48,7 +49,9 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         const hit = rs.find((r) => r.name.trim().toLowerCase() === key) ?? rs[0];
         const list = hit ? strengthChoices(hit).map((c) => c.strength) : [];
         setChoices(list);
-        if (list.length > 0 && med.strength && !list.includes(med.strength)) setOther(true);
+        // "5MG" saved from the prescription is the "5 mg" of the list: select it.
+        const same = list.find((c) => c.replace(/\s/g, "").toLowerCase() === (med.strength ?? "").replace(/\s/g, "").toLowerCase());
+        if (same) setStrength(same);
       },
       () => {},
     );
@@ -73,9 +76,13 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
     return (
       <>
         <p className="text-[17px] leading-snug">
-          Tirar <b>{medLabel(med.name, med.strength)}</b> da lista? Os lembretes e as ligações dele
-          param.
+          Remover <b>{medLabel(med.name, med.strength)}</b> dos remédios {pr.dela}?
         </p>
+        <ul className="flex list-disc flex-col gap-1 pl-5 text-[15px] leading-snug text-muted">
+          <li>Os lembretes e as ligações dele param.</li>
+          <li>O histórico do que {pr.ela} já tomou fica guardado.</li>
+          <li>Se {pr.ela} voltar a tomar, é só adicionar de novo.</li>
+        </ul>
         {error ? (
           <p role="alert" className="font-semibold text-danger">
             {error}
@@ -83,7 +90,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         ) : null}
         <div className="flex flex-col gap-2">
           <Button variant="danger" disabled={busy} onClick={() => run(() => removeMedication(med.id))}>
-            {busy ? "Tirando..." : "Sim, tirar da lista"}
+            {busy ? "Removendo..." : "Sim, remover"}
           </Button>
           <Button variant="secondary" disabled={busy} onClick={() => setConfirming(false)}>
             Voltar
@@ -97,27 +104,21 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
     <>
       {choices.length > 0 ? (
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-[15px] font-bold">Dose</legend>
+          <legend className="mb-2 text-[15px] font-semibold">Dose</legend>
           <div className="flex flex-wrap gap-2" role="radiogroup">
-            {[...choices, "Outra"].map((c) => {
-              const on = c === "Outra" ? other : !other && strength === c;
+            {choices.map((c) => {
+              const on = strength === c;
               return (
                 <button
                   key={c}
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  onClick={() => {
-                    if (c === "Outra") setOther(true);
-                    else {
-                      setOther(false);
-                      setStrength(c);
-                    }
-                  }}
+                  onClick={() => setStrength(c)}
                   className={cn(
                     "min-h-11 rounded-xl px-3.5 text-[16px]",
                     on
-                      ? "border-2 border-brand bg-brand-soft font-bold text-brand"
+                      ? "border-2 border-brand bg-brand-soft font-semibold text-brand"
                       : "border-[1.5px] border-[#cfc8ba] bg-surface font-semibold text-ink",
                   )}
                 >
@@ -126,15 +127,12 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
               );
             })}
           </div>
-          {other ? (
-            <Field label="Qual dose?" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
-          ) : null}
         </fieldset>
       ) : (
         <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
       )}
       <div className="flex flex-col gap-2">
-        <span className="text-[15px] font-bold">Horários</span>
+        <span className="text-[15px] font-semibold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
       </div>
       <StockField value={units} onValue={setUnits} invalid={parsedUnits === undefined} />
@@ -167,9 +165,9 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         <button
           type="button"
           onClick={() => setConfirming(true)}
-          className="min-h-12 font-bold text-danger"
+          className="min-h-12 font-semibold text-danger"
         >
-          Parar este remédio
+          Remover dos remédios
         </button>
       </div>
     </>

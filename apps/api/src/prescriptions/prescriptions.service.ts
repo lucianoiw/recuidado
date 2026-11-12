@@ -118,8 +118,10 @@ export class PrescriptionsService {
       });
 
     for (const medication of saved) {
-      if (medication.times.length > 0)
+      if (medication.times.length > 0) {
         await this.doses.scheduleForMedication(medication.id);
+        await this.doses.addEarlierToday(medication.id);
+      }
     }
     telemetry.capture(
       'prescription_confirmed',

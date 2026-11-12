@@ -46,7 +46,7 @@ export function Panel() {
         <button
           type="button"
           onClick={startOver}
-          className="min-h-10 rounded-xl border-[1.5px] border-ink/30 px-3 text-[14px] font-bold text-ink/80"
+          className="min-h-10 rounded-xl border-[1.5px] border-ink/30 px-3 text-[14px] font-semibold text-ink/80"
         >
           Começar de novo
         </button>
@@ -148,13 +148,13 @@ function Phone({
                 />
               </span>
               {typed ? (
-                <button type="submit" className="rounded-full bg-brand px-3 py-1.5 text-[13px] font-bold text-white">
+                <button type="submit" className="rounded-full bg-brand px-3 py-1.5 text-[13px] font-semibold text-white">
                   Abrir
                 </button>
               ) : null}
             </form>
             {error ? (
-              <p className="bg-[#fce7e5] px-3 py-2 text-[13px] font-bold text-danger">
+              <p className="bg-[#fce7e5] px-3 py-2 text-[13px] font-semibold text-danger">
                 Cole o link do Recuidado que veio do celular do filho.
               </p>
             ) : null}
@@ -163,7 +163,7 @@ function Phone({
                 ref={frameRef}
                 src={src}
                 title={label}
-                allow="clipboard-read; clipboard-write; geolocation"
+                allow="clipboard-read; clipboard-write; geolocation; web-share"
                 className="w-full flex-1 border-0 bg-bg"
               />
             ) : (

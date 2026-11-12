@@ -18,10 +18,11 @@ import {
   type StatusTone,
 } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
-import { callName, getDemoRun, startDemoRun, type DemoRun, type DemoStep } from "@/lib/api";
-import { readDemoRun, saveDemoRun } from "@/lib/demo";
+import { callName, getDemoRun, startDemoRun, stopDemoRun, type DemoRun, type DemoStep } from "@/lib/api";
+import { clearDemoRun, readDemoRun, saveDemoRun } from "@/lib/demo";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
+import { pronouns } from "@/lib/pronouns";
 
 const PILL: Record<DemoStep["state"], { tone: StatusTone; text: string }> = {
   waiting: { tone: "neutral", text: "Aguardando" },
@@ -131,7 +132,28 @@ export function DemoView() {
     }
   }
 
+  async function stop() {
+    const id = following.current ?? doseId;
+    if (!id) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await stopDemoRun(id);
+      clearDemoRun();
+      following.current = null;
+      setDoseId(null);
+      setRun(null);
+      track("demo_run_stopped");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Não deu para parar a demo.");
+      captureError(e, { screen: "demo" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const name = data ? callName(data.patient) : "Dona Maria";
+  const pr = pronouns(data?.patient.gender);
   const running = doseId !== null;
   const hasPhone = data?.patient.hasPhone ?? (data?.patient.phone?.replace(/\D/g, "").length ?? 0) >= 10;
 
@@ -139,12 +161,12 @@ export function DemoView() {
     <>
       <PageTitle
         title="Demo em 2 minutos"
-        subtitle={`O dia de ${name} acelerado: o que acontece quando ela não confirma o remédio.`}
+        subtitle={`O dia de ${name} acelerado: o que acontece quando ${pr.ela} não confirma o remédio.`}
       />
 
       <Card className="flex flex-col gap-2 text-[16px] leading-snug">
         <p>
-          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular dela, ligação da IA e aviso para a
+          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular {pr.dela}, ligação da IA e aviso para a
           família. A espera, que no dia a dia é de minutos, aqui é de segundos.
         </p>
         <p className="text-muted">A agenda normal dos remédios continua igual.</p>
@@ -160,16 +182,16 @@ export function DemoView() {
         </p>
       ) : null}
 
-      <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+      <ul className="overflow-hidden rounded-card bg-surface">
         <StepRow icon={<BellIcon size={22} />} title={`Lembrete para ${name}`} step={run?.reminder ?? null} now={now} />
         <StepRow icon={<PhoneIcon size={22} />} title="Ligação da IA" step={run?.call ?? null} now={now} />
         <StepRow icon={<UsersIcon size={22} />} title="Família avisada" step={run?.family ?? null} now={now} />
       </ul>
 
       {run?.finished ? (
-        <p className="flex items-center gap-2 font-bold text-brand">
+        <p className="flex items-center gap-2 font-semibold text-brand">
           <CheckIcon size={22} />
-          {run.status === "taken" ? `${name} tomou o remédio.` : "A família já sabe e pode ligar para ela."}
+          {run.status === "taken" ? `${name} tomou o remédio.` : `A família já sabe e pode ligar para ${pr.ela}.`}
         </p>
       ) : null}
 
@@ -196,6 +218,11 @@ export function DemoView() {
         <ClockIcon size={22} />
         {running ? "Demo em andamento" : run?.finished ? "Rodar de novo" : "Começar a demo"}
       </Button>
+      {running ? (
+        <button type="button" onClick={stop} disabled={busy} className="-mt-1 min-h-12 font-semibold text-danger">
+          {busy ? "Parando..." : "Parar a demo"}
+        </button>
+      ) : null}
 
       <Link href="/patient" className={buttonClass({ variant: "secondary" })}>
         Abrir o app de {name}
