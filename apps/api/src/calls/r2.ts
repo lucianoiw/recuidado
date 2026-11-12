@@ -1,3 +1,4 @@
+import type { ConfigService } from '@nestjs/config';
 import { AwsClient } from 'aws4fetch';
 
 export interface R2Config {
@@ -31,6 +32,11 @@ export class R2Bucket {
     if (!res.ok) throw new Error(`R2 PUT ${key} answered ${res.status}: ${await res.text()}`);
   }
 
+  async delete(key: string): Promise<void> {
+    const res = await this.client.fetch(`${this.base}/${key}`, { method: 'DELETE' });
+    if (!res.ok && res.status !== 404) throw new Error(`R2 DELETE ${key} answered ${res.status}`);
+  }
+
   /** A signed GET link, valid for `seconds`. */
   async signedUrl(key: string, seconds = 3600): Promise<string> {
     const url = new URL(`${this.base}/${key}`);
@@ -38,4 +44,14 @@ export class R2Bucket {
     const signed = await this.client.sign(url.toString(), { method: 'GET', aws: { signQuery: true } });
     return signed.url;
   }
+}
+
+/** The bucket from R2_* variables, or undefined when any of them is missing. */
+export function r2FromConfig(config: ConfigService): R2Bucket | undefined {
+  const accountId = config.get<string>('R2_ACCOUNT_ID');
+  const accessKeyId = config.get<string>('R2_ACCESS_KEY_ID');
+  const secretAccessKey = config.get<string>('R2_SECRET_ACCESS_KEY');
+  const bucket = config.get<string>('R2_BUCKET');
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucket) return undefined;
+  return new R2Bucket({ accountId, accessKeyId, secretAccessKey, bucket });
 }

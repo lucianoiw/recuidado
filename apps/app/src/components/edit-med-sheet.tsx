@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MedPhotoField } from "@/components/med-photo-field";
 import { StockField } from "@/components/stock-field";
 import { TimeChips } from "@/components/time-chips";
 import { Button, Field, InfoIcon, Sheet, cn } from "@/components/ui";
@@ -137,6 +138,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         <TimeChips times={times} onChange={setTimes} />
       </div>
       <StockField value={units} onValue={setUnits} invalid={parsedUnits === undefined} />
+      <MedPhotoField med={med} onChanged={onSaved} />
       <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
         <InfoIcon size={18} className="mt-0.5 shrink-0" />
         Mude a dose, o horário ou pare o remédio só com orientação do médico.

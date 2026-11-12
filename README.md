@@ -25,6 +25,8 @@ Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração us
 - **A IA liga para a farmácia.** Em "Onde comprar", a família toca em "Perguntar à farmácia". A IA liga, se apresenta como assistente virtual, passa pelo menu de teclas (URA) sozinha, pergunta se tem e quanto custa a caixa, e a resposta aparece comparada ao teto da CMED. Ver [Ligação para a farmácia](#ligação-para-a-farmácia).
 - **O que é grátis e onde.** Cada remédio é cruzado com a lista do Farmácia Popular, com o REMUME das UBS de São Paulo e com o Alto Custo, e a família vê as farmácias credenciadas mais perto.
 - **Os irmãos dividem ou revezam.** Em "Onde comprar e dividir", a família escolhe: dividir todo mês (cada um manda a sua parte por Pix para quem comprou) ou cada mês um compra tudo, na ordem que eles escolheram. Quem paga outra coisa, como o plano de saúde, fica fora da conta. O app avisa todo mundo de quem é a vez. Ver [Dividir ou revezar a conta](#dividir-ou-revezar-a-conta).
+- **Foto do remédio de verdade, nunca uma foto genérica.** O app da Dona Maria nunca mostra imagem de banco de comprimido: uma losartana de outro laboratório tem outra cor e outro formato, e uma foto parecida pode levar ela a tomar o remédio errado. Por isso o filho pode tirar, na aba Remédios, a foto da caixa ou do comprimido que ela tem em casa, e só essa foto aparece na tela da hora do remédio e em Meus remédios. Sem foto, a tela mostra só o nome, a dose e o horário. Ver [Foto do remédio](#foto-do-remédio).
+- **Ligar para a família.** Se mais de um filho deixou o telefone, o botão do app dela vira "Ligar para a família" e abre uma tela com um botão grande para cada um ("Ligar para Ana", "Ligar para Carlos"). Com um filho só, o botão liga direto.
 - **MCP para qualquer assistente de IA.** Claude, ChatGPT ou outro agente consulta o plano, as doses e os avisos da família por conversa. Ver [Servidor MCP](#servidor-mcp).
 - **Login sem senha e a mãe sem cadastro.** O filho entra com o e-mail (código de 6 números ou link, pelo Resend). Os irmãos são convidados por e-mail. A mãe não se cadastra: o filho manda um link e o celular dela abre o app dela. Ver [Login e os dois celulares](#login-e-os-dois-celulares).
 - **Monitoria completa.** Logs, erros, eventos, traces da IA e replay das telas em um só lugar (PostHog).
@@ -154,6 +156,16 @@ Decisões de 11/11/2026 (pedido do Luciano: profissionalizar o que foi feito em 
 - **Dois logins no mesmo navegador sem misturar.** As telas `/patient` mandam só o link dela; as da família mandam só a sessão do filho. Por isso o painel funciona com os dois apps no mesmo navegador.
 - **Visitante continua vendo a demonstração.** Sem login, o app mostra a família da Dona Maria, só leitura, como antes. O vídeo e os jurados não precisam de login (regulamento 7.2).
 - **O painel** (`/painel`, servido pelo próprio app no domínio `painel`) põe os dois apps reais em molduras de Android: um Pixel 6 Pro para o filho e um Galaxy S8 para a mãe, desenhados em CSS pelo [devices.css](https://github.com/picturepan2/devices.css) (MIT). Cada celular tem uma barra de endereço: o filho copia o link dela à esquerda e cola no celular da mãe à direita. O app avisa o painel do endereço atual por `postMessage`, e "Começar de novo" apaga os dois logins. Notificação push não funciona dentro do painel (o navegador bloqueia em moldura); o lembrete aparece na tela dela do mesmo jeito.
+
+## Foto do remédio
+
+Decisão do Luciano de 12/11/2026, por segurança: a tela dela não mostra foto genérica de comprimido. A mesma substância muda de cor, formato e caixa conforme o laboratório, e a pessoa idosa reconhece o remédio pela aparência; uma foto parecida, mas diferente, pode fazer ela trocar um remédio por outro.
+
+- A família abre o remédio em Remédios e toca em "Tirar foto". A câmera traseira abre direto. O app reduz a foto para no máximo 1280 px em JPEG antes de enviar (celulares tiram fotos de 4 a 12 MB).
+- `PUT /family/medications/:id/photo` (multipart, campo `file`, JPG, PNG ou WEBP, até 8 MB) guarda a foto no Cloudflare R2 (`medication-photos/<família>/<remédio>/<id>.jpg`) e a chave em `medications.photo_key`. Uma foto nova apaga a antiga. `DELETE` tira a foto.
+- `GET /family` devolve `photoUrl` em cada remédio: um link assinado do R2 que vale 12 horas, gerado sem chamar o R2. A foto não fica pública.
+- O app dela mostra a foto grande acima do nome na hora do remédio e em Meus remédios. Sem foto, só nome, dose e horário, como antes.
+- A família demonstração é só leitura, então a foto só pode ser tirada em uma família cadastrada.
 
 ## Fluxo de uma dose
 

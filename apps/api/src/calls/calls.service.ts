@@ -14,7 +14,7 @@ import {
   pharmacyInquiries,
   telemetry,
 } from '@recuidado/core';
-import { R2Bucket } from './r2.js';
+import { type R2Bucket, r2FromConfig } from './r2.js';
 
 export type CallKind = 'reminder' | 'recall' | 'check_in' | 'caregiver' | 'pharmacy';
 
@@ -55,13 +55,7 @@ export class CallsService {
     @Inject(DB) private readonly db: Database,
     config: ConfigService,
   ) {
-    const accountId = config.get<string>('R2_ACCOUNT_ID');
-    const accessKeyId = config.get<string>('R2_ACCESS_KEY_ID');
-    const secretAccessKey = config.get<string>('R2_SECRET_ACCESS_KEY');
-    const bucket = config.get<string>('R2_BUCKET');
-    if (accountId && accessKeyId && secretAccessKey && bucket) {
-      this.r2 = new R2Bucket({ accountId, accessKeyId, secretAccessKey, bucket });
-    }
+    this.r2 = r2FromConfig(config);
   }
 
   async saveLog(input: CallLogInput): Promise<void> {

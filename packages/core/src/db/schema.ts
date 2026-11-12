@@ -138,6 +138,8 @@ export const medications = pgTable('medications', {
   lmeFilledOn: date(),
   // Day the state approved it (or last renewed it): the next renewal counts from here.
   highCostSince: date(),
+  // R2 key of the photo the family took of the real box or pill; her screen shows only this photo.
+  photoKey: text(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

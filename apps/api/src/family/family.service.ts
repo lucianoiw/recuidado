@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
   ForbiddenException,
   Inject,
@@ -5,6 +6,7 @@ import {
   Logger,
   NotFoundException,
   OnApplicationBootstrap,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { findFreeAccess, highCostGuide, type FreeAccess } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, sql } from 'drizzle-orm';
@@ -25,6 +27,7 @@ import {
   StockService,
   voiceCalls,
 } from '@recuidado/core';
+import { type R2Bucket, r2FromConfig } from '../calls/r2.js';
 import { seedDemoFamily } from './demo-seed.js';
 import { highCostStatus, todayInSaoPaulo, type HighCostStatus } from './high-cost.js';
 import type { HighCostBody, MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
@@ -67,6 +70,7 @@ export function withFirstContact<T extends { emergencyContact: boolean; hasPhone
 @Injectable()
 export class FamilyService implements OnApplicationBootstrap {
   private readonly logger = new Logger(FamilyService.name);
+  private readonly r2?: R2Bucket;
 
   constructor(
     @Inject(DB) private readonly db: Database,
@@ -74,7 +78,9 @@ export class FamilyService implements OnApplicationBootstrap {
     private readonly stock: StockService,
     private readonly alerts: AlertsService,
     private readonly config: ConfigService,
-  ) {}
+  ) {
+    this.r2 = r2FromConfig(config);
+  }
 
   async onApplicationBootstrap() {
     const ids = await this.ensureDemoFamily();
@@ -216,11 +222,17 @@ export class FamilyService implements OnApplicationBootstrap {
         highCostChecked: medications.highCostChecked,
         lmeFilledOn: medications.lmeFilledOn,
         highCostSince: medications.highCostSince,
+        photoKey: medications.photoKey,
       })
       .from(medications)
       .where(eq(medications.patientId, patientId))
       .orderBy(asc(medications.createdAt));
     const stock = await this.stock.statusFor(meds);
+    const photoUrls = new Map<string, string>();
+    for (const m of meds) {
+      // Signing is local (no request to R2); 12 h covers a screen left open all day.
+      if (m.photoKey && this.r2) photoUrls.set(m.id, await this.r2.signedUrl(m.photoKey, 12 * 60 * 60));
+    }
     // Anyone can open the demo family without logging in: its phones are never sent in full.
     const shown = people.map((p) => ({
       ...p,
@@ -233,7 +245,7 @@ export class FamilyService implements OnApplicationBootstrap {
       patient: shown.find((p) => p.id === patientId)!,
       caregivers: withFirstContact(shown.filter((p) => p.role === 'caregiver')),
       medications: meds.map(
-        ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, ...med }) => {
+        ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, photoKey: _key, ...med }) => {
           const access = freeAccessOf(activeIngredient ?? med.name, med.strength);
           const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
           return {
@@ -244,6 +256,8 @@ export class FamilyService implements OnApplicationBootstrap {
             price,
             // Pills left and days they last; null when the family has not counted them.
             stock: stock.get(med.id) ?? null,
+            // Photo of the real box or pill taken by the family; null when there is none.
+            photoUrl: photoUrls.get(med.id) ?? null,
             // Where the family is in the Alto Custo path, for the reminders.
             highCostPath: access.highCost
               ? highCostPathOf(activeIngredient ?? med.name, {
@@ -356,6 +370,42 @@ export class FamilyService implements OnApplicationBootstrap {
       .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
       .returning({ id: medications.id });
     if (!row) throw new NotFoundException('Remédio não encontrado.');
+  }
+
+  /**
+   * Family saves a photo of the real box or pill. Her screen shows this photo and never a
+   * generic one, so she does not take the wrong pill. A new photo replaces the old one.
+   */
+  async setMedicationPhoto(
+    familyId: string | null | undefined,
+    medicationId: string,
+    photo: { data: Buffer; contentType: string },
+  ): Promise<void> {
+    const { familyId: family, patientId } = await this.writableFamily(familyId);
+    if (!this.r2) throw new ServiceUnavailableException('Foto indisponível agora. Tente mais tarde.');
+    const old = await this.medicationPhotoKey(medicationId, patientId);
+    const ext = photo.contentType === 'image/png' ? 'png' : photo.contentType === 'image/webp' ? 'webp' : 'jpg';
+    const key = `medication-photos/${family}/${medicationId}/${randomUUID()}.${ext}`;
+    await this.r2.put(key, photo.data, photo.contentType);
+    await this.db.update(medications).set({ photoKey: key }).where(eq(medications.id, medicationId));
+    if (old) await this.r2.delete(old).catch((e) => this.logger.warn(`Old photo ${old} not deleted: ${e}`));
+  }
+
+  /** Family removes the photo: her screen goes back to name, dose and time only. */
+  async removeMedicationPhoto(familyId: string | null | undefined, medicationId: string): Promise<void> {
+    const { patientId } = await this.writableFamily(familyId);
+    const old = await this.medicationPhotoKey(medicationId, patientId);
+    await this.db.update(medications).set({ photoKey: null }).where(eq(medications.id, medicationId));
+    if (old && this.r2) await this.r2.delete(old).catch((e) => this.logger.warn(`Photo ${old} not deleted: ${e}`));
+  }
+
+  private async medicationPhotoKey(medicationId: string, patientId: string): Promise<string | null> {
+    const [row] = await this.db
+      .select({ photoKey: medications.photoKey })
+      .from(medications)
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)));
+    if (!row) throw new NotFoundException('Remédio não encontrado.');
+    return row.photoKey;
   }
 
   /** Family stops a medication: it and its doses are removed. */
