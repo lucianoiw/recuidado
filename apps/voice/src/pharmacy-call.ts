@@ -206,6 +206,7 @@ export class PharmacyCall {
   private hangupRequested = false;
   private saidGoodbye = false;
   private goodbyeAsked = false;
+  private deadLineAsked = false;
   /** Whether the pharmacy hears the AI now (the voice gate is open). */
   private voiceOpen = false;
   private mutedSpeech = "";
@@ -715,6 +716,24 @@ export class PharmacyCall {
     if (this.deadLineTimer) clearTimeout(this.deadLineTimer);
     this.deadLineTimer = setTimeout(() => {
       if (this.answer || this.hangupRequested || this.finished || this.waiting || this.side === "hold") return;
+      // Measured 12/11: when the introduction overlaps the attendant's greeting, the attendant may
+      // hear only pieces and answer "Qual remédio?", which the caller's transcription can lose.
+      // Ask once more before giving up.
+      if (!this.deadLineAsked) {
+        this.deadLineAsked = true;
+        this.log(`nothing heard for ${this.opts.deadLineMs ?? 25000} ms after the introduction, asking again`);
+        void this.openVoice().then(() =>
+          this.send({
+            type: "session.commentary.append",
+            event_id: `ask_again_${this.opts.sessionId}`,
+            delegation_id: null,
+            content:
+              'The line went quiet. In Brazilian Portuguese, say "Alô? Está me ouvindo?" and ask your question about the medicine again, short. Then listen.',
+          }),
+        );
+        this.armDeadLine();
+        return;
+      }
       this.log(`nothing heard for ${this.opts.deadLineMs ?? 25000} ms after the introduction, hanging up`);
       this.endReason ??= "silent_line";
       void this.endCall();

@@ -661,6 +661,8 @@ test("nothing heard after the introduction: the call ends as a silent line", asy
   socket.emitEvent({ type: "transport.answered", event_id: "a1" });
   const result = await call.result;
   assert.equal(result.endReason, "silent_line");
+  const again = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("ask_again_"));
+  assert.equal(again.length, 1);
 });
 
 test("nothing heard after a menu key: 'Alô?' three times, then the call ends as a silent line", async () => {
