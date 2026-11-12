@@ -54,12 +54,11 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
         aria-label={`Mudar ${medLabel(m.name, m.strength)}`}
         className="flex min-w-0 flex-col gap-2 text-left"
       >
-        {m.photoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
-          <img src={m.photoUrl} alt="" className="h-40 w-full rounded-2xl bg-cream object-contain" />
-        ) : null}
         <span className="flex items-start gap-3">
-          {m.photoUrl ? null : (
+          {m.photoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
+            <img src={m.photoUrl} alt="" className="h-24 w-16 shrink-0 rounded-2xl bg-cream object-cover" />
+          ) : (
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-cream text-muted">
               <CameraIcon size={22} />
             </span>

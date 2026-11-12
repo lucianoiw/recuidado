@@ -71,10 +71,10 @@ export function PatientMedsView() {
 
       <ul className="flex flex-col overflow-hidden rounded-[28px] bg-surface">
         {meds.map((m) => (
-          <li key={m.id} className="flex flex-col gap-4 border-b border-line-soft px-5 py-5 last:border-b-0">
+          <li key={m.id} className="flex items-center gap-4 border-b border-line-soft px-5 py-5 last:border-b-0">
             {m.photoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
-              <img src={m.photoUrl} alt={`Foto de ${m.name}`} className="h-48 w-full rounded-2xl bg-cream object-contain" />
+              <img src={m.photoUrl} alt={`Foto de ${m.name}`} className="h-32 w-24 shrink-0 rounded-2xl bg-cream object-cover" />
             ) : null}
             <div className="flex min-w-0 flex-col">
               <h2 className="font-display text-[32px] leading-tight">{m.name}</h2>
