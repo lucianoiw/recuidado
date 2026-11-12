@@ -9,8 +9,9 @@ import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, buttonClass } f
 import { captureError, identifyMember, track } from "@/lib/analytics";
 import { useLiveRefresh } from "@/lib/live";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
+import { EarlierQuestion, useEarlierDoses } from "./earlier-doses";
 import { CallLink, canCall } from "@/components/call-link";
-import { callName, confirmDose, formatTime, getFamily, notTakenDose, type Dose, type FamilyOverview } from "@/lib/api";
+import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
 
 function greeting(): string {
   const hour = Number(
@@ -45,8 +46,6 @@ export function PatientView() {
   const [now, setNow] = useState(0);
   const [busy, setBusy] = useState(false);
   const [justTaken, setJustTaken] = useState<Dose[] | null>(null);
-  // Doses of earlier today she already answered, hidden before the reload arrives.
-  const [answered, setAnswered] = useState<Set<string>>(() => new Set());
   const ready = usePatientReady();
 
   const load = useCallback(() => {
@@ -65,27 +64,18 @@ export function PatientView() {
   }, []);
 
   useLiveRefresh(load);
+  const earlier = useEarlierDoses(data, load);
 
   if (error) {
     return <p className="text-[24px] text-muted">Sem conexão. Tente de novo em instantes.</p>;
   }
   if (!data || ready === null) return <p className="text-[24px] text-muted">Carregando...</p>;
-  if (!ready) return <PatientWelcome data={data} />;
+  if (!ready) return <PatientWelcome data={data} earlier={earlier} />;
 
   const patientName = callName(data.patient);
-  // Times that had passed when the family added the medicine: no reminder went out, so ask.
-  const earlier = groupByTime(
-    data.today.filter(
-      (d) =>
-        d.beforeAdded &&
-        d.status === "pending" &&
-        !answered.has(d.id) &&
-        new Date(d.scheduledAt).getTime() <= now,
-    ),
-  );
   // Still waiting: not taken, and not a "Não tomei" she already gave.
   const open = (d: Dose) =>
-    d.status !== "taken" && !(d.status === "missed" && d.confirmedVia === "app") && !answered.has(d.id);
+    d.status !== "taken" && !(d.status === "missed" && d.confirmedVia === "app") && !earlier.answered.has(d.id);
   // Doses at the same time are taken together: the earliest time whose doses are not taken yet.
   const first = data.today.find((d) => open(d) && new Date(d.scheduledAt).getTime() <= now);
   const due = first ? data.today.filter((d) => open(d) && d.scheduledAt === first.scheduledAt) : [];
@@ -106,60 +96,24 @@ export function PatientView() {
     }
   }
 
-  async function answerEarlier(doses: Dose[], took: boolean) {
-    setBusy(true);
-    try {
-      await Promise.all(doses.map((d) => (took ? confirmDose(d.id) : notTakenDose(d.id))));
-      track("earlier_dose_answered", { doses: doses.length, took });
-      setAnswered((prev) => new Set([...prev, ...doses.map((d) => d.id)]));
-      load();
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  if (earlier.length > 0 && !justTaken) {
-    const group = earlier[0];
-    const photo = group.doses.length === 1 ? data.medications.find((m) => m.id === group.doses[0].medicationId)?.photoUrl : null;
+  // Family added a medicine after she finished the first access: ask here too.
+  if (earlier.pending.length > 0 && !justTaken) {
+    const group = earlier.pending[0];
     return (
-      <>
-        <header className="flex flex-col gap-1">
-          <p className="text-[22px] text-muted">
-            {greeting()}, {patientName}
-          </p>
-          <h1 className="font-display text-[44px] leading-[1.02]">Hoje mais cedo</h1>
-        </header>
-        <section className="flex flex-col items-center gap-1 rounded-[28px] bg-surface px-5 py-7 text-center shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)]">
-          <p className="text-[24px] leading-snug">Já tomou o remédio das</p>
-          <p className="font-display text-[32px] text-accent-ink">{group.time}?</p>
-          {photo ? (
-            <PhotoZoom src={photo} name={group.doses[0].medicationName} className="my-3 h-44 w-32" />
-          ) : (
-            <span className="my-3 flex size-28 items-center justify-center rounded-full bg-blush text-accent">
-              <PillIcon size={52} strokeWidth={1.8} />
-            </span>
-          )}
-          <ul className="flex w-full flex-col gap-3">
-            {group.doses.map((d) => (
-              <li key={d.id} className="flex flex-col items-center">
-                <h2 className={group.doses.length > 1 ? "font-display text-[32px] leading-tight" : "font-display text-[40px] leading-tight"}>
-                  {d.medicationName}
-                </h2>
-                {d.strength ? (
-                  <span className="font-sans text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-        <Button size="xl" onClick={() => answerEarlier(group.doses, true)} disabled={busy} className="font-display">
-          <CheckIcon size={32} />
-          {busy ? "Anotando..." : "Sim, tomei"}
-        </Button>
-        <Button variant="secondary" size="lg" onClick={() => answerEarlier(group.doses, false)} disabled={busy}>
-          Não tomei
-        </Button>
-      </>
+      <EarlierQuestion
+        data={data}
+        group={group}
+        busy={earlier.busy}
+        onAnswer={(took) => earlier.answer(group.doses, took)}
+        top={
+          <header className="flex flex-col gap-1">
+            <p className="text-[22px] text-muted">
+              {greeting()}, {patientName}
+            </p>
+            <h1 className="font-display text-[44px] leading-[1.02]">Hoje mais cedo</h1>
+          </header>
+        }
+      />
     );
   }
 
