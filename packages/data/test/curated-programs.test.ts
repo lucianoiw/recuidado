@@ -36,7 +36,13 @@ describe("curated programs (Remédio em Casa, Dose Certa, AMG, Vale Mais Saúde)
     expect(ids("Insulina humana NPH", "100 UI/mL")).toContain("amg_sp");
   });
 
-  it("Tegretol CR (extended release) matches the discount", () => {
+  it("Tegretol CR matches the discount, a plain carbamazepine does not", () => {
+    expect(ids("Carbamazepina", "200 mg")).not.toContain("vale_mais_saude");
+  });
+
+  it("gliclazida 60 mg (only sold as modified release) still matches without MR on the prescription", () => {
+    expect(ids("Gliclazida", "60 mg")).toContain("remedio_em_casa_sp");
+    expect(ids("Gliclazida", "60 mg", "Gliclazida MR")).toContain("remedio_em_casa_sp");
     expect(ids("Carbamazepina", "200 mg", "Tegretol CR")).toContain("vale_mais_saude");
   });
 });
