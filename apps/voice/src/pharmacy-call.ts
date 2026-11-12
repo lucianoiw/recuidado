@@ -52,6 +52,8 @@ export interface PharmacyCallOptions {
   overlapGlueMs?: number;
   /** Silence of the assistant after the pharmacy spoke before a nudge (and, again, before hanging up). Default 6000. */
   stallMs?: number;
+  /** Estimated ms of audio per character of the assistant's transcript. Default 65 (about 15 per second). */
+  speechCharMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -205,6 +207,8 @@ export class PharmacyCall {
   private voiceOpen = false;
   private mutedSpeech = "";
   private lastAssistantAt = 0;
+  /** When the audio of what the assistant said should end (estimated from the transcript). */
+  private speechEndsAt = 0;
   private introDefers = 0;
   private stallTimer?: NodeJS.Timeout;
   private stallPokes = 0;
@@ -412,7 +416,10 @@ export class PharmacyCall {
     if (this.side && this.side !== "person" && this.side !== "unclear" && !(notAMenu && this.side === "menu")) return;
     // The model often starts its own introduction while still muted. Opening the voice in the middle
     // of it let the pharmacy hear only "...virtual da Recuidado": wait until it stops talking.
-    if (Date.now() - this.lastAssistantAt < 700 && this.introDefers < 15) {
+    // The transcript of its speech arrives faster than the audio plays: wait for the estimated end of
+    // the audio too (about 15 characters per second), not only for the last transcript piece.
+    const now = Date.now();
+    if ((now - this.lastAssistantAt < 700 || now < this.speechEndsAt + 300) && this.introDefers < 30) {
       this.introDefers++;
       this.timers.push(setTimeout(() => this.introduceIfNeeded(notAMenu), 300));
       return;
@@ -549,6 +556,7 @@ export class PharmacyCall {
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
     this.lastAssistantAt = Date.now();
+    this.speechEndsAt = Math.max(this.speechEndsAt, this.lastAssistantAt) + delta.length * (this.opts.speechCharMs ?? 65);
     if (this.stallTimer) clearTimeout(this.stallTimer);
     const heard = this.voiceOpen || this.gate.alwaysOpen === true;
     // What the AI says while muted never reaches the pharmacy: it stays out of the transcript (it read
