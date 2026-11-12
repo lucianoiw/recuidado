@@ -1,0 +1,103 @@
+.section {
+  padding-bottom: 72px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-top: 56px;
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.photo {
+  display: block;
+  flex: none;
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  color: #b3135a;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.name {
+  --h-size: 46px;
+}
+
+.lead {
+  margin: 0;
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paragraph {
+  --p-max: none;
+}
+
+.paragraph a {
+  font-weight: 600;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 16px;
+}
+
+@media (min-width: 640px) {
+  .inner {
+    gap: 40px;
+    padding-top: 72px;
+  }
+
+  .head {
+    gap: 28px;
+  }
+
+  .photo {
+    width: 112px;
+    height: 112px;
+  }
+
+  .lead {
+    font-size: 21px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px;
+  }
+}

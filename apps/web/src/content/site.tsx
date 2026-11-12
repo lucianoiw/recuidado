@@ -239,6 +239,31 @@ export const inside = {
   ],
 };
 
+// Who built it. Facts confirmed by Luciano (12/11/2026); keep them as written.
+export const author = {
+  eyebrow: "Quem está por trás",
+  name: "Luciano Souza",
+  lead: "Quase 30 anos transformando ideias em produtos digitais que as pessoas usam.",
+  photoAlt: "Luciano Souza",
+  career:
+    "Começou em 1998 fazendo interfaces para Microsoft, Volkswagen e Pão de Açúcar. Passou pela Youse, a primeira seguradora 100% digital do Brasil, e pela XP Inc., onde trabalhou nas três marcas no Brasil (XP, Rico e Clear) e, na XP Investments, em Nova York, criou do zero uma plataforma de câmbio. Na MELVER, plataforma de educação que já passou de 2 milhões de matrículas e mais de 500 mil alunos, foi CTO por quase 5 anos e hoje é sócio e atua como Staff Engineer.",
+  ai: (
+    <>
+      Apaixonado por inteligência artificial, vem se especializando em várias áreas dela. Já criou e colocou em produção diversas plataformas que usam IA, dos mais diferentes tipos. Entre elas, o{" "}
+      <a href="https://www.tribunaldeideias.com.br">Tribunal de Ideias</a>, onde uma ideia de negócio vai a julgamento ao vivo. Antes da audiência, a plataforma investiga o negócio: analisa o mercado, testa a marca e simula 60 compradores reagindo à oferta para ver quem pagaria e por quê. Depois, até 25 modelos de IA de 20 empresas diferentes assumem acusação, defesa, testemunhas, júri e juiz, e entregam um laudo com o veredito e o que mudar. São mais de 100 chamadas de IA por julgamento, com direito a apelação.
+    </>
+  ),
+  twins: (
+    <>
+      Hoje faz um experimento chamado <a href="https://www.gemeosartificiais.com.br">Gêmeos Artificiais</a>, para entender o quanto o contexto de pessoas reais interfere nas decisões de pessoas artificiais.
+    </>
+  ),
+  links: [
+    { label: "lucianosouza.com.br", href: "https://www.lucianosouza.com.br" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/lcosouza/" },
+  ],
+};
+
 export const footer = {
   text: "Recuidado, produto em validação e ainda não comercializado. Os exemplos usam dados fictícios.",
   character: "A Dona Maria é uma personagem.",
