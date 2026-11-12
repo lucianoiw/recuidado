@@ -705,3 +705,13 @@ test("after 'Alô?' the AI introduces itself on its own; silence after the answe
   const result = await call.result;
   assert.equal(result.endReason, "assistant_silent");
 });
+
+test("a person who asked to wait and never came back: 'Alô? Ainda está aí?', then the call ends", async () => {
+  const { socket, call } = setup(60_000, { waitLimitMs: 30, deadLineMs: 30 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Teste, boa tarde. Só um minutinho, por favor" });
+  const result = await call.result;
+  assert.equal(result.endReason, "silent_line");
+  const check = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("wait_check_"));
+  assert.equal(check.length, 1);
+});

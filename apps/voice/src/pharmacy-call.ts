@@ -56,6 +56,8 @@ export interface PharmacyCallOptions {
   speechCharMs?: number;
   /** Nothing heard for this long after the introduction ends the call. Default 25000. */
   deadLineMs?: number;
+  /** Silence while the person asked to wait, before "Alô? Ainda está aí?" (default 40 s). */
+  waitLimitMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -217,6 +219,7 @@ export class PharmacyCall {
   private stallTimer?: NodeJS.Timeout;
   private stallPokes = 0;
   private deadLineTimer?: NodeJS.Timeout;
+  private waitLimitTimer?: NodeJS.Timeout;
   private openLines: Partial<Record<TranscriptLine["speaker"], { line: TranscriptLine; at: number }>> = {};
   private endReason?: string;
   private voicemail = false;
@@ -745,6 +748,31 @@ export class PharmacyCall {
    * The answer is recorded and the assistant went quiet without a goodbye (measured 12/11: "Ok, só um
    * instante." and the line dropped). Once, ask for the goodbye; then hang up.
    */
+  /**
+   * Measured 12/11: the attendant said "peraí, já te confirmo" and never came back; the call waited
+   * until the time cap. After a long silence the assistant checks once, and the dead line ends the
+   * call if nobody answers (the API reads what was said from the transcript).
+   */
+  private armWaitLimit() {
+    if (this.waitLimitTimer) clearTimeout(this.waitLimitTimer);
+    this.waitLimitTimer = setTimeout(() => {
+      if (!this.waiting || this.answer || this.hangupRequested || this.finished) return;
+      this.log(`waited ${this.opts.waitLimitMs ?? 40000} ms in silence, checking the line`);
+      this.waiting = false;
+      this.side = "unclear";
+      this.armDeadLine();
+      void this.openVoice().then(() =>
+        this.send({
+          type: "session.commentary.append",
+          event_id: `wait_check_${this.opts.sessionId}`,
+          delegation_id: null,
+          content: 'You waited a long time in silence. Say only "Alô? Ainda está aí?" in Brazilian Portuguese, then listen.',
+        }),
+      );
+    }, this.opts.waitLimitMs ?? 40000);
+    this.timers.push(this.waitLimitTimer);
+  }
+
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
@@ -857,6 +885,7 @@ export class PharmacyCall {
     this.armSilentLine();
     this.armStall();
     if (this.deadLineTimer) this.armDeadLine();
+    if (this.waiting) this.armWaitLimit();
     this.inputOrder++;
     if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
     this.utterance += delta;
@@ -920,6 +949,7 @@ export class PharmacyCall {
         this.waiting = true;
         this.waitAck = "";
         if (this.introTimer) clearTimeout(this.introTimer);
+        this.armWaitLimit();
         // Heard for "Claro, eu aguardo"; muted again once it is said.
         void this.openVoice();
         break;
