@@ -62,6 +62,8 @@ export interface CmedRow {
   pmc_region: number | null;
   icms_rate_region: number;
   units_per_pack: number | null;
+  /** Prescription stripe on the box: red, black (controlled, the pharmacy keeps the prescription) or none. */
+  stripe: "red" | "black" | "none" | null;
   pmc_region_per_unit: number | null;
   match_key: string | null;
   ingredient_key: string | null;
@@ -85,7 +87,17 @@ const COLUMNS = {
   pmc18: "PMC 18 %",
   hospitalOnly: "RESTRIÇÃO HOSPITALAR",
   icmsZero: "ICMS 0%",
+  stripe: "TARJA",
 } as const;
+
+/** "Tarja Vermelha", "Tarja Vermelha(*)", "Tarja Preta", "Venda Livre", "- (*)". */
+export function parseStripe(raw: string): CmedRow["stripe"] {
+  const text = raw.toLowerCase();
+  if (text.includes("preta")) return "black";
+  if (text.includes("vermelha")) return "red";
+  if (text.includes("livre") || text.startsWith("-")) return "none";
+  return null;
+}
 
 function cellText(value: ExcelJS.CellValue): string {
   if (value === null || value === undefined) return "";
@@ -149,6 +161,7 @@ export async function parseCmedWorkbook(path: string): Promise<CmedRow[]> {
         pmc_region: pmcRegion,
         icms_rate_region: rate,
         units_per_pack: units,
+        stripe: parseStripe(get(COLUMNS.stripe)),
         pmc_region_per_unit: pmcRegion !== null && units ? Number((pmcRegion / units).toFixed(4)) : null,
         match_key: buildMatchKey(ingredients, parseStrengths(presentation)),
         ingredient_key: buildIngredientKey(ingredients),
@@ -163,6 +176,7 @@ export const CMED_CSV_COLUMNS: (keyof CmedRow)[] = [
   "ggrem", "registry", "ean", "ean_2", "ean_3", "substance", "product", "presentation", "laboratory",
   "therapeutic_class", "product_type", "price_regime", "icms_zero", "pmc_0", "pmc_12", "pmc_18",
   "pmc_region", "icms_rate_region", "units_per_pack", "pmc_region_per_unit", "match_key", "ingredient_key",
+  "stripe",
 ];
 
 async function main(): Promise<void> {

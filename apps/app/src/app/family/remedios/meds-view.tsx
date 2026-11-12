@@ -19,6 +19,7 @@ import {
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { EditMedSheet } from "@/components/edit-med-sheet";
+import { MedBox } from "@/components/med-box";
 import { FreeOrBuy } from "@/components/free-or-buy";
 import { callName, isFree, type Medication } from "@/lib/api";
 import { useBuyChoice } from "@/lib/buy-choice";
@@ -62,8 +63,11 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
             // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
             <img src={m.photoUrl} alt="" className="size-14 shrink-0 rounded-2xl bg-cream object-cover" />
           ) : (
-            <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-cream text-muted">
-              <CameraIcon size={22} />
+            <span className="relative shrink-0">
+              <MedBox med={m} className="w-14 rounded-xl" />
+              <span className="absolute -right-1.5 -bottom-1.5 flex size-7 items-center justify-center rounded-full border-2 border-surface bg-ink text-white">
+                <CameraIcon size={14} />
+              </span>
             </span>
           )}
           <span className="flex min-w-0 flex-1 flex-col">

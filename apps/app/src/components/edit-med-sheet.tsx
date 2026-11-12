@@ -139,7 +139,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
       <MedPhotoField med={med} onChanged={onSaved} />
       <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
         <InfoIcon size={18} className="mt-0.5 shrink-0" />
-        Mude a dose, o horário ou pare o remédio só com orientação do médico.
+        Mude a dose, o horário ou remova o remédio só com orientação do médico.
       </p>
       {error ? (
         <p role="alert" className="font-semibold text-danger">

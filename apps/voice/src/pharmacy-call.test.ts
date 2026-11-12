@@ -673,3 +673,20 @@ test("nothing heard after a menu key: 'Alô?' three times, then the call ends as
   const alo = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("alo_"));
   assert.equal(alo.length, 3);
 });
+
+test("answer recorded without a goodbye: the AI is asked for it once, then the call ends", async () => {
+  const { socket, call } = setup(60_000);
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Central, boa tarde. Tem sim, sete e noventa." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Ok, só um instante." });
+  socket.emitEvent(
+    fnCall("r1", "record_pharmacy_answer", {
+      items: [{ medication: "Losartana 50 mg", available: "yes", generic_price_reais: 7.9, reference_price_reais: 13.9, price_reais: null, package: "" }],
+      note: "",
+    }),
+  );
+  const result = await call.result;
+  assert.equal(result.endReason, "hung_up_after_answer");
+  const asked = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("goodbye_"));
+  assert.equal(asked.length, 1);
+});

@@ -205,6 +205,7 @@ export class PharmacyCall {
   private durationSeconds?: number;
   private hangupRequested = false;
   private saidGoodbye = false;
+  private goodbyeAsked = false;
   /** Whether the pharmacy hears the AI now (the voice gate is open). */
   private voiceOpen = false;
   private mutedSpeech = "";
@@ -719,9 +720,26 @@ export class PharmacyCall {
     this.timers.push(this.deadLineTimer);
   }
 
+  /**
+   * The answer is recorded and the assistant went quiet without a goodbye (measured 12/11: "Ok, só um
+   * instante." and the line dropped). Once, ask for the goodbye; then hang up.
+   */
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
+      if (this.finished || this.hangupRequested) return;
+      if (!this.goodbyeAsked && !GOODBYE.test(this.assistantAfterAnswer)) {
+        this.goodbyeAsked = true;
+        this.log("answer recorded and no goodbye yet, asking for it");
+        this.send({
+          type: "session.commentary.append",
+          event_id: `goodbye_${this.opts.sessionId}`,
+          delegation_id: null,
+          content: 'You have everything. Say only "Muito obrigada, tchau!" in Brazilian Portuguese now.',
+        });
+        this.armSilenceHangup();
+        return;
+      }
       this.endReason ??= "hung_up_after_answer";
       void this.endCall();
     }, this.opts.goodbyeMs ?? 5000);

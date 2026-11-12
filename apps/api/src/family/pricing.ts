@@ -1,4 +1,4 @@
-import { findCmedPrice } from '@recuidado/data';
+import { findCmedPrice, presentationForm } from '@recuidado/data';
 
 /** CMED reference sent with each medication in GET /family. */
 export interface MedicationPrice {
@@ -12,6 +12,12 @@ export interface MedicationPrice {
   product: string;
   /** Publication date of the CMED list used. */
   listDate: string | null;
+  /** Some pack with this substance and strength is sold as a generic. */
+  hasGeneric: boolean;
+  /** Pharmaceutical form of the cheapest pack, e.g. "comprimido revestido". */
+  form: string | null;
+  /** Prescription stripe on the box: red, black or none; null when the list does not say. */
+  stripe: 'red' | 'black' | 'none' | null;
 }
 
 /**
@@ -36,6 +42,9 @@ export function cmedPriceOf(
       unitsPerPack: price.cheapest.unitsPerPack,
       product: price.cheapest.product,
       listDate: price.listDate,
+      hasGeneric: price.hasGeneric,
+      form: presentationForm(price.cheapest.presentation),
+      stripe: price.stripe,
     };
   } catch {
     return null;
