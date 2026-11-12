@@ -1,0 +1,74 @@
+/* Base. Section styles live inline in page.tsx, copied from the approved design. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: #ffffff; color: #161314; -webkit-font-smoothing: antialiased; }
+a { color: #161314; }
+a:hover { color: #fe398a; }
+a[style*="background: #161314"]:hover, a[style*="background:#161314"]:hover { color: #ffffff; opacity: 0.88; }
+:focus-visible { outline: 3px solid #fe398a; outline-offset: 3px; }
+section[id] { scroll-margin-top: 16px; }
+
+.nowrap { white-space: nowrap; }
+.faq summary { list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq[open] .faq-plus { display: none; }
+
+/* Tablet: two-column layouts become one column. */
+@media (max-width: 1023px) {
+  .wrap { padding-left: 32px !important; padding-right: 32px !important; }
+  .nav-link { display: none; }
+  .g-stack { grid-template-columns: minmax(0, 1fr) !important; gap: 48px !important; }
+  .phone { justify-self: center; }
+  .g-time { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; row-gap: 48px !important; }
+  .time-line { display: none; }
+  .g-four { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .g-three { grid-template-columns: minmax(0, 1fr) !important; }
+  .num { padding: 28px 0 !important; border-left: 0 !important; border-bottom: 1px solid #e9e3dd; }
+  .t-h1 { font-size: 60px !important; }
+  .t-h2 { font-size: 44px !important; max-width: 16em !important; }
+  .ph { height: 520px !important; }
+  .note-l { left: 16px !important; }
+  .box-dark { padding: 48px !important; }
+  .card-rx { bottom: -28px !important; }
+  /* Photos with text on top: tall photo, gradient from the bottom (dark) or top (light). */
+  .ph-ov { height: 620px !important; }
+  .ov-dark { background: linear-gradient(0deg, rgba(22, 19, 20, 0.88) 0%, rgba(22, 19, 20, 0.6) 55%, rgba(22, 19, 20, 0) 85%) !important; }
+  .ov-light { background: linear-gradient(180deg, rgba(252, 235, 241, 0.97) 0%, rgba(252, 235, 241, 0.9) 50%, rgba(252, 235, 241, 0) 80%) !important; }
+  .ov-text { left: 32px !important; right: 32px !important; max-width: 560px !important; }
+  .ov-bottom { bottom: 28px !important; }
+  .ov-mid { top: 32px !important; transform: none !important; }
+}
+
+/* Phone. */
+@media (max-width: 639px) {
+  .banner { font-size: 13px !important; padding: 10px 16px !important; }
+  .wrap { padding-left: 16px !important; padding-right: 16px !important; }
+  header.wrap { padding-top: 18px !important; padding-bottom: 18px !important; }
+  header.wrap img { width: 120px; height: auto; }
+  .nav { gap: 12px !important; font-size: 14px !important; }
+  .nav-cta { padding: 10px 14px !important; white-space: nowrap; }
+  .pad-y { padding-top: 72px !important; padding-bottom: 72px !important; }
+  .pad-t { padding-top: 72px !important; }
+  .pad-b { padding-bottom: 72px !important; }
+  .gap-big { gap: 80px !important; }
+  .g-stack { gap: 36px !important; }
+  .t-h1 { font-size: 42px !important; line-height: 1.05 !important; }
+  .t-h2 { font-size: 34px !important; line-height: 1.08 !important; }
+  .time-h { font-size: 38px !important; }
+  .g-time { grid-template-columns: minmax(0, 1fr) !important; row-gap: 36px !important; }
+  .g-four { grid-template-columns: minmax(0, 1fr) !important; }
+  .ph { height: 400px !important; }
+  .note-l, .note-r { position: relative !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; width: auto !important; }
+  .note-l { margin: -44px 16px 0; }
+  .note-r { margin: 10px 16px 0 40px; }
+  .num > span:first-child { font-size: 64px !important; }
+  .pill-box { height: 400px !important; }
+  .card-pharm { left: 16px !important; right: 16px !important; bottom: 16px !important; width: auto !important; }
+  .card-rx { right: 16px !important; left: 16px !important; width: auto !important; }
+  .box-dark { padding: 28px 20px !important; border-radius: 28px !important; }
+  .box-price { padding: 28px !important; }
+  .price { font-size: 52px !important; }
+  .price-name { font-size: 26px !important; }
+  .box-tech { padding: 24px 16px !important; border-radius: 28px !important; }
+  .faq-q { font-size: 20px !important; }
+  .ov-text { left: 20px !important; right: 20px !important; }
+}
