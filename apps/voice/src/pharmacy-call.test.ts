@@ -547,3 +547,16 @@ test("a recorded welcome is a menu, not a person", () => {
   assert.equal(sideByRule("Bem-vindo à Farmácia Teste", ""), "menu");
   assert.equal(sideByRule("Farmácia Central, boa noite, Marcos falando", ""), null);
 });
+
+test("a recorded welcome before the options: stays muted and waits, no introduction over the menu", async () => {
+  const { socket, gate } = quickMenuCall();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Olá, você ligou para a Drogaria Bom Preço." });
+  socket.emitEvent(decision("d1", "i1", "person", "none"));
+  await new Promise((r) => setTimeout(r, 120));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  assert.equal(gate.last, "muted");
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: " Para entregas, tecle 1. Para falar com um atendente, tecle 3." });
+  await new Promise((r) => setTimeout(r, 120));
+  assert.deepEqual(keysSent(socket), ["3"]);
+});

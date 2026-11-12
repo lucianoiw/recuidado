@@ -360,8 +360,14 @@ export class PharmacyCall {
       this.side === "menu" && this.suggestedKey && menuKeys(heard).includes(this.suggestedKey) ? this.suggestedKey : null;
     const key = byRule ?? bySecond;
     if (!key) {
-      if (this.side === "menu" && this.sideSource === "decisions" && Date.now() - this.lastInputAt < 3000) {
-        // Still a menu, and its options are not all out yet: wait for more.
+      if (
+        this.side === "menu" &&
+        (this.sideSource === "decisions" || this.keysPressed.length === 0) &&
+        Date.now() - this.lastInputAt < 3000
+      ) {
+        // Still a menu, its options not all out yet: wait for more. Before the first key the words are
+        // enough ("Olá, você ligou para a Drogaria X" comes before any option); after a key, a stray
+        // "tecle" is often the tail of the last menu, so only the second model's verdict waits.
         this.log("menu without a usable option yet, waiting");
         this.menuTimer = setTimeout(() => this.chooseFromMenu(), this.opts.menuPauseMs ?? 1500);
         this.timers.push(this.menuTimer);
