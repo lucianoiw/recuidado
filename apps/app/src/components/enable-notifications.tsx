@@ -76,7 +76,7 @@ export function EnableNotifications({
         </button>
       ) : null}
       {state === "on" && !large ? (
-        <button type="button" onClick={disable} disabled={busy} className="min-h-11 font-bold text-danger">
+        <button type="button" onClick={disable} disabled={busy} className="min-h-11 font-semibold text-danger">
           Desligar alertas neste celular
         </button>
       ) : null}

@@ -31,11 +31,9 @@ export function DoseRow({
   statusText?: string;
 }) {
   return (
-    <li className="flex items-center justify-between gap-3 border-b border-line-soft py-3 last:border-b-0">
-      <div className="flex min-w-0 flex-col">
-        <span className="font-semibold">{name}</span>
-        <span className="text-[15px] text-muted">{time}</span>
-      </div>
+    <li className="flex items-center gap-3 border-b border-line-soft py-3 last:border-b-0">
+      <span className="w-12 shrink-0 text-[15px] tabular-nums text-muted">{time}</span>
+      <span className="min-w-0 flex-1 text-[16px] font-medium leading-snug">{name}</span>
       <StatusPill tone={statusTone[status]}>{statusText ?? statusLabel[status]}</StatusPill>
     </li>
   );

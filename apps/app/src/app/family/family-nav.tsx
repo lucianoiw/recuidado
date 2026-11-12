@@ -10,10 +10,10 @@ export function FamilyNav() {
   return (
     <BottomNav
       items={[
-        { href: "/family", label: "Hoje", icon: <HomeIcon size={26} /> },
-        { href: "/family/remedios", label: "Remédios", icon: <PillIcon size={26} /> },
-        { href: "/family/onde-pegar", label: "Onde pegar", icon: <PinIcon size={26} /> },
-        { href: "/family/familia", label: "Família", icon: <UsersIcon size={26} /> },
+        { href: "/family", label: "Hoje", icon: <HomeIcon size={22} /> },
+        { href: "/family/remedios", label: "Remédios", icon: <PillIcon size={22} /> },
+        { href: "/family/onde-pegar", label: "Onde pegar", icon: <PinIcon size={22} /> },
+        { href: "/family/familia", label: "Família", icon: <UsersIcon size={22} /> },
       ]}
     />
   );

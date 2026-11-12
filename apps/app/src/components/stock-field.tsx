@@ -34,7 +34,7 @@ export function StockField({
             key={n}
             type="button"
             onClick={() => onValue(String(Math.min(1000, current + n)))}
-            className="inline-flex min-h-11 items-center rounded-xl border-[1.5px] border-line bg-surface px-3 text-[16px] font-bold text-ink"
+            className="inline-flex min-h-11 items-center rounded-xl border-[1.5px] border-line bg-surface px-3 text-[16px] font-semibold text-ink"
           >
             +{n}
           </button>

@@ -88,7 +88,7 @@ function ReadingSteps() {
         <h1 className="font-display text-[32px] leading-[1.08]">Lendo a receita...</h1>
         <p className="text-muted">Leva uns 15 segundos.</p>
       </div>
-      <ul className="flex w-full flex-col gap-3 rounded-card border border-line-soft bg-surface p-4 text-left">
+      <ul className="flex w-full flex-col gap-3 rounded-card bg-surface p-4 text-left">
         {READING_STEPS.map((s, i) => (
           <li key={s} className={cn("flex items-center gap-3", i > done && "text-muted")}>
             <span
@@ -99,7 +99,7 @@ function ReadingSteps() {
             >
               {i < done ? <CheckIcon size={16} strokeWidth={3} /> : null}
             </span>
-            <span className={cn(i === done && "font-bold")}>{s}</span>
+            <span className={cn(i === done && "font-semibold")}>{s}</span>
           </li>
         ))}
       </ul>
@@ -139,7 +139,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
       ) : null}
 
       {free.length > 0 ? (
-        <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
+        <section className="overflow-hidden rounded-card bg-surface">
           <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
             <FreeIcon size={20} className="text-brand" />
             Grátis, se quiser pegar
@@ -154,7 +154,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           </ul>
           <Link
             href="/family/onde-pegar"
-            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
+            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-semibold text-brand no-underline"
           >
             Onde pegar perto de casa
             <ChevronRightIcon size={20} />
@@ -163,7 +163,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
       ) : null}
 
       {paid.length > 0 ? (
-        <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
+        <section className="overflow-hidden rounded-card bg-surface">
           <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
             <CartIcon size={20} className="text-warn" />
             Precisa comprar
@@ -180,7 +180,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
           </ul>
           <Link
             href="/family/comprar"
-            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-bold text-brand no-underline"
+            className="flex items-center justify-between border-t border-line-soft px-4 py-3.5 font-semibold text-brand no-underline"
           >
             Onde comprar e dividir
             <ChevronRightIcon size={20} />
@@ -299,7 +299,7 @@ export function PrescriptionReview() {
         {warnings.map((w) => (
           <div
             key={w}
-            className="flex gap-2 rounded-card border-[1.5px] border-warn bg-warn-soft p-3.5 text-[15px] leading-snug"
+            className="flex gap-2 rounded-card bg-warn-soft p-3.5 text-[15px] leading-snug"
           >
             <AlertIcon size={20} className="mt-0.5 shrink-0 text-warn" />
             {w}
@@ -310,7 +310,7 @@ export function PrescriptionReview() {
             key={d.key}
             className={cn(
               "flex flex-col gap-3 rounded-card bg-surface p-4",
-              d.review ? "border-[1.5px] border-warn" : "border border-line-soft",
+              d.review ? "" : "border border-line-soft",
             )}
           >
             <div className="flex items-start justify-between gap-2">
@@ -347,7 +347,7 @@ export function PrescriptionReview() {
             {d.editing ? (
               <div className="flex flex-col gap-3 rounded-2xl bg-bg p-3">
                 <label className="flex flex-col gap-1">
-                  <span className="text-[15px] font-bold">Nome</span>
+                  <span className="text-[15px] font-semibold">Nome</span>
                   <input
                     className={inputClass}
                     value={d.name}
@@ -357,7 +357,7 @@ export function PrescriptionReview() {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="flex flex-col gap-1">
-                    <span className="text-[15px] font-bold">Dose</span>
+                    <span className="text-[15px] font-semibold">Dose</span>
                     <input
                       className={inputClass}
                       value={d.strength}
@@ -366,7 +366,7 @@ export function PrescriptionReview() {
                     />
                   </label>
                   <label className="flex flex-col gap-1">
-                    <span className="text-[15px] font-bold">Princípio ativo</span>
+                    <span className="text-[15px] font-semibold">Princípio ativo</span>
                     <input
                       className={inputClass}
                       value={d.activeIngredient}
@@ -377,7 +377,7 @@ export function PrescriptionReview() {
                 <button
                   type="button"
                   onClick={() => setDrafts((ds) => ds.filter((x) => x.key !== d.key))}
-                  className="min-h-11 rounded-xl text-[16px] font-bold text-danger"
+                  className="min-h-11 rounded-xl text-[16px] font-semibold text-danger"
                 >
                   Tirar da lista
                 </button>

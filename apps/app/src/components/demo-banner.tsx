@@ -11,16 +11,11 @@ import { useFamily } from "@/lib/use-family";
 export function DemoBanner({ isDemo }: { isDemo?: boolean }) {
   if (!isDemo) return null;
   return (
-    <section className="flex flex-col gap-2 rounded-card border border-line-soft bg-brand-soft p-4 text-[15px] leading-snug">
-      <div className="flex items-start gap-2.5">
-        <InfoIcon size={22} className="mt-0.5 shrink-0 text-brand" />
-        <span>
-          Você está vendo a família de demonstração. Ela não muda. Para testar com a sua família, entre
-          com o seu e-mail: os dados ficam separados.
-        </span>
-      </div>
-      <Link href="/entrar" className="font-bold text-brand">
-        Entrar ou criar conta
+    <section className="flex items-center gap-3 rounded-card bg-ink p-3 pl-4 text-[14px] leading-snug text-white">
+      <InfoIcon size={20} className="shrink-0 text-white/80" />
+      <span className="flex-1">Família de demonstração, com dados fictícios. Para usar com a sua, entre com o seu e-mail.</span>
+      <Link href="/entrar" className="shrink-0 rounded-full bg-surface px-3.5 py-2 text-[14px] font-semibold text-ink no-underline">
+        Entrar
       </Link>
     </section>
   );

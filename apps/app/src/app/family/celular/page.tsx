@@ -3,7 +3,7 @@ import { PhoneSetupView } from "./phone-setup-view";
 
 export default function Page() {
   return (
-    <Screen audience="family">
+    <Screen audience="family" withNav>
       <PhoneSetupView />
     </Screen>
   );

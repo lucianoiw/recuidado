@@ -20,7 +20,7 @@ export function Field({
 }) {
   return (
     <label className={cn("flex min-w-0 flex-col gap-1.5", className)}>
-      <span className="text-[15px] font-bold">{label}</span>
+      <span className="text-[15px] font-semibold">{label}</span>
       <input
         {...props}
         className={inputClass}
@@ -49,7 +49,7 @@ export function SelectField<T extends string>({
 }) {
   return (
     <label className="flex min-w-0 flex-col gap-1.5">
-      <span className="text-[15px] font-bold">{label}</span>
+      <span className="text-[15px] font-semibold">{label}</span>
       <span className="relative">
         <select
           className={cn(inputClass, "appearance-none pr-11", !value && "text-[#8c8578]")}

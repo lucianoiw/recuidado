@@ -11,3 +11,4 @@ export { Screen, ScreenHeader } from "./screen";
 export { Sheet } from "./sheet";
 export { StatusPill, type StatusTone } from "./status-pill";
 export { TopBar } from "./top-bar";
+export { InfoLine, Notice, pillClass } from "./info-line";

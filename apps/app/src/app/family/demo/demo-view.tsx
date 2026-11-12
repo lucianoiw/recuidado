@@ -160,14 +160,14 @@ export function DemoView() {
         </p>
       ) : null}
 
-      <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+      <ul className="overflow-hidden rounded-card bg-surface">
         <StepRow icon={<BellIcon size={22} />} title={`Lembrete para ${name}`} step={run?.reminder ?? null} now={now} />
         <StepRow icon={<PhoneIcon size={22} />} title="Ligação da IA" step={run?.call ?? null} now={now} />
         <StepRow icon={<UsersIcon size={22} />} title="Família avisada" step={run?.family ?? null} now={now} />
       </ul>
 
       {run?.finished ? (
-        <p className="flex items-center gap-2 font-bold text-brand">
+        <p className="flex items-center gap-2 font-semibold text-brand">
           <CheckIcon size={22} />
           {run.status === "taken" ? `${name} tomou o remédio.` : "A família já sabe e pode ligar para ela."}
         </p>

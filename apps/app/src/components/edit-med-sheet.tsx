@@ -97,7 +97,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
     <>
       {choices.length > 0 ? (
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-[15px] font-bold">Dose</legend>
+          <legend className="mb-2 text-[15px] font-semibold">Dose</legend>
           <div className="flex flex-wrap gap-2" role="radiogroup">
             {[...choices, "Outra"].map((c) => {
               const on = c === "Outra" ? other : !other && strength === c;
@@ -117,7 +117,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
                   className={cn(
                     "min-h-11 rounded-xl px-3.5 text-[16px]",
                     on
-                      ? "border-2 border-brand bg-brand-soft font-bold text-brand"
+                      ? "border-2 border-brand bg-brand-soft font-semibold text-brand"
                       : "border-[1.5px] border-[#cfc8ba] bg-surface font-semibold text-ink",
                   )}
                 >
@@ -134,7 +134,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
       )}
       <div className="flex flex-col gap-2">
-        <span className="text-[15px] font-bold">Horários</span>
+        <span className="text-[15px] font-semibold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
       </div>
       <StockField value={units} onValue={setUnits} invalid={parsedUnits === undefined} />
@@ -167,7 +167,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         <button
           type="button"
           onClick={() => setConfirming(true)}
-          className="min-h-12 font-bold text-danger"
+          className="min-h-12 font-semibold text-danger"
         >
           Parar este remédio
         </button>

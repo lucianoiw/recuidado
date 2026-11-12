@@ -18,7 +18,7 @@ import { formatDistance, mapsUrl } from "@/lib/pharmacies";
 import { highCostUnits } from "@/lib/sus-units";
 import { brl, medLabel } from "@/lib/use-family";
 
-const linkClass = "font-bold text-brand underline underline-offset-2";
+const linkClass = "font-semibold text-brand underline underline-offset-2";
 
 function ItemRow({
   item,
@@ -42,9 +42,9 @@ function ItemRow({
           {checked ? <CheckIcon size={18} strokeWidth={3} /> : null}
         </span>
         <span className="flex flex-col gap-0.5">
-          <span className={checked ? "font-bold text-muted line-through" : "font-bold"}>{item.label}</span>
+          <span className={checked ? "font-semibold text-muted line-through" : "font-semibold"}>{item.label}</span>
           {item.detail ? <span className="text-[15px] leading-snug text-muted">{item.detail}</span> : null}
-          <span className="text-[13px] font-bold uppercase tracking-wide text-muted">
+          <span className="text-[13px] font-semibold uppercase tracking-wide text-muted">
             {checked ? "Pronto" : "Falta"}
           </span>
         </span>
@@ -68,7 +68,7 @@ function Checklist({
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-[18px] font-semibold">{title}</h2>
-      <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+      <ul className="overflow-hidden rounded-card bg-surface">
         {items.map((item) => (
           <ItemRow key={item.id} item={item} checked={checked.includes(item.id)} onToggle={() => onToggle(item.id)} />
         ))}
@@ -144,7 +144,7 @@ export function HighCostView({ id }: { id: string }) {
       ) : null}
 
       {status.due ? (
-        <section role="alert" className="flex items-start gap-2.5 rounded-card border-2 border-warn bg-warn-soft p-4">
+        <section role="alert" className="flex items-start gap-2.5 rounded-card bg-warn-soft p-4">
           <AlertIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
           <b className="text-warn">{dueText(status.due)}</b>
         </section>
@@ -187,7 +187,7 @@ export function HighCostView({ id }: { id: string }) {
         checked={status.checked}
         onToggle={toggle}
       />
-      {saveError ? <p className="text-[15px] font-bold text-danger">{saveError}</p> : null}
+      {saveError ? <p className="text-[15px] font-semibold text-danger">{saveError}</p> : null}
 
       <section className="flex flex-col gap-3">
         <h2 className="text-[18px] font-semibold">3. Datas para não perder o prazo</h2>
@@ -217,12 +217,12 @@ export function HighCostView({ id }: { id: string }) {
 
       <section className="flex flex-col gap-2">
         <h2 className="text-[18px] font-semibold">4. Onde entregar e retirar</h2>
-        <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+        <ul className="overflow-hidden rounded-card bg-surface">
           {highCostUnits.slice(0, 2).map((u) => (
             <li key={u.cnes} className="flex flex-col gap-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">
               <div className="flex items-start justify-between gap-3">
                 <b className="leading-snug">{u.name}</b>
-                <span className="whitespace-nowrap text-[15px] font-bold text-muted">
+                <span className="whitespace-nowrap text-[15px] font-semibold text-muted">
                   {formatDistance(u.distanceKm)}
                 </span>
               </div>
@@ -233,7 +233,7 @@ export function HighCostView({ id }: { id: string }) {
                 href={mapsUrl(u)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl border-[1.5px] border-ink px-3.5 text-[15px] font-bold text-ink no-underline"
+                className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl border-[1.5px] border-ink px-3.5 text-[15px] font-semibold text-ink no-underline"
               >
                 <NavigationIcon size={18} />
                 Como chegar

@@ -179,7 +179,7 @@ export function OnboardingFlow() {
               <Field label="Como chamar" value={p.nickname} onValue={(v) => patch("patient", { nickname: v })} placeholder="Dona Maria" />
             </div>
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-2 text-[15px] font-bold">Na ligação, a assistente fala</legend>
+              <legend className="mb-2 text-[15px] font-semibold">Na ligação, a assistente fala</legend>
               <div className="grid grid-cols-2 gap-3">
                 {([
                   { value: "female", label: "A senhora" },
@@ -192,7 +192,7 @@ export function OnboardingFlow() {
                     aria-checked={p.gender === o.value}
                     onClick={() => patch("patient", { gender: o.value })}
                     className={cn(
-                      "rounded-2xl bg-surface p-3.5 text-[15px] font-bold",
+                      "rounded-2xl bg-surface p-3.5 text-[15px] font-semibold",
                       p.gender === o.value ? "border-2 border-brand bg-[#f2f8f6]" : "border-[1.5px] border-line-soft",
                     )}
                   >
@@ -215,7 +215,7 @@ export function OnboardingFlow() {
               <CepField value={p.cep} onValue={(v) => patch("patient", { cep: v })} invalid={tried && !isCep(p.cep)} onLookup={setCepOk} />
             </div>
             <fieldset className="flex flex-col gap-2.5">
-              <legend className="mb-2.5 text-[15px] font-bold">Usa celular com internet?</legend>
+              <legend className="mb-2.5 text-[15px] font-semibold">Usa celular com internet?</legend>
               {[
                 {
                   value: true,
@@ -264,7 +264,7 @@ export function OnboardingFlow() {
               onClick={() => patch("patient", { consent: !p.consent })}
               className={cn(
                 "flex items-start gap-3 rounded-2xl bg-surface p-3.5 text-left",
-                p.consent ? "border-2 border-brand bg-[#f2f8f6]" : tried ? "border-2 border-danger" : "border-[1.5px] border-line-soft",
+                p.consent ? "border-2 border-brand bg-[#f2f8f6]" : tried ? "" : "border-[1.5px] border-line-soft",
               )}
             >
               <span
@@ -280,7 +280,7 @@ export function OnboardingFlow() {
                 família veja se {she} tomou o remédio.{p.usesPhone ? ` ${she === "ele" ? "Ele" : "Ela"} também confirma isso no app.` : ""}
               </span>
             </button>
-            <Link href="/privacidade" className="text-[15px] font-bold text-brand">
+            <Link href="/privacidade" className="text-[15px] font-semibold text-brand">
               Como cuidamos dos dados {she === "ele" ? "dele" : "dela"}
             </Link>
           </div>
@@ -404,7 +404,7 @@ function InviteStep({
   return (
     <>
       <Header title="Quem cuida junto?" text="Todo mundo aqui recebe os alertas. Depois de chamar, vocês escolhem como pagam o que não é grátis." />
-      <ul className="flex flex-col overflow-hidden rounded-card border border-line-soft bg-surface">
+      <ul className="flex flex-col overflow-hidden rounded-card bg-surface">
         <li className="flex items-center gap-3 px-4 py-3.5">
           <Avatar name={me.name || "Você"} tone="brand" />
           <span className="flex flex-1 flex-col">
@@ -423,7 +423,7 @@ function InviteStep({
             <button
               type="button"
               onClick={() => shareTo(i.name)}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-bold"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-semibold"
             >
               {canShare ? <ShareIcon size={18} /> : <CopyIcon size={18} />}
               {canShare ? "Enviar" : "Copiar"}
@@ -434,13 +434,13 @@ function InviteStep({
       <button
         type="button"
         onClick={() => setAdding(true)}
-        className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#8c8578] font-bold"
+        className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#8c8578] font-semibold"
       >
         <PlusIcon size={20} />
         Chamar mais alguém
       </button>
       {done ? (
-        <p aria-live="polite" className="flex items-center gap-2 text-[15px] font-bold text-brand">
+        <p aria-live="polite" className="flex items-center gap-2 text-[15px] font-semibold text-brand">
           <CheckIcon size={18} strokeWidth={2.6} />
           {done}
         </p>
@@ -493,7 +493,7 @@ function InviteStep({
             type="button"
             onClick={later}
             disabled={!name.trim()}
-            className="min-h-12 font-bold text-brand disabled:opacity-40"
+            className="min-h-12 font-semibold text-brand disabled:opacity-40"
           >
             {inviteEmail.trim() ? "Mandar o convite por e-mail" : "Só adicionar, envio depois"}
           </button>
@@ -588,7 +588,7 @@ function CepField({
   const missing = lookup.state === "not-found";
   return (
     <label className="flex min-w-0 flex-col gap-1.5">
-      <span className="text-[15px] font-bold">CEP</span>
+      <span className="text-[15px] font-semibold">CEP</span>
       <span className="relative">
         <input
           inputMode="numeric"
@@ -611,7 +611,7 @@ function CepField({
           </span>
         ) : null}
       </span>
-      <span id="cep-status" aria-live="polite" className={cn("text-[14px] font-bold", found ? "text-brand" : missing ? "text-danger" : "text-muted")}>
+      <span id="cep-status" aria-live="polite" className={cn("text-[14px] font-semibold", found ? "text-brand" : missing ? "text-danger" : "text-muted")}>
         {lookup.state === "found"
           ? [lookup.district, `${lookup.city}/${lookup.uf}`].filter(Boolean).join(", ")
           : lookup.state === "not-found"

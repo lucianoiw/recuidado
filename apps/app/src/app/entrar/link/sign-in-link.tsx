@@ -36,13 +36,13 @@ export function SignInLink() {
       <Logo size={64} />
       {error ? (
         <>
-          <p className="text-[19px] font-bold">{error}</p>
+          <p className="text-[19px] font-semibold">{error}</p>
           <Link href="/entrar" className={buttonClass()}>
             Pedir um código novo
           </Link>
         </>
       ) : (
-        <p className="text-[19px] font-bold">Entrando...</p>
+        <p className="text-[19px] font-semibold">Entrando...</p>
       )}
     </main>
   );

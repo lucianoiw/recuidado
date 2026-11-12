@@ -38,7 +38,7 @@ const DAY_TONE: Record<DayState, string> = {
 
 function Stat({ label, value, sub, brand }: { label: string; value: string; sub: string; brand?: boolean }) {
   return (
-    <div className="flex flex-col gap-0.5 rounded-card border border-line-soft bg-surface px-4 py-3.5">
+    <div className="flex flex-col gap-0.5 rounded-card bg-surface px-4 py-3.5">
       <span className="text-[14px] text-muted">{label}</span>
       <span className={cn("text-[26px] font-semibold", brand && "text-brand")}>{value}</span>
       <span className="text-[13px] text-muted">{sub}</span>
@@ -67,7 +67,7 @@ export function MonthSummary() {
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-card border border-line-soft bg-surface p-1.5">
+      <div className="flex items-center justify-between rounded-card bg-surface p-1.5">
         <span className="flex size-11 items-center justify-center text-muted" aria-hidden="true">
           <ChevronLeftIcon size={20} />
         </span>
@@ -89,9 +89,9 @@ export function MonthSummary() {
         <Stat label="Avisos para vocês" value="3" sub="1 de cada tipo" />
       </section>
 
-      <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface px-4 py-3.5">
+      <section className="flex flex-col gap-3 rounded-card bg-surface px-4 py-3.5">
         <h2 className="text-[17px] font-semibold">Dia a dia</h2>
-        <div className="grid grid-cols-7 gap-1.5 text-center text-[13px] font-bold">
+        <div className="grid grid-cols-7 gap-1.5 text-center text-[13px] font-semibold">
           {["D", "S", "T", "Q", "Q", "S", "S"].map((w, i) => (
             <span key={i} className="text-[12px] text-muted">
               {w}
@@ -113,14 +113,14 @@ export function MonthSummary() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-2.5 rounded-card border border-line-soft bg-surface px-4 py-3.5">
+      <section className="flex flex-col gap-2.5 rounded-card bg-surface px-4 py-3.5">
         <h2 className="text-[17px] font-semibold">Doses tomadas, últimos 6 meses</h2>
         <div className="flex gap-2">
           {MONTHS.map((m, i) => {
             const last = i === MONTHS.length - 1;
             return (
               <div key={m} className="flex flex-1 flex-col items-center gap-1.5">
-                <span className={cn("text-[13px] font-bold", last ? "text-brand" : "text-muted")}>{ADHERENCE[i]}%</span>
+                <span className={cn("text-[13px] font-semibold", last ? "text-brand" : "text-muted")}>{ADHERENCE[i]}%</span>
                 <div className="flex h-[90px] w-full items-end">
                   <div
                     className={cn("w-full rounded-t-lg rounded-b", last ? "bg-brand" : "bg-brand-soft")}
@@ -135,13 +135,13 @@ export function MonthSummary() {
       </section>
 
       {meds.length > 0 ? (
-        <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
+        <section className="overflow-hidden rounded-card bg-surface">
           <h2 className="px-4 pb-2.5 pt-3.5 text-[17px] font-semibold">Por remédio</h2>
           {meds.map((m, i) => (
             <div key={m.id} className="flex flex-col gap-1.5 border-t border-line-soft px-4 py-2.5">
               <div className="flex justify-between text-[15px]">
                 <b>{[m.name, m.strength].filter(Boolean).join(" ")}</b>
-                <span className="font-bold">{PER_MED[i].pct}%</span>
+                <span className="font-semibold">{PER_MED[i].pct}%</span>
               </div>
               <div className="h-2 rounded bg-line-soft">
                 <div className="h-2 rounded bg-brand" style={{ width: `${PER_MED[i].pct}%` }} />
@@ -152,7 +152,7 @@ export function MonthSummary() {
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
+      <section className="overflow-hidden rounded-card bg-surface">
         <h2 className="px-4 pb-2.5 pt-3.5 text-[17px] font-semibold">Meses anteriores</h2>
         {PREVIOUS.map((p) => (
           <div key={p.month} className="flex items-center gap-3 border-t border-line-soft px-4 py-3">

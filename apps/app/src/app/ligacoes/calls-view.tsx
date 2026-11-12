@@ -79,7 +79,7 @@ function Timeline({ events }: { events: CallEvent[] }) {
           </li>
         ))}
       </ol>
-      <button type="button" onClick={() => setAll((v) => !v)} className="self-start text-[13px] font-bold text-brand underline">
+      <button type="button" onClick={() => setAll((v) => !v)} className="self-start text-[13px] font-semibold text-brand underline">
         {all ? "Só os passos principais" : `Todos os passos (${events.length})`}
       </button>
     </div>
@@ -135,7 +135,7 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
       )}
       <div className="grid gap-5 md:grid-cols-2">
         <section className="flex min-w-0 flex-col gap-2">
-          <h3 className="text-[13px] font-bold uppercase tracking-wide text-muted">Conversa</h3>
+          <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">Conversa</h3>
           {call.transcript.length === 0 ? (
             <p className="text-[14px] text-muted">Sem transcrição.</p>
           ) : (
@@ -144,7 +144,7 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
                 const ai = l.speaker === "assistant";
                 return (
                   <li key={i} className={`flex flex-col ${ai ? "items-start" : "items-end"}`}>
-                    <span className="text-[12px] font-bold text-muted">{ai ? "Assistente da Recuidado" : kind.other}</span>
+                    <span className="text-[12px] font-semibold text-muted">{ai ? "Assistente da Recuidado" : kind.other}</span>
                     <span
                       className={`max-w-[92%] rounded-2xl px-3 py-2 text-[15px] leading-snug ${ai ? "bg-[#efe9df]" : "bg-brand text-white"}`}
                     >
@@ -157,7 +157,7 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
           )}
         </section>
         <section className="flex min-w-0 flex-col gap-2">
-          <h3 className="text-[13px] font-bold uppercase tracking-wide text-muted">O que o sistema fez</h3>
+          <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">O que o sistema fez</h3>
           <Timeline events={call.events} />
         </section>
       </div>
@@ -202,7 +202,7 @@ export function CallsView() {
             teclas na farmácia).{signedIn ? "" : " Dados de teste; as vozes são da equipe."}
           </p>
         </header>
-        {error && <p className="text-[15px] font-bold text-red-700">Não foi possível carregar as ligações agora.</p>}
+        {error && <p className="text-[15px] font-semibold text-red-700">Não foi possível carregar as ligações agora.</p>}
         {calls === null && !error && <p className="text-[15px] text-muted">Carregando…</p>}
         {calls?.length === 0 && <p className="text-[15px] text-muted">Nenhuma ligação registrada ainda.</p>}
         {calls?.map((c) => <CallCard key={c.sessionId} call={c} signedIn={signedIn} />)}

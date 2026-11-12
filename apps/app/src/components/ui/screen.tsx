@@ -48,7 +48,7 @@ export function ScreenHeader({
       <h1
         className={cn(
           patient
-            ? "text-[38px] font-bold leading-tight"
+            ? "text-[38px] font-semibold leading-tight"
             : "font-display text-[34px] leading-[1.05]",
         )}
       >

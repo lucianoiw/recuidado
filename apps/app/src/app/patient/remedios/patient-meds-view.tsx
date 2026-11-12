@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BellIcon, Card, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
+import { BellIcon, Card, ClockIcon, ScreenHeader, buttonClass } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
 import { formatTime, getFamily, type FamilyOverview } from "@/lib/api";
 
@@ -83,9 +83,6 @@ export function PatientMedsView() {
                 />
               ) : null}
               <div className="flex items-start gap-2.5">
-                <span className="flex h-9 shrink-0 items-center text-brand">
-                  <PillIcon size={28} />
-                </span>
                 <div className="flex min-w-0 flex-col">
                   <h2 className="text-[30px] font-bold leading-tight">{m.name}</h2>
                   {m.strength ? (
@@ -93,8 +90,11 @@ export function PatientMedsView() {
                   ) : null}
                 </div>
               </div>
-              <p className="text-[24px] leading-snug">
-                Às <b>{joinTimes(m.times.map(shortTime))}</b>
+              <p className="flex items-center gap-2.5 border-t border-line-soft pt-3 text-[24px] leading-snug">
+                <ClockIcon size={26} className="shrink-0 text-accent-ink" />
+                <span>
+                  Às <b>{joinTimes(m.times.map(shortTime))}</b>
+                </span>
               </p>
             </Card>
           </li>

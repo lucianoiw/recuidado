@@ -16,7 +16,7 @@ export function ChipGroup<T extends string>({
 }) {
   return (
     <fieldset className="flex flex-col gap-2.5">
-      <legend className="mb-2 text-[15px] font-bold">{label}</legend>
+      <legend className="mb-2 text-[15px] font-semibold">{label}</legend>
       <div className="flex flex-wrap gap-2" role="radiogroup">
         {options.map((o) => {
           const on = o === value;

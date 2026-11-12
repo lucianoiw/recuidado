@@ -105,7 +105,7 @@ export function SignIn() {
             <Button type="submit" disabled={busy}>
               {busy ? "Enviando..." : "Receber o código"}
             </Button>
-            <Link href="/family" className="py-2 text-center text-[15px] font-bold text-brand">
+            <Link href="/family" className="py-2 text-center text-[15px] font-semibold text-brand">
               Só quero ver a demonstração
             </Link>
           </div>
@@ -138,7 +138,7 @@ export function SignIn() {
             <Button type="submit" disabled={busy}>
               {busy ? "Entrando..." : "Entrar"}
             </Button>
-            <button type="button" onClick={() => sendCode()} disabled={busy} className="py-2 text-[15px] font-bold text-brand">
+            <button type="button" onClick={() => sendCode()} disabled={busy} className="py-2 text-[15px] font-semibold text-brand">
               Mandar outro código
             </button>
           </div>

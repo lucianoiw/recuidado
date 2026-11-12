@@ -58,7 +58,7 @@ export function PatientLink() {
     } catch {}
   }
   return (
-    <section className="flex items-stretch gap-4 rounded-card border border-line-soft bg-surface p-4">
+    <section className="flex items-stretch gap-4 rounded-card bg-surface p-4">
       <span className="flex size-[132px] shrink-0 items-center justify-center rounded-xl border border-line bg-white p-2">
         {url ? (
           <QRCodeSVG value={url} size={114} fgColor="#161314" title="QR code do app dela" />
@@ -69,7 +69,7 @@ export function PatientLink() {
         <button
           type="button"
           onClick={copy}
-          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface text-[16px] font-bold"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface text-[16px] font-semibold"
         >
           <CopyIcon size={18} />
           <span aria-live="polite">{copied ? "Copiado" : "Copiar link"}</span>

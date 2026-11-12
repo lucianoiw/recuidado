@@ -173,9 +173,9 @@ export function PatientView() {
             <ClockIcon size={30} strokeWidth={2.2} />
             Agora, {formatTime(due[0].scheduledAt)}
           </p>
-          <ul className="flex flex-col gap-3.5">
+          <ul className="flex flex-col divide-y divide-line-soft">
             {due.map((d) => (
-              <li key={d.id} className="flex flex-col gap-2.5">
+              <li key={d.id} className="flex flex-col gap-2.5 py-3.5 first:pt-0 last:pb-0">
                 {photoOf.get(d.medicationId) ? (
                   // eslint-disable-next-line @next/next/no-img-element -- signed R2 link
                   <img

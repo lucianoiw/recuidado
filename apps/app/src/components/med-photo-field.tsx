@@ -53,7 +53,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-[15px] font-bold">Foto do remédio de verdade</span>
+      <span className="text-[15px] font-semibold">Foto do remédio de verdade</span>
       {preview ? (
         // eslint-disable-next-line @next/next/no-img-element -- signed R2 link or a local blob
         <img
@@ -81,7 +81,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
           type="button"
           disabled={busy}
           onClick={() => input.current?.click()}
-          className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface px-3 text-[16px] font-bold disabled:opacity-60"
+          className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface px-3 text-[16px] font-semibold disabled:opacity-60"
         >
           <CameraIcon size={20} />
           {busy ? "Salvando..." : preview ? "Trocar foto" : "Tirar foto"}
@@ -91,7 +91,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
             type="button"
             disabled={busy}
             onClick={() => void run(() => removeMedicationPhoto(med.id), null)}
-            className="min-h-11 rounded-xl px-3 text-[16px] font-bold text-danger disabled:opacity-60"
+            className="min-h-11 rounded-xl px-3 text-[16px] font-semibold text-danger disabled:opacity-60"
           >
             Apagar foto
           </button>

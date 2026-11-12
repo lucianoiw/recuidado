@@ -3,7 +3,7 @@ import { MonthView } from "./month-view";
 
 export default function Page() {
   return (
-    <Screen audience="family">
+    <Screen audience="family" withNav>
       <MonthView />
     </Screen>
   );

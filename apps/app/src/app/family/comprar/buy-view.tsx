@@ -34,7 +34,7 @@ export function BuyView() {
       <PageTitle title="Onde comprar e dividir" subtitle="O que não sai grátis e a família compra todo mês" />
 
       {paid.length === 0 ? (
-        <section className="flex flex-col items-center gap-2 rounded-card border border-line-soft bg-surface p-6 text-center">
+        <section className="flex flex-col items-center gap-2 rounded-card bg-surface p-6 text-center">
           <span className="flex size-14 items-center justify-center rounded-full bg-blush text-accent-ink">
             <CartIcon size={28} />
           </span>
@@ -43,21 +43,21 @@ export function BuyView() {
         </section>
       ) : (
         <>
-          <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+          <ul className="overflow-hidden rounded-card bg-surface">
             {paid.map((m) => (
               <li
                 key={m.id}
                 className="flex items-center justify-between gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0"
               >
                 <div className="flex min-w-0 flex-col">
-                  <span className="font-bold">{medLabel(m.name, m.strength)}</span>
+                  <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
                   <span className="text-[15px] text-muted">
                     {m.times.length} {m.times.length === 1 ? "vez" : "vezes"} ao dia
                     {isFree(m) ? ". Vocês escolheram comprar" : ""}
                     {m.price?.unitsPerPack ? `. Caixa com ${m.price.unitsPerPack}: até ${brl.format(m.price.packCents / 100)}` : ""}
                   </span>
                 </div>
-                <span className="whitespace-nowrap font-bold">
+                <span className="whitespace-nowrap font-semibold">
                   {m.monthlyCostCents > 0 ? brl.format(m.monthlyCostCents / 100) : "Sem preço"}
                 </span>
               </li>
@@ -73,14 +73,14 @@ export function BuyView() {
           <section className="flex flex-col gap-2">
             <h2 className="text-[18px] font-semibold">Farmácias perto dela</h2>
             <PlacesMap places={pharmacies.slice(0, 3)} homeLabel={`Casa de ${callName(data.patient)}`} />
-            <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+            <ul className="overflow-hidden rounded-card bg-surface">
               {pharmacies.slice(0, 3).map((p, i) => (
                 <li key={p.cnes} className="flex flex-col gap-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">
                   <div className="flex items-start justify-between gap-3">
                     <b className="leading-snug">
                       {i + 1}. {p.name}
                     </b>
-                    <span className="whitespace-nowrap text-[15px] font-bold text-muted">
+                    <span className="whitespace-nowrap text-[15px] font-semibold text-muted">
                       {formatDistance(p.distanceKm)}
                     </span>
                   </div>
@@ -89,7 +89,7 @@ export function BuyView() {
                     href={mapsUrl(p)}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl border-[1.5px] border-ink px-3.5 text-[15px] font-bold text-ink no-underline"
+                    className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl border-[1.5px] border-ink px-3.5 text-[15px] font-semibold text-ink no-underline"
                   >
                     <NavigationIcon size={18} />
                     Como chegar

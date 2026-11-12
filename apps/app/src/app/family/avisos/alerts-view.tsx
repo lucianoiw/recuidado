@@ -102,7 +102,7 @@ export function AlertsView() {
           {!error && !alerts ? <p className="text-muted">Carregando...</p> : null}
 
           {alerts && alerts.length === 0 ? (
-            <section className="flex flex-col items-center gap-3 rounded-card border border-line-soft bg-surface p-6 text-center">
+            <section className="flex flex-col items-center gap-3 rounded-card bg-surface p-6 text-center">
               <span className="flex size-16 items-center justify-center rounded-full bg-blush text-accent-ink">
                 <BellIcon size={32} />
               </span>
@@ -117,7 +117,7 @@ export function AlertsView() {
           {days.map((day) => (
             <section key={day.title} className="flex flex-col gap-2">
               <h2 className="text-[18px] font-semibold">{day.title}</h2>
-              <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+              <ul className="overflow-hidden rounded-card bg-surface">
                 {day.items.map((a) => {
                   const kind = KINDS[a.kind];
                   const Icon = kind.icon;
@@ -125,13 +125,13 @@ export function AlertsView() {
                     <li key={a.id} className="flex gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0">
                       <span
                         aria-hidden="true"
-                        className={cn("flex size-10 shrink-0 items-center justify-center rounded-[12px]", kind.tone)}
+                        className={cn("flex size-10 shrink-0 items-center justify-center rounded-full", kind.tone)}
                       >
                         <Icon size={20} strokeWidth={2.4} />
                       </span>
                       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <span className="flex items-baseline justify-between gap-2">
-                          <span className="text-[13px] font-bold uppercase tracking-wide text-muted">
+                          <span className="text-[13px] font-semibold uppercase tracking-wide text-muted">
                             {kind.label}
                           </span>
                           <span className="shrink-0 text-[14px] text-muted">{formatTime(a.createdAt)}</span>

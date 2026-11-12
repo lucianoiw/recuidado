@@ -16,7 +16,11 @@ import {
   FreeIcon,
   HeartIcon,
   PhoneIcon,
+  CartIcon,
+  Notice,
+  PinIcon,
   buttonClass,
+  pillClass,
   type DoseStatus as RowStatus,
 } from "@/components/ui";
 import { DemoBanner } from "@/components/demo-banner";
@@ -127,128 +131,104 @@ export function FamilyView() {
       <DemoBanner isDemo={data.isDemo} />
 
       {unwell ? (
-        <section
+        <Notice
           role="alert"
-          className="flex flex-col gap-3 rounded-card border-[1.5px] border-warn bg-warn-soft p-4"
+          tone="warn"
+          icon={<HeartIcon />}
+          title={`${name} não está bem`}
+          actions={
+            tel ? (
+              <a href={tel} className={pillClass("dark")}>
+                <PhoneIcon />
+                Ligar para ela
+              </a>
+            ) : null
+          }
         >
-          <div className="flex items-start gap-2.5">
-            <HeartIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
-            <div className="flex flex-col gap-0.5">
-              <b className="text-warn">{name} não está bem</b>
-              <span className="text-[15px] leading-snug">
-                Na ligação das {formatTime(unwell.at)}
-                {unwell.note ? (
-                  <>
-                    : <q className="font-semibold">{unwell.note}</q>
-                  </>
-                ) : (
-                  "."
-                )}
-              </span>
-              <span className="text-[14px] text-muted">
-                Ela mesma informou. O app não avalia a saúde dela.
-              </span>
-            </div>
-          </div>
-          {tel ? (
-            <a href={tel} className={buttonClass()}>
-              <PhoneIcon size={20} />
-              Ligar para ela
-            </a>
-          ) : null}
-        </section>
+          Na ligação das {formatTime(unwell.at)}
+          {unwell.note ? (
+            <>
+              : <q>{unwell.note}</q>
+            </>
+          ) : (
+            "."
+          )}
+          <span className="mt-1 block text-[13px] text-muted">Ela mesma informou. O app não avalia a saúde dela.</span>
+        </Notice>
       ) : null}
 
       {missed.map((group) => {
         const d = group[0];
         const names = group.map((x) => medLabel(x.medicationName, x.strength));
         return (
-          <section
+          <Notice
             key={d.scheduledAt}
             role="alert"
-            className="flex flex-col gap-3 rounded-card border-[1.5px] border-danger bg-danger-soft p-4"
-          >
-            <div className="flex items-start gap-2.5">
-              <AlertIcon
-                size={22}
-                strokeWidth={2.4}
-                className="mt-0.5 shrink-0 text-danger"
-              />
-              <div className="flex flex-col gap-0.5">
-                <b className="text-danger">
-                  Não confirmou {names.length > 1 ? "os remédios" : names[0]}{" "}
-                  das {formatTime(d.scheduledAt)}
-                </b>
-                {names.length > 1 ? (
-                  <span className="text-[15px] font-semibold">
-                    {names.join(", ")}
-                  </span>
+            tone="danger"
+            icon={<AlertIcon />}
+            title={`Não confirmou ${names.length > 1 ? "os remédios" : names[0]} das ${formatTime(d.scheduledAt)}`}
+            actions={
+              <>
+                {tel ? (
+                  <a href={tel} className={pillClass("dark")}>
+                    <PhoneIcon />
+                    Ligar para ela
+                  </a>
                 ) : null}
-                <span className="text-[15px] leading-snug">
-                  {d.familyAlertedAt
-                    ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}. Vale ligar para ela.`
-                    : "Vale ligar para ela."}
-                </span>
-              </div>
-            </div>
-            {tel ? (
-              <a href={tel} className={buttonClass({ variant: "danger" })}>
-                <PhoneIcon size={20} />
-                Ligar para ela
-              </a>
-            ) : null}
-            <button
-              type="button"
-              onClick={() => markTaken(group)}
-              disabled={confirming === d.scheduledAt}
-              className={buttonClass({ variant: "secondary" })}
-            >
-              <CheckIcon size={20} />
-              {confirming === d.scheduledAt ? "Anotando..." : "Ela já tomou"}
-            </button>
-          </section>
+                <button
+                  type="button"
+                  onClick={() => markTaken(group)}
+                  disabled={confirming === d.scheduledAt}
+                  className={pillClass()}
+                >
+                  <CheckIcon />
+                  {confirming === d.scheduledAt ? "Anotando..." : "Ela já tomou"}
+                </button>
+              </>
+            }
+          >
+            {names.length > 1 ? <span className="block">{names.join(", ")}</span> : null}
+            <span className="block text-muted">
+              {d.familyAlertedAt ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}.` : "Vale ligar para ela."}
+            </span>
+          </Notice>
         );
       })}
 
       {highCostDue.map((m) => (
-        <Link
-          key={m.id}
-          href={`/family/alto-custo/${m.id}`}
-          className="flex items-start gap-2.5 rounded-card border-[1.5px] border-warn bg-warn-soft p-4 text-ink no-underline"
-        >
-          <AlertIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
-          <span className="flex flex-1 flex-col gap-0.5">
-            <b className="text-warn">Alto Custo: {medLabel(m.name, m.strength)}</b>
-            <span className="text-[15px] leading-snug">{dueText(m.highCostPath!.due!)}</span>
-          </span>
-          <ChevronRightIcon size={20} className="mt-0.5 shrink-0 text-warn" />
+        <Link key={m.id} href={`/family/alto-custo/${m.id}`} className="no-underline">
+          <Notice tone="warn" icon={<AlertIcon />} title={`Alto Custo: ${medLabel(m.name, m.strength)}`}>
+            <span className="flex items-start justify-between gap-2">
+              {dueText(m.highCostPath!.due!)}
+              <ChevronRightIcon size={20} className="shrink-0 text-muted" />
+            </span>
+          </Notice>
         </Link>
       ))}
 
       {runningOut.length > 0 ? (
-        <section className="flex flex-col gap-3 rounded-card border-[1.5px] border-warn bg-warn-soft p-4">
-          <div className="flex items-start gap-2.5">
-            <PillIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
-            <div className="flex flex-col gap-1">
-              <b className="text-warn">
-                {runningOut.length > 1 ? "Remédios acabando" : "Remédio acabando"}
-              </b>
-              <ul className="flex flex-col gap-0.5 text-[15px] leading-snug">
-                {runningOut.map((m) => (
-                  <li key={m.id}>
-                    <b>{medLabel(m.name, m.strength)}</b>: {stockText(m.stock!)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <Link
-            href={runningOut.every(isFree) ? "/family/onde-pegar" : "/family/comprar"}
-            className={buttonClass({ variant: "secondary" })}
-          >
-            {runningOut.every(isFree) ? "Ver onde pegar grátis" : "Ver onde comprar"}
-          </Link>
-        </section>
+        <Notice
+          tone="warn"
+          icon={<PillIcon />}
+          title={runningOut.length > 1 ? "Remédios acabando" : "Remédio acabando"}
+          actions={
+            <Link
+              href={runningOut.every(isFree) ? "/family/onde-pegar" : "/family/comprar"}
+              className={pillClass()}
+            >
+              {runningOut.every(isFree) ? <PinIcon /> : <CartIcon />}
+              {runningOut.every(isFree) ? "Onde pegar grátis" : "Onde comprar"}
+            </Link>
+          }
+        >
+          <ul className="flex flex-col gap-0.5">
+            {runningOut.map((m) => (
+              <li key={m.id}>
+                <b>{medLabel(m.name, m.strength)}</b>: {stockText(m.stock!)}
+              </li>
+            ))}
+          </ul>
+        </Notice>
       ) : null}
 
       <div className="grid grid-cols-2 gap-3">

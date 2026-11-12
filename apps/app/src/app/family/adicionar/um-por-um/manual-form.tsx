@@ -89,7 +89,7 @@ export function ManualForm() {
                 aria-pressed={strength === c.strength}
                 onClick={() => setStrength(c.strength)}
                 className={cn(
-                  "inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] px-3 text-[16px] font-bold",
+                  "inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] px-3 text-[16px] font-semibold",
                   strength === c.strength
                     ? "border-brand bg-brand text-white"
                     : "border-line bg-surface text-ink",
@@ -111,7 +111,7 @@ export function ManualForm() {
         ) : null}
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-[15px] font-bold">Horários</span>
+        <span className="text-[15px] font-semibold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
         <span className="text-[14px] text-muted">
           Use 8:00, 12:00 e 20:00 quando der. Assim ela toma tudo junto.
@@ -136,7 +136,7 @@ export function ManualForm() {
           type="button"
           onClick={() => save(true)}
           disabled={busy}
-          className="min-h-12 font-bold text-brand disabled:opacity-60"
+          className="min-h-12 font-semibold text-brand disabled:opacity-60"
         >
           Salvar e adicionar outro
         </button>

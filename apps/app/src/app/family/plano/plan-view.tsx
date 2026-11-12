@@ -83,7 +83,7 @@ export function PlanView() {
 
       {waiting ? (
         <Card tone="warn">
-          <p className="font-bold">Confirmando o pagamento...</p>
+          <p className="font-semibold">Confirmando o pagamento...</p>
           <p className="text-[15px]">Leva alguns segundos. Pode deixar esta tela aberta.</p>
         </Card>
       ) : null}
