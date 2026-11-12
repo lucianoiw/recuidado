@@ -326,7 +326,9 @@ Ninguém consegue pagar ainda, então o checkout fica desligado (`PLAN_CHECKOUT_
 
 ### Apagar o banco para a conta zero
 
-`WIPE_DATA_ON_BOOT=<rótulo>` na `api` apaga todas as linhas do Postgres no próximo boot (o esquema e as migrações ficam) e limpa a fila de doses no Redis. Cada rótulo apaga uma vez só: uma marca no Redis lembra, então redeploys seguintes mantêm os dados. Depois do apagão o boot recria a Família Demo (`DEMO_SEED_ENABLED`). Passos: pôr a variável, redeploy da `api`, reiniciar o `worker` (ele recria o planejador de hora em hora), tirar a variável. Gravações e fotos no R2 não são apagadas, mas nada mais aponta para elas.
+`WIPE_DATA_ON_BOOT=<rótulo>` na `api` apaga, no próximo boot, todas as famílias menos a Família Demo (com membros, remédios, doses, ligações, avisos e logins, pelas chaves estrangeiras em cascata) e os códigos de login, e limpa a fila de doses no Redis. A Família Demo fica com o histórico e as gravações das ligações, porque o painel `/ligacoes` que o jurado vê sem login mostra as ligações dela. Cada rótulo apaga uma vez só: uma marca no Redis lembra, então redeploys seguintes mantêm os dados. Passos: pôr a variável, redeploy da `api`, reiniciar o `worker` (ele recria o planejador de hora em hora), tirar a variável. Gravações e fotos das famílias apagadas ficam no R2, mas nada mais aponta para elas.
+
+Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurado, cria conta e testa tudo do plano grátis, inclusive a leitura da receita pela IA (limites `PRESCRIPTION_LIMIT_*`). Só as ligações ficam para as contas da equipe (`PLAN_INCLUDED_EMAILS`), porque não há crédito de telefonia para todo mundo.
 
 ## Resultados medidos
 
