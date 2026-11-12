@@ -367,6 +367,26 @@ O painel mostra adesão às doses, o funil do lembrete até o "Tomei", ligaçõe
 
 A região da demo é São Paulo capital. Detalhes em [packages/data/README.md](packages/data/README.md).
 
+### Onde pegar cada remédio (12/11/2026)
+
+Cada remédio tem o seu lugar, e o app diz qual é, para ninguém ir ao posto atrás de um remédio que só o Farmácia Popular dá. Teste com uma receita real de 9 remédios:
+
+| Remédio | Onde sai grátis | O que levar |
+| --- | --- | --- |
+| AAS 100 mg | Só no posto (REMUME). Não está no Farmácia Popular | Receita e cartão do SUS |
+| Espironolactona 25 mg | Posto ou Farmácia Popular | Receita e documento |
+| Metformina XR 500 mg | Só no Farmácia Popular ("500 mg ação prolongada"). O posto só tem a comum de 500 e 850 mg | Receita e documento com CPF |
+| Dapagliflozina 10 mg | Farmácia Popular, para 65 anos ou mais com diabetes tipo 2 e doença cardiovascular. Também está no Alto Custo, mas lá precisa de laudo (LME) | Receita e documento com CPF |
+| Entresto (sacubitril valsartana) 50 mg | Só no Alto Custo do Estado (CEAF grupo 1B) | Laudo do médico (LME), receita e exames |
+
+Regras que o código segue:
+- Liberação prolongada (XR, LP, Retard, CR...) é outro produto: só conta como grátis onde a lista oficial tem a versão prolongada.
+- Quando o remédio sai grátis só com receita (posto ou Farmácia Popular), o Alto Custo não aparece como caminho, porque pede laudo.
+- Combinações escritas com "+" ("sacubitril + valsartana") também são reconhecidas no Alto Custo.
+- Farmácia Popular pede receita e documento com CPF. Laudo só existe para fralda geriátrica (gov.br/saude, página do Farmácia Popular) e no Alto Custo (LME). Não encontramos exigência de laudo para a dapagliflozina no Farmácia Popular.
+
+Fontes: Portaria GM/MS nº 6.613/2025 (lista grátis, inclui metformina 500 mg ação prolongada e dapagliflozina 10 mg para "diabetes mellitus associada a doença cardiovascular"), CRF-SP e SES-MG (dapagliflozina só a partir de 65 anos), REMUME de São Paulo e lista do CEAF da SES-SP.
+
 ## Tecnologia dos patrocinadores
 
 Usamos produtos de patrocinadores do Hack Brasil onde eles resolvem algo do produto, sem mudar a proposta.
