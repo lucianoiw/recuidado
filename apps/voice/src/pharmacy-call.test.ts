@@ -294,6 +294,7 @@ test("an introduction said while the AI was muted did not reach the pharmacy: it
   const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
   assert.equal(intro.length, 1);
   assert.match(intro[0].content, /assistente virtual da Recuidado/);
+  assert.match(intro[0].content, /did not hear/);
   assert.equal(gate.last, "heard");
   await call.endCall();
   await call.result;

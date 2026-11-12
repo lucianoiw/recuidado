@@ -420,12 +420,17 @@ export class PharmacyCall {
     this.introduced = true;
     this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
     this.armQuietPerson();
+    // The model usually already said its introduction while muted and would not repeat it: tell it so.
+    const unheard = this.mutedSpeech.trim().length > 0;
+    const opening = pharmacyOpening(this.opts.context);
     void this.openVoice().then(() =>
       this.send({
         type: "session.commentary.append",
         event_id: `introduce_${this.opts.sessionId}`,
         delegation_id: null,
-        content: `Say exactly this in Brazilian Portuguese now, before anything else, then listen: "${pharmacyOpening(this.opts.context)}"`,
+        content: unheard
+          ? `The pharmacy did not hear anything you said until now: your line was muted. Say again now, word for word, in Brazilian Portuguese, then listen: "${opening}"`
+          : `Say exactly this in Brazilian Portuguese now, before anything else, then listen: "${opening}"`,
       }),
     );
   }
@@ -595,12 +600,14 @@ export class PharmacyCall {
    */
   private armQuietPerson() {
     if (this.quietTimer) clearTimeout(this.quietTimer);
-    if (!this.introduced || this.nudges >= 2) return;
+    // Off unless quietPersonMs is set: measured 12/11, it fired while the attendant was still answering
+    // (its transcript arrives late) and made the assistant repeat the question.
+    if (!this.opts.quietPersonMs || !this.introduced || this.nudges >= 2) return;
     this.quietTimer = setTimeout(() => {
       if (this.answer || this.saidGoodbye || this.hangupRequested || this.finished || this.waiting) return;
       if (this.side && this.side !== "person" && this.side !== "unclear") return;
       this.nudges++;
-      this.log(`person quiet for ${this.opts.quietPersonMs ?? 9000} ms, asking again (${this.nudges})`);
+      this.log(`person quiet for ${this.opts.quietPersonMs} ms, asking again (${this.nudges})`);
       this.send({
         type: "session.commentary.append",
         event_id: `nudge_${this.nudges}_${this.opts.sessionId}`,
@@ -608,7 +615,7 @@ export class PharmacyCall {
         content: "The pharmacy has been silent. Say only \"Alô? Vocês estão me ouvindo?\" and repeat your last question, briefly.",
       });
       this.armQuietPerson();
-    }, this.opts.quietPersonMs ?? 9000);
+    }, this.opts.quietPersonMs);
     this.timers.push(this.quietTimer);
   }
 
