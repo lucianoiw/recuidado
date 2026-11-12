@@ -19,6 +19,7 @@ import { InstallSteps, readPlatform, type InstallPromptEvent, type Platform } fr
 import { track } from "@/lib/analytics";
 import { callName, setConsent, type FamilyOverview } from "@/lib/api";
 import { enablePush, type PushState } from "@/lib/push";
+import { EarlierQuestion, type useEarlierDoses } from "./earlier-doses";
 import { useScrollTopOn } from "@/lib/scroll-top";
 
 const READY_KEY = "recuidado:patient-ready";
@@ -55,14 +56,16 @@ function markReady() {
   listeners.forEach((l) => l());
 }
 
-type Step = "hello" | "consent" | "install" | "notify" | "done";
+type Step = "hello" | "consent" | "install" | "notify" | "earlier" | "done";
 
-function Dots({ step }: { step: number }) {
+function Dots({ step, total }: { step: number; total: number }) {
   return (
     <div className="flex items-center justify-between">
-      <p className="text-[22px] text-muted">Passo {step} de 5</p>
+      <p className="text-[22px] text-muted">
+        Passo {step} de {total}
+      </p>
       <div className="flex gap-1.5" aria-hidden>
-        {[1, 2, 3, 4, 5].map((i) => (
+        {Array.from({ length: total }, (_, k) => k + 1).map((i) => (
           <span
             key={i}
             className={`h-2.5 rounded-full ${i === step ? "w-7" : "w-2.5"} ${i <= step ? "bg-accent" : "bg-line"}`}
@@ -90,13 +93,18 @@ function joinTimes(list: string[]): string {
 }
 
 /** First access on Dona Maria's phone: hello, her consent (LGPD), add to home screen, allow reminders, ready. */
-export function PatientWelcome({ data }: { data: FamilyOverview }) {
+export function PatientWelcome({ data, earlier }: { data: FamilyOverview; earlier: ReturnType<typeof useEarlierDoses> }) {
   const platform = useSyncExternalStore(
     () => () => {},
     readPlatform,
     () => "other" as Platform,
   );
   const [step, setStep] = useState<Step>("hello");
+  // Doses of earlier today (medicine added after their time): one question each, before "Pronto".
+  // Decided once, so the step count does not change while she answers.
+  const [hasEarlier] = useState(() => earlier.pending.length > 0);
+  const total = hasEarlier ? 6 : 5;
+  const afterNotify: Step = hasEarlier ? "earlier" : "done";
   useScrollTopOn(step);
   const [installEvent, setInstallEvent] = useState<InstallPromptEvent | null>(
     null,
@@ -158,7 +166,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         () => "unsupported" as PushState,
       );
       setPush(state);
-      if (state === "on") go("done");
+      if (state === "on") go(afterNotify);
     } finally {
       setBusy(false);
     }
@@ -167,7 +175,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
   if (step === "hello") {
     return (
       <div className="flex flex-1 flex-col gap-6">
-        <Dots step={1} />
+        <Dots step={1} total={total} />
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
           <Badge>
             <HeartIcon size={56} strokeWidth={1.8} />
@@ -196,7 +204,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
   if (step === "consent") {
     return (
       <div className="flex flex-1 flex-col gap-5">
-        <Dots step={2} />
+        <Dots step={2} total={total} />
         <h1 className="font-display text-[40px] leading-[1.04]">Combinado, {name}?</h1>
         {declined ? (
           <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5 text-[24px] leading-snug" role="status">
@@ -238,7 +246,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
   if (step === "install") {
     return (
       <div className="flex flex-1 flex-col gap-4">
-        <Dots step={3} />
+        <Dots step={3} total={total} />
         <h1 className="font-display text-[36px] leading-[1.06]">
           Coloque o Recuidado na tela do celular
         </h1>
@@ -272,7 +280,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     const blocked = push !== null && push !== "on";
     return (
       <div className="flex flex-1 flex-col gap-6">
-        <Dots step={4} />
+        <Dots step={4} total={total} />
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
           <Badge>
             <BellIcon size={56} strokeWidth={1.8} />
@@ -306,7 +314,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
           )}
         </div>
         {blocked ? (
-          <Button size="xl" className="font-display" onClick={() => go("done")}>
+          <Button size="xl" className="font-display" onClick={() => go(afterNotify)}>
             Continuar
           </Button>
         ) : (
@@ -325,9 +333,34 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     );
   }
 
+  if (step === "earlier" && earlier.pending.length > 0) {
+    const group = earlier.pending[0];
+    return (
+      <EarlierQuestion
+        data={data}
+        group={group}
+        busy={earlier.busy}
+        onAnswer={(took) => earlier.answer(group.doses, took)}
+        top={
+          <>
+            <Dots step={5} total={total} />
+            <header className="flex flex-col gap-2">
+              <h1 className="font-display text-[40px] leading-[1.04]">Hoje mais cedo</h1>
+              <p className="text-[24px] leading-snug">
+                {family.length > 0
+                  ? `Assim ${family.join(" e ")} ${family.length > 1 ? "ficam sabendo" : "fica sabendo"} o que você já tomou.`
+                  : "Conte o que você já tomou hoje."}
+              </p>
+            </header>
+          </>
+        }
+      />
+    );
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-6">
-      <Dots step={5} />
+      <Dots step={total} total={total} />
       <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
         <Badge>
           <CheckIcon size={60} strokeWidth={2.2} />

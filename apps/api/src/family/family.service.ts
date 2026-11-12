@@ -267,7 +267,7 @@ export class FamilyService implements OnApplicationBootstrap {
       caregivers: withFirstContact(shown.filter((p) => p.role === 'caregiver')),
       medications: meds.map(
         ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, photoKey: _key, ...med }) => {
-          const access = freeAccessOf(activeIngredient ?? med.name, med.strength);
+          const access = freeAccessOf(activeIngredient ?? med.name, med.strength, med.name);
           const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
           return {
             ...med,
@@ -376,7 +376,7 @@ export class FamilyService implements OnApplicationBootstrap {
         name: med.name,
         strength: med.strength,
         monthlyCostCents: med.monthlyCostCents,
-        highCost: freeAccessOf(ingredient, med.strength).highCost ?? false,
+        highCost: freeAccessOf(ingredient, med.strength, med.name).highCost ?? false,
       },
       guide,
       status: highCostStatus(
@@ -749,9 +749,9 @@ export class FamilyService implements OnApplicationBootstrap {
  * Alto Custo list, from the public lists in @recuidado/data. Never throws: a
  * missing seed file only hides the badges.
  */
-export function freeAccessOf(activeIngredient: string, strength: string | null): Partial<FreeAccess> {
+export function freeAccessOf(activeIngredient: string, strength: string | null, name?: string | null): Partial<FreeAccess> {
   try {
-    return findFreeAccess(activeIngredient, strength);
+    return findFreeAccess(activeIngredient, strength, name);
   } catch {
     return {};
   }
