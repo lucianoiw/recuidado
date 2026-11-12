@@ -50,6 +50,8 @@ export interface PharmacyCallOptions {
   silentLineMs?: number;
   /** A speaker's piece within this many ms of their last one continues their line. Default 1200. */
   overlapGlueMs?: number;
+  /** Silence of the assistant after the pharmacy spoke before a nudge (and, again, before hanging up). Default 6000. */
+  stallMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -202,6 +204,10 @@ export class PharmacyCall {
   /** Whether the pharmacy hears the AI now (the voice gate is open). */
   private voiceOpen = false;
   private mutedSpeech = "";
+  private lastAssistantAt = 0;
+  private introDefers = 0;
+  private stallTimer?: NodeJS.Timeout;
+  private stallPokes = 0;
   private openLines: Partial<Record<TranscriptLine["speaker"], { line: TranscriptLine; at: number }>> = {};
   private endReason?: string;
   private voicemail = false;
@@ -404,6 +410,13 @@ export class PharmacyCall {
     if (!notAMenu && MENU.test(this.otherSideSinceKey())) return;
     // A recording or a person who asked to wait: not the moment to talk.
     if (this.side && this.side !== "person" && this.side !== "unclear" && !(notAMenu && this.side === "menu")) return;
+    // The model often starts its own introduction while still muted. Opening the voice in the middle
+    // of it let the pharmacy hear only "...virtual da Recuidado": wait until it stops talking.
+    if (Date.now() - this.lastAssistantAt < 700 && this.introDefers < 15) {
+      this.introDefers++;
+      this.timers.push(setTimeout(() => this.introduceIfNeeded(notAMenu), 300));
+      return;
+    }
     this.introduced = true;
     this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
     this.armQuietPerson();
@@ -530,6 +543,8 @@ export class PharmacyCall {
 
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
+    this.lastAssistantAt = Date.now();
+    if (this.stallTimer) clearTimeout(this.stallTimer);
     const heard = this.voiceOpen || this.gate.alwaysOpen === true;
     // What the AI says while muted never reaches the pharmacy: it stays out of the transcript (it read
     // as a double introduction) and goes to the log when the voice opens.
@@ -622,6 +637,38 @@ export class PharmacyCall {
       this.armSilentLine();
     }, this.opts.silentLineMs ?? 9000);
     this.timers.push(this.silentLineTimer);
+  }
+
+  /**
+   * The pharmacy answered and the assistant went silent (measured 12/11: it sometimes neither records
+   * nor says goodbye, and the line stayed open until the 3-minute cap). First a nudge to wrap up or ask
+   * the next question; if it is still silent, the call ends and the API reads the prices from the
+   * transcript.
+   */
+  private armStall() {
+    if (this.stallTimer) clearTimeout(this.stallTimer);
+    if (!this.introduced || this.waiting) return;
+    this.stallTimer = setTimeout(() => {
+      if (this.answer || this.hangupRequested || this.finished || this.waiting) return;
+      if (this.side && this.side !== "person" && this.side !== "unclear") return;
+      if (this.stallPokes >= 1) {
+        this.log("assistant still silent after the pharmacy spoke, ending the call");
+        this.endReason ??= "assistant_silent";
+        void this.endCall();
+        return;
+      }
+      this.stallPokes++;
+      this.log(`assistant silent for ${this.opts.stallMs ?? 6000} ms after the pharmacy spoke, nudging`);
+      this.send({
+        type: "session.commentary.append",
+        event_id: `stall_${this.stallPokes}_${this.opts.sessionId}`,
+        delegation_id: null,
+        content:
+          'The pharmacy answered and is waiting for you. If you already have stock and both prices for every medicine, call record_pharmacy_answer and say only "Muito obrigada, tchau!". Otherwise ask the next short question.',
+      });
+      this.armStall();
+    }, this.opts.stallMs ?? 6000);
+    this.timers.push(this.stallTimer);
   }
 
   private armSilenceHangup() {
@@ -721,6 +768,7 @@ export class PharmacyCall {
     // The person spoke last: no "Alô?" for them. The timer starts again when the assistant speaks.
     if (this.quietTimer) clearTimeout(this.quietTimer);
     this.armSilentLine();
+    this.armStall();
     this.inputOrder++;
     if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
     this.utterance += delta;
