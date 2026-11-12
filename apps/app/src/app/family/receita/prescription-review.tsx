@@ -16,7 +16,6 @@ import {
   TopBar,
   buttonClass,
   cn,
-  inputClass,
 } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
 import {
@@ -28,15 +27,21 @@ import {
   type ReadItem,
 } from "@/lib/api";
 import { FreeOrBuy } from "@/components/free-or-buy";
+import { MedPicker, matchMedication, matchStrength, pickComplete } from "@/components/med-picker";
+import type { MedResult } from "@/lib/med-search";
 import { TimeChips, normalizeTime } from "@/components/time-chips";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel } from "@/lib/use-family";
 
 interface Draft {
   key: number;
+  /** What the prescription says, kept to search the CMED list. */
   name: string;
   strength: string;
   activeIngredient: string;
+  /** The medicine picked from the CMED list: nothing is saved without one. */
+  med: MedResult | null;
+  query: string;
   times: string[];
   posology: string;
   instructions: string | null;
@@ -55,6 +60,8 @@ function toDraft(item: ReadItem, key: number): Draft {
     name: item.medication_name,
     strength: item.strength.text,
     activeIngredient: item.active_ingredient ?? "",
+    med: null,
+    query: item.medication_name,
     times: [...new Set(times)].sort(),
     posology: item.frequency.text,
     instructions: item.instructions,
@@ -242,7 +249,16 @@ export function PrescriptionReview() {
         setStep("pick");
         return;
       }
-      setDrafts(reading.items.map(toDraft));
+      // Tie each item to one medicine of the CMED list; the family picks when it is unclear.
+      const drafts = await Promise.all(
+        reading.items.map(toDraft).map(async (d) => {
+          const med = await matchMedication(d.name, d.activeIngredient);
+          if (!med) return { ...d, editing: true };
+          const strength = matchStrength(med, d.strength);
+          return { ...d, med, strength, editing: d.editing || !pickComplete(med, strength) };
+        }),
+      );
+      setDrafts(drafts);
       setWarnings(reading.warnings);
       setStep("review");
     } catch (e) {
@@ -256,7 +272,7 @@ export function PrescriptionReview() {
     setDrafts((ds) => ds.map((d) => (d.key === key ? { ...d, ...patch } : d)));
   }
 
-  const invalid = drafts.filter((d) => !d.name.trim());
+  const invalid = drafts.filter((d) => !pickComplete(d.med, d.strength));
 
   async function save() {
     setStep("saving");
@@ -266,9 +282,9 @@ export function PrescriptionReview() {
       await confirmPrescription(
         patient.id,
         drafts.map((d) => ({
-          name: d.name.trim(),
-          activeIngredient: d.activeIngredient.trim() || null,
-          strength: d.strength.trim() || null,
+          name: d.med!.name,
+          activeIngredient: d.med!.activeIngredient || null,
+          strength: d.strength || null,
           times: d.times,
         })),
       );
@@ -316,7 +332,7 @@ export function PrescriptionReview() {
             <div className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 flex-col">
                 <h2 className="text-[19px] font-semibold leading-snug">
-                  {medLabel(d.name || "Sem nome", d.strength || null)}
+                  {d.med ? medLabel(d.med.name, d.strength || null) : `Na receita: ${medLabel(d.name || "sem nome", d.strength || null)}`}
                 </h2>
                 <span className="text-[15px] text-muted">
                   {d.posology}
@@ -346,34 +362,15 @@ export function PrescriptionReview() {
             ) : null}
             {d.editing ? (
               <div className="flex flex-col gap-3 rounded-2xl bg-bg p-3">
-                <label className="flex flex-col gap-1">
-                  <span className="text-[15px] font-semibold">Nome</span>
-                  <input
-                    className={inputClass}
-                    value={d.name}
-                    aria-invalid={!d.name.trim()}
-                    onChange={(e) => update(d.key, { name: e.target.value })}
-                  />
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1">
-                    <span className="text-[15px] font-semibold">Dose</span>
-                    <input
-                      className={inputClass}
-                      value={d.strength}
-                      placeholder="50 mg"
-                      onChange={(e) => update(d.key, { strength: e.target.value })}
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="text-[15px] font-semibold">Princípio ativo</span>
-                    <input
-                      className={inputClass}
-                      value={d.activeIngredient}
-                      onChange={(e) => update(d.key, { activeIngredient: e.target.value })}
-                    />
-                  </label>
-                </div>
+                <MedPicker
+                  query={d.query}
+                  onQuery={(query) => update(d.key, { query })}
+                  med={d.med}
+                  onMed={(med) => update(d.key, med ? { med, query: med.name } : { med: null })}
+                  strength={d.strength}
+                  onStrength={(strength) => update(d.key, { strength })}
+                  tried={!pickComplete(d.med, d.strength)}
+                />
                 <button
                   type="button"
                   onClick={() => setDrafts((ds) => ds.filter((x) => x.key !== d.key))}
@@ -392,6 +389,11 @@ export function PrescriptionReview() {
         <p className="text-[15px] leading-snug text-muted">
           O Recuidado só organiza os horários. Dúvida sobre dose, fale com o médico.
         </p>
+        {invalid.length > 0 ? (
+          <p className="text-[15px] font-semibold text-danger">
+            Escolha na lista {invalid.length === 1 ? "o remédio marcado" : `os ${invalid.length} remédios marcados`} para salvar.
+          </p>
+        ) : null}
         {error ? <p className="font-semibold text-danger">{error}</p> : null}
         <Button onClick={save} disabled={step === "saving" || drafts.length === 0 || invalid.length > 0}>
           <CheckIcon size={22} />

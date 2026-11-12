@@ -38,7 +38,6 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
   const [error, setError] = useState<string | null>(null);
   // Strengths this medication is sold in, to pick instead of typing.
   const [choices, setChoices] = useState<string[]>([]);
-  const [other, setOther] = useState(false);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -48,7 +47,6 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         const hit = rs.find((r) => r.name.trim().toLowerCase() === key) ?? rs[0];
         const list = hit ? strengthChoices(hit).map((c) => c.strength) : [];
         setChoices(list);
-        if (list.length > 0 && med.strength && !list.includes(med.strength)) setOther(true);
       },
       () => {},
     );
@@ -99,21 +97,15 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-2 text-[15px] font-semibold">Dose</legend>
           <div className="flex flex-wrap gap-2" role="radiogroup">
-            {[...choices, "Outra"].map((c) => {
-              const on = c === "Outra" ? other : !other && strength === c;
+            {choices.map((c) => {
+              const on = strength === c;
               return (
                 <button
                   key={c}
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  onClick={() => {
-                    if (c === "Outra") setOther(true);
-                    else {
-                      setOther(false);
-                      setStrength(c);
-                    }
-                  }}
+                  onClick={() => setStrength(c)}
                   className={cn(
                     "min-h-11 rounded-xl px-3.5 text-[16px]",
                     on
@@ -126,9 +118,6 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
               );
             })}
           </div>
-          {other ? (
-            <Field label="Qual dose?" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
-          ) : null}
         </fieldset>
       ) : (
         <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />

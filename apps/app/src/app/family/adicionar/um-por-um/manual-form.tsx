@@ -4,12 +4,12 @@ import Link from "next/link";
 import { afterMedsHref } from "@/components/patient-link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MedSearch } from "@/components/med-search";
+import { MedPicker, pickComplete } from "@/components/med-picker";
 import { StockField } from "@/components/stock-field";
 import { TimeChips } from "@/components/time-chips";
-import { Button, CheckIcon, Field, FreeIcon, TopBar, buttonClass, cn } from "@/components/ui";
+import { Button, CheckIcon, TopBar, buttonClass } from "@/components/ui";
 import { confirmPrescription, getFamily } from "@/lib/api";
-import { strengthChoices, type MedResult } from "@/lib/med-search";
+import type { MedResult } from "@/lib/med-search";
 import { parseUnits } from "@/lib/stock";
 
 export function ManualForm() {
@@ -26,7 +26,7 @@ export function ManualForm() {
 
   async function save(another: boolean) {
     const stockUnits = parseUnits(units);
-    if (!name.trim() || stockUnits === undefined) {
+    if (!picked || !pickComplete(picked, strength) || stockUnits === undefined) {
       setTried(true);
       return;
     }
@@ -35,9 +35,9 @@ export function ManualForm() {
     try {
       const { patient } = await getFamily();
       await confirmPrescription(patient.id, [
-        { name: name.trim(), activeIngredient: null, strength: strength.trim() || null, times, stockUnits },
+        { name: picked.name, activeIngredient: picked.activeIngredient || null, strength: strength || null, times, stockUnits },
       ]);
-      setSaved((s) => [...s, [name.trim(), strength.trim()].filter(Boolean).join(" ")]);
+      setSaved((s) => [...s, [picked.name, strength].filter(Boolean).join(" ")]);
       setName("");
       setStrength("");
       setPicked(null);
@@ -64,52 +64,18 @@ export function ManualForm() {
         </p>
       ) : null}
 
-      <MedSearch
-        value={name}
-        onValue={(v) => {
-          setName(v);
-          setPicked(null);
-        }}
-        onPick={(m) => {
-          setName(m.name);
+      <MedPicker
+        query={name}
+        onQuery={setName}
+        med={picked}
+        onMed={(m) => {
           setPicked(m);
-          const choices = strengthChoices(m);
-          setStrength(choices.length === 1 ? choices[0]!.strength : "");
+          if (m) setName(m.name);
         }}
-        invalid={tried && !name.trim()}
+        strength={strength}
+        onStrength={setStrength}
+        tried={tried}
       />
-      <div className="flex flex-col gap-2">
-        <Field label="Dose" value={strength} onValue={setStrength} autoComplete="off" placeholder="50 mg" />
-        {picked && strengthChoices(picked).length > 1 ? (
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Doses deste remédio">
-            {strengthChoices(picked).map((c) => (
-              <button
-                key={c.strength}
-                type="button"
-                aria-pressed={strength === c.strength}
-                onClick={() => setStrength(c.strength)}
-                className={cn(
-                  "inline-flex min-h-11 items-center gap-1.5 rounded-xl border-[1.5px] px-3 text-[16px] font-semibold",
-                  strength === c.strength
-                    ? "border-brand bg-brand text-white"
-                    : "border-line bg-surface text-ink",
-                )}
-              >
-                {c.strength}
-                {c.free ? (
-                  <FreeIcon size={16} className={strength === c.strength ? "text-white" : "text-brand"} />
-                ) : null}
-              </button>
-            ))}
-          </div>
-        ) : null}
-        {picked && strengthChoices(picked).some((c) => c.free) ? (
-          <span className="flex items-center gap-1.5 text-[14px] text-muted">
-            <FreeIcon size={16} className="text-brand" />
-            Pode sair grátis no Farmácia Popular ou na UBS.
-          </span>
-        ) : null}
-      </div>
       <div className="flex flex-col gap-2">
         <span className="text-[15px] font-semibold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
