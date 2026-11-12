@@ -63,6 +63,8 @@ export interface PharmacyCallOptions {
   gate?: VoiceGate;
   /** Silence that starts a new utterance of the other side, for the word rules. */
   utteranceGapMs?: number;
+  /** After the introduction, a person this long silent hears "Alô?" and the question again (twice at most). */
+  quietPersonMs?: number;
   log?: (msg: string, extra?: unknown) => void;
   onStatusChange?: (status: CallStatus) => void;
 }
@@ -196,6 +198,8 @@ export class PharmacyCall {
   private voicemail = false;
   private assistantAfterAnswer = "";
   private silenceTimer?: NodeJS.Timeout;
+  private quietTimer?: NodeJS.Timeout;
+  private nudges = 0;
   private goodbyeTimer?: NodeJS.Timeout;
   private introTimer?: NodeJS.Timeout;
   private finished = false;
@@ -391,6 +395,7 @@ export class PharmacyCall {
     if (this.side && this.side !== "person" && this.side !== "unclear" && !(notAMenu && this.side === "menu")) return;
     this.introduced = true;
     this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
+    this.armQuietPerson();
     void this.gate.unmute().then(() =>
       this.send({
         type: "session.commentary.append",
@@ -541,6 +546,29 @@ export class PharmacyCall {
     this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
   }
 
+  /**
+   * A person who goes quiet after the assistant spoke (the line dropped their audio, they did not
+   * hear, they walked away) gets "Alô?" and the question again, like a person would do.
+   */
+  private armQuietPerson() {
+    if (this.quietTimer) clearTimeout(this.quietTimer);
+    if (!this.introduced || this.nudges >= 2) return;
+    this.quietTimer = setTimeout(() => {
+      if (this.answer || this.hangupRequested || this.finished || this.waiting) return;
+      if (this.side && this.side !== "person" && this.side !== "unclear") return;
+      this.nudges++;
+      this.log(`person quiet for ${this.opts.quietPersonMs ?? 9000} ms, asking again (${this.nudges})`);
+      this.send({
+        type: "session.commentary.append",
+        event_id: `nudge_${this.nudges}_${this.opts.sessionId}`,
+        delegation_id: null,
+        content: "The pharmacy has been silent. Say only \"Alô? Vocês estão me ouvindo?\" and repeat your last question, briefly.",
+      });
+      this.armQuietPerson();
+    }, this.opts.quietPersonMs ?? 9000);
+    this.timers.push(this.quietTimer);
+  }
+
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
@@ -604,6 +632,7 @@ export class PharmacyCall {
     const now = Date.now();
     if (this.lastInputAt && now - this.lastInputAt > (this.opts.utteranceGapMs ?? 1500)) this.startUtterance();
     this.lastInputAt = now;
+    this.armQuietPerson();
     this.inputOrder++;
     if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
     this.utterance += delta;
