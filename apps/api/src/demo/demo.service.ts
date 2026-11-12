@@ -12,6 +12,7 @@ import {
   doses,
   DOSES_QUEUE,
   families,
+  MAX_CHECK_INS,
   medications,
   members,
   PlanGate,
@@ -101,12 +102,18 @@ export class DemoService {
       .where(and(eq(doses.id, doseId), eq(doses.demo, true), eq(medications.patientId, ref.patientId)));
     if (!dose) throw new NotFoundException('Demo não encontrada.');
     let callActive = false;
-    for (const kind of ['remind', 'call', 'alert-family'] as const) {
-      const job = (await this.queue.getJob(doseJobId(kind, doseId))) as Job<DoseJob> | undefined;
+    // The call itself may have queued a recall or emergency call backs: they go with the run.
+    const jobIds = [
+      ...(['remind', 'call', 'alert-family', 'recall'] as const).map((kind) => doseJobId(kind, doseId)),
+      ...Array.from({ length: MAX_CHECK_INS }, (_, i) => `${doseJobId('check-in', doseId)}-${i + 1}`),
+    ];
+    for (const jobId of jobIds) {
+      const job = (await this.queue.getJob(jobId)) as Job<DoseJob> | undefined;
       if (!job) continue;
       const state = await job.getState();
       if (state === 'active') {
-        if (kind === 'call') callActive = true;
+        // Any call (first call, recall or call back) still writes its result on this dose.
+        if (!jobId.startsWith('remind-') && !jobId.startsWith('alert-family-')) callActive = true;
         continue;
       }
       if (state === 'delayed' || state === 'waiting' || state === 'prioritized') await job.remove().catch(() => undefined);

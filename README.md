@@ -379,6 +379,8 @@ O painel mostra adesão às doses, o funil do lembrete até o "Tomei", ligaçõe
 
 [Abrir o painel ao vivo](https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg) (público, sem login). Detalhes em [docs/monitoring.md](docs/monitoring.md).
 
+Exemplo real do alerta (12/11/2026): uma demo terminou com a Dona Maria dizendo que não estava bem, o que agenda uma ligação de retorno 10 minutos depois. A demo foi encerrada antes disso e apagou a dose, mas a ligação de retorno ficou na fila. Quando ela rodou, não achou a dose e gerou um erro no worker. Nenhuma ligação foi feita. Correção: encerrar a demo também tira da fila a nova tentativa e as ligações de retorno, e uma ligação na fila de uma dose que não existe mais só é ignorada, sem erro.
+
 ## Dados públicos
 
 | Fonte | Uso |

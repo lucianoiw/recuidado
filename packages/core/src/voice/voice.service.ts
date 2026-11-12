@@ -161,7 +161,7 @@ export class VoiceCallService {
   }
 
   /**
-   * Asks apps/voice to call the patient. Does nothing if the dose is no longer pending.
+   * Asks apps/voice to call the patient. Does nothing if the dose is gone or no longer pending.
    * With checkIn, it is the call back after an emergency: the dose status does not matter.
    */
   async call(
@@ -196,7 +196,11 @@ export class VoiceCallService {
       .innerJoin(members, eq(medications.patientId, members.id))
       .innerJoin(families, eq(members.familyId, families.id))
       .where(eq(doses.id, doseId));
-    if (!row) throw new NotFoundException('Dose não encontrada.');
+    if (!row) {
+      // Removed doses (demo run stopped, times edited) can still have queued calls: they do nothing.
+      this.logger.log(`Dose ${doseId} no longer exists; not calling.`);
+      return null;
+    }
     if (row.stoppedAt && !checkIn) {
       this.logger.log(`Medication of dose ${doseId} was removed; not calling.`);
       return null;
