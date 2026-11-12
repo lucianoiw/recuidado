@@ -68,6 +68,11 @@ mkdir -p /etc/recuidado
 printf 'API_URL=%s\nVOICE_API_TOKEN=%s\n' "${API_URL:-}" "${VOICE_API_TOKEN:-}" > /etc/recuidado/upload.env
 chown root:asterisk /etc/recuidado/upload.env
 chmod 640 /etc/recuidado/upload.env
+if [ -n "${API_URL:-}" ] && [ -n "${VOICE_API_TOKEN:-}" ]; then
+  echo "Call recordings: uploaded to ${API_URL%/}/call-logs"
+else
+  echo "Call recordings: API_URL or VOICE_API_TOKEN not set, recordings stay in /var/spool/asterisk/recuidado" >&2
+fi
 mkdir -p /var/spool/asterisk/recuidado && chown asterisk:asterisk /var/spool/asterisk/recuidado
 
 VARS='$AMI_ENABLED $AMI_SECRET $SIP_TLS_PORT $NVOIP_LOCAL_PORT $NVOIP_SIP_HOST $NVOIP_SIP_USER $NVOIP_SIP_PASSWORD $OPENAI_SIP_USERNAME $OPENAI_SIP_PASSWORD $RTP_START $RTP_END $ALLOWED_REGEX $EXTERNAL_ADDR_LINES'
