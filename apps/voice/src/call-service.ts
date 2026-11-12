@@ -222,6 +222,7 @@ export class CallService {
         simGreeting(sim),
       );
       this.log(`[${callerId}] simulated pharmacy ${sim.index} (${sim.name}): actor ${actorId}`);
+      this.watchActor(actorId, callerId);
       const hangup = () => this.live.hangup(actorId).catch((err: Error) => this.log(`actor hangup: ${err.message}`));
       // At most 5 minutes, even if the pharmacy call never reports an end.
       const timer = setTimeout(hangup, 5 * 60 * 1000);
@@ -231,6 +232,30 @@ export class CallService {
       });
     } catch (err) {
       this.log(`[${callerId}] simulated pharmacy ${sim.index}: actor not started: ${(err as Error).message}`);
+    }
+  }
+
+  /** Logs the actor's errors and how its session ended, to see why an attendant goes quiet. */
+  private watchActor(actorId: string, callerId: string) {
+    try {
+      const socket = this.live.attach(actorId);
+      socket.on("message", (data) => {
+        let event: { type?: string; error?: unknown; reason?: unknown };
+        try {
+          event = JSON.parse(String(data));
+        } catch {
+          return;
+        }
+        if (event.type === "error") this.log(`[${callerId}] actor error ${JSON.stringify(event.error)}`);
+        if (event.type?.startsWith("transport.") && !event.type.includes("dtmf")) this.log(`[${callerId}] actor ${event.type}`);
+        if (event.type === "session.closed") {
+          this.log(`[${callerId}] actor session closed: ${String(event.reason ?? "unknown")}`);
+          socket.close();
+        }
+      });
+      socket.on("error", (err) => this.log(`[${callerId}] actor sideband: ${err.message}`));
+    } catch (err) {
+      this.log(`[${callerId}] actor sideband not attached: ${(err as Error).message}`);
     }
   }
 

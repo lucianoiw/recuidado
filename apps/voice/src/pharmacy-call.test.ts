@@ -103,6 +103,7 @@ test("presses a menu key, then records stock and price and hangs up after the go
   assert.deepEqual(dtmf.map((e) => e.event), ["2"]);
   const out = socket.sent.find((e) => e.type === "response.item.create") as { item: { output: string } };
   assert.deepEqual(JSON.parse(out.item.output), { pressed: "2", ok: true });
+  assert.equal(socket.sent.filter((e) => e.type === "response.create").length, 0, "no new response after a key");
 
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Drogaria, bom dia." });
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi, bom dia! Aqui é a assistente virtual da Recuidado." });
@@ -559,4 +560,17 @@ test("a recorded welcome before the options: stays muted and waits, no introduct
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: " Para entregas, tecle 1. Para falar com um atendente, tecle 3." });
   await new Promise((r) => setTimeout(r, 120));
   assert.deepEqual(keysSent(socket), ["3"]);
+});
+
+test("a goodbye ends the call even when the answer tool never ran, and no 'Alô?' after it", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Drogaria, boa noite." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi, boa noite! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Tem sim, dez e noventa." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: "Perfeito. Muito obrigada, tchau!" });
+  const result = await call.result;
+  assert.equal(result.endReason, "hung_up_after_goodbye");
+  const nudges = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("nudge_"));
+  assert.equal(nudges.length, 0);
 });

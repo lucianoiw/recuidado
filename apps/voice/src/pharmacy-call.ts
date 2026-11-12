@@ -194,6 +194,7 @@ export class PharmacyCall {
   private error?: string;
   private durationSeconds?: number;
   private hangupRequested = false;
+  private saidGoodbye = false;
   private endReason?: string;
   private voicemail = false;
   private assistantAfterAnswer = "";
@@ -453,7 +454,9 @@ export class PharmacyCall {
     } else {
       this.log("invalid keypad request", keys);
     }
-    this.toolOutput(callId, { pressed: valid ? (keys as string).trim() : "", ok: valid });
+    // No new response after a key: the next menu or the attendant speaks next. Asking for one here
+    // came back as "invalid_request_error" and left the session unable to record the answer.
+    this.toolOutput(callId, { pressed: valid ? (keys as string).trim() : "", ok: valid }, false);
   }
 
   private sendKeys(id: string, digits: string[]) {
@@ -506,13 +509,13 @@ export class PharmacyCall {
     else this.armSilenceHangup();
   }
 
-  private toolOutput(callId: string, output: unknown) {
+  private toolOutput(callId: string, output: unknown, respond = true) {
     this.send({
       type: "response.item.create",
       event_id: `result_${callId}`,
       item: { type: "function_call_output", call_id: callId, output: JSON.stringify(output) },
     });
-    this.send({ type: "response.create", event_id: `continue_${callId}` });
+    if (respond) this.send({ type: "response.create", event_id: `continue_${callId}` });
   }
 
   private onAssistantSpeech(delta: string) {
@@ -536,7 +539,17 @@ export class PharmacyCall {
         this.sendKeys(`spoken_${this.keysPressed.length}`, [key]);
       }
     }
-    if (!this.answer) return;
+    if (!this.answer) {
+      // The answer tool can fail on the Live side ("invalid_request_error" on the turn after a key
+      // press): a goodbye still ends the call, and the API reads the prices from the transcript.
+      const line = this.transcript.at(-1);
+      if (this.introduced && line?.speaker === "assistant" && GOODBYE.test(line.text)) {
+        this.saidGoodbye = true;
+        if (this.quietTimer) clearTimeout(this.quietTimer);
+        if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
+      }
+      return;
+    }
     this.assistantAfterAnswer += delta;
     if (!GOODBYE.test(this.assistantAfterAnswer)) {
       this.armSilenceHangup();
@@ -554,7 +567,7 @@ export class PharmacyCall {
     if (this.quietTimer) clearTimeout(this.quietTimer);
     if (!this.introduced || this.nudges >= 2) return;
     this.quietTimer = setTimeout(() => {
-      if (this.answer || this.hangupRequested || this.finished || this.waiting) return;
+      if (this.answer || this.saidGoodbye || this.hangupRequested || this.finished || this.waiting) return;
       if (this.side && this.side !== "person" && this.side !== "unclear") return;
       this.nudges++;
       this.log(`person quiet for ${this.opts.quietPersonMs ?? 9000} ms, asking again (${this.nudges})`);
