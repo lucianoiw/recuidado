@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertIcon, BellIcon, HeartIcon, PhoneIcon, PillIcon, Segmented, TopBar, cn } from "@/components/ui";
+import { AlertIcon, BellIcon, CartIcon, HeartIcon, PhoneIcon, PillIcon, Segmented, TopBar, cn } from "@/components/ui";
 import { markAlertsSeen } from "@/lib/alerts-seen";
 import { captureError } from "@/lib/analytics";
 import { MonthSummary } from "./month-summary";
@@ -14,6 +14,7 @@ const KINDS: Record<AlertKind, { label: string; icon: typeof AlertIcon; tone: st
   emergency: { label: "Emergência", icon: AlertIcon, tone: "bg-danger text-white" },
   emergency_call: { label: "Ligação para a família", icon: PhoneIcon, tone: "bg-danger-soft text-danger" },
   check_in: { label: "Ligação de volta", icon: PhoneIcon, tone: "bg-brand-soft text-brand" },
+  rotation_turn: { label: "Vez de comprar", icon: CartIcon, tone: "bg-brand-soft text-brand" },
 };
 
 /** How the alert reached the family. */

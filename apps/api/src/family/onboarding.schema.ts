@@ -70,6 +70,14 @@ export const onboardingBody = z
       )
       .max(20)
       .default([]),
+    // How the siblings pay: split by Pix or one per month. People by name (the caregiver and the
+    // invites), in the rotation order; excluded ones stay out of the count.
+    payment: z
+      .object({
+        mode: z.enum(['split', 'rotation']),
+        people: z.array(z.object({ name, excluded: z.boolean().default(false) })).max(21),
+      })
+      .optional(),
   })
   .refine((b) => b.caregiver.relation !== 'Outro' || b.caregiver.relationOther !== '', {
     message: 'Diga qual é a relação.',

@@ -24,6 +24,7 @@ Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração us
 - **Família avisada.** Sem confirmação, ou se ela disser que não está bem, os filhos recebem o aviso na hora, por push e por e-mail. Todo aviso também fica na tela Avisos do app, com o sino de novos na tela Hoje. Ver [Avisos da família](#avisos-da-família).
 - **A IA liga para a farmácia.** Em "Onde comprar", a família toca em "Perguntar à farmácia". A IA liga, se apresenta como assistente virtual, passa pelo menu de teclas (URA) sozinha, pergunta se tem, quanto custa a caixa e se sai pelo Farmácia Popular, e a resposta aparece comparada ao teto da CMED. Ver [Ligação para a farmácia](#ligação-para-a-farmácia).
 - **O que é grátis e onde.** Cada remédio é cruzado com a lista do Farmácia Popular, com o REMUME das UBS de São Paulo e com o Alto Custo, e a família vê as farmácias credenciadas mais perto.
+- **Os irmãos dividem ou revezam.** Em "Onde comprar e dividir", a família escolhe: dividir todo mês (cada um manda a sua parte por Pix para quem comprou) ou cada mês um compra tudo, na ordem que eles escolheram. Quem paga outra coisa, como o plano de saúde, fica fora da conta. O app avisa todo mundo de quem é a vez. Ver [Dividir ou revezar a conta](#dividir-ou-revezar-a-conta).
 - **MCP para qualquer assistente de IA.** Claude, ChatGPT ou outro agente consulta o plano, as doses e os avisos da família por conversa. Ver [Servidor MCP](#servidor-mcp).
 - **Login sem senha e a mãe sem cadastro.** O filho entra com o e-mail (código de 6 números ou link, pelo Resend). Os irmãos são convidados por e-mail. A mãe não se cadastra: o filho manda um link e o celular dela abre o app dela. Ver [Login e os dois celulares](#login-e-os-dois-celulares).
 - **Monitoria completa.** Logs, erros, eventos, traces da IA e replay das telas em um só lugar (PostHog).
@@ -194,6 +195,7 @@ Toda mensagem para os cuidadores sai por push e por e-mail ao mesmo tempo e tamb
 | Ligação para a família | A ligação de voz para o primeiro contato (ou para o próximo, se ele não atender), com o recado dito (sem push) |
 | Ligação de volta | Resultado da ligação para ela depois da emergência |
 | Remédio acabando | Estoque para `LOW_STOCK_DAYS` dias ou menos |
+| Vez de comprar | No rodízio, uma vez por mês: quem compra este mês e quem é o próximo |
 
 Cada aviso diz por onde chegou ("Notificação em 2 celulares e e-mail para 2 pessoas", "Por ligação de voz", ou "Só no app" quando ninguém ligou a notificação nem deu e-mail).
 
@@ -271,6 +273,18 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
 - **Gravação.** Toda ligação passa pelo Asterisk. Logo que a ligação é criada, o serviço de voz pede pelo AMI um `MixMonitor` no canal da IA (as duas vozes, WAV 16 kHz). É só uma cópia do áudio: a ligação não espera por ela, e a latência da voz não muda. Quando a ligação acaba, o Asterisk envia o arquivo para `POST /call-logs/:sessao/recording` em segundo plano (`deploy/asterisk/upload-recording.sh`), e a API guarda no Cloudflare R2 (`R2_*`), ou no Postgres se o R2 não estiver configurado.
 - **Linha do tempo.** O serviço de voz guarda as linhas de log de cada ligação com o tempo desde o início e envia junto com a transcrição para `POST /call-logs`. A tela mostra os passos principais e, num clique, todos.
 - **Privacidade.** A lista e os áudios são públicos só para a família de demonstração (dados sintéticos, vozes da equipe). Transcrição, passos e áudio guardado no Postgres somem depois de `VOICE_TRANSCRIPT_RETENTION_DAYS`; no R2, por regra de ciclo de vida do bucket. Desligar: `RECORD_CALLS=off` no serviço de voz.
+
+## Dividir ou revezar a conta
+
+O que não sai grátis a família paga, e cada família combina de um jeito. O app aceita os dois jeitos mais comuns, escolhidos no cadastro (passo "Quem cuida junto?") ou depois em "Onde comprar e dividir":
+
+- **Dividir todo mês.** Quem compra cadastra a chave Pix. Cada irmão vê a sua parte e um Pix "copia e cola" com o valor já preenchido, e toca em "Já paguei". A parte de quem comprou já conta como paga.
+- **Cada mês um compra.** A família põe os irmãos em ordem (setas para subir e descer). O primeiro compra no mês atual, o segundo no mês seguinte, e assim por diante. A tela mostra de quem é a vez, o botão "Já comprei" e os próximos três meses. No começo de cada mês, todos recebem o aviso "Em dezembro, Carlos compra os remédios", por push e e-mail, com o nome do próximo.
+- **Fora da conta.** Qualquer irmão pode ficar fora da divisão e do rodízio, com o motivo à vista ("Paga o plano de saúde"). Ele continua recebendo os avisos da mãe.
+
+**Sem cobrança automática (decidido em 11/11).** O app não move dinheiro nem confere se o Pix caiu. Detectar o pagamento exigiria passar cada Pix por um intermediário (a AbacatePay cobra por transação) e todos os irmãos teriam de pagar por ele. Por isso o Pix é estático, direto para a chave de quem comprou, e cada um marca "Já paguei" ou "Já comprei". A AbacatePay fica só para a assinatura do plano pago.
+
+Como funciona: `families.split_mode` (`split` ou `rotation`), `families.rotation_start_month` (o mês em que o primeiro da lista compra; muda quando a ordem muda) e, em cada cuidador, `members.rotation_order`, `split_excluded` e `split_excluded_reason`. A vez de cada mês é a posição na lista mais os meses desde o início, em volta da lista (`packages/core/src/rotation`). O aviso mensal sai do planejador de doses do worker, que roda a cada hora, e `families.rotation_notified_month` garante um aviso por mês. Quando alguém muda a ordem e muda quem compra no mês atual, o aviso sai na hora.
 
 ## Plano pago (AbacatePay)
 

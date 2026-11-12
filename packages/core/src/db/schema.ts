@@ -31,6 +31,13 @@ export const families = pgTable('families', {
   subscriptionId: text(),
   subscriptionTrialEndsAt: timestamp({ withTimezone: true }),
   subscriptionUpdatedAt: timestamp({ withTimezone: true }),
+  // How the siblings pay what is not free: 'split' (everyone pays a share by Pix to the one who
+  // buys) or 'rotation' (each month one caregiver buys it all, in members.rotationOrder).
+  splitMode: text().$type<'split' | 'rotation'>().notNull().default('split'),
+  // "2026-11": the month the first caregiver of the rotation buys. Set again when the order changes.
+  rotationStartMonth: text(),
+  // "2026-11": last month the family got the "whose turn it is" alert.
+  rotationNotifiedMonth: text(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -62,6 +69,12 @@ export const members = pgTable('members', {
   pixKey: text(),
   // The one caregiver phoned when she reports an emergency on the call. None set: the oldest caregiver with a phone.
   emergencyContact: boolean().notNull().default(false),
+  // Caregiver position in the monthly rotation, from 0 (null: not ordered yet, goes last).
+  rotationOrder: integer(),
+  // Out of the split and of the rotation, e.g. a brother who pays the health plan instead.
+  splitExcluded: boolean().notNull().default(false),
+  // Why, shown to the family: "Paga o plano de saúde".
+  splitExcludedReason: text(),
   invitedById: uuid().references((): AnyPgColumn => members.id, { onDelete: 'set null' }),
   joinedAt: timestamp({ withTimezone: true }),
   // LGPD consent of the patient (health data, art. 11): reminders, calls and the family seeing doses.
@@ -200,7 +213,7 @@ export const costShares = pgTable('cost_shares', {
 }, (t) => [unique().on(t.familyId, t.memberId, t.month)]);
 
 // emergency: she said it on the call; emergency_call: we phoned the first contact (no push);
-// check_in: result of the call back after an emergency.
+// check_in: result of the call back after an emergency; rotation_turn: whose month it is to buy.
 export const alertKind = pgEnum('alert_kind', [
   'dose_missed',
   'unwell',
@@ -208,6 +221,7 @@ export const alertKind = pgEnum('alert_kind', [
   'emergency',
   'emergency_call',
   'check_in',
+  'rotation_turn',
 ]);
 
 // Every alert sent to the caregivers, for the history screen of the family app.

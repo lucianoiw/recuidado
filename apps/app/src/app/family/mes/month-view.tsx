@@ -90,7 +90,11 @@ export function MonthView() {
           <span className="text-[15px] text-muted">
             {data.toBuy.length === 0
               ? "Nada para comprar"
-              : data.split.receiver
+              : data.split.mode === "rotation"
+                ? data.split.rotation?.payer
+                  ? `Este mês ${data.split.rotation.payer.name} compra${data.split.shares[0]?.paid ? " (já comprou)" : ""}`
+                  : "Cada mês um compra"
+                : data.split.receiver
                 ? `${paid} de ${data.split.shares.length} já pagaram. Dividir com Pix`
                 : "Dividir entre a família com Pix"}
           </span>

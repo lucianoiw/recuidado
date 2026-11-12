@@ -22,6 +22,21 @@ export const pixKeyBody = z.object({
     .nullable(),
 });
 
+/** Body of PUT /family/payment: split or rotation, and every caregiver in the rotation order. */
+export const paymentBody = z.object({
+  mode: z.enum(['split', 'rotation']),
+  members: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        excluded: z.boolean().default(false),
+        reason: z.string().trim().max(60).nullable().optional(),
+      }),
+    )
+    .max(20)
+    .refine((list) => new Set(list.map((m) => m.id)).size === list.length, 'Pessoa repetida.'),
+});
+
 @Controller('family')
 export class MonthController {
   constructor(private readonly month: MonthService) {}
@@ -41,6 +56,13 @@ export class MonthController {
     @FamilyId({ write: true }) familyId: string | null,
   ) {
     await this.month.setPaid(familyId, memberId, parse(paidBody, body).paid);
+  }
+
+  /** Split by Pix or one per month, the rotation order and who is out of the count. */
+  @Put('payment')
+  @HttpCode(204)
+  async setPayment(@Body() body: unknown, @FamilyId({ write: true }) familyId: string | null) {
+    await this.month.setPayment(familyId, parse(paymentBody, body));
   }
 
   /** Who buys the medicines and receives the others' shares by Pix. */

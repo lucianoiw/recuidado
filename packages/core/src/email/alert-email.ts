@@ -1,7 +1,7 @@
 // The e-mail a caregiver gets for a family alert. Table layout with inline styles, which every mail client
 // reads (Gmail drops <style> blocks and web fonts). Same colors as the app (apps/app globals.css).
 
-export type AlertEmailKind = 'dose_missed' | 'unwell' | 'low_stock' | 'emergency' | 'emergency_call' | 'check_in';
+export type AlertEmailKind = 'dose_missed' | 'unwell' | 'low_stock' | 'emergency' | 'emergency_call' | 'check_in' | 'rotation_turn';
 
 export interface AlertEmailInput {
   kind: AlertEmailKind;
@@ -36,6 +36,7 @@ const KINDS: Record<AlertEmailKind, { label: string; fg: string; bg: string; but
   emergency: { label: 'Emergência', fg: '#ffffff', bg: '#a11d17', button: '#a11d17' },
   emergency_call: { label: 'Ligação para a família', fg: '#a11d17', bg: '#fce7e5', button: C.brand },
   check_in: { label: 'Ligação de volta', fg: C.brand, bg: '#e3f1ee', button: C.brand },
+  rotation_turn: { label: 'Vez de comprar', fg: C.brand, bg: '#e3f1ee', button: C.brand },
 };
 
 const FONT = `'Atkinson Hyperlegible Next','Atkinson Hyperlegible',-apple-system,'Segoe UI',Roboto,Arial,sans-serif`;
