@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
-import { Button, Card, CheckIcon, ClockIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
+import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
 import { captureError, identifyMember, track } from "@/lib/analytics";
 import { refreshMs } from "@/lib/demo";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
@@ -159,67 +159,65 @@ export function PatientView() {
 
   return (
     <>
-      <ScreenHeader audience="patient" eyebrow={todayLabel()} title={
-          <>
-            {greeting()},
-            <br />
-            {patientName}
-          </>
-        } />
+      {due.length > 0 ? (
+        <header className="flex flex-col gap-1">
+          <p className="text-[22px] text-muted">
+            {greeting()}, {patientName}
+          </p>
+          <h1 className="font-display text-[44px] leading-[1.02]">Hora do remédio</h1>
+        </header>
+      ) : (
+        <ScreenHeader
+          audience="patient"
+          eyebrow={todayLabel()}
+          title={
+            <>
+              {greeting()},
+              <br />
+              {patientName}
+            </>
+          }
+        />
+      )}
 
       {due.length > 0 ? (
-        <Card className="flex flex-col gap-5 px-5 py-6" aria-live="polite">
-          <div className="flex flex-col gap-1">
-            <p className="flex w-fit items-center gap-2 rounded-full bg-blush px-4 py-1.5 text-[22px] font-bold text-accent-ink">
-              <ClockIcon size={24} strokeWidth={2.2} />
-              {formatTime(due[0].scheduledAt)}
-            </p>
-            <p className="mt-2 text-[30px] font-bold leading-tight">Hora do remédio</p>
-          </div>
-          <ul className="flex flex-col divide-y divide-line-soft">
+        <section
+          aria-live="polite"
+          className="flex flex-col items-center gap-1 rounded-[28px] bg-surface px-5 py-7 text-center shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)]"
+        >
+          <p className="font-display text-[32px] text-accent-ink">{formatTime(due[0].scheduledAt)}</p>
+          {due.length === 1 && photoOf.get(due[0].medicationId) ? (
+            // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, the real box
+            <img
+              src={photoOf.get(due[0].medicationId)!}
+              alt={`Foto de ${due[0].medicationName}`}
+              className="my-3 h-44 w-full rounded-2xl bg-cream object-contain"
+            />
+          ) : (
+            <span className="my-3 flex size-28 items-center justify-center rounded-full bg-blush text-accent">
+              <BellIcon size={52} strokeWidth={1.8} />
+            </span>
+          )}
+          <ul className="flex w-full flex-col gap-3">
             {due.map((d) => (
-              <li key={d.id} className="flex flex-col gap-3 py-4 first:pt-1 last:pb-1">
-                {photoOf.get(d.medicationId) && due.length === 1 ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- signed R2 link
-                  <img
-                    src={photoOf.get(d.medicationId)!}
-                    alt={`Foto de ${d.medicationName}`}
-                    className="h-52 w-full rounded-2xl bg-cream object-contain"
-                  />
+              <li key={d.id} className="flex flex-col items-center">
+                <h2 className={due.length > 1 ? "font-display text-[32px] leading-tight" : "font-display text-[40px] leading-tight"}>
+                  {d.medicationName}
+                </h2>
+                {d.strength ? (
+                  <span className="font-sans text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
                 ) : null}
-                <div className="flex items-center gap-3.5">
-                  {photoOf.get(d.medicationId) && due.length > 1 ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- signed R2 link
-                    <img
-                      src={photoOf.get(d.medicationId)!}
-                      alt={`Foto de ${d.medicationName}`}
-                      className="size-20 shrink-0 rounded-2xl bg-cream object-cover"
-                    />
-                  ) : due.length > 1 ? (
-                    <span
-                      aria-hidden="true"
-                      className="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-cream text-[34px] font-bold text-muted"
-                    >
-                      {d.medicationName.charAt(0)}
-                    </span>
-                  ) : null}
-                  <div className="flex min-w-0 flex-col">
-                    <h2 className={due.length > 1 ? "text-[28px] font-bold leading-tight" : "text-[34px] font-bold leading-tight"}>
-                      {d.medicationName}
-                    </h2>
-                    {d.strength ? (
-                      <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
-                    ) : null}
-                  </div>
-                </div>
               </li>
             ))}
           </ul>
-          <Button size="xl" onClick={() => confirm(due)} disabled={busy}>
-            <CheckIcon size={32} />
-            {busy ? "Anotando..." : due.length > 1 ? `Tomei os ${due.length}` : "Tomei o remédio"}
-          </Button>
-        </Card>
+        </section>
+      ) : null}
+
+      {due.length > 0 ? (
+        <Button size="xl" onClick={() => confirm(due)} disabled={busy} className="font-display">
+          <CheckIcon size={32} />
+          {busy ? "Anotando..." : due.length > 1 ? `Tomei os ${due.length}` : "Tomei"}
+        </Button>
       ) : (
         <Card className="flex flex-col gap-2 px-5 py-6">
           <p className="flex items-center gap-2.5 text-[30px] font-bold leading-tight text-ok">
