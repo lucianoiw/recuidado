@@ -19,4 +19,8 @@ describe('corsOrigins', () => {
       'https://www.a.com.br',
     ]);
   });
+
+  it('allows the panel host next to the app host', () => {
+    expect(corsOrigins('https://app.recuidado.com.br')).toContain('https://painel.recuidado.com.br');
+  });
 });
