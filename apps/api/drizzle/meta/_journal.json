@@ -155,6 +155,13 @@
       "when": 1794444839388,
       "tag": "0021_new_purple_man",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1794499267505,
+      "tag": "0022_tearful_dragon_man",
+      "breakpoints": true
     }
   ]
 }

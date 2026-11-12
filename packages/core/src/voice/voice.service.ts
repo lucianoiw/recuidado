@@ -280,7 +280,7 @@ export class VoiceCallService {
     const [allPharmacy] = await this.db
       .select({ n: count() })
       .from(pharmacyInquiries)
-      .where(gte(pharmacyInquiries.createdAt, since));
+      .where(and(gte(pharmacyInquiries.createdAt, since), eq(pharmacyInquiries.simulated, false)));
     if (all.n + allPharmacy.n >= total) return 'daily_total_limit';
     if (isDemo) return null;
     const perFamily = this.config.get<number>('CALL_DAILY_LIMIT_PER_FAMILY') ?? 3;
@@ -293,7 +293,13 @@ export class VoiceCallService {
     const [minePharmacy] = await this.db
       .select({ n: count() })
       .from(pharmacyInquiries)
-      .where(and(eq(pharmacyInquiries.familyId, familyId), gte(pharmacyInquiries.createdAt, since)));
+      .where(
+        and(
+          eq(pharmacyInquiries.familyId, familyId),
+          gte(pharmacyInquiries.createdAt, since),
+          eq(pharmacyInquiries.simulated, false),
+        ),
+      );
     return mine.n + minePharmacy.n >= perFamily ? 'daily_family_limit' : null;
   }
 

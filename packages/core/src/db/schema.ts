@@ -261,6 +261,8 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
   pharmacyName: text().notNull(),
   // Calls placed together by one tap ("Perguntar às farmácias"), to compare their prices.
   batchId: uuid(),
+  // A simulated pharmacy on the test Asterisk (DDD 00): not counted in the daily call limits.
+  simulated: boolean().notNull().default(false),
   // What was asked, e.g. [{ medicationId, name: "Losartana", strength: "50 mg" }].
   medications: jsonb()
     .$type<{ medicationId: string; name: string; strength: string | null }[]>()
