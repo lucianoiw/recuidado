@@ -63,6 +63,7 @@ function setup(openingWaitMs = 60_000, extra: Partial<ConstructorParameters<type
     closeGraceMs: 5,
     silentLineMs: 60_000,
     stallMs: 60_000,
+    speechCharMs: 1,
     ...extra,
   });
   return { socket, call, gate, hangups: () => hangups };
