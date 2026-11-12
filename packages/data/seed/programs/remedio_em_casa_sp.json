@@ -1,0 +1,390 @@
+{
+  "program": {
+    "id": "remedio_em_casa_sp",
+    "name": "Remédio em Casa (Prefeitura de São Paulo)",
+    "kind": "home_delivery",
+    "level": "municipal",
+    "region": "3550308",
+    "channel": "Peça na UBS onde ela faz acompanhamento. O remédio chega em casa, para 90 dias.",
+    "sourceUrl": "https://prefeitura.sp.gov.br/web/saude/w/programas/5875",
+    "version": "2026-11-12",
+    "documents": [
+      "Cartão do SUS",
+      "Receita da UBS",
+      "Formulário do programa, preenchido na UBS"
+    ],
+    "rules": [
+      {
+        "kind": "residence",
+        "value": "3550308",
+        "text": "para quem mora na cidade de São Paulo"
+      },
+      {
+        "kind": "note",
+        "text": "Para doença crônica estável e controlada, com acompanhamento na UBS."
+      }
+    ]
+  },
+  "items": [
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "hidroclorotiazida-25-mg-comprimido",
+      "name": "hidroclorotiazida 25 mg comprimido",
+      "activeIngredients": [
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida",
+      "looseMatchKey": "hidroclorotiazida 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "propranolol-40-mg-comprimido",
+      "name": "propranolol 40 mg comprimido",
+      "activeIngredients": [
+        "propranolol"
+      ],
+      "looseKey": "propranolol",
+      "looseMatchKey": "propranolol 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "atenolol-50-mg-comprimido",
+      "name": "atenolol 50 mg comprimido",
+      "activeIngredients": [
+        "atenolol"
+      ],
+      "looseKey": "atenolol",
+      "looseMatchKey": "atenolol 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "captopril-25-mg-comprimido",
+      "name": "captopril 25 mg comprimido",
+      "activeIngredients": [
+        "captopril"
+      ],
+      "looseKey": "captopril",
+      "looseMatchKey": "captopril 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "enalapril-20-mg-comprimido",
+      "name": "enalapril 20 mg comprimido",
+      "activeIngredients": [
+        "enalapril"
+      ],
+      "looseKey": "enalapril",
+      "looseMatchKey": "enalapril 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "enalapril-5-mg-comprimido",
+      "name": "enalapril 5 mg comprimido",
+      "activeIngredients": [
+        "enalapril"
+      ],
+      "looseKey": "enalapril",
+      "looseMatchKey": "enalapril 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "nifedipino-20-mg-comprimido",
+      "name": "nifedipino 20 mg comprimido",
+      "activeIngredients": [
+        "nifedipino"
+      ],
+      "looseKey": "nifedipino",
+      "looseMatchKey": "nifedipino 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "anlodipino-5-mg-comprimido",
+      "name": "anlodipino 5 mg comprimido",
+      "activeIngredients": [
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino",
+      "looseMatchKey": "anlodipino 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "anlodipino-10-mg-comprimido",
+      "name": "anlodipino 10 mg comprimido",
+      "activeIngredients": [
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino",
+      "looseMatchKey": "anlodipino 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "acido-acetilsalicilico-100-mg-comprimido",
+      "name": "ácido acetilsalicílico 100 mg comprimido",
+      "activeIngredients": [
+        "ácido acetilsalicílico"
+      ],
+      "looseKey": "acido acetilsalicilico",
+      "looseMatchKey": "acido acetilsalicilico 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "metformina-850-mg-comprimido",
+      "name": "metformina 850 mg comprimido",
+      "activeIngredients": [
+        "metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 850 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "metformina-500-mg-comprimido",
+      "name": "metformina 500 mg comprimido",
+      "activeIngredients": [
+        "metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "gliclazida-60-mg-comprimido-de-liberacao-modificada",
+      "name": "gliclazida 60 mg comprimido de liberação modificada",
+      "activeIngredients": [
+        "gliclazida"
+      ],
+      "looseKey": "gliclazida",
+      "looseMatchKey": "gliclazida 60 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "sinvastatina-10-mg-comprimido",
+      "name": "sinvastatina 10 mg comprimido",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "sinvastatina-20-mg-comprimido",
+      "name": "sinvastatina 20 mg comprimido",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "sinvastatina-40-mg-comprimido",
+      "name": "sinvastatina 40 mg comprimido",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "levotiroxina-25-mcg-comprimido",
+      "name": "levotiroxina 25 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 25 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "levotiroxina-50-mcg-comprimido",
+      "name": "levotiroxina 50 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 50 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "levotiroxina-100-mcg-comprimido",
+      "name": "levotiroxina 100 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 100 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remedio_em_casa_sp",
+      "key": "losartana-potassica-50-mg-comprimido",
+      "name": "losartana potássica 50 mg comprimido",
+      "activeIngredients": [
+        "losartana potássica"
+      ],
+      "looseKey": "losartana",
+      "looseMatchKey": "losartana 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    }
+  ]
+}
