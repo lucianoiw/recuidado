@@ -690,3 +690,16 @@ test("answer recorded without a goodbye: the AI is asked for it once, then the c
   const asked = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("goodbye_"));
   assert.equal(asked.length, 1);
 });
+
+test("after 'Alô?' the AI introduces itself on its own; silence after the answer still ends the call", async () => {
+  const { socket, call } = setup(60_000, { silentLineMs: 45, stallMs: 10 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para falar com um atendente, tecle 3." });
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "3" }));
+  await new Promise((r) => setTimeout(r, 55));
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi, boa tarde! Vocês têm Losartana 50 mg?" });
+  await new Promise((r) => setTimeout(r, 15));
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Temos sim, o genérico sai treze e noventa." });
+  const result = await call.result;
+  assert.equal(result.endReason, "assistant_silent");
+});
