@@ -65,6 +65,14 @@ export function pharmacyTargets(targets: string | undefined, phone: string | und
   return phone ? [{ name: name || 'Farmácia de teste', phone }] : [];
 }
 
+/**
+ * DDD 00 does not exist: these numbers only reach the test Asterisk (simulated pharmacies and the
+ * test phone menu). Calls to them cost only the AI minutes and do not count in the daily limits.
+ */
+export function isSimulatedPharmacy(phone: string): boolean {
+  return phone.replace(/\D/g, '').startsWith('5500');
+}
+
 const NO_PLAN_MESSAGE = 'A ligação para a farmácia faz parte do plano Recuidado Família. Ative em Família > Plano.';
 const LIMIT_MESSAGE =
   'Limite de ligações de hoje atingido. Ligações custam dinheiro, por isso há um limite por dia.';
@@ -132,7 +140,8 @@ export class PharmacyService {
       telemetry.capture('pharmacy_call_skipped', { reason: 'no_plan', demo: ref.isDemo }, ref.patientId);
       throw new HttpException(NO_PLAN_MESSAGE, HttpStatus.PAYMENT_REQUIRED);
     }
-    const overLimit = await this.voice.overCallLimit(ref.familyId, ref.isDemo, now);
+    const simulated = targets.every((t) => isSimulatedPharmacy(t.phone));
+    const overLimit = simulated ? null : await this.voice.overCallLimit(ref.familyId, ref.isDemo, now);
     if (overLimit) {
       telemetry.capture('pharmacy_call_skipped', { reason: overLimit, demo: ref.isDemo }, ref.patientId);
       throw new HttpException(LIMIT_MESSAGE, HttpStatus.TOO_MANY_REQUESTS);
@@ -146,6 +155,7 @@ export class PharmacyService {
           familyId: ref.familyId,
           pharmacyName: t.name,
           batchId,
+          simulated: isSimulatedPharmacy(t.phone),
           medications: asked.map((m) => ({ medicationId: m.id, name: m.name, strength: m.strength })),
           createdAt: now,
         })),
