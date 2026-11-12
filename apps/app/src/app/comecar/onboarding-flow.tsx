@@ -24,13 +24,11 @@ import { inputClass } from "@/components/ui";
 import { isCep, isDate, isEmail, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
 import { getMe, getOnboarding, saveOnboarding } from "@/lib/api";
 import { readSession } from "@/lib/session";
-import { PaymentSetup } from "@/components/payment-setup";
 import {
   RELATIONS,
   emptyOnboarding,
   fromRecord,
   paymentOf,
-  thisMonthName,
   type Onboarding,
   type Relation,
 } from "@/lib/onboarding";
@@ -491,7 +489,7 @@ function InviteStep({
   const me = data.caregiver;
   return (
     <>
-      <Header title="Quem cuida junto?" text="Todo mundo aqui recebe os alertas. Depois de chamar, vocês escolhem como pagam o que não é grátis." />
+      <Header title="Quem cuida junto?" text="Todo mundo aqui recebe os alertas. Como dividir o que não é grátis vocês escolhem depois, em Onde comprar e dividir." />
       <ul className="flex flex-col overflow-hidden rounded-card bg-surface">
         <li className="flex items-center gap-3 px-4 py-3.5">
           <Avatar name={me.name || "Você"} tone="brand" />
@@ -591,42 +589,11 @@ function InviteStep({
         <InfoIcon size={22} className="shrink-0 text-brand" />
         Toque no botão ao lado do nome para mandar o link. A pessoa abre e já acompanha {art} {nickname}.
       </p>
-      {data.invites.length > 0 ? <PaymentStep data={data} setData={setData} /> : null}
     </>
   );
 }
 
 /** How the family pays what is not free: split by Pix or one per month, and who stays out. */
-function PaymentStep({
-  data,
-  setData,
-}: {
-  data: Onboarding;
-  setData: (fn: (d: Onboarding) => Onboarding) => void;
-}) {
-  const payment = paymentOf(data);
-  const me = data.caregiver.name.trim().toLocaleLowerCase("pt-BR");
-  return (
-    <section className="flex flex-col gap-3">
-      <h2 className="text-[19px] font-semibold">Como vocês pagam o que não é grátis?</h2>
-      <PaymentSetup
-        mode={payment.mode}
-        monthName={thisMonthName()}
-        people={payment.people.map((p) => ({
-          key: p.name,
-          name: p.name,
-          excluded: p.excluded,
-          me: p.name.trim().toLocaleLowerCase("pt-BR") === me,
-        }))}
-        onChange={(mode, people) =>
-          setData((d) => ({ ...d, payment: { mode, people: people.map((p) => ({ name: p.name, excluded: p.excluded })) } }))
-        }
-      />
-      <p className="text-[14px] text-muted">Dá para mudar depois na tela Onde comprar e dividir.</p>
-    </section>
-  );
-}
-
 function Avatar({ name, tone }: { name: string; tone: "brand" | "blue" }) {
   return (
     <span

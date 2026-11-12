@@ -14,8 +14,8 @@ export interface PaymentPerson {
 }
 
 const MODES: { value: SplitMode; label: string }[] = [
-  { value: "split", label: "Dividir todo mês" },
-  { value: "rotation", label: "Cada mês um compra" },
+  { value: "split", label: "Dividir" },
+  { value: "rotation", label: "Revezar" },
 ];
 
 /** Keeps the saved order and adds the people not in it yet at the end. */
