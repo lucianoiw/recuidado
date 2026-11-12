@@ -33,14 +33,28 @@
 }
 
 /* Phone: the two notes sit under the photo, the first one overlapping its edge. */
-.confirmed {
+.before {
   position: relative;
-  margin: -44px 16px 0;
+  margin: -44px 40px 0 16px;
 }
 
-.call {
+.now {
   position: relative;
   margin: 10px 16px 0 40px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.check svg {
+  width: 14px;
+  height: 14px;
 }
 
 @media (min-width: 640px) {
@@ -52,19 +66,19 @@
     height: 520px;
   }
 
-  .confirmed {
+  .before {
     position: absolute;
     top: 32px;
     right: 28px;
-    width: 290px;
+    width: 270px;
     margin: 0;
   }
 
-  .call {
+  .now {
     position: absolute;
     bottom: 120px;
     left: 16px;
-    width: 270px;
+    width: 300px;
     margin: 0;
   }
 }
@@ -79,7 +93,7 @@
     height: 680px;
   }
 
-  .call {
+  .now {
     left: -48px;
   }
 }
