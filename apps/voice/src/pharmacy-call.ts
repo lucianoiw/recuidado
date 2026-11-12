@@ -46,6 +46,8 @@ export interface PharmacyCallOptions {
   maxCallMs: number;
   /** If nobody speaks this long after the call is answered, the assistant opens. */
   openingWaitMs?: number;
+  /** Silence after a menu key or hold message before the AI says "Alô?". Default 9000. */
+  silentLineMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -202,6 +204,8 @@ export class PharmacyCall {
   private assistantAfterAnswer = "";
   private silenceTimer?: NodeJS.Timeout;
   private quietTimer?: NodeJS.Timeout;
+  private silentLineTimer?: NodeJS.Timeout;
+  private silentLinePokes = 0;
   private nudges = 0;
   private goodbyeTimer?: NodeJS.Timeout;
   private introTimer?: NodeJS.Timeout;
@@ -587,6 +591,33 @@ export class PharmacyCall {
     this.timers.push(this.quietTimer);
   }
 
+  /**
+   * After a menu or a hold message, silence before the introduction: the attendant's short greeting
+   * is often lost by the transcription (measured on 11/11 and again on 12/11), and the attendant then
+   * waits for the caller. A person would say "Alô?". Up to 3 times, each after 9 s of silence.
+   */
+  private armSilentLine() {
+    if (this.silentLineTimer) clearTimeout(this.silentLineTimer);
+    if (this.introduced || this.silentLinePokes >= 3) return;
+    this.silentLineTimer = setTimeout(() => {
+      if (this.introduced || this.answer || this.hangupRequested || this.finished || this.waiting) return;
+      if (this.menuPending || this.side === "menu" || this.keysPressed.length === 0) return;
+      this.silentLinePokes++;
+      this.log(`line silent for ${this.opts.silentLineMs ?? 9000} ms after the menu or hold, saying "Alô?" (${this.silentLinePokes})`);
+      this.side = "unclear";
+      void this.openVoice().then(() =>
+        this.send({
+          type: "session.commentary.append",
+          event_id: `alo_${this.silentLinePokes}_${this.opts.sessionId}`,
+          delegation_id: null,
+          content: 'The line went quiet. Say only "Alô?" in Brazilian Portuguese, then stop and listen.',
+        }),
+      );
+      this.armSilentLine();
+    }, this.opts.silentLineMs ?? 9000);
+    this.timers.push(this.silentLineTimer);
+  }
+
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
@@ -660,7 +691,9 @@ export class PharmacyCall {
     const now = Date.now();
     if (this.lastInputAt && now - this.lastInputAt > (this.opts.utteranceGapMs ?? 1500)) this.startUtterance();
     this.lastInputAt = now;
-    this.armQuietPerson();
+    // The person spoke last: no "Alô?" for them. The timer starts again when the assistant speaks.
+    if (this.quietTimer) clearTimeout(this.quietTimer);
+    this.armSilentLine();
     this.inputOrder++;
     if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
     this.utterance += delta;
@@ -718,6 +751,7 @@ export class PharmacyCall {
       case "hold":
         void this.closeVoice();
         if (this.introTimer) clearTimeout(this.introTimer);
+        this.armSilentLine();
         break;
       case "person_wait":
         this.waiting = true;
