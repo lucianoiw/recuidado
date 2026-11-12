@@ -187,3 +187,57 @@ export class AsteriskVoiceGate implements VoiceGate {
     void this.queue.finally(() => this.client?.close());
   }
 }
+
+/** Where Asterisk writes recordings, and the script it runs when one is closed (deploy/asterisk). */
+export const RECORDING_DIR = "/var/spool/asterisk/recuidado";
+export const RECORDING_UPLOAD = "/opt/recuidado/upload-recording.sh";
+
+/**
+ * Starts MixMonitor (both directions, 16 kHz WAV) on the AI's channel of a call. When the call ends,
+ * Asterisk runs the upload script, which posts the file to the API (calls panel). It only copies the
+ * audio: the call itself does not wait for it. The dialplan stores the channel in AI_CHANNEL_<number>
+ * a moment after the call is created, and the previous call's channel may still be there, so it
+ * retries until MixMonitor accepts a live channel. Never throws.
+ */
+export async function startRecording(
+  config: AmiConfig,
+  number: string,
+  sessionId: string,
+  log: (msg: string) => void = () => {},
+  opts: { attempts?: number; waitMs?: number } = {},
+): Promise<boolean> {
+  if (!/^[A-Za-z0-9_-]+$/.test(sessionId)) return false;
+  const client = new AmiClient(config);
+  const attempts = opts.attempts ?? 30;
+  let lastError = "";
+  try {
+    await client.open();
+    for (let i = 0; i < attempts; i++) {
+      const v = await client.action({ Action: "Getvar", Variable: `AI_CHANNEL_${number}` });
+      if (v.Response === "Success" && v.Value) {
+        const file = `${RECORDING_DIR}/${sessionId}.wav16`;
+        const res = await client.action({
+          Action: "MixMonitor",
+          Channel: v.Value,
+          File: file,
+          Command: `${RECORDING_UPLOAD} ${file} ${sessionId}`,
+        });
+        if (res.Response === "Success") {
+          log(`recording started (${v.Value})`);
+          return true;
+        }
+        lastError = res.Message ?? "unknown";
+      } else {
+        lastError = `no channel for ${number}`;
+      }
+      await new Promise((r) => setTimeout(r, opts.waitMs ?? 500));
+    }
+    log(`recording not started: ${lastError}`);
+    return false;
+  } catch (err) {
+    log(`recording not started: ${(err as Error).message}`);
+    return false;
+  } finally {
+    client.close();
+  }
+}

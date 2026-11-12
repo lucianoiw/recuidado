@@ -127,6 +127,13 @@
       "when": 1794434520636,
       "tag": "0017_magenta_bloodstorm",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1794442131802,
+      "tag": "0018_aspiring_magneto",
+      "breakpoints": true
     }
   ]
 }

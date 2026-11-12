@@ -36,6 +36,7 @@
     "@recuidado/data": "workspace:*",
     "@recuidado/prescription-reader": "workspace:*",
     "@recuidado/telemetry": "workspace:*",
+    "aws4fetch": "1.0.20",
     "bullmq": "^6.7.3",
     "drizzle-orm": "^0.45.4",
     "helmet": "^8.3.0",

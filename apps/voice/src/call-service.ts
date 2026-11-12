@@ -7,7 +7,45 @@ import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.
 import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
-import { AsteriskVoiceGate, openGate } from "./ami.js";
+import { AsteriskVoiceGate, openGate, startRecording } from "./ami.js";
+
+/** One step of a call for the calls panel: a log line of the call and when it happened. */
+export interface CallEvent {
+  atMs: number;
+  text: string;
+}
+
+/**
+ * Keeps the log lines of one call as its timeline (events, function calls, forced lines, keys) and
+ * still prints them. Lines look like "2026-11-11T22:50:05.948Z [session] text".
+ */
+export class CallTrail {
+  readonly startedAt = new Date();
+  readonly events: CallEvent[] = [];
+
+  constructor(private readonly print: (msg: string, extra?: unknown) => void) {}
+
+  readonly log = (msg: string, extra?: unknown) => {
+    if (this.events.length < 500) {
+      const text = msg.replace(/^(\S+Z )?\[[^\]]+\] /, "");
+      this.events.push({ atMs: Date.now() - this.startedAt.getTime(), text: text.slice(0, 2000) });
+    }
+    this.print(msg, extra);
+  };
+}
+
+/** What apps/voice sends to POST /call-logs when a call ends. */
+export interface CallLog {
+  sessionId: string;
+  kind: "reminder" | "recall" | "check_in" | "caregiver" | "pharmacy";
+  doseId?: string;
+  inquiryId?: string;
+  outcome?: string;
+  durationSeconds?: number;
+  startedAt: string;
+  transcript: { speaker: string; text: string }[];
+  events: CallEvent[];
+}
 
 export interface StartCallInput extends ReminderContext {
   phone: string;
@@ -35,11 +73,13 @@ export interface StartPharmacyCallInput extends PharmacyContext {
 export interface StartedPharmacyCall {
   sessionId: string;
   call: PharmacyCall;
+  trail: CallTrail;
 }
 
 export interface StartedCall {
   sessionId: string;
   call: ReminderCall;
+  trail: CallTrail;
 }
 
 export class CallService {
@@ -72,17 +112,19 @@ export class CallService {
     const now = new Date();
     const line = greetingLine(context, now);
     const greetingAudio = this.greetings.get(this.config.liveVoice, line);
+    const trail = new CallTrail(this.log);
     const sessionId = await this.live.createSipCall(destination, context, greetingAudio ? line : undefined);
     this.log(`call created ${sessionId}${greetingAudio ? " (recorded greeting)" : ""}`);
     // Attach right away: the sideband only replays the previous 3 seconds of call progress.
     const socket = this.live.attach(sessionId);
+    this.record(destination, sessionId, trail);
     const call = new ReminderCall({
       sessionId,
       context,
       socket,
       hangup: () => this.live.hangup(sessionId),
       maxCallMs: this.config.maxCallSeconds * 1000,
-      log: this.log,
+      log: trail.log,
       onStatusChange,
       now,
       greetingAudio,
@@ -92,27 +134,29 @@ export class CallService {
         }
       },
     });
-    return { sessionId, call };
+    return { sessionId, call, trail };
   }
 
   /** Calls a family member with an urgent message. Same allowlist as reminder calls. */
-  async startAlert(phone: string, message: string): Promise<{ sessionId: string; call: AlertCall }> {
+  async startAlert(phone: string, message: string): Promise<{ sessionId: string; call: AlertCall; trail: CallTrail }> {
     const destination = toE164(phone);
     if (!isAllowed(this.config, destination)) {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
     }
+    const trail = new CallTrail(this.log);
     const sessionId = await this.live.createAlertSipCall(destination, message);
     this.log(`alert call created ${sessionId}`);
     const socket = this.live.attach(sessionId);
+    this.record(destination, sessionId, trail);
     const call = new AlertCall({
       sessionId,
       message,
       socket,
       hangup: () => this.live.hangup(sessionId),
       maxCallMs: 60_000,
-      log: this.log,
+      log: trail.log,
     });
-    return { sessionId, call };
+    return { sessionId, call, trail };
   }
 
   async startPharmacy(input: StartPharmacyCallInput): Promise<StartedPharmacyCall> {
@@ -121,13 +165,15 @@ export class CallService {
       throw new NumberNotAllowedError(`Pharmacy number ${destination} is not listed in CALL_ALLOWED_NUMBERS`);
     }
     const context: PharmacyContext = { medications: input.medications };
+    const trail = new CallTrail(this.log);
     const { sessionId, decisions, decisionsError } = await this.live.createPharmacySipCall(destination, context);
     if (decisionsError) this.log(`pharmacy call: Decisions triggers rejected, calling without them: ${decisionsError}`);
     this.log(`pharmacy call created ${sessionId} (decisions ${decisions ? "on" : "off"}, voice gate ${this.config.ami ? "on" : "off"})`);
     const socket = this.live.attach(sessionId);
+    this.record(destination, sessionId, trail);
     // The dialplan keys the AI's channel by the national number (DDD + number).
     const gate = this.config.ami
-      ? new AsteriskVoiceGate(this.config.ami, destination.replace(/^\+55/, ""), (m) => this.log(`[${sessionId}] ${m}`))
+      ? new AsteriskVoiceGate(this.config.ami, destination.replace(/^\+55/, ""), (m) => trail.log(`[${sessionId}] ${m}`))
       : openGate;
     const call = new PharmacyCall({
       sessionId,
@@ -137,9 +183,23 @@ export class CallService {
       hangup: () => this.live.hangup(sessionId),
       // Recorded menus take time: allow a bit longer than a reminder call.
       maxCallMs: Math.max(this.config.maxCallSeconds, 180) * 1000,
-      log: this.log,
+      log: trail.log,
     });
-    return { sessionId, call };
+    return { sessionId, call, trail };
+  }
+
+  /**
+   * Asks Asterisk to record the call (calls panel). Runs on the side: the call never waits for it.
+   * The dialplan keys the AI's channel by the national number (DDD + number).
+   */
+  private record(destination: string, sessionId: string, trail: CallTrail) {
+    if (!this.config.ami || !this.config.recordCalls) return;
+    void startRecording(this.config.ami, destination.replace(/^\+55/, ""), sessionId, (m) => trail.log(`[${sessionId}] ${m}`));
+  }
+
+  /** Sends the transcript and the timeline of a call to the calls panel. */
+  reportLog(log: CallLog): Promise<void> {
+    return this.post("/call-logs", log);
   }
 
   /** Sends the result to the Recuidado API, which alerts the family when confirmed is false. */

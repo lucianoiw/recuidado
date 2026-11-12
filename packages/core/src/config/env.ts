@@ -70,6 +70,11 @@ export const envSchema = z.object({
   CALL_DAILY_LIMIT_TOTAL: z.coerce.number().int().nonnegative().default(20),
   // Days a call transcript (and what she said about how she feels) is kept. After that only the outcome stays.
   VOICE_TRANSCRIPT_RETENTION_DAYS: z.coerce.number().int().positive().default(90),
+  // Cloudflare R2 bucket for call recordings (calls panel). Without it, recordings stay in Postgres.
+  R2_ACCOUNT_ID: optionalString,
+  R2_ACCESS_KEY_ID: optionalString,
+  R2_SECRET_ACCESS_KEY: optionalString,
+  R2_BUCKET: optionalString,
   // "Perguntar à farmácia": the only number the pharmacy call dials (also listed in CALL_ALLOWED_NUMBERS
   // of apps/voice). A phone the team controls, never a real pharmacy. Empty turns the feature off.
   PHARMACY_CALL_PHONE: optionalString,
