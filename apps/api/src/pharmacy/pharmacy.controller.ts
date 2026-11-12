@@ -21,7 +21,7 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   return result.data;
 }
 
-const askBody = z.object({ medicationIds: z.array(z.uuid()).min(1).max(10) });
+const askBody = z.object({ medicationIds: z.array(z.uuid()).min(1).max(30) });
 
 const triState = z.enum(['yes', 'no', 'unknown']);
 const voiceResultBody = z.object({

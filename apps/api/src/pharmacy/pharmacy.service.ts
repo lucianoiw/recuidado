@@ -19,7 +19,6 @@ import { cmedPriceOf } from '../family/pricing.js';
 import { randomUUID } from 'node:crypto';
 
 /** At most this many medicines per call, so the call stays short. */
-export const MAX_MEDICATIONS_PER_CALL = 3;
 /** A call that never reported back after this long is shown as failed. */
 const STALE_AFTER_MS = 6 * 60 * 1000;
 
@@ -133,8 +132,7 @@ export class PharmacyService {
       .where(and(eq(medications.patientId, ref.patientId), inArray(medications.id, ids), isNull(medications.stoppedAt)));
     if (meds.length === 0) throw new NotFoundException('Remédio não encontrado.');
     const asked = meds
-      .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
-      .slice(0, MAX_MEDICATIONS_PER_CALL);
+      .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
 
     if (!(await this.voice.callsAllowed(ref.familyId, ref.isDemo))) {
       telemetry.capture('pharmacy_call_skipped', { reason: 'no_plan', demo: ref.isDemo }, ref.patientId);
