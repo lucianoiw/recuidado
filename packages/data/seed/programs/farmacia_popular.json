@@ -1,0 +1,744 @@
+{
+  "program": {
+    "id": "farmacia_popular",
+    "name": "Farmácia Popular",
+    "kind": "free",
+    "level": "federal",
+    "region": "BR",
+    "channel": "Em drogaria credenciada ao Farmácia Popular, com a receita.",
+    "sourceUrl": "https://www.gov.br/saude/pt-br/composicao/sectics/farmacia-popular/arquivos/elenco-de-medicamentos-e-insumos-pfpb.pdf",
+    "version": "2026-10-01",
+    "documents": [
+      "Receita do médico, do SUS ou particular",
+      "Documento oficial com foto e número do CPF"
+    ],
+    "rules": [
+      {
+        "kind": "note",
+        "text": "A receita vale 180 dias (anticoncepcional, 1 ano)."
+      }
+    ]
+  },
+  "items": [
+    {
+      "programId": "farmacia_popular",
+      "key": "estradiol-5-mg-enantato-de-noretisterona-50-mg",
+      "name": "VALERATO DE ESTRADIOL 5MG + ENANTATO DE NORETISTERONA 50MG",
+      "activeIngredients": [
+        "valerato de estradiol",
+        "enantato de noretisterona"
+      ],
+      "looseKey": "estradiol + noretisterona",
+      "looseMatchKey": "estradiol + noretisterona 5 mg + 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "etinilestradiol-0-03-mg-levonorgestrel-0-15-mg",
+      "name": "ETINILESTRADIOL 0,03MG + LEVONORGESTREL 0,15MG",
+      "activeIngredients": [
+        "etinilestradiol",
+        "levonorgestrel"
+      ],
+      "looseKey": "etinilestradiol + levonorgestrel",
+      "looseMatchKey": "etinilestradiol + levonorgestrel 0.03 mg + 0.15 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "medroxiprogesterona-150-mg",
+      "name": "ACETATO DE MEDROXIPROGESTERONA 150MG",
+      "activeIngredients": [
+        "acetato de medroxiprogesterona"
+      ],
+      "looseKey": "medroxiprogesterona",
+      "looseMatchKey": "medroxiprogesterona 150 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "noretisterona-0-35-mg",
+      "name": "NORETISTERONA 0,35MG",
+      "activeIngredients": [
+        "noretisterona"
+      ],
+      "looseKey": "noretisterona",
+      "looseMatchKey": "noretisterona 0.35 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "brometo-de-ipratropio-0-02-mg",
+      "name": "BROMETO DE IPRATRÓPIO 0,02MG",
+      "activeIngredients": [
+        "brometo de ipratrópio"
+      ],
+      "looseKey": "ipratropio",
+      "looseMatchKey": "ipratropio 0.02 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "brometo-de-ipratropio-0-25-mg",
+      "name": "BROMETO DE IPRATRÓPIO 0,25MG",
+      "activeIngredients": [
+        "brometo de ipratrópio"
+      ],
+      "looseKey": "ipratropio",
+      "looseMatchKey": "ipratropio 0.25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "dipropionato-de-beclometasona-200-mcg",
+      "name": "DIPROPIONATO DE BECLOMETASONA 200MCG",
+      "activeIngredients": [
+        "dipropionato de beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 200 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "dipropionato-de-beclometasona-250-mcg",
+      "name": "DIPROPIONATO DE BECLOMETASONA 250MCG",
+      "activeIngredients": [
+        "dipropionato de beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 250 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "dipropionato-de-beclometasona-50-mcg",
+      "name": "DIPROPIONATO DE BECLOMETASONA 50MCG",
+      "activeIngredients": [
+        "dipropionato de beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 50 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "salbutamol-100-mcg",
+      "name": "SULFATO DE SALBUTAMOL 100MCG",
+      "activeIngredients": [
+        "sulfato de salbutamol"
+      ],
+      "looseKey": "salbutamol",
+      "looseMatchKey": "salbutamol 100 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "salbutamol-5-mg",
+      "name": "SULFATO DE SALBUTAMOL 5MG",
+      "activeIngredients": [
+        "sulfato de salbutamol"
+      ],
+      "looseKey": "salbutamol",
+      "looseMatchKey": "salbutamol 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "glibenclamida-5-mg",
+      "name": "GLIBENCLAMIDA 5MG",
+      "activeIngredients": [
+        "glibenclamida"
+      ],
+      "looseKey": "glibenclamida",
+      "looseMatchKey": "glibenclamida 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "insulina-humana-100-ui-ml",
+      "name": "INSULINA HUMANA 100UI/ML",
+      "activeIngredients": [
+        "insulina humana"
+      ],
+      "looseKey": "insulina humana",
+      "looseMatchKey": "insulina humana 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "insulina-humana-regular-100-ui-ml",
+      "name": "INSULINA HUMANA REGULAR 100UI/ML",
+      "activeIngredients": [
+        "insulina humana regular"
+      ],
+      "looseKey": "insulina humana regular",
+      "looseMatchKey": "insulina humana regular 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "metformina-500-mg",
+      "name": "CLORIDRATO DE METFORMINA 500MG",
+      "activeIngredients": [
+        "cloridrato de metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "metformina-500-mg-acao-prolongada",
+      "name": "CLORIDRATO DE METFORMINA 500MG - AÇÃO PROLONGADA",
+      "activeIngredients": [
+        "cloridrato de metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 500 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "metformina-850-mg",
+      "name": "CLORIDRATO DE METFORMINA 850MG",
+      "activeIngredients": [
+        "cloridrato de metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 850 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "dapagliflozina-10-mg",
+      "name": "DAPAGLIFLOZINA 10 MG",
+      "activeIngredients": [
+        "dapagliflozina"
+      ],
+      "looseKey": "dapagliflozina",
+      "looseMatchKey": "dapagliflozina 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [
+        {
+          "kind": "min_age",
+          "value": 65,
+          "text": "só para 65 anos ou mais"
+        },
+        {
+          "kind": "condition",
+          "value": [
+            "Diabetes mellitus tipo 2",
+            "Doença cardiovascular"
+          ],
+          "text": "com diabetes tipo 2 e doença cardiovascular"
+        }
+      ],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "sinvastatina-10-mg",
+      "name": "SINVASTATINA 10MG",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "sinvastatina-20-mg",
+      "name": "SINVASTATINA 20MG",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "sinvastatina-40-mg",
+      "name": "SINVASTATINA 40MG",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "benserazida-25-mg-levodopa-100-mg",
+      "name": "CLORIDRATO DE BENSERAZIDA 25MG + LEVODOPA 100MG",
+      "activeIngredients": [
+        "cloridrato de benserazida",
+        "levodopa"
+      ],
+      "looseKey": "benserazida + levodopa",
+      "looseMatchKey": "benserazida + levodopa 100 mg + 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "carbidopa-25-mg-levodopa-250-mg",
+      "name": "CARBIDOPA 25MG + LEVODOPA 250MG",
+      "activeIngredients": [
+        "carbidopa",
+        "levodopa"
+      ],
+      "looseKey": "carbidopa + levodopa",
+      "looseMatchKey": "carbidopa + levodopa 25 mg + 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "timolol-2-5-mg",
+      "name": "MALEATO DE TIMOLOL 2,5MG",
+      "activeIngredients": [
+        "maleato de timolol"
+      ],
+      "looseKey": "timolol",
+      "looseMatchKey": "timolol 2.5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "timolol-5-mg",
+      "name": "MALEATO DE TIMOLOL 5MG",
+      "activeIngredients": [
+        "maleato de timolol"
+      ],
+      "looseKey": "timolol",
+      "looseMatchKey": "timolol 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "anlodipino-5-mg",
+      "name": "BESILATO DE ANLODIPINO 5 MG",
+      "activeIngredients": [
+        "besilato de anlodipino"
+      ],
+      "looseKey": "anlodipino",
+      "looseMatchKey": "anlodipino 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "atenolol-25-mg",
+      "name": "ATENOLOL 25MG",
+      "activeIngredients": [
+        "atenolol"
+      ],
+      "looseKey": "atenolol",
+      "looseMatchKey": "atenolol 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "captopril-25-mg",
+      "name": "CAPTOPRIL 25MG",
+      "activeIngredients": [
+        "captopril"
+      ],
+      "looseKey": "captopril",
+      "looseMatchKey": "captopril 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "enalapril-10-mg",
+      "name": "MALEATO DE ENALAPRIL 10MG",
+      "activeIngredients": [
+        "maleato de enalapril"
+      ],
+      "looseKey": "enalapril",
+      "looseMatchKey": "enalapril 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "espironolactona-25-mg",
+      "name": "ESPIRONOLACTONA 25 MG",
+      "activeIngredients": [
+        "espironolactona"
+      ],
+      "looseKey": "espironolactona",
+      "looseMatchKey": "espironolactona 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "furosemida-40-mg",
+      "name": "FUROSEMIDA 40 MG",
+      "activeIngredients": [
+        "furosemida"
+      ],
+      "looseKey": "furosemida",
+      "looseMatchKey": "furosemida 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "hidroclorotiazida-25-mg",
+      "name": "HIDROCLOROTIAZIDA 25MG",
+      "activeIngredients": [
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida",
+      "looseMatchKey": "hidroclorotiazida 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "losartana-50-mg",
+      "name": "LOSARTANA POTÁSSICA 50MG",
+      "activeIngredients": [
+        "losartana potássica"
+      ],
+      "looseKey": "losartana",
+      "looseMatchKey": "losartana 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "metoprolol-25-mg",
+      "name": "SUCCINATO DE METOPROLOL 25 MG",
+      "activeIngredients": [
+        "succinato de metoprolol"
+      ],
+      "looseKey": "metoprolol",
+      "looseMatchKey": "metoprolol 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "propranolol-40-mg",
+      "name": "CLORIDRATO DE PROPRANOLOL 40MG",
+      "activeIngredients": [
+        "cloridrato de propranolol"
+      ],
+      "looseKey": "propranolol",
+      "looseMatchKey": "propranolol 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "alendronato-de-sodio-70-mg",
+      "name": "ALENDRONATO DE SÓDIO 70MG",
+      "activeIngredients": [
+        "alendronato de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 70 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "budesonida-32-mcg",
+      "name": "BUDESONIDA 32MCG",
+      "activeIngredients": [
+        "budesonida"
+      ],
+      "looseKey": "budesonida",
+      "looseMatchKey": "budesonida 32 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "budesonida-50-mcg",
+      "name": "BUDESONIDA 50MCG",
+      "activeIngredients": [
+        "budesonida"
+      ],
+      "looseKey": "budesonida",
+      "looseMatchKey": "budesonida 50 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "farmacia_popular",
+      "key": "dipropionato-de-beclometasona-0-05-mg",
+      "name": "DIPROPIONATO DE BECLOMETASONA 0,05 MG",
+      "activeIngredients": [
+        "dipropionato de beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 0.05 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    }
+  ]
+}

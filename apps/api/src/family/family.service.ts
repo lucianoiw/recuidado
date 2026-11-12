@@ -10,7 +10,7 @@ import {
   OnApplicationBootstrap,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { findFreeAccess, highCostGuide, type FreeAccess } from '@recuidado/data';
+import { highCostGuide, PROGRAM_IDS, seedProgramIndex, type FreeAccess, type Patient, type ProgramIndex } from '@recuidado/data';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, sql } from 'drizzle-orm';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -26,6 +26,7 @@ import {
   medications,
   members,
   PlanGate,
+  ProgramsService,
   rotationParticipants,
   StockService,
   voiceCalls,
@@ -82,6 +83,7 @@ export class FamilyService implements OnApplicationBootstrap {
     private readonly alerts: AlertsService,
     private readonly config: ConfigService,
     private readonly plan: PlanGate,
+    private readonly programs: ProgramsService,
   ) {
     this.r2 = r2FromConfig(config);
   }
@@ -210,6 +212,7 @@ export class FamilyService implements OnApplicationBootstrap {
         relation: members.relation,
         relationOther: members.relationOther,
         phone: members.phone,
+        birthDate: members.birthDate,
         emergencyContact: members.emergencyContact,
         consentAt: members.consentAt,
         consentSource: members.consentSource,
@@ -246,6 +249,9 @@ export class FamilyService implements OnApplicationBootstrap {
       .where(and(eq(medications.patientId, patientId), isNotNull(medications.stoppedAt)))
       .orderBy(desc(medications.stoppedAt));
     const stock = await this.stock.statusFor(meds);
+    // Program lists (refreshed monthly) and her age, for rules such as "65 anos ou mais".
+    const programIndex = await this.programs.answerIndex();
+    const patientFacts: Patient = { age: ageOn(people.find((p) => p.id === patientId)?.birthDate ?? null, now) };
     const photoUrls = new Map<string, string>();
     for (const m of meds) {
       // Signing is local (no request to R2); 12 h covers a screen left open all day.
@@ -266,7 +272,7 @@ export class FamilyService implements OnApplicationBootstrap {
       caregivers: withFirstContact(shown.filter((p) => p.role === 'caregiver')),
       medications: meds.map(
         ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, photoKey: _key, ...med }) => {
-          const access = freeAccessOf(activeIngredient ?? med.name, med.strength, med.name);
+          const access = freeAccessOf(activeIngredient ?? med.name, med.strength, med.name, programIndex, patientFacts);
           const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
           return {
             ...med,
@@ -362,13 +368,22 @@ export class FamilyService implements OnApplicationBootstrap {
     if (!med) throw new NotFoundException('Remédio não encontrado.');
     const ingredient = med.activeIngredient ?? med.name;
     const guide = highCostGuide(ingredient);
+    const [patient] = await this.db.select({ birthDate: members.birthDate }).from(members).where(eq(members.id, patientId));
+    const access = freeAccessOf(ingredient, med.strength, med.name, await this.programs.answerIndex(), {
+      age: ageOn(patient?.birthDate ?? null, now),
+    });
+    const program = access.programs?.find((p) => p.programId === PROGRAM_IDS.highCost);
     return {
       medication: {
         id: med.id,
         name: med.name,
         strength: med.strength,
         monthlyCostCents: med.monthlyCostCents,
-        highCost: freeAccessOf(ingredient, med.strength, med.name).highCost ?? false,
+        highCost: access.highCost ?? false,
+        // Diseases the Alto Custo gives it for, their CID codes and its age rules, from SES-SP (Remédio SP).
+        conditions: program?.conditions ?? [],
+        conditionCodes: program?.conditionCodes ?? [],
+        rules: program?.rules ?? [],
       },
       guide,
       status: highCostStatus(
@@ -741,12 +756,27 @@ export class FamilyService implements OnApplicationBootstrap {
  * Alto Custo list, from the public lists in @recuidado/data. Never throws: a
  * missing seed file only hides the badges.
  */
-export function freeAccessOf(activeIngredient: string, strength: string | null, name?: string | null): Partial<FreeAccess> {
+export function freeAccessOf(
+  activeIngredient: string,
+  strength: string | null,
+  name?: string | null,
+  index?: ProgramIndex,
+  patient?: Patient,
+): Partial<FreeAccess> {
   try {
-    return findFreeAccess(activeIngredient, strength, name);
+    return (index ?? seedProgramIndex()).find(activeIngredient, strength, name, patient);
   } catch {
     return {};
   }
+}
+
+/** Whole years on `now` (São Paulo date), or null without a birth date. */
+export function ageOn(birthDate: string | null, now: Date): number | null {
+  if (!birthDate || !/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) return null;
+  const today = todayInSaoPaulo(now);
+  const [by, bm, bd] = birthDate.split('-').map(Number) as [number, number, number];
+  const [ty, tm, td] = today.split('-').map(Number) as [number, number, number];
+  return ty - by - (tm < bm || (tm === bm && td < bd) ? 1 : 0);
 }
 
 /** Alto Custo status for GET /family. Never throws: a missing seed file only hides the reminder. */

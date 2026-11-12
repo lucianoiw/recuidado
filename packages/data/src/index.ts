@@ -14,7 +14,27 @@ export type { CeafItem } from "./fetch-ceaf.ts";
 export type { SusUnit } from "./fetch-sus-units.ts";
 export type { FreeAccessRow } from "./link-free-access.ts";
 export { readCsv } from "./lib/csv.ts";
-export { findFreeAccess, isExtendedRelease, type FreeAccess, type FreePlace } from "./free-access.ts";
+export { findFreeAccess } from "./free-access.ts";
+export {
+  checkRule,
+  isExtendedRelease,
+  overall,
+  PROGRAM_IDS,
+  ProgramIndex,
+  readProgramFiles,
+  seedProgramIndex,
+  type BenefitProgram,
+  type BenefitProgramItem,
+  type CheckedRule,
+  type FreeAccess,
+  type FreePlace,
+  type Patient,
+  type ProgramFile,
+  type ProgramKind,
+  type ProgramMatch,
+  type ProgramRule,
+  type RuleStatus,
+} from "./programs.ts";
 export { highCostGuide, slugFor, type HighCostGuide, type HighCostItem } from "./high-cost-guide.ts";
 export { findCmedPrice, DAYS_PER_MONTH, type CmedOffer, type CmedPrice } from "./cmed-price.ts";
 export { searchMedicines, type MedicineKind, type MedicineResult, type MedicineStrength } from "./medicine-search.ts";
@@ -35,3 +55,4 @@ export const SEED_FILES = {
   freeAccess: join(SEED_DIR, "free-access.csv"),
   ceafSpGuides: join(SEED_DIR, "ceaf-sp-guides.json"),
 } as const;
+export { fetchOfficialPrograms, type FetchedProgram } from "./programs-sync.ts";

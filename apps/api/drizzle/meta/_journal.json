@@ -169,6 +169,13 @@
       "when": 1794504055771,
       "tag": "0023_broad_exodus",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794506521248,
+      "tag": "0024_thankful_lake",
+      "breakpoints": true
     }
   ]
 }

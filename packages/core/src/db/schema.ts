@@ -13,6 +13,8 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core';
 
+import type { ProgramKind, ProgramRule } from '@recuidado/data';
+
 // Demo data is always synthetic (Hack Brasil rule 6.9).
 
 export const memberRole = pgEnum('member_role', ['caregiver', 'patient']);
@@ -325,4 +327,71 @@ export const callLogs = pgTable('call_logs', {
   recordingBytes: integer(),
   startedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
+/**
+ * Programs that give medicines for free or cheaper (Farmácia Popular, UBS list, Alto Custo...), in one
+ * shape. First loaded from @recuidado/data seed/programs; the worker refreshes them every month from the
+ * official sources (benefitProgramSyncs keeps each run). Not family data: public lists.
+ */
+export const benefitPrograms = pgTable('benefit_programs', {
+  id: text().primaryKey(),
+  name: text().notNull(),
+  kind: text().$type<ProgramKind>().notNull(),
+  level: text().$type<'federal' | 'state' | 'municipal' | 'private'>().notNull(),
+  region: text().notNull(),
+  channel: text().notNull(),
+  sourceUrl: text().notNull(),
+  // Date of the official list the items come from (YYYY-MM-DD).
+  version: text().notNull(),
+  documents: jsonb().$type<string[]>().notNull().default([]),
+  rules: jsonb().$type<ProgramRule[]>().notNull().default([]),
+  // Last time the monthly job read the official source, changed or not.
+  checkedAt: timestamp({ withTimezone: true }),
+  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
+export const benefitProgramItems = pgTable(
+  'benefit_program_items',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    programId: text()
+      .notNull()
+      .references(() => benefitPrograms.id, { onDelete: 'cascade' }),
+    key: text().notNull(),
+    name: text().notNull(),
+    activeIngredients: jsonb().$type<string[]>().notNull().default([]),
+    looseKey: text(),
+    looseMatchKey: text(),
+    extendedRelease: boolean().notNull().default(false),
+    access: text().$type<'open' | 'restricted'>().notNull().default('open'),
+    availability: text(),
+    group: text(),
+    conditions: jsonb().$type<string[]>().notNull().default([]),
+    conditionCodes: jsonb().$type<string[]>().notNull().default([]),
+    rules: jsonb().$type<ProgramRule[]>().notNull().default([]),
+    sourceUrl: text(),
+    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.programId, t.key)],
+);
+
+/** One run of the refresh of a program: what changed, or why it failed. */
+export const benefitProgramSyncs = pgTable('benefit_program_syncs', {
+  id: uuid().primaryKey().defaultRandom(),
+  programId: text()
+    .notNull()
+    .references(() => benefitPrograms.id, { onDelete: 'cascade' }),
+  // 'seed': loaded from the files shipped with the code. 'source': read from the official site.
+  origin: text().$type<'seed' | 'source'>().notNull(),
+  // 'updated', 'unchanged', 'rejected' (the new list looked broken, kept the old one), 'failed'.
+  status: text().$type<'updated' | 'unchanged' | 'rejected' | 'failed'>().notNull(),
+  version: text(),
+  added: integer().notNull().default(0),
+  removed: integer().notNull().default(0),
+  changed: integer().notNull().default(0),
+  total: integer().notNull().default(0),
+  error: text(),
+  startedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  finishedAt: timestamp({ withTimezone: true }),
 });

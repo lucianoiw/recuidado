@@ -1,0 +1,643 @@
+{
+  "source": {
+    "name": "Secretaria de Estado da Saúde de São Paulo (SES-SP): página de cada medicamento do Componente Especializado (CEAF), com a lista de doenças atendidas",
+    "url": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento",
+    "fetched_on": "2026-11-12",
+    "note": "Página do sevelamer estava vazia em 12/11/2026."
+  },
+  "diseases": {
+    "abatacepte": [
+      "Artrite reumatoide",
+      "Artrite idiopática juvenil"
+    ],
+    "acetazolamida": [
+      "Glaucoma"
+    ],
+    "acido-ursodesoxicolico": [
+      "Colangite biliar primária"
+    ],
+    "acido-zoledronico": [
+      "Doença de Paget",
+      "Osteoporose"
+    ],
+    "acitretina": [
+      "Ictioses hereditárias",
+      "Psoríase"
+    ],
+    "adalimumabe": [
+      "Artrite idiopática juvenil",
+      "Artrite reumatoide",
+      "Artrite psoríaca",
+      "Doença de Crohn",
+      "Espondilite ancilosante",
+      "Hidradenite supurativa",
+      "Psoríase",
+      "Uveíte não infecciosa"
+    ],
+    "alentuzumabe": [
+      "Esclerose múltipla"
+    ],
+    "alfadornase": [
+      "Fibrose cística (manifestações pulmonares)"
+    ],
+    "alfaelosulfase": [
+      "Mucopolissacaridose tipo IV"
+    ],
+    "alfaepoetina": [
+      "Anemia na insuficiência renal crônica",
+      "Doença falciforme",
+      "Imunossupressão em transplante",
+      "Hepatite viral C e coinfecções",
+      "Síndrome mielodisplásica de baixo risco"
+    ],
+    "alfagalsidase": [
+      "Doença de Fabry"
+    ],
+    "alfaglicosidase": [
+      "Doença de Pompe"
+    ],
+    "alfainterferona-2b": [
+      "Hemangioma infantil"
+    ],
+    "alfataliglicerase": [
+      "Doença de Gaucher"
+    ],
+    "alfavelaglicerase": [
+      "Doença de Gaucher"
+    ],
+    "alfavestronidase": [
+      "Mucopolissacaridose tipo VII"
+    ],
+    "amantadina": [
+      "Doença de Parkinson"
+    ],
+    "atorvastatina": [
+      "Dislipidemia para prevenção de eventos cardiovasculares e pancreatite"
+    ],
+    "azatioprina": [
+      "Anemia aplástica, mielodisplasia e neutropenias constitucionais",
+      "Artrite idiopática juvenil",
+      "Artrite reumatoide",
+      "Dermatomiosite e polimiosite",
+      "Doença de Crohn",
+      "Esclerose múltipla",
+      "Esclerose sistêmica",
+      "Hepatite autoimune",
+      "Lúpus eritematoso sistêmico",
+      "Miastenia gravis",
+      "Trombocitopenia imune primária",
+      "Retocolite ulcerativa",
+      "Imunossupressão em transplante",
+      "Uveíte não infecciosa"
+    ],
+    "baricitinibe": [
+      "Artrite reumatoide"
+    ],
+    "beclometasona-formoterol-glicopirronio": [
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "benralizumabe": [
+      "Asma"
+    ],
+    "betainterferona": [
+      "Esclerose múltipla"
+    ],
+    "bezafibrato": [
+      "Dislipidemia para prevenção de eventos cardiovasculares e pancreatite"
+    ],
+    "biotina": [
+      "Deficiência de biotinidase"
+    ],
+    "bosentana": [
+      "Hipertensão arterial pulmonar"
+    ],
+    "budesonida": [
+      "Asma",
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "burosumabe": [
+      "Raquitismo e osteomalácia"
+    ],
+    "cabergolina": [
+      "Acromegalia",
+      "Hiperprolactinemia"
+    ],
+    "calcipotriol": [
+      "Psoríase"
+    ],
+    "calcitonina": [
+      "Doença de Paget",
+      "Osteoporose"
+    ],
+    "calcitriol": [
+      "Distúrbio mineral ósseo na doença renal crônica",
+      "Hipoparatireoidismo",
+      "Osteoporose",
+      "Raquitismo e osteomalácia"
+    ],
+    "certolizumabe-pegol": [
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Doença de Crohn",
+      "Espondilite ancilosante"
+    ],
+    "ciclofosfamida": [
+      "Anemia hemolítica autoimune",
+      "Esclerose sistêmica",
+      "Lúpus eritematoso sistêmico",
+      "Trombocitopenia imune primária",
+      "Síndrome nefrótica primária",
+      "Síndrome de falência medular"
+    ],
+    "ciclosporina": [
+      "Anemia hemolítica autoimune",
+      "Artrite idiopática juvenil",
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Dermatite atópica",
+      "Dermatomiosite e polimiosite",
+      "Imunossupressão em transplante",
+      "Lúpus eritematoso sistêmico",
+      "Miastenia gravis",
+      "Psoríase",
+      "Retocolite ulcerativa",
+      "Síndrome de falência medular",
+      "Síndrome nefrótica primária",
+      "Uveíte não infecciosa"
+    ],
+    "cinacalcete": [
+      "Distúrbio mineral ósseo na doença renal crônica"
+    ],
+    "ciprofibrato": [
+      "Dislipidemia para prevenção de eventos cardiovasculares e pancreatite"
+    ],
+    "ciproterona": [
+      "Puberdade precoce central",
+      "Síndrome de ovários policísticos"
+    ],
+    "cladribina": [
+      "Esclerose múltipla"
+    ],
+    "clobazam": [
+      "Epilepsia"
+    ],
+    "clobetasol": [
+      "Psoríase"
+    ],
+    "clopidogrel": [
+      "Síndromes coronarianas agudas"
+    ],
+    "cloroquina": [
+      "Artrite idiopática juvenil",
+      "Artrite reumatoide",
+      "Lúpus eritematoso sistêmico"
+    ],
+    "clozapina": [
+      "Doença de Parkinson",
+      "Esquizofrenia",
+      "Transtorno afetivo bipolar",
+      "Transtorno esquizoafetivo"
+    ],
+    "codeina": [
+      "Dor crônica"
+    ],
+    "danazol": [
+      "Angioedema",
+      "Endometriose",
+      "Lúpus eritematoso sistêmico",
+      "Trombocitopenia imune primária"
+    ],
+    "dapagliflozina": [
+      "Diabetes mellitus tipo 2",
+      "Doença renal crônica (atenuar a progressão)",
+      "Insuficiência cardíaca com fração de ejeção reduzida"
+    ],
+    "deferasirox": [
+      "Sobrecarga de ferro"
+    ],
+    "deferiprona": [
+      "Sobrecarga de ferro"
+    ],
+    "desferroxamina": [
+      "Distúrbio mineral ósseo na doença renal crônica",
+      "Sobrecarga de ferro"
+    ],
+    "desmopressina": [
+      "Diabetes insípido"
+    ],
+    "dicloridrato-de-sapropterina": [
+      "Fenilcetonúria"
+    ],
+    "donepezila": [
+      "Doença de Alzheimer"
+    ],
+    "eculizumabe": [
+      "Hemoglobinúria paroxística noturna"
+    ],
+    "eltrombopague-olamina": [
+      "Trombocitopenia imune primária",
+      "Síndrome de falência medular"
+    ],
+    "enoxaparina-sodica": [
+      "Tromboembolismo venoso em gestantes com trombofilia"
+    ],
+    "entacapona": [
+      "Doença de Parkinson"
+    ],
+    "etanercepte": [
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Espondilite ancilosante",
+      "Psoríase",
+      "Artrite idiopática juvenil"
+    ],
+    "etossuximida": [
+      "Epilepsia"
+    ],
+    "everolimo": [
+      "Imunossupressão em transplante"
+    ],
+    "fenofibrato": [
+      "Dislipidemia para prevenção de eventos cardiovasculares e pancreatite"
+    ],
+    "fenoterol": [
+      "Asma",
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "filgrastim": [
+      "Doença pelo HIV resultando em outras doenças",
+      "Hepatite viral C e coinfecções",
+      "Síndrome de falência medular"
+    ],
+    "fingolimode": [
+      "Esclerose múltipla"
+    ],
+    "fludrocortisona": [
+      "Hiperplasia adrenal congênita",
+      "Insuficiência adrenal primária (doença de Addison)"
+    ],
+    "formoterol": [
+      "Asma",
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "formoterol-budesonida": [
+      "Asma",
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "fumarato-de-dimetila": [
+      "Esclerose múltipla"
+    ],
+    "furoato-de-fluticasonabrometo-de-umeclidiniotrifenato-de-vilanterol": [
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "furoato-de-mometasona": [
+      "Dermatite atópica"
+    ],
+    "gabapentina": [
+      "Epilepsia",
+      "Dor crônica"
+    ],
+    "galantamina": [
+      "Doença de Alzheimer"
+    ],
+    "galsulfase": [
+      "Mucopolissacaridose tipo VI"
+    ],
+    "genfibrozila": [
+      "Dislipidemia para prevenção de eventos cardiovasculares e pancreatite"
+    ],
+    "glatiramer": [
+      "Esclerose múltipla"
+    ],
+    "golimumabe": [
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Espondilite ancilosante"
+    ],
+    "gosserrelina": [
+      "Endometriose",
+      "Leiomioma de útero",
+      "Puberdade precoce central"
+    ],
+    "hidroxicloroquina": [
+      "Artrite idiopática juvenil",
+      "Artrite reumatoide",
+      "Dermatomiosite e polimiosite",
+      "Lúpus eritematoso sistêmico"
+    ],
+    "hidroxiureia": [
+      "Doença falciforme"
+    ],
+    "idursulfase-alfa": [
+      "Mucopolissacaridose tipo II"
+    ],
+    "iloprosta": [
+      "Hipertensão arterial pulmonar"
+    ],
+    "imiglucerase": [
+      "Doença de Gaucher"
+    ],
+    "imunoglobulina-humana": [
+      "Anemia hemolítica autoimune",
+      "Dermatomiosite e polimiosite",
+      "Doença pelo HIV resultando em outras doenças",
+      "Imunodeficiência primária com predominância de defeitos de anticorpos",
+      "Miastenia gravis",
+      "Trombocitopenia imune primária",
+      "Síndrome de Guillain-Barré",
+      "Síndrome inflamatória multissistêmica pediátrica associada à Covid-19",
+      "Imunossupressão no transplante renal",
+      "Síndrome de falência medular"
+    ],
+    "infliximabe": [
+      "Artrite idiopática juvenil",
+      "Artrite reumatoide",
+      "Artrite psoríaca",
+      "Doença de Crohn",
+      "Espondilite ancilosante",
+      "Retocolite ulcerativa"
+    ],
+    "insulina-analoga-de-acao-prolongada": [
+      "Diabetes mellitus tipo 1"
+    ],
+    "insulina-analoga-de-acao-rapida": [
+      "Diabetes mellitus tipo 1"
+    ],
+    "isotretinoina": [
+      "Acne grave"
+    ],
+    "ivacaftor": [
+      "Fibrose cística"
+    ],
+    "lamotrigina": [
+      "Epilepsia",
+      "Transtorno afetivo bipolar"
+    ],
+    "lanreotida": [
+      "Acromegalia"
+    ],
+    "laronidase": [
+      "Mucopolissacaridose tipo I"
+    ],
+    "leflunomida": [
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Artrite idiopática juvenil"
+    ],
+    "leuprorrelina": [
+      "Leiomioma de útero",
+      "Puberdade precoce central",
+      "Endometriose"
+    ],
+    "levetiracetam": [
+      "Epilepsia"
+    ],
+    "memantina": [
+      "Doença de Alzheimer"
+    ],
+    "mepolizumabe": [
+      "Asma"
+    ],
+    "mesalazina": [
+      "Doença de Crohn",
+      "Retocolite ulcerativa"
+    ],
+    "metadona": [
+      "Dor crônica"
+    ],
+    "metilprednisolona": [
+      "Doença de Crohn",
+      "Imunossupressão no transplante cardíaco",
+      "Imunossupressão no transplante hepático em adultos",
+      "Imunossupressão no transplante hepático em pediatria",
+      "Imunossupressão no transplante pulmonar",
+      "Imunossupressão no transplante renal",
+      "Imunossupressão no transplante de outros órgãos e tecidos",
+      "Lúpus eritematoso sistêmico",
+      "Uveíte não infecciosa"
+    ],
+    "metotrexato": [
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Dermatomiosite e polimiosite",
+      "Doença de Crohn",
+      "Esclerose sistêmica",
+      "Espondilite ancilosante",
+      "Lúpus eritematoso sistêmico",
+      "Psoríase",
+      "Artrite idiopática juvenil"
+    ],
+    "micofenolato-de-mofetila": [
+      "Imunossupressão no transplante cardíaco",
+      "Imunossupressão no transplante hepático em adultos",
+      "Imunossupressão no transplante hepático em pediatria",
+      "Imunossupressão no transplante renal",
+      "Lúpus eritematoso sistêmico"
+    ],
+    "micofenolato-de-sodio": [
+      "Imunossupressão no transplante cardíaco",
+      "Imunossupressão no transplante hepático em adultos",
+      "Imunossupressão no transplante hepático em pediatria",
+      "Imunossupressão no transplante renal"
+    ],
+    "miglustate": [
+      "Doença de Gaucher"
+    ],
+    "morfina": [
+      "Dor crônica"
+    ],
+    "naproxeno": [
+      "Artrite psoríaca",
+      "Artrite reumatoide",
+      "Espondilite ancilosante",
+      "Artrite idiopática juvenil",
+      "Dor crônica"
+    ],
+    "natalizumabe": [
+      "Esclerose múltipla"
+    ],
+    "nusinersena": [
+      "Atrofia muscular espinhal 5q tipo 1",
+      "Atrofia muscular espinhal 5q tipo 2"
+    ],
+    "octreotida": [
+      "Acromegalia"
+    ],
+    "olanzapina": [
+      "Esquizofrenia",
+      "Transtorno afetivo bipolar",
+      "Transtorno esquizoafetivo"
+    ],
+    "omalizumabe": [
+      "Asma"
+    ],
+    "pamidronato": [
+      "Osteoporose"
+    ],
+    "pancreatina": [
+      "Fibrose cística (insuficiência pancreática)",
+      "Insuficiência pancreática exócrina"
+    ],
+    "paricalcitol": [
+      "Distúrbio mineral ósseo na doença renal crônica"
+    ],
+    "penicilamina": [
+      "Doença de Wilson"
+    ],
+    "piridostigmina": [
+      "Miastenia gravis"
+    ],
+    "pramipexol": [
+      "Doença de Parkinson"
+    ],
+    "pravastatina": [
+      "Dislipidemia para prevenção de eventos cardiovasculares e pancreatite"
+    ],
+    "primidona": [
+      "Epilepsia"
+    ],
+    "quetiapina": [
+      "Esquizofrenia",
+      "Transtorno afetivo bipolar",
+      "Transtorno esquizoafetivo"
+    ],
+    "raloxifeno": [
+      "Osteoporose"
+    ],
+    "rasagilina": [
+      "Doença de Parkinson"
+    ],
+    "riluzol": [
+      "Esclerose lateral amiotrófica"
+    ],
+    "risanquizumabe": [
+      "Psoríase"
+    ],
+    "risdiplam": [
+      "Atrofia muscular espinhal 5q tipo 1",
+      "Atrofia muscular espinhal 5q tipo 2"
+    ],
+    "risedronato": [
+      "Doença de Paget",
+      "Osteoporose"
+    ],
+    "risperidona": [
+      "Comportamento agressivo no transtorno do espectro do autismo",
+      "Esquizofrenia",
+      "Transtorno afetivo bipolar",
+      "Transtorno esquizoafetivo"
+    ],
+    "rituximabe": [
+      "Artrite reumatoide",
+      "Vasculite"
+    ],
+    "rivastigmina": [
+      "Doença de Alzheimer",
+      "Doença de Parkinson"
+    ],
+    "romosozumabe": [
+      "Osteoporose"
+    ],
+    "sacarato-de-hidroxido-ferrico": [
+      "Anemia na doença renal crônica (reposição de ferro)"
+    ],
+    "sacubitril-valsartana-sodica-hidratada": [
+      "Insuficiência cardíaca com fração de ejeção reduzida"
+    ],
+    "secuquinumabe": [
+      "Artrite psoríaca",
+      "Espondilite ancilosante",
+      "Psoríase"
+    ],
+    "selexipague": [
+      "Hipertensão arterial pulmonar"
+    ],
+    "sildenafila": [
+      "Hipertensão arterial pulmonar",
+      "Esclerose sistêmica"
+    ],
+    "sirolimo": [
+      "Linfangioleiomiomatose",
+      "Imunossupressão no transplante renal",
+      "Imunossupressão no transplante hepático em pediatria"
+    ],
+    "somatropina": [
+      "Deficiência de hormônio do crescimento (hipopituitarismo)",
+      "Síndrome de Turner"
+    ],
+    "sulfassalazina": [
+      "Artrite psoríaca",
+      "Retocolite ulcerativa",
+      "Artrite reativa (doença de Reiter)",
+      "Artrite reumatoide",
+      "Artropatia enteropática",
+      "Doença de Crohn",
+      "Espondilite ancilosante",
+      "Artrite idiopática juvenil"
+    ],
+    "tacrolimo": [
+      "Dermatite atópica",
+      "Síndrome nefrótica primária em crianças e adolescentes",
+      "Imunossupressão no transplante cardíaco",
+      "Imunossupressão no transplante hepático em adultos",
+      "Imunossupressão no transplante hepático em pediatria",
+      "Imunossupressão no transplante renal"
+    ],
+    "tafamidis": [
+      "Amiloidose associada à transtirretina"
+    ],
+    "teriflunomida": [
+      "Esclerose múltipla"
+    ],
+    "tiotropio-olodaterol": [
+      "Doença pulmonar obstrutiva crônica (DPOC)"
+    ],
+    "tobramicina": [
+      "Fibrose cística (manifestações pulmonares)"
+    ],
+    "tocilizumabe": [
+      "Artrite reumatoide",
+      "Artrite idiopática juvenil"
+    ],
+    "tofacitinibe": [
+      "Artrite reumatoide",
+      "Artrite psoríaca",
+      "Retocolite ulcerativa"
+    ],
+    "topiramato": [
+      "Epilepsia"
+    ],
+    "toxina-botulinica-tipo-a": [
+      "Distonias e espasmo hemifacial",
+      "Espasticidade"
+    ],
+    "trientina": [
+      "Doença de Wilson"
+    ],
+    "triexifinidil": [
+      "Doença de Parkinson"
+    ],
+    "triptorrelina": [
+      "Leiomioma de útero",
+      "Puberdade precoce central",
+      "Endometriose"
+    ],
+    "upadacitinibe": [
+      "Artrite reumatoide"
+    ],
+    "ustequinumabe": [
+      "Psoríase"
+    ],
+    "vedolizumabe": [
+      "Retocolite ulcerativa"
+    ],
+    "vigabatrina": [
+      "Epilepsia"
+    ],
+    "ziprasidona": [
+      "Esquizofrenia",
+      "Transtorno esquizoafetivo"
+    ],
+    "sevelamer": []
+  }
+}

@@ -385,7 +385,32 @@ Regras que o código segue:
 - Combinações escritas com "+" ("sacubitril + valsartana") também são reconhecidas no Alto Custo.
 - Farmácia Popular pede receita e documento com CPF. Laudo só existe para fralda geriátrica (gov.br/saude, página do Farmácia Popular) e no Alto Custo (LME). Não encontramos exigência de laudo para a dapagliflozina no Farmácia Popular.
 
-Fontes: Portaria GM/MS nº 6.613/2025 (lista grátis, inclui metformina 500 mg ação prolongada e dapagliflozina 10 mg para "diabetes mellitus associada a doença cardiovascular"), CRF-SP e SES-MG (dapagliflozina só a partir de 65 anos), REMUME de São Paulo e lista do CEAF da SES-SP.
+Fontes: Portaria GM/MS nº 6.613/2025 (lista grátis, inclui metformina 500 mg ação prolongada e dapagliflozina 10 mg para "diabetes mellitus associada a doença cardiovascular"), Portaria GM/MS nº 12.091/2026 (regras atuais do programa: documento oficial com foto e CPF, receita válida por 180 dias, 365 para anticoncepcional, e critérios específicos de cada item), CRF-SP e SES-MG (dapagliflozina só a partir de 65 anos), REMUME de São Paulo e lista do CEAF da SES-SP.
+
+### Programas no banco e atualização todo mês (12/11/2026)
+
+As listas de remédio grátis saíram dos arquivos JSON e foram para o Postgres, no mesmo formato para qualquer programa: Farmácia Popular, posto da Prefeitura de São Paulo (REMUME) e Alto Custo do Estado (CEAF). Um programa novo (entrega em casa, fralda, desconto em laboratório) entra sem mudar o código.
+
+- **Tabelas.** `benefit_programs` (programa, onde pegar, documentos, regras), `benefit_program_items` (cada remédio, com doenças, CID e regras próprias) e `benefit_program_syncs` (histórico de cada atualização: quantos entraram, saíram e mudaram).
+- **Regras.** Cada regra é idade mínima, idade máxima, doença, cidade ou estado, ou nota. O motor confere cada regra com a pessoa cuidada e responde "sim", "falta saber" (por exemplo, o diagnóstico) ou "não". Exemplo: dapagliflozina no Farmácia Popular é só a partir de 65 anos. Para a Dona Maria, com 78, sai grátis; para alguém de 60, o app não manda ao Farmácia Popular.
+- **Alto Custo com doenças e CID.** Vem da API pública do Remédio SP (SES-SP): para cada remédio, as doenças do protocolo, os CID que o médico escreve no laudo (LME) e limites de idade. Os nomes das doenças com acento vêm das páginas da SES-SP. Exemplo: Entresto, insuficiência cardíaca (I50.0, I50.1, I50.9), a partir de 18 anos.
+- **Rotina mensal.** O worker busca de novo as fontes oficiais todo dia 2, às 6h (horário de Brasília), e também uma vez por mês ao subir. Se uma fonte não responde, o banco mantém a lista atual e grava o erro. Se a lista nova vem com menos da metade dos itens, ela é recusada (leitura quebrada de PDF não apaga o programa).
+- **Na subida da API**, os arquivos `packages/data/seed/programs/*.json` entram no banco quando são mais novos que o banco. A API responde de um índice em memória que se renova quando um programa muda. Se o banco não responde, usa os arquivos.
+- **Consulta.** `GET /programs` lista os programas, quantos itens têm e a última atualização. `GET /family/alto-custo` traz doenças, CID e regras de cada remédio.
+- Números de hoje: Farmácia Popular 39 itens, posto 304, Alto Custo SP 302 apresentações de 167 remédios, para 109 doenças.
+
+### E se for outro remédio? Mapa de todos os remédios vendidos no Brasil (12/11/2026)
+
+`pnpm --filter @recuidado/data report:coverage` cruza cada princípio ativo e dosagem da tabela da CMED (todos os remédios com preço regulado no Brasil) com os três programas e grava `packages/data/seed/coverage.json`. Resultado de 12/11/2026, em 1.802 princípios ativos:
+
+| Situação | Princípios ativos |
+| --- | --- |
+| Grátis só com receita (posto ou Farmácia Popular), em ao menos uma dosagem | 124 |
+| Grátis só em alguns postos (serviços de referência, por exemplo SAE/IST/AIDS) | 53 |
+| Só pelo Alto Custo, com laudo (LME) | 157 |
+| Não sai grátis: compra na farmácia | 1.468 |
+
+Desses, 28 estão no Farmácia Popular, 116 no posto e 175 no Alto Custo. Colírios e sprays são reconhecidos nas duas escritas: a lista oficial escreve "timolol 2,5 mg" e a caixa "2,5 mg/ml"; a lista escreve "ipratrópio 0,02 mg" e a caixa "20 mcg/dose".
 
 ## Tecnologia dos patrocinadores
 

@@ -25,6 +25,11 @@ export const SOURCES = {
    * network on 11/11/2026. Replace the file name when ES publishes a new edition.
    */
   ceafListPdf: "https://farmaciacidada.es.gov.br/media/Arquivos/Componente%20Especializado/REMEME/REMEME_17.0_jan.2026.pdf",
+  /**
+   * SES-SP, Remédio SP: public list of the state's specialised medicines, one row per presentation
+   * and CID, with the protocol name, CEAF group and age notes. No login.
+   */
+  remedioSpApi: "https://msrec.sp.gov.br/medex/acessos-publicos/medicamentos",
   /** Ministério da Saúde / DEMAS: open API over CNES (registry of health establishments). */
   cnesEstablishments: "https://apidadosabertos.saude.gov.br/cnes/estabelecimentos",
 } as const;

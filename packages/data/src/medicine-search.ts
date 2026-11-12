@@ -223,7 +223,11 @@ export function searchMedicines(query: string, limit = 10): MedicineResult[] {
     kind: entry.kind,
     laboratory: entry.laboratory,
     strengths: strengths
-      .map(({ strength, form }) => ({ strength, form, ...findFreeAccess(entry.activeIngredient, strength, `${entry.name} ${form ?? ""}`) }))
+      .map(({ strength, form }) => {
+        const access = findFreeAccess(entry.activeIngredient, strength, `${entry.name} ${form ?? ""}`);
+        // Search shows the badges only; the full program answer comes with the family's medicines.
+        return { strength, form, freeAt: access.freeAt, highCost: access.highCost, farmaciaPopularRule: access.farmaciaPopularRule };
+      })
       .sort(strengthOrder),
   }));
 }

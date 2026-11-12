@@ -20,3 +20,5 @@ export * from './family/demo-family.js';
 export * from './privacy/consent.js';
 export * from './rotation/rotation.js';
 export * from './rotation/rotation.service.js';
+export * from './programs/programs.service.js';
+export * from './programs/programs.queue.js';

@@ -22,6 +22,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@recuidado/data": "workspace:*",
     "@recuidado/telemetry": "workspace:*",
     "drizzle-orm": "^0.45.4",
     "pg": "^8.23.1",
