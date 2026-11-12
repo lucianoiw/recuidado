@@ -23,6 +23,7 @@ describe('MedicationsController', () => {
       form: 'comprimido revestido',
       freeAt: ['farmacia_popular', 'ubs'],
       highCost: false,
+      farmaciaPopularRule: null,
     });
   });
 
