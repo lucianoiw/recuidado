@@ -1,28 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { medicationBox, shortIngredient } from './box.js';
+import { medicationBox, shortIngredient, titleCase } from './box.js';
 
 describe('medicationBox', () => {
-  it('names a generic by the short substance', () => {
+  it('names a generic by the full substance, nothing under it', () => {
     expect(medicationBox('Losartana potássica', 'Losartana potássica', true)).toEqual({
-      title: 'Losartana',
-      substance: 'losartana potássica',
+      title: 'Losartana Potássica',
+      substance: null,
       generic: true,
     });
-    expect(medicationBox('Dipirona monoidratada', 'Dipirona monoidratada', true).title).toBe('Dipirona');
+    expect(medicationBox('Dipirona', 'Dipirona monoidratada', true).title).toBe('Dipirona Monoidratada');
+    expect(titleCase('cloridrato de metformina')).toBe('Cloridrato de Metformina');
     expect(shortIngredient('Cloridrato de metformina')).toBe('Metformina');
   });
 
-  it('capitalizes each substance of a combination', () => {
-    const box = medicationBox('Sacubitril valsartana', 'Sacubitril + Valsartana sódica', false);
-    expect(box.title).toBe('Sacubitril Valsartana');
-    expect(box.substance).toBe('sacubitril + valsartana sódica');
-    expect(box.generic).toBe(false);
+  it('shows the ingredients under a name with no generic', () => {
+    expect(medicationBox('Sacubitril valsartana', 'Sacubitril + Valsartana sódica', false)).toEqual({
+      title: 'Sacubitril Valsartana',
+      substance: 'Sacubitril + Valsartana Sódica',
+      generic: false,
+    });
   });
 
-  it('keeps a brand name', () => {
+  it('keeps a brand name with the ingredients below', () => {
     expect(medicationBox('Entresto', 'Sacubitril + Valsartana sódica', true)).toEqual({
       title: 'Entresto',
-      substance: 'sacubitril + valsartana sódica',
+      substance: 'Sacubitril + Valsartana Sódica',
       generic: false,
     });
   });
