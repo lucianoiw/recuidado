@@ -660,6 +660,7 @@ export class PharmacyCall {
       this.silentLinePokes++;
       this.log(`line silent for ${this.opts.silentLineMs ?? 9000} ms after the menu or hold, saying "Alô?" (${this.silentLinePokes})`);
       this.side = "unclear";
+      this.armDeadLine();
       void this.openVoice().then(() =>
         this.send({
           type: "session.commentary.append",
@@ -681,7 +682,8 @@ export class PharmacyCall {
    */
   private armStall() {
     if (this.stallTimer) clearTimeout(this.stallTimer);
-    if (!this.introduced || this.waiting) return;
+    // After "Alô?" the model often introduces itself on its own: the voice is open, so it counts.
+    if ((!this.introduced && !this.voiceOpen) || this.waiting) return;
     this.stallTimer = setTimeout(() => {
       if (this.answer || this.hangupRequested || this.finished || this.waiting) return;
       if (this.side && this.side !== "person" && this.side !== "unclear") return;

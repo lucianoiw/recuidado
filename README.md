@@ -287,11 +287,29 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
 
   - **Achado: a transcrição perde a saudação curta.** Duas vezes, o "Farmácia Teste, boa tarde" logo depois da música de espera (ou logo no começo) não apareceu na transcrição, e a IA só se apresentou quando a atendente repetiu "Alô?". Uma atendente de verdade faz isso quando a linha fica muda, e a atendente de teste agora também faz (PR #127). Do fim da saudação até a IA falar leva cerca de 3 s: a transcrição de uma frase curta chega em 1,5 a 2 s e a IA espera 1,2 s de pausa para não cortar a pessoa.
   - **Falta.** Testar com uma farmácia de verdade (depende de ok do Luciano, regra de não ligar para terceiros) e com música de espera real, que é diferente do tom sintético do teste.
-- **Três farmácias simuladas (12/11, PRs #143, #147, #148, #149 e #152).** Decisão do Luciano: não ligar para farmácia de verdade por enquanto. O botão "Perguntar às farmácias" liga para três farmácias ao mesmo tempo (`PHARMACY_CALL_TARGETS`, "Nome|número" separados por vírgula) e o app compara os preços, com a conversa de cada uma e a gravação no painel.
+- **Três farmácias simuladas (12/11, PRs #143 a #182).** Decisão do Luciano: não ligar para farmácia de verdade por enquanto. O botão "Perguntar às farmácias" liga para três farmácias ao mesmo tempo (`PHARMACY_CALL_TARGETS`, "Nome|número" separados por vírgula) e o app compara os preços, com a conversa de cada uma e a gravação no painel.
   - **Quem atende.** O menu é um menu de verdade no Asterisk (voz sintética). Quem atende é uma segunda sessão do GPT-Live com voz masculina (`PHARMACY_ACTOR_VOICE`, padrão `tempo`), e a assistente do produto continua com a voz feminina `bossa`. Cada atendente sabe só os preços da sua farmácia, calculados a partir da caixa da CMED (`apps/voice/src/sim-pharmacy.ts`): Drogaria Vida (menu, tecla 2, 0,9 do teto), Farmácia Central (atende direto, 0,65 do teto) e Drogaria Bom Preço (menu com boas-vindas, tecla 3, espera com música, 1,15 do teto, acima da CMED de propósito).
   - **Como as duas IAs se encontram.** `+550000000001N` é a farmácia N. Quando a assistente passa pelo menu, o Asterisk marca `SIM_READY_N` e toca chamando; o serviço de voz vê isso pelo AMI e só então disca o atendente em `+550000000009N`, que entra em uma ConfBridge `simN` com a assistente. Discar o atendente no começo não funcionou: ele desistia de esperar durante um menu longo.
   - **Achados das rodadas.** "Você ligou para a Drogaria X" é boas-vindas gravada, não pessoa (a IA se apresentava por cima do menu). "Bom Preço" fazia a regra achar que a primeira opção era de preço: agora a regra lê só o nome da opção depois de "para". Quando o atendente fica 9 s quieto depois da pergunta, a assistente diz "Alô? Vocês estão me ouvindo?" (até 2 vezes). Uma vez o GPT-Live devolveu `invalid_request_error` no turno seguinte a uma tecla e a ferramenta de registro não rodou: agora a ligação desliga no tchau mesmo assim e o Claude lê os preços da transcrição.
-  - **Resultado.** Drogaria Vida (genérico R$ 10,90, referência R$ 19,90) e Farmácia Central (R$ 7,90 e R$ 13,90) responderam do começo ao fim em 30 a 45 s. A Drogaria Bom Preço é a instável: o atendente saiu da sala logo depois de "Paulo falando" (causa em investigação, o serviço de voz agora registra a sessão do atendente).
+  - **Rodadas medidas (12/11, PRs #159 a #182).** Cada rodada liga para as três ao mesmo tempo; `measure.py` confere status, duração, preços, quantas vezes a assistente se apresentou e quantos "Alô?". As ligações de produção foram apagadas antes (`WIPE_CALLS_ON_BOOT`, uma vez por rótulo, como `WIPE_DATA_ON_BOOT`). Ligações para farmácias simuladas (DDD 00) não contam no limite diário (`pharmacy_inquiries.simulated`).
+
+    | Rodadas | Ligações | Os dois preços certos | O que apareceu |
+    | --- | --- | --- | --- |
+    | 16:21 a 16:41 | 21 | 21 | 4 ficaram abertas até o limite de 3 min porque a assistente se calou depois da resposta |
+    | 16:47 a 17:07 | 24 | 22 | Asterisk reiniciou sozinho no meio de uma rodada; um preço errado na leitura |
+    | 17:19 a 17:24 | 9 | 7 | Linha muda depois da tecla por 3 min; atendente simulado trocou o preço do genérico |
+    | 17:38 a 17:45 | 15 | 9 | Atendente simulado mudo depois da pergunta ou respondendo pela metade |
+    | 17:59 a 18:05 | 12 | 12 | Uma apresentação repetida; duas terminaram sem "tchau" |
+    | 18:10 a 18:19 | 15 | 15 | Uma ficou aberta até 3 min (a IA se apresentou sozinha depois do "Alô?" e o vigia de silêncio não contava isso, corrigido no #182). Uma vez a assistente inventou uma frase fora do assunto ("olha só essa calça...") e o atendente ouviu |
+
+    Chamadas de 26 a 74 s (Farmácia Central cerca de 30 s, Drogaria Vida e Bom Preço 50 a 70 s por causa do menu e da espera).
+  - **Correções que as rodadas pediram.**
+    - Apresentação só conta quando a farmácia ouve: o que a IA fala com o áudio fechado fica fora da conversa e ela repete quando o áudio abre, esperando ela terminar a frase (#159, #164, #166, #168, #169).
+    - Depois de uma tecla ou da espera, 9 s de silêncio: a assistente diz "Alô?" (até 3 vezes). Se nada foi ouvido desde a tecla, desliga como `silent_line` (#162, #176).
+    - Assistente calada 6 s depois que a farmácia respondeu: um lembrete para registrar ou perguntar; se continuar calada, desliga e o Claude lê os preços da transcrição (#166). Resposta registrada sem "tchau": pede o "tchau" uma vez (#179).
+    - 25 s sem ouvir nada depois da apresentação: desliga (#171). Veio de uma ligação que ficou muda depois de o Asterisk de teste reiniciar sozinho (causa não encontrada).
+    - O atendente simulado diz cada preço com o nome ("o genérico sai sete e noventa"), escrito por extenso nas instruções dele (#176). O serviço de voz registra o que o atendente fala e ouve (#178).
+  - **O que ainda falha e por quê.** O GPT-Live às vezes continua falando sozinho com uma frase sem relação com a ligação (1 vez em 96 ligações medidas). Quase todas as outras falhas vêm de duas IAs conversando: uma fala por cima da outra, a transcrição corta o começo da frase ("Comprimidos" em vez do preço) ou o atendente simulado não responde. Com uma pessoa do outro lado, o que importa é a linha, e isso não muda.
 
 ## Painel das ligações
 
