@@ -12,7 +12,7 @@ import {
 import { SkipThrottle } from '@nestjs/throttler';
 import { z } from 'zod';
 import { VoiceTokenGuard } from './voice-token.guard.js';
-import { VoiceCallService, type VoiceResult } from '@recuidado/core';
+import { type AlertCallResult, VoiceCallService, type VoiceResult } from '@recuidado/core';
 
 const voiceResultSchema = z.object({
   sessionId: z.string(),
@@ -29,6 +29,14 @@ const voiceResultSchema = z.object({
   durationSeconds: z.number().nonnegative().nullish(),
   endReason: z.string().nullish(),
   error: z.string().nullish(),
+});
+
+const alertCallResultSchema = z.object({
+  sessionId: z.string().min(1),
+  memberId: z.uuid(),
+  message: z.string().min(1).max(600),
+  answered: z.boolean(),
+  delivered: z.boolean(),
 });
 
 const demoSchema = z.object({
@@ -58,6 +66,14 @@ export class VoiceController {
   @HttpCode(200)
   async voiceResult(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown) {
     const status = await this.voice.applyResult(id, parse(voiceResultSchema, body) as VoiceResult);
+    return { status };
+  }
+
+  /** Called by apps/voice when an emergency call to a caregiver ends; not heard calls the next one. */
+  @Post('doses/:id/alert-call-result')
+  @HttpCode(200)
+  async alertCallResult(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown) {
+    const status = await this.voice.applyAlertCallResult(id, parse(alertCallResultSchema, body) as AlertCallResult);
     return { status };
   }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { caregiverMessage, patientWords, quoted, reported } from './voice.service.js';
+import { caregiverMessage, contactsAfter, namesList, patientWords, quoted, reported } from './voice.service.js';
 
 describe('emergency messages', () => {
   it('passes her own words to the first contact and asks to call her', () => {
@@ -34,5 +34,27 @@ describe('emergency messages', () => {
   it('falls back to the note when there is no transcript', () => {
     expect(patientWords({ transcript: [], note: 'Caiu' })).toBe('Caiu');
     expect(patientWords({ transcript: [] })).toBeUndefined();
+  });
+});
+
+describe('emergency call order', () => {
+  const carlos = { id: 'c', name: 'Carlos' };
+  const ana = { id: 'a', name: 'Ana' };
+  const pedro = { id: 'p', name: 'Pedro' };
+
+  it('starts with the first contact and moves to the next one who did not hear', () => {
+    expect(contactsAfter([carlos, ana, pedro])).toEqual([carlos, ana, pedro]);
+    expect(contactsAfter([carlos, ana, pedro], 'c')).toEqual([ana, pedro]);
+    expect(contactsAfter([carlos, ana, pedro], 'p')).toEqual([]);
+  });
+
+  it('stops when the caregiver left the family meanwhile', () => {
+    expect(contactsAfter([carlos, ana], 'gone')).toEqual([]);
+  });
+
+  it('lists names the way people say them', () => {
+    expect(namesList(['Carlos'])).toBe('Carlos');
+    expect(namesList(['Carlos', 'Ana'])).toBe('Carlos e Ana');
+    expect(namesList(['Carlos', 'Ana', 'Pedro'])).toBe('Carlos, Ana e Pedro');
   });
 });

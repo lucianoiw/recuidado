@@ -71,6 +71,8 @@ export class DosesProcessor extends WorkerHost implements OnApplicationBootstrap
           telemetry.captureException(error, { job_kind: 'check-in', dose_id: data.doseId });
           return 'failed';
         }
+      case 'next-contact':
+        return this.voice.callNextContact(data.doseId, data.message, data.afterId);
     }
   }
 }

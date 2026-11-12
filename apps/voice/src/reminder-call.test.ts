@@ -345,6 +345,33 @@ test("alert call speaks the message and hangs up after it", async () => {
   assert.equal(result.endReason, "message_delivered");
 });
 
+test("alert call answered by voicemail is not delivered, so the next caregiver is called", async () => {
+  const { AlertCall } = await import("./alert-call.js");
+  const socket = new FakeSocket();
+  let hangups = 0;
+  const message = "Olá, aqui é a assistente virtual da Recuidado. Se for grave, ligue para o SAMU, 192.";
+  const call = new AlertCall({
+    sessionId: "live_vm",
+    message,
+    socket,
+    hangup: async () => {
+      hangups++;
+      socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" });
+    },
+    maxCallMs: 60_000,
+    tailMs: 10,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "v1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "v2", delta: message });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "v3", delta: "Sua chamada está sendo encaminhada para a caixa postal" });
+  const result = await call.result;
+  assert.equal(hangups, 1);
+  assert.equal(result.recording, true);
+  assert.equal(result.delivered, false);
+  assert.equal(result.endReason, "voicemail");
+});
+
 test("emergency: tells her the family will be told and promises the call back; the call back only asks how she is", () => {
   const ctx = { patientName: "Dona Maria", medications: [{ name: "Losartana" }] };
   const live = buildLiveInstructions(ctx);
