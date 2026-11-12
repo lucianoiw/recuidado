@@ -9,6 +9,7 @@ import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, buttonClass } f
 import { captureError, identifyMember, track } from "@/lib/analytics";
 import { useLiveRefresh } from "@/lib/live";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
+import { EarlierQuestion, useEarlierDoses } from "./earlier-doses";
 import { CallLink, canCall } from "@/components/call-link";
 import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
 
@@ -63,21 +64,21 @@ export function PatientView() {
   }, []);
 
   useLiveRefresh(load);
+  const earlier = useEarlierDoses(data, load);
 
   if (error) {
     return <p className="text-[24px] text-muted">Sem conexão. Tente de novo em instantes.</p>;
   }
   if (!data || ready === null) return <p className="text-[24px] text-muted">Carregando...</p>;
-  if (!ready) return <PatientWelcome data={data} />;
+  if (!ready) return <PatientWelcome data={data} earlier={earlier} />;
 
   const patientName = callName(data.patient);
+  // Still waiting: not taken, and not a "Não tomei" she already gave.
+  const open = (d: Dose) =>
+    d.status !== "taken" && !(d.status === "missed" && d.confirmedVia === "app") && !earlier.answered.has(d.id);
   // Doses at the same time are taken together: the earliest time whose doses are not taken yet.
-  const first = data.today.find(
-    (d) => d.status !== "taken" && new Date(d.scheduledAt).getTime() <= now,
-  );
-  const due = first
-    ? data.today.filter((d) => d.status !== "taken" && d.scheduledAt === first.scheduledAt)
-    : [];
+  const first = data.today.find((d) => open(d) && new Date(d.scheduledAt).getTime() <= now);
+  const due = first ? data.today.filter((d) => open(d) && d.scheduledAt === first.scheduledAt) : [];
   const later = groupByTime(
     data.today.filter((d) => d.status === "pending" && new Date(d.scheduledAt).getTime() > now),
   );
@@ -93,6 +94,27 @@ export function PatientView() {
     } finally {
       setBusy(false);
     }
+  }
+
+  // Family added a medicine after she finished the first access: ask here too.
+  if (earlier.pending.length > 0 && !justTaken) {
+    const group = earlier.pending[0];
+    return (
+      <EarlierQuestion
+        data={data}
+        group={group}
+        busy={earlier.busy}
+        onAnswer={(took) => earlier.answer(group.doses, took)}
+        top={
+          <header className="flex flex-col gap-1">
+            <p className="text-[22px] text-muted">
+              {greeting()}, {patientName}
+            </p>
+            <h1 className="font-display text-[44px] leading-[1.02]">Hoje mais cedo</h1>
+          </header>
+        }
+      />
+    );
   }
 
   if (justTaken) {

@@ -287,7 +287,7 @@ export class DosesService {
         (select string_agg(d.id::text || d.status::text, ',' order by d.id)
            from ${doses} d join ${medications} m on m.id = d.medication_id
           where m.patient_id = ${patientId} and d.scheduled_at >= ${start}),
-        (select string_agg(m.id::text || m.times::text || coalesce(m.photo_key, ''), ',' order by m.id)
+        (select string_agg(m.id::text || m.times::text || coalesce(m.photo_key, '') || coalesce(m.stopped_at::text, ''), ',' order by m.id)
            from ${medications} m where m.patient_id = ${patientId}),
         (select count(*)::text || max(a.created_at)::text from ${alerts} a where a.family_id = ${familyId})
       )) as stamp`);
