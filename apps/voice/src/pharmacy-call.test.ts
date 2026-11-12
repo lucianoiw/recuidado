@@ -39,7 +39,7 @@ class FakeGate implements VoiceGate {
   }
 }
 
-function setup(openingWaitMs = 60_000) {
+function setup(openingWaitMs = 60_000, extra: Partial<ConstructorParameters<typeof PharmacyCall>[0]> = {}) {
   const socket = new FakeSocket();
   const gate = new FakeGate();
   let hangups = 0;
@@ -61,6 +61,8 @@ function setup(openingWaitMs = 60_000) {
     goodbyeMs: 5,
     goodbyeTailMs: 5,
     closeGraceMs: 5,
+    silentLineMs: 60_000,
+    ...extra,
   });
   return { socket, call, gate, hangups: () => hangups };
 }
@@ -589,4 +591,19 @@ test("a goodbye ends the call even when the answer tool never ran, and no 'Alô?
   assert.equal(result.endReason, "hung_up_after_goodbye");
   const nudges = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("nudge_"));
   assert.equal(nudges.length, 0);
+});
+
+test("silence after the hold message: the AI is heard and says only 'Alô?'", async () => {
+  const { socket, call, gate } = setup(60_000, { silentLineMs: 20 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para falar com um atendente, tecle 3." });
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "3" }));
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Nossos atendentes estão ocupados. Por favor, aguarde na linha." });
+  await new Promise((r) => setTimeout(r, 60));
+  const alo = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.ok(alo.length >= 1);
+  assert.match(alo[0].content, /Alô\?/);
+  assert.equal(gate.last, "heard");
+  await call.endCall();
+  await call.result;
 });
