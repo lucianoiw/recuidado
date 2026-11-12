@@ -18,7 +18,7 @@ export const hero = {
   title: "Chegou a sua vez de cuidar de quem sempre cuidou de você.",
   text: "O Recuidado acompanha os remédios da sua mãe, do seu pai ou dos seus avós. Na hora certa, o celular avisa. Se não houver confirmação, a gente liga, pergunta como a pessoa está e se já tomou. Se algo não vai bem, você e seus irmãos ficam sabendo na hora.",
   secondary: "Ver como funciona",
-  fine: "Ninguém precisa saber mexer em aplicativo. A ligação chega em qualquer telefone.",
+  fine: "Quem toma o remédio não precisa saber mexer em aplicativo. A ligação chega em qualquer telefone.",
   confirmed: { label: "Agora · Recuidado", text: <><b>Dona Maria tomou a Losartana</b> das 8h.</> },
   call: { label: "Ligação das 8:15", text: "“Bom dia! Já tomei, minha filha.”" },
 };
@@ -31,14 +31,14 @@ export const timeline = {
     { time: "8h00", text: "O celular mostra qual remédio tomar naquele horário, com letra grande e um botão só: “Tomei”." },
     {
       time: "8h15",
-      text: "Passaram 15 minutos sem confirmação. O Recuidado liga para o celular ou o fixo, sem precisar de internet.",
-      says: "Oi, Dona Maria, bom dia! Como a senhora está? A senhora já tomou a Losartana das oito da manhã?",
+      text: "Passaram 15 minutos sem confirmação. O Recuidado liga para o celular ou o fixo, sem precisar de internet. Depois de ouvir como ela está, pergunta se já tomou a Losartana das oito.",
+      says: "Oi, Dona Maria, bom dia! Aqui é a assistente virtual da Recuidado. Como a senhora está?",
     },
     { time: "8h16", text: "Ela ainda não tomou. A assistente pede que tome agora e liga de novo em 15 minutos." },
     {
       time: "8h31",
       text: "Se ela não tomou ou não atendeu, a assistente liga para um dos filhos. Se ele não atende, liga para o próximo. Todos recebem o aviso no celular e no e-mail.",
-      says: "Olá, Carlos, tudo bem? Aqui é da Recuidado. Tentei falar com a Dona Maria e não consegui contato. Por favor, tente entrar em contato com ela. Obrigado.",
+      says: "Olá, Carlos, tudo bem? Aqui é da Recuidado. Tentei falar com Dona Maria e não consegui contato. Por favor, tente entrar em contato com ela. Obrigado.",
     },
   ] as { time: string; text: string; says?: string }[],
 
@@ -46,7 +46,7 @@ export const timeline = {
 
 export const howSheIs = {
   title: "Toda ligação começa perguntando como a pessoa está",
-  quote: "“Oi, Dona Maria, bom dia! Como a senhora está?”",
+  quote: "“Oi, Dona Maria, bom dia! Aqui é a assistente virtual da Recuidado. Como a senhora está?”",
   paragraphs: [
     "Antes de falar do remédio, a assistente pergunta como ela está. Se ela disser que está cansada, com tontura ou com qualquer outra queixa, a família recebe um aviso com as palavras dela, do jeito que ela falou.",
     "Se ela disser que caiu, que está com dor no peito ou com falta de ar, a assistente não fala mais de remédio. Ela avisa que vai chamar a família, desliga para deixar a linha livre e liga para o filho escolhido como primeiro contato, contando o que ela disse. Se ele não atender, liga para o próximo da família, um de cada vez, até alguém ouvir o recado. Todos recebem o aviso no celular desde o começo. Dez minutos depois, liga de volta para ela para saber se alguém já chegou.",
@@ -144,8 +144,8 @@ export const siblings = {
 export const patientApp = {
   title: "Do outro lado, um botão só",
   paragraphs: [
-    "O app de quem toma o remédio mostra qual remédio tomar naquele horário, a quantidade e o botão “Tomei”. Letra grande, uma coisa por tela, nada para configurar. Quem cadastra tudo é a família.",
-    "Ela também dá o próprio aceite no primeiro acesso. Sem o aceite dela, o Recuidado não liga.",
+    "O app de quem toma o remédio mostra qual remédio tomar naquele horário, a dose e o botão “Tomei”. Letra grande, uma coisa por tela, nada para configurar. Quem cadastra tudo é a família.",
+    "No cadastro, a família confirma que ela aceita receber as ligações, e no primeiro acesso ao app ela mesma pode dar o aceite. Sem aceite, o Recuidado não liga.",
     "Se ela não usa celular com aplicativo, tudo bem: o lembrete chega por ligação.",
   ],
   screen: {
@@ -210,7 +210,7 @@ export const faq = {
     },
     {
       question: "O que vocês guardam?",
-      answer: "O mínimo: sem CPF, sem endereço completo, sem diagnóstico e sem áudio. O texto das ligações é apagado em 90 dias. Quem fez o cadastro baixa ou apaga tudo quando quiser.",
+      answer: "O mínimo: sem CPF, sem endereço completo e sem diagnóstico. A gravação e o texto das ligações são apagados em 90 dias. Quem fez o cadastro baixa ou apaga tudo quando quiser.",
     },
   ],
 };
@@ -224,13 +224,13 @@ export const inside = {
   title: "Por dentro do Recuidado",
   subtitle: "A tecnologia que faz cada passo funcionar.",
   items: [
-    { title: "Voz em tempo real", text: "A ligação funciona em qualquer celular ou telefone fixo. A assistente responde em cerca de meio segundo, como em uma conversa." },
+    { title: "Voz em tempo real", text: "A ligação funciona em qualquer celular ou telefone fixo. A assistente conversa ao vivo, em português, como em uma ligação comum." },
     { title: "Receita lida por IA", text: "A foto da receita é lida pelo Claude, da Anthropic. A família confere cada remédio antes de salvar." },
     { title: "Dados oficiais", text: "Preço máximo da tabela CMED, da Anvisa. Farmácias credenciadas e remédios grátis do Farmácia Popular, do Ministério da Saúde." },
-    { title: "Tudo registrado", text: "Cada ligação fica transcrita, com o que a assistente fez, para a família conferir depois." },
+    { title: "Tudo registrado", text: "Cada ligação fica gravada e transcrita, com o que a assistente fez, para a família conferir depois." },
     { title: "Sem instalar nada", text: "Por enquanto, o app abre no navegador do celular e avisa por notificação e por e-mail. Os apps para Android e iPhone vêm depois." },
     { title: "Conector para assistentes de IA", text: "Quem usa o Claude ou o ChatGPT pode perguntar por lá: “meu pai tomou o remédio da pressão hoje?”." },
-    { title: "Privacidade (LGPD)", text: "Quem toma o remédio dá o próprio aceite. A família exporta ou apaga os dados quando quiser. As transcrições são apagadas em 90 dias." },
+    { title: "Privacidade (LGPD)", text: "Ninguém recebe ligação sem aceite. A família exporta ou apaga os dados quando quiser. Gravações e transcrições são apagadas em 90 dias." },
   ],
 };
 
