@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { captureError } from "./analytics";
 import { getFamily, type FamilyOverview } from "./api";
-import { refreshMs } from "./demo";
+import { useLiveRefresh } from "./live";
 
-/** Loads GET /family and refreshes it every 30 seconds (every 3 during a demo run). */
+/** Loads GET /family and reloads it within about 2 seconds of a change (see useLiveRefresh). */
 export function useFamily() {
   const [data, setData] = useState<FamilyOverview | null>(null);
   const [error, setError] = useState(false);
@@ -25,15 +25,7 @@ export function useFamily() {
     );
   }, []);
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const tick = () => {
-      load();
-      timer = setTimeout(tick, refreshMs());
-    };
-    tick();
-    return () => clearTimeout(timer);
-  }, [load]);
+  useLiveRefresh(load);
 
   return { data, error, now, reload: load };
 }
