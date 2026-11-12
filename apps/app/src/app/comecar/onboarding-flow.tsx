@@ -42,6 +42,8 @@ export function OnboardingFlow() {
   const params = useSearchParams();
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
+  // Calls are the paid plan; without it the options say so instead of promising a call.
+  const [calls, setCalls] = useState(false);
   const [familyId, setFamilyId] = useState<string | null>(null);
   const [data, setData] = useState<Onboarding>(emptyOnboarding);
   const [tried, setTried] = useState(false);
@@ -59,18 +61,23 @@ export function OnboardingFlow() {
     getMe().then(
       (me) => {
         if (!alive) return;
-        if (!me) router.replace("/entrar?next=/comecar");
-        else setEmail(me.email);
-      },
-      () => {},
-    );
-    // Restore the answers saved in an earlier visit ("Chamar mais alguém" opens step 3).
-    getOnboarding().then(
-      (r) => {
-        if (!alive || !r) return;
-        setData(fromRecord(r));
-        setFamilyId(r.familyId);
-        if (params.get("passo") === "3") setStep(3);
+        if (!me) {
+          router.replace("/entrar?next=/comecar");
+          return;
+        }
+        setEmail(me.email);
+        setCalls(me.calls === true);
+        // Restore the answers saved in an earlier visit ("Chamar mais alguém" opens step 3).
+        if (!me.memberId) return;
+        getOnboarding().then(
+          (r) => {
+            if (!alive || !r) return;
+            setData(fromRecord(r));
+            setFamilyId(r.familyId);
+            if (params.get("passo") === "3") setStep(3);
+          },
+          () => {},
+        );
       },
       () => {},
     );
@@ -210,8 +217,20 @@ export function OnboardingFlow() {
             <fieldset className="flex flex-col gap-2.5">
               <legend className="mb-2.5 text-[15px] font-bold">Usa celular com internet?</legend>
               {[
-                { value: true, title: "Sim, usa bem", text: "Lembrete no celular. Se não confirmar, a gente liga." },
-                { value: false, title: "Não usa", text: "A gente liga no horário de cada remédio." },
+                {
+                  value: true,
+                  title: "Sim, usa bem",
+                  text: calls
+                    ? "Lembrete no celular. Se não confirmar, a gente liga."
+                    : "Lembrete no celular. Se não confirmar, a família é avisada.",
+                },
+                {
+                  value: false,
+                  title: "Não usa",
+                  text: calls
+                    ? "A gente liga no horário de cada remédio."
+                    : "A ligação no horário do remédio é do plano pago, que chega em breve. Até lá, a família é avisada se a dose não for confirmada.",
+                },
               ].map((o) => (
                 <button
                   key={o.title}

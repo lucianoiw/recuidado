@@ -22,6 +22,8 @@ export interface RunFacts {
   call: JobInfo;
   alert: JobInfo;
   lastCall: { outcome: string } | null;
+  /** The family gets calls (paid plan, demo family or included). False: the call is skipped for the plan. */
+  callsAllowed?: boolean;
 }
 
 export interface Step {
@@ -74,7 +76,10 @@ export function demoSteps(f: RunFacts): RunSteps {
       r === 'failed'
         ? step('failed', 'A ligação não saiu.')
         : r === 'skipped'
-          ? step('skipped', taken ? takenText : 'Sem telefone cadastrado para ela.')
+          ? step(
+              'skipped',
+              taken ? takenText : f.callsAllowed === false ? 'Ligação é do plano pago, que chega em breve.' : 'Sem telefone cadastrado para ela.',
+            )
           : taken
             ? step('done', takenText)
             : step('active', 'Ligando para ela agora.');

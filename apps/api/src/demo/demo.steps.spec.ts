@@ -56,4 +56,9 @@ describe('demoSteps', () => {
     expect(s.call.state).toBe('failed');
     expect(s.family.state).toBe('waiting');
   });
+
+  it('says the call is the paid plan when the family has no calls', () => {
+    const s = demoSteps(facts({ remind: done(), call: done('skipped'), alert: delayed(0), callsAllowed: false }));
+    expect(s.call).toMatchObject({ state: 'skipped', detail: 'Ligação é do plano pago, que chega em breve.' });
+  });
 });

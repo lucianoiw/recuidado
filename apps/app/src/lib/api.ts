@@ -185,6 +185,8 @@ export interface FamilyOverview {
   familyId: string;
   /** The demo family (Dona Maria): shown to visitors without a sign-up, read-only. */
   isDemo?: boolean;
+  /** The family gets calls (the paid part). False on the free plan: screens say "plano pago, em breve". */
+  calls?: boolean;
   patient: Member;
   caregivers: Member[];
   medications: Medication[];
@@ -307,6 +309,8 @@ export interface Me {
   memberId: string | null;
   name: string | null;
   familyId: string | null;
+  /** This account gets calls (paid plan, or included for free). Only on GET /auth/me. */
+  calls?: boolean;
 }
 
 /** Sends the e-mail with the 6 digit code and the sign-in link. */
@@ -606,8 +610,10 @@ export interface Plan {
   name: string;
   priceCents: number;
   trialDays: number;
-  /** AbacatePay is configured on the server. */
+  /** Families can open the checkout. False while nobody can pay: the screen says "em breve". */
   available: boolean;
+  /** Calls work without paying (demo family, or the team's account). */
+  included: boolean;
   isDemo: boolean;
   /** null: free plan. */
   status: "pending" | "active" | "cancelled" | null;

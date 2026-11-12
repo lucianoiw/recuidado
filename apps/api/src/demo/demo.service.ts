@@ -6,11 +6,15 @@ import { asc, desc, eq } from 'drizzle-orm';
 import {
   type Database,
   DB,
+  DEMO_FAMILY,
   type DoseJob,
   doseJobId,
   doses,
   DOSES_QUEUE,
+  families,
   medications,
+  members,
+  PlanGate,
   telemetry,
   voiceCalls,
 } from '@recuidado/core';
@@ -36,6 +40,7 @@ export class DemoService {
     @InjectQueue(DOSES_QUEUE) private readonly queue: Queue<DoseJob>,
     private readonly family: FamilyService,
     private readonly config: ConfigService,
+    private readonly plan: PlanGate,
   ) {}
 
   async start(familyId: string | null, now = new Date()): Promise<{ doseId: string; alreadyRunning: boolean }> {
@@ -95,6 +100,14 @@ export class DemoService {
       .from(doses)
       .where(eq(doses.id, doseId));
     if (!dose) throw new NotFoundException('Demo não encontrada.');
+    const [owner] = await this.db
+      .select({ familyId: members.familyId, name: families.name })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .innerJoin(members, eq(medications.patientId, members.id))
+      .innerJoin(families, eq(members.familyId, families.id))
+      .where(eq(doses.id, doseId));
+    const callsAllowed = owner ? await this.plan.callsAllowed(owner.familyId, owner.name === DEMO_FAMILY) : true;
     const [lastCall] = await this.db
       .select({ outcome: voiceCalls.outcome, note: voiceCalls.note, transcript: voiceCalls.transcript })
       .from(voiceCalls)
@@ -108,7 +121,7 @@ export class DemoService {
       doseId,
       startedAt: dose.scheduledAt,
       status: dose.status,
-      ...demoSteps({ dose, remind, call, alert, lastCall: lastCall ?? null }),
+      ...demoSteps({ dose, remind, call, alert, lastCall: lastCall ?? null, callsAllowed }),
       transcript: lastCall?.transcript ?? [],
     };
   }

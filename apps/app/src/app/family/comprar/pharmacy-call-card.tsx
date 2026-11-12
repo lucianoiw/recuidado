@@ -29,7 +29,7 @@ const ENDED: Partial<Record<PharmacyInquiry["status"], string>> = {
 };
 
 /** "Perguntar às farmácias": the agent calls them at the same time, asks stock and price, and compares. */
-export function PharmacyCallCard({ medications }: { medications: Medication[] }) {
+export function PharmacyCallCard({ medications, calls = true }: { medications: Medication[]; calls?: boolean }) {
   const [round, setRound] = useState<PharmacyRound>({ inquiry: null, inquiries: [] });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -108,7 +108,12 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
         </div>
       ) : null}
 
-      {!calling ? (
+      {!calls ? (
+        <p className="flex items-center gap-2 rounded-2xl bg-blush p-3.5 text-[15px] font-semibold text-accent-ink">
+          <PhoneIcon size={18} className="shrink-0" />
+          Ligação é do plano pago, que chega em breve.
+        </p>
+      ) : !calling ? (
         <Button variant="secondary" onClick={ask} disabled={busy || asked.length === 0}>
           <PhoneIcon size={20} />
           {busy ? "Ligando..." : inquiries.length > 0 ? "Perguntar de novo" : "Ligar e perguntar"}

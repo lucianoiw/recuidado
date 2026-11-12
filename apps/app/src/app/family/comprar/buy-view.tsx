@@ -68,7 +68,7 @@ export function BuyView() {
             <SplitPix month={month} isDemo={data.isDemo ?? false} onChanged={reloadMonth} />
           ) : null}
 
-          <PharmacyCallCard medications={paid} />
+          <PharmacyCallCard medications={paid} calls={data.calls !== false} />
 
           <section className="flex flex-col gap-2">
             <h2 className="text-[18px] font-semibold">Farmácias perto dela</h2>

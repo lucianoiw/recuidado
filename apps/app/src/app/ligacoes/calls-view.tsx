@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { API_URL } from "@/lib/api";
+import { API_URL, apiFetch } from "@/lib/api";
+import { authHeader } from "@/lib/session";
 import { Logo } from "@/components/ui";
 
 type Kind = "reminder" | "recall" | "check_in" | "caregiver" | "pharmacy";
@@ -85,7 +86,35 @@ function Timeline({ events }: { events: CallEvent[] }) {
   );
 }
 
-function CallCard({ call }: { call: CallLog }) {
+/** Signed in: the family's own calls, so the audio needs the Authorization header an <audio src> cannot send. */
+function SignedRecording({ sessionId }: { sessionId: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+  const path = `/call-logs/${encodeURIComponent(sessionId)}/recording`;
+
+  async function load() {
+    try {
+      const res = await apiFetch(`${path}?as=json`, { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      const { url } = (await res.json()) as { url: string | null };
+      if (url) return setSrc(url);
+      const audio = await apiFetch(path, { cache: "no-store" });
+      if (!audio.ok) throw new Error(String(audio.status));
+      setSrc(URL.createObjectURL(await audio.blob()));
+    } catch {
+      setFailed(true);
+    }
+  }
+
+  if (src) return <audio controls autoPlay className="w-full" src={src} />;
+  return (
+    <button type="button" onClick={() => void load()} className="self-start rounded-full bg-ink px-4 py-2 text-[15px] font-semibold text-white">
+      {failed ? "Não deu para abrir. Tentar de novo" : "Ouvir a gravação"}
+    </button>
+  );
+}
+
+function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
   const kind = call.kind ? KIND[call.kind] : { label: "Ligação", other: "Outro lado" };
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm sm:p-5">
@@ -97,7 +126,9 @@ function CallCard({ call }: { call: CallLog }) {
           {call.outcome ? ` · ${OUTCOME[call.outcome] ?? call.outcome}` : ""}
         </span>
       </header>
-      {call.hasRecording ? (
+      {call.hasRecording && signedIn ? (
+        <SignedRecording sessionId={call.sessionId} />
+      ) : call.hasRecording ? (
         <audio controls preload="none" className="w-full" src={`${API_URL}/call-logs/${encodeURIComponent(call.sessionId)}/recording`} />
       ) : (
         <p className="text-[14px] text-muted">Sem gravação desta ligação.</p>
@@ -137,10 +168,12 @@ function CallCard({ call }: { call: CallLog }) {
 export function CallsView() {
   const [calls, setCalls] = useState<CallLog[] | null>(null);
   const [error, setError] = useState(false);
+  // Visitors see the demo family's calls; a signed-in caregiver sees the own family's.
+  const [signedIn, setSignedIn] = useState(false);
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/call-logs?limit=40`, { cache: "no-store" });
+      const res = await apiFetch(`/call-logs?limit=40`, { cache: "no-store" });
       if (!res.ok) throw new Error(String(res.status));
       setCalls((await res.json()) as CallLog[]);
       setError(false);
@@ -151,6 +184,7 @@ export function CallsView() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSignedIn(Object.keys(authHeader()).length > 0);
     void load();
     const timer = setInterval(() => void load(), 15_000);
     return () => clearInterval(timer);
@@ -163,15 +197,15 @@ export function CallsView() {
           <Logo size={26} variant="full" />
           <h1 className="font-display text-[32px] leading-[1.08]">Ligações da prova de conceito</h1>
           <p className="max-w-2xl text-[16px] text-muted">
-            Cada ligação que a assistente fez para a família de demonstração: o áudio gravado, o que cada lado disse e o que o
-            sistema fez em cada momento (registro da resposta, frase garantida pelo código, teclas na farmácia). Dados de teste;
-            as vozes são da equipe.
+            Cada ligação que a assistente fez para {signedIn ? "a sua família" : "a família de demonstração"}: o áudio gravado,
+            o que cada lado disse e o que o sistema fez em cada momento (registro da resposta, frase garantida pelo código,
+            teclas na farmácia).{signedIn ? "" : " Dados de teste; as vozes são da equipe."}
           </p>
         </header>
         {error && <p className="text-[15px] font-bold text-red-700">Não foi possível carregar as ligações agora.</p>}
         {calls === null && !error && <p className="text-[15px] text-muted">Carregando…</p>}
         {calls?.length === 0 && <p className="text-[15px] text-muted">Nenhuma ligação registrada ainda.</p>}
-        {calls?.map((c) => <CallCard key={c.sessionId} call={c} />)}
+        {calls?.map((c) => <CallCard key={c.sessionId} call={c} signedIn={signedIn} />)}
       </div>
     </main>
   );

@@ -286,7 +286,7 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
 
 - **Gravação.** Toda ligação passa pelo Asterisk. Logo que a ligação é criada, o serviço de voz pede pelo AMI um `MixMonitor` no canal da IA (as duas vozes, WAV 16 kHz). É só uma cópia do áudio: a ligação não espera por ela, e a latência da voz não muda. Quando a ligação acaba, o Asterisk envia o arquivo para `POST /call-logs/:sessao/recording` em segundo plano (`deploy/asterisk/upload-recording.sh`), e a API guarda no Cloudflare R2 (`R2_*`), ou no Postgres se o R2 não estiver configurado.
 - **Linha do tempo.** O serviço de voz guarda as linhas de log de cada ligação com o tempo desde o início e envia junto com a transcrição para `POST /call-logs`. A tela mostra os passos principais e, num clique, todos.
-- **Privacidade.** A lista e os áudios são públicos só para a família de demonstração (dados sintéticos, vozes da equipe). Transcrição, passos e áudio guardado no Postgres somem depois de `VOICE_TRANSCRIPT_RETENTION_DAYS`; no R2, por regra de ciclo de vida do bucket. Desligar: `RECORD_CALLS=off` no serviço de voz.
+- **Privacidade.** Sem login, a lista e os áudios mostram só a família de demonstração (dados sintéticos, vozes da equipe). Com login, cada família vê só as próprias ligações. Transcrição, passos e áudio guardado no Postgres somem depois de `VOICE_TRANSCRIPT_RETENTION_DAYS`; no R2, por regra de ciclo de vida do bucket. Desligar: `RECORD_CALLS=off` no serviço de voz.
 
 ## Dividir ou revezar a conta
 
@@ -306,9 +306,22 @@ O Recuidado é grátis em tudo que não custa nada a cada uso: leitura da receit
 
 - **Assinatura recorrente de verdade**, pela API v2 da AbacatePay: um produto mensal (`cycle: MONTHLY`, `trialDays: 7`) e um checkout de assinatura hospedado por ela (`POST /v2/subscriptions/create`). O id da família vai como `externalId`.
 - **Webhook** em `POST /billing/webhook`: `subscription.completed` e `trial_started` ativam, `renewed` mantém, `cancelled` desliga. A origem é provada pelo secret do webhook, comparado em tempo constante. `payment_failed` não desliga nada, porque a AbacatePay tenta de novo e cancela sozinha quando as tentativas acabam.
-- **Bloqueio das ligações**: com `ABACATEPAY_API_KEY` configurada, o worker só liga para família com plano ativo. Sem plano, ela continua recebendo o push e a família continua sendo avisada. A ligação de volta depois de uma emergência sai mesmo se o plano acabou no meio. A Família Demo nunca é bloqueada.
+- **Bloqueio das ligações** (`PlanGate`, `packages/core/src/billing`): o worker e a API só ligam para família com plano ativo, para a Família Demo ou para família com um cuidador listado em `PLAN_INCLUDED_EMAILS`. Vale sempre, com ou sem AbacatePay configurada. Sem plano, ela continua recebendo o push e a família continua sendo avisada por push e e-mail. A ligação de volta depois de uma emergência sai mesmo se o plano acabou no meio.
 - **Só cartão no checkout**: o teste grátis da AbacatePay só existe no cartão (ela cobra R$ 0 e guarda o cartão). O Pix Automático também é aceito pela API, mas sem teste grátis.
 - **Ambiente de teste**: na demo a conta fica no Modo Teste da AbacatePay. O checkout mostra "Simular Pagamento" e aceita o cartão 4242 4242 4242 4242; nada é cobrado.
+
+### Plano grátis e a conta zero (12/11/2026)
+
+Ninguém consegue pagar ainda, então o checkout fica desligado (`PLAN_CHECKOUT_ENABLED=false`, o padrão). Motivo: com a AbacatePay em Modo Teste, qualquer pessoa que tocasse em "Simular Pagamento" ganharia ligações de graça, e cada ligação custa dinheiro de verdade.
+
+- **Plano grátis completo.** Cadastro por e-mail, receita (foto ou um por um), Farmácia Popular, preço CMED, divisão ou rodízio entre irmãos com Pix, convite por e-mail, link do app da mãe, farmácias perto, lembrete por push, "Tomei", aviso para a família por push e e-mail, e a demo de 2 minutos sem a ligação.
+- **Ligação aparece como "plano pago, em breve".** A API diz em `GET /family` (`calls`) e em `GET /auth/me` (`calls`, já no cadastro, antes de existir família) se a conta liga. Sem ligação, as telas trocam a promessa de ligar por "plano pago, em breve": opção "Não usa celular" do cadastro, Celular dela, Perguntar às farmácias, Primeiro contato (some), Plano, demo de 2 minutos e as frases do app da mãe.
+- **Conta da equipe liga.** `PLAN_INCLUDED_EMAILS` (api e worker) lista os e-mails cujas famílias ligam sem pagar. Só conta quem já entrou na família (convite pendente não libera). É assim que a conta zero do vídeo liga. O número dela também precisa estar em `CALL_ALLOWED_NUMBERS` do serviço de voz.
+- **Demo de 2 minutos e painel de ligações seguem quem está logado.** `POST /demo/run` roda na família do cuidador logado (visitante continua na Família Demo), com uma trava por família. `/ligacoes` mostra as ligações da própria família; o áudio é buscado com a sessão (`?as=json` devolve o link assinado do R2), porque um `<audio src>` não manda o cabeçalho de login.
+
+### Apagar o banco para a conta zero
+
+`WIPE_DATA_ON_BOOT=<rótulo>` na `api` apaga todas as linhas do Postgres no próximo boot (o esquema e as migrações ficam) e limpa a fila de doses no Redis. Cada rótulo apaga uma vez só: uma marca no Redis lembra, então redeploys seguintes mantêm os dados. Depois do apagão o boot recria a Família Demo (`DEMO_SEED_ENABLED`). Passos: pôr a variável, redeploy da `api`, reiniciar o `worker` (ele recria o planejador de hora em hora), tirar a variável. Gravações e fotos no R2 não são apagadas, mas nada mais aponta para elas.
 
 ## Resultados medidos
 

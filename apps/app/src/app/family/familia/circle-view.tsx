@@ -77,7 +77,8 @@ export function CircleView() {
         </ul>
       </section>
 
-      <FirstContact caregivers={data.caregivers} patient={patient} onSaved={reload} />
+      {/* Who the call reaches in an emergency: only with calls (the paid plan). */}
+      {data.calls !== false ? <FirstContact caregivers={data.caregivers} patient={patient} onSaved={reload} /> : null}
 
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
         <h2 className="flex items-center gap-2 text-[18px] font-semibold">
@@ -105,7 +106,9 @@ export function CircleView() {
       >
         <span className="flex flex-col">
           <b>Plano</b>
-          <span className="text-[15px] text-muted">Ligações para quem não usa celular</span>
+          <span className="text-[15px] text-muted">
+            {data.calls === false ? "Grátis. Ligações no plano pago, em breve" : "Ligações para quem não usa celular"}
+          </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />
       </Link>

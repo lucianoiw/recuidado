@@ -39,7 +39,9 @@ export function PhoneSetupView() {
         ))}
       </ol>
       <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
-        Ela não usa celular? Tudo bem: a gente liga no horário de cada remédio.
+        {data?.calls === false
+          ? "Ela não usa celular? A ligação no horário de cada remédio é do plano pago, que chega em breve."
+          : "Ela não usa celular? Tudo bem: a gente liga no horário de cada remédio."}
       </p>
       <div className="mt-auto pt-2">
         <Link href="/family" className={buttonClass()}>
