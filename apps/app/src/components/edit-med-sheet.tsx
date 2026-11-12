@@ -47,6 +47,9 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         const hit = rs.find((r) => r.name.trim().toLowerCase() === key) ?? rs[0];
         const list = hit ? strengthChoices(hit).map((c) => c.strength) : [];
         setChoices(list);
+        // "5MG" saved from the prescription is the "5 mg" of the list: select it.
+        const same = list.find((c) => c.replace(/\s/g, "").toLowerCase() === (med.strength ?? "").replace(/\s/g, "").toLowerCase());
+        if (same) setStrength(same);
       },
       () => {},
     );

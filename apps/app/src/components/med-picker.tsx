@@ -25,6 +25,9 @@ export async function matchMedication(name: string, ingredient?: string | null):
     });
     if (hits.length === 1) return hits[0]!;
     if (hits.length > 1) return null;
+    // A brand written as such ("Entresto"): only when exactly one product has that name.
+    const brands = results.filter((m) => m.kind === "brand" && fold(m.name) === fold(wanted));
+    if (brands.length === 1) return brands[0]!;
   }
   return null;
 }
