@@ -37,6 +37,28 @@ import {
 
 const TOTAL = 3;
 
+
+/** How the family calls the patient: a title and the first name ("Dona Maria"), or just the name. */
+const TITLES = { female: ["Dona", "Senhora", "Doutora", ""], male: ["Seu", "Senhor", "Doutor", ""] } as const;
+type Title = (typeof TITLES)["female" | "male"][number];
+
+function titleOf(nickname: string, gender: "female" | "male"): Title {
+  const first = nickname.trim().split(/\s+/)[0] ?? "";
+  if (!nickname.trim()) return TITLES[gender][0];
+  return (TITLES[gender] as readonly string[]).includes(first) ? (first as Title) : "";
+}
+
+function swapTitle(t: Title, gender: "female" | "male"): Title {
+  const from = gender === "male" ? TITLES.female : TITLES.male;
+  const i = (from as readonly string[]).indexOf(t);
+  return i >= 0 ? TITLES[gender][i]! : t;
+}
+
+function callAs(title: Title, name: string): string {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  return [title, first].filter(Boolean).join(" ");
+}
+
 export function OnboardingFlow() {
   const router = useRouter();
   const params = useSearchParams();
@@ -174,25 +196,33 @@ export function OnboardingFlow() {
         <>
           <Header title="Quem vamos cuidar?" />
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Nome" value={p.name} onValue={(v) => patch("patient", { name: v })} placeholder="Maria Helena" aria-invalid={tried && p.name.trim().length < 2} />
-              <Field label="Como chamar" value={p.nickname} onValue={(v) => patch("patient", { nickname: v })} placeholder="Dona Maria" />
-            </div>
+            <Field
+              label="Nome"
+              value={p.name}
+              onValue={(v) => patch("patient", { name: v, nickname: callAs(titleOf(p.nickname, p.gender), v) })}
+              placeholder="Maria Helena"
+              aria-invalid={tried && p.name.trim().length < 2}
+            />
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-2 text-[15px] font-semibold">Na ligação, a assistente fala</legend>
+              <legend className="mb-2 text-[15px] font-semibold">É ele ou ela?</legend>
               <div className="grid grid-cols-2 gap-3">
                 {([
-                  { value: "female", label: "A senhora" },
-                  { value: "male", label: "O senhor" },
+                  { value: "female", label: "Ela" },
+                  { value: "male", label: "Ele" },
                 ] as const).map((o) => (
                   <button
                     key={o.value}
                     type="button"
                     role="radio"
                     aria-checked={p.gender === o.value}
-                    onClick={() => patch("patient", { gender: o.value })}
+                    onClick={() =>
+                      patch("patient", {
+                        gender: o.value,
+                        nickname: callAs(swapTitle(titleOf(p.nickname, p.gender), o.value), p.name),
+                      })
+                    }
                     className={cn(
-                      "rounded-2xl bg-surface p-3.5 text-[15px] font-semibold",
+                      "min-h-12 rounded-2xl bg-surface p-3 text-[16px] font-semibold",
                       p.gender === o.value ? "border-2 border-brand bg-[#f2f8f6]" : "border-[1.5px] border-line-soft",
                     )}
                   >
@@ -200,6 +230,35 @@ export function OnboardingFlow() {
                   </button>
                 ))}
               </div>
+            </fieldset>
+            <fieldset className="flex flex-col gap-2">
+              <legend className="mb-2 text-[15px] font-semibold">Como a família chama</legend>
+              <div className="flex flex-wrap gap-2" role="radiogroup">
+                {TITLES[p.gender].map((t) => {
+                  const on = titleOf(p.nickname, p.gender) === t;
+                  return (
+                    <button
+                      key={t || "nome"}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      onClick={() => patch("patient", { nickname: callAs(t, p.name) })}
+                      className={cn(
+                        "min-h-11 rounded-full px-4 text-[16px] font-semibold",
+                        on ? "bg-ink text-white" : "border-[1.5px] border-line-soft bg-surface text-ink",
+                      )}
+                    >
+                      {t || "Só o nome"}
+                    </button>
+                  );
+                })}
+              </div>
+              {p.name.trim() ? (
+                <span className="text-[15px] text-muted">
+                  Na ligação e no app: <b className="text-ink">{callAs(titleOf(p.nickname, p.gender), p.name)}</b>. A
+                  assistente fala &ldquo;{p.gender === "male" ? "o senhor" : "a senhora"}&rdquo;.
+                </span>
+              ) : null}
             </fieldset>
             <Field
               label="Telefone, para a ligação"
