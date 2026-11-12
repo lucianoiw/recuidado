@@ -1,0 +1,491 @@
+{
+  "program": {
+    "id": "vale_mais_saude",
+    "name": "Vale Mais Saúde (desconto do laboratório Novartis)",
+    "kind": "discount",
+    "level": "private",
+    "region": "BR",
+    "channel": "Cadastro no site valemaissaude.com.br, pelo telefone 0800 707 1080 ou na farmácia. O desconto sai no caixa da farmácia.",
+    "sourceUrl": "https://www.valemaissaude.com.br/cadastrar",
+    "version": "2026-11-12",
+    "documents": [
+      "CPF de quem faz o cadastro",
+      "Receita com o CRM do médico"
+    ],
+    "rules": [
+      {
+        "kind": "note",
+        "text": "Desconto só na marca do laboratório, não no genérico. O valor aparece na farmácia."
+      },
+      {
+        "kind": "note",
+        "text": "Programa do laboratório, não do SUS. O Recuidado não faz o cadastro pela família."
+      }
+    ]
+  },
+  "items": [
+    {
+      "programId": "vale_mais_saude",
+      "key": "sacubitril-valsartana-50-mg-comprimido",
+      "name": "Entresto (sacubitril valsartana 50 mg)",
+      "activeIngredients": [
+        "sacubitril valsartana"
+      ],
+      "looseKey": "sacubitril valsartana",
+      "looseMatchKey": "sacubitril valsartana 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Entresto",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "sacubitril-valsartana-100-mg-comprimido",
+      "name": "Entresto (sacubitril valsartana 100 mg)",
+      "activeIngredients": [
+        "sacubitril valsartana"
+      ],
+      "looseKey": "sacubitril valsartana",
+      "looseMatchKey": "sacubitril valsartana 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Entresto",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "sacubitril-valsartana-200-mg-comprimido",
+      "name": "Entresto (sacubitril valsartana 200 mg)",
+      "activeIngredients": [
+        "sacubitril valsartana"
+      ],
+      "looseKey": "sacubitril valsartana",
+      "looseMatchKey": "sacubitril valsartana 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Entresto",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-80-mg-comprimido",
+      "name": "Diovan (valsartana 80 mg)",
+      "activeIngredients": [
+        "valsartana"
+      ],
+      "looseKey": "valsartana",
+      "looseMatchKey": "valsartana 80 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-160-mg-comprimido",
+      "name": "Diovan (valsartana 160 mg)",
+      "activeIngredients": [
+        "valsartana"
+      ],
+      "looseKey": "valsartana",
+      "looseMatchKey": "valsartana 160 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-320-mg-comprimido",
+      "name": "Diovan (valsartana 320 mg)",
+      "activeIngredients": [
+        "valsartana"
+      ],
+      "looseKey": "valsartana",
+      "looseMatchKey": "valsartana 320 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-hidroclorotiazida-80-mg-12-5-mg-comprimido",
+      "name": "Diovan HCT (valsartana + hidroclorotiazida 80 mg + 12,5 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida + valsartana",
+      "looseMatchKey": "hidroclorotiazida + valsartana 12.5 mg + 80 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan HCT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-hidroclorotiazida-160-mg-12-5-mg-comprimido",
+      "name": "Diovan HCT (valsartana + hidroclorotiazida 160 mg + 12,5 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida + valsartana",
+      "looseMatchKey": "hidroclorotiazida + valsartana 12.5 mg + 160 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan HCT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-hidroclorotiazida-160-mg-25-mg-comprimido",
+      "name": "Diovan HCT (valsartana + hidroclorotiazida 160 mg + 25 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida + valsartana",
+      "looseMatchKey": "hidroclorotiazida + valsartana 160 mg + 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan HCT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-hidroclorotiazida-320-mg-12-5-mg-comprimido",
+      "name": "Diovan HCT (valsartana + hidroclorotiazida 320 mg + 12,5 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida + valsartana",
+      "looseMatchKey": "hidroclorotiazida + valsartana 12.5 mg + 320 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan HCT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-hidroclorotiazida-320-mg-25-mg-comprimido",
+      "name": "Diovan HCT (valsartana + hidroclorotiazida 320 mg + 25 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida + valsartana",
+      "looseMatchKey": "hidroclorotiazida + valsartana 25 mg + 320 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan HCT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-anlodipino-80-mg-5-mg-comprimido",
+      "name": "Diovan Amlo Fix (valsartana + anlodipino 80 mg + 5 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino + valsartana",
+      "looseMatchKey": "anlodipino + valsartana 5 mg + 80 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan Amlo Fix",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-anlodipino-160-mg-5-mg-comprimido",
+      "name": "Diovan Amlo Fix (valsartana + anlodipino 160 mg + 5 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino + valsartana",
+      "looseMatchKey": "anlodipino + valsartana 160 mg + 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan Amlo Fix",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-anlodipino-160-mg-10-mg-comprimido",
+      "name": "Diovan Amlo Fix (valsartana + anlodipino 160 mg + 10 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino + valsartana",
+      "looseMatchKey": "anlodipino + valsartana 10 mg + 160 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan Amlo Fix",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-anlodipino-320-mg-5-mg-comprimido",
+      "name": "Diovan Amlo Fix (valsartana + anlodipino 320 mg + 5 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino + valsartana",
+      "looseMatchKey": "anlodipino + valsartana 320 mg + 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan Amlo Fix",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "valsartana-anlodipino-320-mg-10-mg-comprimido",
+      "name": "Diovan Amlo Fix (valsartana + anlodipino 320 mg + 10 mg)",
+      "activeIngredients": [
+        "valsartana",
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino + valsartana",
+      "looseMatchKey": "anlodipino + valsartana 10 mg + 320 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Diovan Amlo Fix",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "vildagliptina-50-mg-comprimido",
+      "name": "Galvus (vildagliptina 50 mg)",
+      "activeIngredients": [
+        "vildagliptina"
+      ],
+      "looseKey": "vildagliptina",
+      "looseMatchKey": "vildagliptina 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Galvus",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "vildagliptina-metformina-50-mg-500-mg-comprimido",
+      "name": "Galvus Met (vildagliptina + metformina 50 mg + 500 mg)",
+      "activeIngredients": [
+        "vildagliptina",
+        "metformina"
+      ],
+      "looseKey": "metformina + vildagliptina",
+      "looseMatchKey": "metformina + vildagliptina 50 mg + 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Galvus Met",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "vildagliptina-metformina-50-mg-850-mg-comprimido",
+      "name": "Galvus Met (vildagliptina + metformina 50 mg + 850 mg)",
+      "activeIngredients": [
+        "vildagliptina",
+        "metformina"
+      ],
+      "looseKey": "metformina + vildagliptina",
+      "looseMatchKey": "metformina + vildagliptina 50 mg + 850 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Galvus Met",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "vildagliptina-metformina-50-mg-1000-mg-comprimido",
+      "name": "Galvus Met (vildagliptina + metformina 50 mg + 1000 mg)",
+      "activeIngredients": [
+        "vildagliptina",
+        "metformina"
+      ],
+      "looseKey": "metformina + vildagliptina",
+      "looseMatchKey": "metformina + vildagliptina 1000 mg + 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Galvus Met",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "letrozol-2-5-mg-comprimido",
+      "name": "Femara (letrozol 2,5 mg)",
+      "activeIngredients": [
+        "letrozol"
+      ],
+      "looseKey": "letrozol",
+      "looseMatchKey": "letrozol 2.5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Femara",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "oxcarbazepina-300-mg-comprimido",
+      "name": "Trileptal (oxcarbazepina 300 mg)",
+      "activeIngredients": [
+        "oxcarbazepina"
+      ],
+      "looseKey": "oxcarbazepina",
+      "looseMatchKey": "oxcarbazepina 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Trileptal",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "oxcarbazepina-600-mg-comprimido",
+      "name": "Trileptal (oxcarbazepina 600 mg)",
+      "activeIngredients": [
+        "oxcarbazepina"
+      ],
+      "looseKey": "oxcarbazepina",
+      "looseMatchKey": "oxcarbazepina 600 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "Marca Trileptal",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "carbamazepina-200-mg-comprimido-de-liberacao-controlada-cr",
+      "name": "Tegretol CR (carbamazepina 200 mg)",
+      "activeIngredients": [
+        "carbamazepina"
+      ],
+      "looseKey": "carbamazepina",
+      "looseMatchKey": "carbamazepina 200 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": "Marca Tegretol CR",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "vale_mais_saude",
+      "key": "carbamazepina-400-mg-comprimido-de-liberacao-controlada-cr",
+      "name": "Tegretol CR (carbamazepina 400 mg)",
+      "activeIngredients": [
+        "carbamazepina"
+      ],
+      "looseKey": "carbamazepina",
+      "looseMatchKey": "carbamazepina 400 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": "Marca Tegretol CR",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    }
+  ]
+}

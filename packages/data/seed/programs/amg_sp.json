@@ -1,0 +1,152 @@
+{
+  "program": {
+    "id": "amg_sp",
+    "name": "Automonitoramento Glicêmico, AMG (Prefeitura de São Paulo)",
+    "kind": "supplies",
+    "level": "municipal",
+    "region": "3550308",
+    "channel": "Cadastro em qualquer UBS, com o formulário preenchido pelo médico. O aparelho fica emprestado e as tiras, lancetas e seringas saem todo mês, com retirada agendada.",
+    "sourceUrl": "https://prefeitura.sp.gov.br/web/saude/w/programas/amg-programa-de-automonitoramento-glicemico",
+    "version": "2026-11-12",
+    "documents": [
+      "Cartão do SUS",
+      "Formulário de solicitação de insumos AMG (versão 2026), preenchido pelo médico"
+    ],
+    "rules": [
+      {
+        "kind": "residence",
+        "value": "3550308",
+        "text": "para quem mora na cidade de São Paulo"
+      },
+      {
+        "kind": "condition",
+        "value": [
+          "Diabetes com uso de insulina"
+        ],
+        "text": "para quem tem diabetes e usa insulina"
+      },
+      {
+        "kind": "note",
+        "text": "Em todo o Brasil, a Lei 11.347/2006 garante insulina e material de aplicação e medida para quem usa insulina."
+      }
+    ]
+  },
+  "items": [
+    {
+      "programId": "amg_sp",
+      "key": "insulina-humana-nph-100-ui-ml-suspensao-injetavel",
+      "name": "insulina humana NPH 100 UI/ml suspensão injetável",
+      "activeIngredients": [
+        "insulina humana NPH"
+      ],
+      "looseKey": "insulina humana",
+      "looseMatchKey": "insulina humana 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "amg_sp",
+      "key": "insulina-humana-regular-100-ui-ml-solucao-injetavel",
+      "name": "insulina humana regular 100 UI/ml solução injetável",
+      "activeIngredients": [
+        "insulina humana regular"
+      ],
+      "looseKey": "insulina humana regular",
+      "looseMatchKey": "insulina humana regular 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "amg_sp",
+      "key": "aparelho-medidor-de-glicose-emprestado",
+      "name": "Aparelho medidor de glicose (emprestado)",
+      "activeIngredients": [],
+      "looseKey": null,
+      "looseMatchKey": null,
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "amg_sp",
+      "key": "tiras-para-medir-glicose",
+      "name": "Tiras para medir glicose",
+      "activeIngredients": [],
+      "looseKey": null,
+      "looseMatchKey": null,
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "amg_sp",
+      "key": "lancetas",
+      "name": "Lancetas",
+      "activeIngredients": [],
+      "looseKey": null,
+      "looseMatchKey": null,
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "amg_sp",
+      "key": "seringas-com-agulha-para-insulina",
+      "name": "Seringas com agulha para insulina",
+      "activeIngredients": [],
+      "looseKey": null,
+      "looseMatchKey": null,
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "amg_sp",
+      "key": "coletor-para-descarte-de-agulhas",
+      "name": "Coletor para descarte de agulhas",
+      "activeIngredients": [],
+      "looseKey": null,
+      "looseMatchKey": null,
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    }
+  ]
+}

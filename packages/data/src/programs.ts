@@ -78,7 +78,7 @@ export interface ProgramFile {
 
 /** "XR", "LP", "liberação prolongada"...: a different product from the plain tablet. */
 const EXTENDED_RELEASE =
-  /\b(xr|xl|lp|sr|cr|od|retard|a[cç][aã]o prolongada|libera[cç][aã]o (prolongada|controlada|modificada|estendida|lenta))\b/i;
+  /\b(xr|xl|lp|sr|cr|mr|od|retard|a[cç][aã]o prolongada|libera[cç][aã]o (prolongada|controlada|modificada|estendida|lenta))\b/i;
 
 export function isExtendedRelease(text: string): boolean {
   return EXTENDED_RELEASE.test(text);
@@ -224,9 +224,15 @@ export class ProgramIndex {
       if (joined.exact.length > 0 || joined.highCostEntries.length > 0) found = joined;
     }
     const xr = isExtendedRelease(`${name ?? ""} ${activeIngredient} ${strength ?? ""}`);
+    const plainExists = found.exact.some((e) => e.program.id !== PROGRAM_IDS.highCost && !e.item.extendedRelease);
     const entries = [...found.exact.filter((e) => e.program.id !== PROGRAM_IDS.highCost), ...found.highCostEntries]
-      // An XR prescription only matches XR items, and a plain one only plain items when the list has both.
-      .filter((e) => !xr || e.item.extendedRelease || e.program.id === PROGRAM_IDS.highCost);
+      // An XR prescription only matches XR items. A plain one skips XR items when the plain product exists
+      // in some list (plain carbamazepina is not Tegretol CR); when only XR exists (gliclazida 60 mg is sold
+      // only as modified release), it still matches. Alto Custo is per drug.
+      .filter((e) => {
+        if (e.program.id === PROGRAM_IDS.highCost) return true;
+        return xr ? e.item.extendedRelease : !e.item.extendedRelease || !plainExists;
+      });
     const matches = dedupe(entries).map(({ item, program }) => toMatch(item, program, patient));
 
     const usable = (id: string) => matches.find((m) => m.programId === id && m.access === "open" && m.status !== "no");

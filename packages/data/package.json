@@ -28,6 +28,7 @@
     "link:prices": "tsx src/link-free-items-prices.ts",
     "link:free-access": "tsx src/link-free-access.ts",
     "build:programs": "tsx src/build-programs.ts",
+    "build:curated-programs": "tsx src/build-curated-programs.ts",
     "report:coverage": "tsx src/report-coverage.ts",
     "fetch:all": "pnpm fetch:free-items && pnpm fetch:cmed && pnpm fetch:pharmacies && pnpm fetch:remume && pnpm fetch:ceaf && pnpm fetch:sus-units && pnpm fetch:remediosp && pnpm link:prices && pnpm link:free-access && pnpm build:programs && pnpm report:coverage",
     "test": "vitest run",

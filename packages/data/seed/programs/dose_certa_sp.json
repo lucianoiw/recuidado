@@ -1,0 +1,967 @@
+{
+  "program": {
+    "id": "dose_certa_sp",
+    "name": "Farmácia Dose Certa (Governo do Estado de São Paulo)",
+    "kind": "free",
+    "level": "state",
+    "region": "3550308",
+    "channel": "Nas Farmácias Dose Certa do Estado, de segunda a sexta, das 8h às 17h: metrô Ana Rosa, Brás, Clínicas, Corinthians-Itaquera, Santana, Saúde, Sé e Vila Mariana; CPTM Guaianazes e Santo Amaro; terminal São Mateus; hospitais Sapopemba, Pedreira, Santa Marcelina e Mandaqui.",
+    "sourceUrl": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/farmacia-dose-certa",
+    "version": "2026-11-12",
+    "documents": [
+      "Receita do SUS do Estado de São Paulo, com o nome genérico do remédio",
+      "Cartão do SUS"
+    ],
+    "rules": [
+      {
+        "kind": "note",
+        "text": "A receita tem que ser do SUS e vale 180 dias para remédio de uso contínuo (30 dias para controlado, 10 para antibiótico)."
+      },
+      {
+        "kind": "note",
+        "text": "Receita particular só nas unidades Mandaqui, Pedreira, Guaianazes e Sé, com Cartão do SUS da cidade de São Paulo."
+      }
+    ]
+  },
+  "items": [
+    {
+      "programId": "dose_certa_sp",
+      "key": "acido-acetilsalicilico-100-mg-comprimido",
+      "name": "ácido acetilsalicílico 100 mg comprimido",
+      "activeIngredients": [
+        "ácido acetilsalicílico"
+      ],
+      "looseKey": "acido acetilsalicilico",
+      "looseMatchKey": "acido acetilsalicilico 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "acido-valproico-250-mg-comprimido-ou-capsula",
+      "name": "ácido valproico 250 mg comprimido ou cápsula",
+      "activeIngredients": [
+        "ácido valproico"
+      ],
+      "looseKey": "acido valproico",
+      "looseMatchKey": "acido valproico 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "amitriptilina-25-mg-comprimido",
+      "name": "amitriptilina 25 mg comprimido",
+      "activeIngredients": [
+        "amitriptilina"
+      ],
+      "looseKey": "amitriptilina",
+      "looseMatchKey": "amitriptilina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "amoxicilina-250-mg-5-ml-po-para-suspensao-oral",
+      "name": "amoxicilina 250 mg/5 ml pó para suspensão oral",
+      "activeIngredients": [
+        "amoxicilina"
+      ],
+      "looseKey": "amoxicilina",
+      "looseMatchKey": "amoxicilina 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "amoxicilina-500-mg-capsula",
+      "name": "amoxicilina 500 mg cápsula",
+      "activeIngredients": [
+        "amoxicilina"
+      ],
+      "looseKey": "amoxicilina",
+      "looseMatchKey": "amoxicilina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "benzilpenicilina-benzatina-1-200-000-ui-po-para-suspensao-injetavel",
+      "name": "benzilpenicilina benzatina 1.200.000 UI pó para suspensão injetável",
+      "activeIngredients": [
+        "benzilpenicilina benzatina"
+      ],
+      "looseKey": "benzilpenicilina benzatina",
+      "looseMatchKey": "benzilpenicilina benzatina",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "biperideno-2-mg-comprimido",
+      "name": "biperideno 2 mg comprimido",
+      "activeIngredients": [
+        "biperideno"
+      ],
+      "looseKey": "biperideno",
+      "looseMatchKey": "biperideno 2 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "captopril-25-mg-comprimido",
+      "name": "captopril 25 mg comprimido",
+      "activeIngredients": [
+        "captopril"
+      ],
+      "looseKey": "captopril",
+      "looseMatchKey": "captopril 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "carbamazepina-200-mg-comprimido",
+      "name": "carbamazepina 200 mg comprimido",
+      "activeIngredients": [
+        "carbamazepina"
+      ],
+      "looseKey": "carbamazepina",
+      "looseMatchKey": "carbamazepina 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "carbonato-de-litio-300-mg-comprimido",
+      "name": "carbonato de lítio 300 mg comprimido",
+      "activeIngredients": [
+        "carbonato de lítio"
+      ],
+      "looseKey": "litio",
+      "looseMatchKey": "litio 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "cefalexina-250-mg-5-ml-po-para-suspensao-oral",
+      "name": "cefalexina 250 mg/5 ml pó para suspensão oral",
+      "activeIngredients": [
+        "cefalexina"
+      ],
+      "looseKey": "cefalexina",
+      "looseMatchKey": "cefalexina 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "cefalexina-500-mg-capsula",
+      "name": "cefalexina 500 mg cápsula",
+      "activeIngredients": [
+        "cefalexina"
+      ],
+      "looseKey": "cefalexina",
+      "looseMatchKey": "cefalexina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "cimetidina-200-mg-comprimido",
+      "name": "cimetidina 200 mg comprimido",
+      "activeIngredients": [
+        "cimetidina"
+      ],
+      "looseKey": "cimetidina",
+      "looseMatchKey": "cimetidina 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "clomipramina-25-mg-dragea",
+      "name": "clomipramina 25 mg drágea",
+      "activeIngredients": [
+        "clomipramina"
+      ],
+      "looseKey": "clomipramina",
+      "looseMatchKey": "clomipramina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "clorpromazina-100-mg-comprimido",
+      "name": "clorpromazina 100 mg comprimido",
+      "activeIngredients": [
+        "clorpromazina"
+      ],
+      "looseKey": "clorpromazina",
+      "looseMatchKey": "clorpromazina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "clorpromazina-25-mg-comprimido",
+      "name": "clorpromazina 25 mg comprimido",
+      "activeIngredients": [
+        "clorpromazina"
+      ],
+      "looseKey": "clorpromazina",
+      "looseMatchKey": "clorpromazina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "dexametasona-1-mg-g-creme",
+      "name": "dexametasona 1 mg/g creme",
+      "activeIngredients": [
+        "dexametasona"
+      ],
+      "looseKey": "dexametasona",
+      "looseMatchKey": "dexametasona 1 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "diazepam-10-mg-comprimido",
+      "name": "diazepam 10 mg comprimido",
+      "activeIngredients": [
+        "diazepam"
+      ],
+      "looseKey": "diazepam",
+      "looseMatchKey": "diazepam 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "diclofenaco-sodico-50-mg-comprimido-revestido",
+      "name": "diclofenaco sódico 50 mg comprimido revestido",
+      "activeIngredients": [
+        "diclofenaco sódico"
+      ],
+      "looseKey": "diclofenaco",
+      "looseMatchKey": "diclofenaco 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "digoxina-0-25-mg-comprimido",
+      "name": "digoxina 0,25 mg comprimido",
+      "activeIngredients": [
+        "digoxina"
+      ],
+      "looseKey": "digoxina",
+      "looseMatchKey": "digoxina 0.25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "dipirona-sodica-500-mg-ml-solucao-oral",
+      "name": "dipirona sódica 500 mg/ml solução oral",
+      "activeIngredients": [
+        "dipirona sódica"
+      ],
+      "looseKey": "dipirona",
+      "looseMatchKey": "dipirona 500 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "etinilestradiol-levonorgestrel-0-03-mg-0-15-mg-comprimido",
+      "name": "etinilestradiol + levonorgestrel 0,03 mg + 0,15 mg comprimido",
+      "activeIngredients": [
+        "etinilestradiol",
+        "levonorgestrel"
+      ],
+      "looseKey": "etinilestradiol + levonorgestrel",
+      "looseMatchKey": "etinilestradiol + levonorgestrel 0.03 mg + 0.15 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "fenitoina-100-mg-comprimido",
+      "name": "fenitoína 100 mg comprimido",
+      "activeIngredients": [
+        "fenitoína"
+      ],
+      "looseKey": "fenitoina",
+      "looseMatchKey": "fenitoina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "fenobarbital-100-mg-comprimido",
+      "name": "fenobarbital 100 mg comprimido",
+      "activeIngredients": [
+        "fenobarbital"
+      ],
+      "looseKey": "fenobarbital",
+      "looseMatchKey": "fenobarbital 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "furosemida-40-mg-comprimido",
+      "name": "furosemida 40 mg comprimido",
+      "activeIngredients": [
+        "furosemida"
+      ],
+      "looseKey": "furosemida",
+      "looseMatchKey": "furosemida 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "glibenclamida-5-mg-comprimido",
+      "name": "glibenclamida 5 mg comprimido",
+      "activeIngredients": [
+        "glibenclamida"
+      ],
+      "looseKey": "glibenclamida",
+      "looseMatchKey": "glibenclamida 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "haloperidol-2-mg-ml-solucao-oral",
+      "name": "haloperidol 2 mg/ml solução oral",
+      "activeIngredients": [
+        "haloperidol"
+      ],
+      "looseKey": "haloperidol",
+      "looseMatchKey": "haloperidol 2 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "haloperidol-5-mg-comprimido",
+      "name": "haloperidol 5 mg comprimido",
+      "activeIngredients": [
+        "haloperidol"
+      ],
+      "looseKey": "haloperidol",
+      "looseMatchKey": "haloperidol 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "hidroclorotiazida-25-mg-comprimido",
+      "name": "hidroclorotiazida 25 mg comprimido",
+      "activeIngredients": [
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida",
+      "looseMatchKey": "hidroclorotiazida 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "imipramina-25-mg-comprimido",
+      "name": "imipramina 25 mg comprimido",
+      "activeIngredients": [
+        "imipramina"
+      ],
+      "looseKey": "imipramina",
+      "looseMatchKey": "imipramina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "levomepromazina-40-mg-ml-solucao-oral",
+      "name": "levomepromazina 40 mg/ml solução oral",
+      "activeIngredients": [
+        "levomepromazina"
+      ],
+      "looseKey": "levomepromazina",
+      "looseMatchKey": "levomepromazina 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "levonorgestrel-0-75-mg-comprimido",
+      "name": "levonorgestrel 0,75 mg comprimido",
+      "activeIngredients": [
+        "levonorgestrel"
+      ],
+      "looseKey": "levonorgestrel",
+      "looseMatchKey": "levonorgestrel 0.75 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "mebendazol-100-mg-comprimido",
+      "name": "mebendazol 100 mg comprimido",
+      "activeIngredients": [
+        "mebendazol"
+      ],
+      "looseKey": "mebendazol",
+      "looseMatchKey": "mebendazol 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "mebendazol-100-mg-5-ml-suspensao-oral",
+      "name": "mebendazol 100 mg/5 ml suspensão oral",
+      "activeIngredients": [
+        "mebendazol"
+      ],
+      "looseKey": "mebendazol",
+      "looseMatchKey": "mebendazol 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "medroxiprogesterona-150-mg-solucao-injetavel",
+      "name": "medroxiprogesterona 150 mg solução injetável",
+      "activeIngredients": [
+        "medroxiprogesterona"
+      ],
+      "looseKey": "medroxiprogesterona",
+      "looseMatchKey": "medroxiprogesterona 150 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "metildopa-250-mg-comprimido-revestido",
+      "name": "metildopa 250 mg comprimido revestido",
+      "activeIngredients": [
+        "metildopa"
+      ],
+      "looseKey": "metildopa",
+      "looseMatchKey": "metildopa 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "metoclopramida-10-mg-comprimido",
+      "name": "metoclopramida 10 mg comprimido",
+      "activeIngredients": [
+        "metoclopramida"
+      ],
+      "looseKey": "metoclopramida",
+      "looseMatchKey": "metoclopramida 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "metronidazol-250-mg-comprimido",
+      "name": "metronidazol 250 mg comprimido",
+      "activeIngredients": [
+        "metronidazol"
+      ],
+      "looseKey": "metronidazol",
+      "looseMatchKey": "metronidazol 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "metronidazol-40-mg-ml-suspensao-oral",
+      "name": "metronidazol 40 mg/ml suspensão oral",
+      "activeIngredients": [
+        "metronidazol"
+      ],
+      "looseKey": "metronidazol",
+      "looseMatchKey": "metronidazol 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "naltrexona-50-mg-comprimido-revestido",
+      "name": "naltrexona 50 mg comprimido revestido",
+      "activeIngredients": [
+        "naltrexona"
+      ],
+      "looseKey": "naltrexona",
+      "looseMatchKey": "naltrexona 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "nifedipino-20-mg-comprimido-revestido",
+      "name": "nifedipino 20 mg comprimido revestido",
+      "activeIngredients": [
+        "nifedipino"
+      ],
+      "looseKey": "nifedipino",
+      "looseMatchKey": "nifedipino 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "nitrazepam-5-mg-comprimido",
+      "name": "nitrazepam 5 mg comprimido",
+      "activeIngredients": [
+        "nitrazepam"
+      ],
+      "looseKey": "nitrazepam",
+      "looseMatchKey": "nitrazepam 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "noretisterona-0-35-mg-comprimido",
+      "name": "noretisterona 0,35 mg comprimido",
+      "activeIngredients": [
+        "noretisterona"
+      ],
+      "looseKey": "noretisterona",
+      "looseMatchKey": "noretisterona 0.35 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "nortriptilina-25-mg-comprimido-ou-capsula",
+      "name": "nortriptilina 25 mg comprimido ou cápsula",
+      "activeIngredients": [
+        "nortriptilina"
+      ],
+      "looseKey": "nortriptilina",
+      "looseMatchKey": "nortriptilina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "paracetamol-200-mg-ml-solucao-oral",
+      "name": "paracetamol 200 mg/ml solução oral",
+      "activeIngredients": [
+        "paracetamol"
+      ],
+      "looseKey": "paracetamol",
+      "looseMatchKey": "paracetamol 200 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "prometazina-25-mg-comprimido",
+      "name": "prometazina 25 mg comprimido",
+      "activeIngredients": [
+        "prometazina"
+      ],
+      "looseKey": "prometazina",
+      "looseMatchKey": "prometazina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "propranolol-40-mg-comprimido",
+      "name": "propranolol 40 mg comprimido",
+      "activeIngredients": [
+        "propranolol"
+      ],
+      "looseKey": "propranolol",
+      "looseMatchKey": "propranolol 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "sulfametoxazol-trimetoprima-400-mg-80-mg-comprimido",
+      "name": "sulfametoxazol + trimetoprima 400 mg + 80 mg comprimido",
+      "activeIngredients": [
+        "sulfametoxazol",
+        "trimetoprima"
+      ],
+      "looseKey": "sulfametoxazol + trimetoprima",
+      "looseMatchKey": "sulfametoxazol + trimetoprima 400 mg + 80 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "sulfametoxazol-trimetoprima-200-mg-40-mg-5-ml-suspensao-oral",
+      "name": "sulfametoxazol + trimetoprima 200 mg + 40 mg/5 ml suspensão oral",
+      "activeIngredients": [
+        "sulfametoxazol",
+        "trimetoprima"
+      ],
+      "looseKey": "sulfametoxazol + trimetoprima",
+      "looseMatchKey": "sulfametoxazol + trimetoprima 200 mg + 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "sulfato-ferroso-25-mg-ml-solucao-oral",
+      "name": "sulfato ferroso 25 mg/ml solução oral",
+      "activeIngredients": [
+        "sulfato ferroso"
+      ],
+      "looseKey": "sulfato ferroso",
+      "looseMatchKey": "sulfato ferroso 25 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "tiamina-300-mg-comprimido-revestido",
+      "name": "tiamina 300 mg comprimido revestido",
+      "activeIngredients": [
+        "tiamina"
+      ],
+      "looseKey": "tiamina",
+      "looseMatchKey": "tiamina 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "dose_certa_sp",
+      "key": "tioridazina-100-mg-comprimido",
+      "name": "tioridazina 100 mg comprimido",
+      "activeIngredients": [
+        "tioridazina"
+      ],
+      "looseKey": "tioridazina",
+      "looseMatchKey": "tioridazina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": null,
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    }
+  ]
+}
