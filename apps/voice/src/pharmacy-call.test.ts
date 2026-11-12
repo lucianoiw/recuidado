@@ -272,10 +272,26 @@ test("asks for the introduction when a person talks and the assistant has not sa
 test("does not repeat the introduction once said", async () => {
   const { socket, call } = setup();
   socket.emitEvent({ type: "transport.answered", event_id: "a1" });
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
-  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Pois não?" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia, boa tarde." });
   await new Promise((r) => setTimeout(r, 30));
-  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Pois não?" });
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 1);
+  await call.endCall();
+  await call.result;
+});
+
+test("an introduction said while the AI was muted did not reach the pharmacy: it is asked for again", async () => {
+  const { socket, call, gate } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Drogaria Bom Preço, bom dia, Paulo falando." });
+  await new Promise((r) => setTimeout(r, 30));
+  const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.equal(intro.length, 1);
+  assert.match(intro[0].content, /assistente virtual da Recuidado/);
+  assert.equal(gate.last, "heard");
   await call.endCall();
   await call.result;
 });
