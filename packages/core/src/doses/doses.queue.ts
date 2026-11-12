@@ -16,7 +16,9 @@ export type DoseJob =
   // She said "ainda não" on the call: call once more to confirm.
   | { kind: 'recall'; doseId: string }
   // She reported an emergency on the call: call her back a few minutes later.
-  | { kind: 'check-in'; doseId: string; attempt?: number };
+  | { kind: 'check-in'; doseId: string; attempt?: number }
+  // The caregiver called in an emergency did not hear the message: call the next one in order.
+  | { kind: 'next-contact'; doseId: string; afterId: string; message: string };
 
 export function doseJobId(kind: 'remind' | 'call' | 'alert-family' | 'check-in' | 'recall', doseId: string) {
   return `${kind}-${doseId}`;
