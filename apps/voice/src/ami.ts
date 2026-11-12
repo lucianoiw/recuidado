@@ -6,10 +6,12 @@ export interface VoiceGate {
   mute(): Promise<void>;
   unmute(): Promise<void>;
   close?(): void;
+  /** True when the gate never mutes (no Asterisk Manager Interface): the AI is always heard. */
+  alwaysOpen?: boolean;
 }
 
 /** Used when no Asterisk Manager Interface is configured: the AI is always heard. */
-export const openGate: VoiceGate = { mute: async () => {}, unmute: async () => {} };
+export const openGate: VoiceGate = { mute: async () => {}, unmute: async () => {}, alwaysOpen: true };
 
 export interface AmiConfig {
   host: string;

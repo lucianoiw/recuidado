@@ -5,11 +5,8 @@ RUN apk add --no-cache asterisk asterisk-opus asterisk-srtp curl gettext jq open
 
 COPY templates/ /opt/recuidado/templates/
 COPY entrypoint.sh /opt/recuidado/entrypoint.sh
-# Voice prompts of the test phone menu (URA), synthesized here; the TTS tools are removed after.
-COPY make-test-sounds.sh /opt/recuidado/make-test-sounds.sh
-RUN apk add --no-cache --virtual .tts espeak-ng sox \
- && sh /opt/recuidado/make-test-sounds.sh \
- && apk del .tts
+# Voice prompts of the test phone menus (URA), made with Piper by sounds/make.sh.
+COPY sounds/*.wav /opt/recuidado/sounds/
 # Call recordings (MixMonitor, started by recuidado/voice through AMI) are posted to the API by this script.
 COPY upload-recording.sh /opt/recuidado/upload-recording.sh
 RUN chmod +x /opt/recuidado/entrypoint.sh /opt/recuidado/upload-recording.sh \

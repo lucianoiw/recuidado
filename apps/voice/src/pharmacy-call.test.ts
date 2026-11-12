@@ -39,7 +39,7 @@ class FakeGate implements VoiceGate {
   }
 }
 
-function setup(openingWaitMs = 60_000) {
+function setup(openingWaitMs = 60_000, extra: Partial<ConstructorParameters<typeof PharmacyCall>[0]> = {}) {
   const socket = new FakeSocket();
   const gate = new FakeGate();
   let hangups = 0;
@@ -61,6 +61,10 @@ function setup(openingWaitMs = 60_000) {
     goodbyeMs: 5,
     goodbyeTailMs: 5,
     closeGraceMs: 5,
+    silentLineMs: 60_000,
+    stallMs: 60_000,
+    speechCharMs: 1,
+    ...extra,
   });
   return { socket, call, gate, hangups: () => hangups };
 }
@@ -261,7 +265,7 @@ test("asks for the introduction when a person talks and the assistant has not sa
   socket.emitEvent({ type: "transport.answered", event_id: "a1" });
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia, boa tarde." });
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Um momento." });
-  await new Promise((r) => setTimeout(r, 30));
+  await new Promise((r) => setTimeout(r, 1000));
   const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
   assert.equal(intro.length, 1);
   assert.match(intro[0].content, /assistente virtual da Recuidado/);
@@ -272,10 +276,27 @@ test("asks for the introduction when a person talks and the assistant has not sa
 test("does not repeat the introduction once said", async () => {
   const { socket, call } = setup();
   socket.emitEvent({ type: "transport.answered", event_id: "a1" });
-  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
-  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Pois não?" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia, boa tarde." });
   await new Promise((r) => setTimeout(r, 30));
-  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0);
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Pois não?" });
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 1);
+  await call.endCall();
+  await call.result;
+});
+
+test("an introduction said while the AI was muted did not reach the pharmacy: it is asked for again", async () => {
+  const { socket, call, gate } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi! Aqui é a assistente virtual da Recuidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Drogaria Bom Preço, bom dia, Paulo falando." });
+  await new Promise((r) => setTimeout(r, 1000));
+  const intro = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.equal(intro.length, 1);
+  assert.match(intro[0].content, /assistente virtual da Recuidado/);
+  assert.match(intro[0].content, /did not hear/);
+  assert.equal(gate.last, "heard");
   await call.endCall();
   await call.result;
 });
@@ -573,4 +594,71 @@ test("a goodbye ends the call even when the answer tool never ran, and no 'Alô?
   assert.equal(result.endReason, "hung_up_after_goodbye");
   const nudges = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("nudge_"));
   assert.equal(nudges.length, 0);
+});
+
+test("silence after the hold message: the AI is heard and says only 'Alô?'", async () => {
+  const { socket, call, gate } = setup(60_000, { silentLineMs: 20 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Para falar com um atendente, tecle 3." });
+  socket.emitEvent(fnCall("k1", "press_phone_keys", { keys: "3" }));
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Nossos atendentes estão ocupados. Por favor, aguarde na linha." });
+  await new Promise((r) => setTimeout(r, 60));
+  const alo = socket.sent.filter((e) => e.type === "session.commentary.append") as { content: string }[];
+  assert.ok(alo.length >= 1);
+  assert.match(alo[0].content, /Alô\?/);
+  assert.equal(gate.last, "heard");
+  await call.endCall();
+  await call.result;
+});
+
+test("overlapping speech keeps whole lines; what the AI said while muted stays out of the transcript", async () => {
+  const { socket, call } = setup(60_000, { overlapGlueMs: 25 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o0", delta: "Oi, bom dia!" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Central, bom dia." });
+  await new Promise((r) => setTimeout(r, 1000));
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Aqui é a assistente virtual da Rec" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Pois" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: "uidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i3", delta: " não?" });
+  await call.endCall();
+  const result = await call.result;
+  assert.deepEqual(result.transcript, [
+    { speaker: "patient", text: "Farmácia Central, bom dia." },
+    { speaker: "assistant", text: "Aqui é a assistente virtual da Recuidado." },
+    { speaker: "patient", text: "Pois não?" },
+  ]);
+});
+
+test("the assistant goes silent after the pharmacy answered: one nudge, then the call ends", async () => {
+  const { socket, call } = setup(60_000, { stallMs: 20 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Drogaria, boa tarde." });
+  await new Promise((r) => setTimeout(r, 30));
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Aqui é a assistente virtual da Recuidado. Vocês têm Losartana?" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Tem sim, dez e noventa." });
+  const result = await call.result;
+  assert.equal(result.endReason, "assistant_silent");
+  const stall = (socket.sent as { event_id?: string }[]).filter((e) => e.event_id?.startsWith("stall_"));
+  assert.equal(stall.length, 1);
+});
+
+test("the introduction waits until the model stops its own muted introduction", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Drogaria Vida, boa tarde." });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Oi, boa tarde! Aqui é a assistente" });
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 0, "not while it talks");
+  await new Promise((r) => setTimeout(r, 1200));
+  assert.equal(socket.sent.filter((e) => e.type === "session.commentary.append").length, 1);
+  await call.endCall();
+  await call.result;
+});
+
+test("nothing heard after the introduction: the call ends as a silent line", async () => {
+  const { socket, call } = setup(5, { deadLineMs: 40 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  const result = await call.result;
+  assert.equal(result.endReason, "silent_line");
 });

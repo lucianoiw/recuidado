@@ -1,5 +1,5 @@
 {
-  "id": "dac87b29-f304-43de-a5b9-8f9bc29cb2a7",
+  "id": "76f82b1c-a1d2-42a2-88ec-f58fcd376edb",
   "prevId": "6e891d19-19fe-43cc-acb8-4628f3e5fafd",
   "version": "7",
   "dialect": "postgresql",
@@ -719,12 +719,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "stopped_at": {
-          "name": "stopped_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -982,6 +976,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "simulated": {
+          "name": "simulated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "medications": {
           "name": "medications",

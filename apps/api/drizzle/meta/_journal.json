@@ -159,8 +159,15 @@
     {
       "idx": 22,
       "version": "7",
-      "when": 1794503173353,
-      "tag": "0022_silent_sprite",
+      "when": 1794499267505,
+      "tag": "0022_tearful_dragon_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1794504055771,
+      "tag": "0023_broad_exodus",
       "breakpoints": true
     }
   ]

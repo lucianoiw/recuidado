@@ -27,11 +27,15 @@ export function Hero() {
       </div>
       <div className={styles.visual}>
         <Photo name="abraco" priority className={styles.photo} />
-        <NoteCard icon={<CheckIcon />} label={hero.confirmed.label} className={styles.confirmed}>
-          {hero.confirmed.text}
+        <NoteCard icon={<PhoneIcon />} label={hero.before.label} className={styles.before}>
+          {hero.before.text}
         </NoteCard>
-        <NoteCard icon={<PhoneIcon />} label={hero.call.label} className={styles.call}>
-          {hero.call.text}
+        <NoteCard icon={<PhoneIcon />} label={hero.now.label} className={styles.now}>
+          {hero.now.text}
+          <span className={styles.check}>
+            <CheckIcon />
+            {hero.now.check}
+          </span>
         </NoteCard>
       </div>
     </Container>
