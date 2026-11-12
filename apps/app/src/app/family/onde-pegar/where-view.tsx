@@ -4,11 +4,11 @@ import { callName } from "@/lib/api";
 import { useState } from "react";
 import Link from "next/link";
 import {
+  CheckIcon,
   ChevronRightIcon,
   InfoIcon,
   NavigationIcon,
   Segmented,
-  StatusPill,
   cn,
   pillClass,
 } from "@/components/ui";
@@ -28,11 +28,9 @@ type Tab = "fp" | "ubs";
 function PharmacyRow({
   p,
   index,
-  freeMeds,
 }: {
   p: Pharmacy;
   index: number;
-  freeMeds: string[];
 }) {
   return (
     <li className="flex gap-3 border-b border-line-soft px-4 py-4 last:border-b-0">
@@ -47,15 +45,6 @@ function PharmacyRow({
           </span>
         </div>
         <span className="text-[15px] leading-snug text-muted">{p.address}</span>
-        {p.fpAccredited === true && freeMeds.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
-            {freeMeds.map((m) => (
-              <StatusPill key={m} tone="ok" className="px-2.5 py-1 text-[13px]">
-                {m} grátis
-              </StatusPill>
-            ))}
-          </div>
-        ) : null}
         {p.fpAccredited === null ? (
           <span className="text-[14px] text-muted">
             Credenciamento no Farmácia Popular a confirmar
@@ -78,11 +67,9 @@ function PharmacyRow({
 function UnitRow({
   u,
   index,
-  meds,
 }: {
   u: SusUnit;
   index: number;
-  meds: string[];
 }) {
   return (
     <li className="flex gap-3 border-b border-line-soft px-4 py-4 last:border-b-0">
@@ -99,15 +86,6 @@ function UnitRow({
         <span className="text-[15px] leading-snug text-muted">
           {u.address}. {u.hours}.
         </span>
-        {meds.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
-            {meds.map((m) => (
-              <StatusPill key={m} tone="ok" className="px-2.5 py-1 text-[13px]">
-                {m} na UBS
-              </StatusPill>
-            ))}
-          </div>
-        ) : null}
         <a
           href={mapsUrl(u)}
           target="_blank"
@@ -122,19 +100,80 @@ function UnitRow({
   );
 }
 
+type Med = NonNullable<ReturnType<typeof useFamily>["data"]>["medications"][number];
+
+const atFp = (m: Med) => m.freeInFarmaciaPopular || (m.freeAt?.includes("farmacia_popular") ?? false);
+const atUbs = (m: Med) => m.freeAt?.includes("ubs") ?? false;
+
+/** Where this medicine comes from when it is not at the place on screen. */
+function elsewhere(m: Med, tab: Tab): string {
+  if (tab === "fp" && atUbs(m)) return "Pegue no posto de saúde";
+  if (tab === "ubs" && atFp(m)) return "Pegue na Farmácia Popular";
+  if (m.highCost) return "Alto Custo, precisa de laudo";
+  return "Precisa comprar";
+}
+
+/** The patient's medicines split into what this kind of place hands out and what it does not. */
+function WhatHere({ meds, tab }: { meds: Med[]; tab: Tab }) {
+  const here = meds.filter((m) => (tab === "fp" ? atFp(m) : atUbs(m)));
+  const not = meds.filter((m) => !here.includes(m));
+  const place = tab === "fp" ? "na Farmácia Popular" : "no posto de saúde";
+  return (
+    <section className="flex flex-col overflow-hidden rounded-card bg-surface">
+      <div className="flex flex-col gap-2 px-4 py-3.5">
+        <h2 className="text-[17px] font-semibold">Sai grátis {place}</h2>
+        {here.length > 0 ? (
+          <ul className="flex flex-col gap-1.5">
+            {here.map((m) => (
+              <li key={m.id} className="flex items-center gap-2 text-[16px]">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-ok-soft text-ok">
+                  <CheckIcon size={14} strokeWidth={2.6} />
+                </span>
+                {medLabel(m.name, m.strength)}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-[15px] text-muted">Nenhum remédio da receita sai grátis {place}.</p>
+        )}
+      </div>
+      {not.length > 0 ? (
+        <div className="flex flex-col gap-2 border-t border-line-soft px-4 py-3.5">
+          <h2 className="text-[17px] font-semibold">Não sai {place}</h2>
+          <ul className="flex flex-col gap-2">
+            {not.map((m) => (
+              <li key={m.id} className="flex items-start gap-2 text-[16px]">
+                <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-cream text-muted">
+                  <XSmall />
+                </span>
+                <span className="flex min-w-0 flex-col">
+                  <span>{medLabel(m.name, m.strength)}</span>
+                  <span className="text-[14px] font-semibold text-accent-ink">{elsewhere(m, tab)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function XSmall() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
 export function WhereView() {
   const { data } = useFamily();
   const [tab, setTab] = useState<Tab>("fp");
 
   const patient = data ? callName(data.patient) : "a pessoa cuidada";
-  const freeMeds = (data?.medications ?? [])
-    .filter((m) => m.freeInFarmaciaPopular)
-    .map((m) => medLabel(m.name, null));
   const list = pharmacies.slice(0, 6);
   const meds = data?.medications ?? [];
-  const ubsMeds = meds
-    .filter((m) => m.freeAt?.includes("ubs"))
-    .map((m) => medLabel(m.name, null));
   const highCostMeds = meds.filter((m) => m.highCost);
 
   return (
@@ -154,12 +193,14 @@ export function WhereView() {
         ]}
       />
 
+      {data ? <WhatHere meds={meds} tab={tab} /> : null}
+
       {tab === "fp" ? (
         <>
           <PlacesMap places={list} homeLabel={`Casa de ${patient}`} />
           <ul className="overflow-hidden rounded-card bg-surface">
             {list.map((p, i) => (
-              <PharmacyRow key={p.cnes} p={p} index={i} freeMeds={freeMeds} />
+              <PharmacyRow key={p.cnes} p={p} index={i} />
             ))}
           </ul>
           <p className="flex items-start gap-2 text-[15px] leading-snug text-muted">
@@ -176,7 +217,7 @@ export function WhereView() {
           />
           <ul className="overflow-hidden rounded-card bg-surface">
             {ubsUnits.slice(0, 3).map((u, i) => (
-              <UnitRow key={u.cnes} u={u} index={i} meds={ubsMeds} />
+              <UnitRow key={u.cnes} u={u} index={i} />
             ))}
           </ul>
           <p className="flex items-start gap-2 text-[15px] leading-snug text-muted">
