@@ -1,0 +1,94 @@
+.band {
+  padding: 72px 0;
+  background: var(--cream);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  --h-max: 22em;
+}
+
+.lead {
+  --p-max: 40em;
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 5px var(--cream);
+}
+
+.last {
+  background: var(--pink);
+}
+
+.time {
+  margin-top: 6px;
+  color: var(--ink);
+  font-size: 38px;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .band {
+    padding: 112px 0;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 48px;
+  }
+
+  .time {
+    font-size: 46px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* The line that joins the four dots. */
+  .steps::before {
+    position: absolute;
+    z-index: 0;
+    top: 6px;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: #d8cfc7;
+    content: "";
+  }
+}

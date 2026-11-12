@@ -1,0 +1,85 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 36px;
+  padding-top: 36px;
+  padding-bottom: 96px;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.text {
+  --p-max: 29em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.visual {
+  position: relative;
+}
+
+.photo {
+  object-position: 50% 30%;
+  border-radius: 32px;
+}
+
+/* Phone: the two notes sit under the photo, the first one overlapping its edge. */
+.confirmed {
+  position: relative;
+  margin: -44px 16px 0;
+}
+
+.call {
+  position: relative;
+  margin: 10px 16px 0 40px;
+}
+
+@media (min-width: 640px) {
+  .hero {
+    gap: 48px;
+  }
+
+  .photo {
+    height: 520px;
+  }
+
+  .confirmed {
+    position: absolute;
+    bottom: 120px;
+    left: 16px;
+    width: 290px;
+    margin: 0;
+  }
+
+  .call {
+    position: absolute;
+    top: 32px;
+    right: 28px;
+    width: 270px;
+    margin: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 56px;
+  }
+
+  .photo {
+    height: 680px;
+  }
+
+  .confirmed {
+    left: -48px;
+  }
+}

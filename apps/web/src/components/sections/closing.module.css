@@ -1,0 +1,63 @@
+.section {
+  padding-bottom: 72px;
+}
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 40px;
+}
+
+.photo {
+  height: 620px;
+  object-position: 60% 30%;
+  border-radius: 0;
+}
+
+/* Phone and tablet: light from the top, where the text is. Desktop: from the left. */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(252, 235, 241, 0.97) 0%, rgba(252, 235, 241, 0.9) 50%, rgba(252, 235, 241, 0) 80%);
+}
+
+.copy {
+  position: absolute;
+  top: 32px;
+  right: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.title {
+  --h-size: 56px;
+  --h-max: 9em;
+}
+
+@media (min-width: 640px) {
+  .copy {
+    right: 32px;
+    left: 32px;
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .photo {
+    height: 560px;
+  }
+
+  .shade {
+    background: linear-gradient(90deg, rgba(252, 235, 241, 0.97) 0%, rgba(252, 235, 241, 0.9) 38%, rgba(252, 235, 241, 0) 66%);
+  }
+
+  .copy {
+    top: 50%;
+    right: auto;
+    left: 64px;
+    max-width: 460px;
+    transform: translateY(-50%);
+  }
+}

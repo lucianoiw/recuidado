@@ -1,0 +1,31 @@
+.text {
+  margin: 0;
+  max-width: var(--p-max, 32em);
+  color: var(--p-color, var(--body));
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.sm {
+  font-size: 17px;
+}
+
+.md {
+  font-size: 18px;
+}
+
+.lg {
+  font-size: 19px;
+}
+
+.xl {
+  font-size: 20px;
+}
+
+.fine {
+  margin: 0;
+  max-width: 40em;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
