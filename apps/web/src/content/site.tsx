@@ -19,8 +19,13 @@ export const hero = {
   text: "O Recuidado acompanha os remédios da sua mãe, do seu pai ou dos seus avós. Na hora certa, o celular avisa. Se não houver confirmação, a gente liga, pergunta como a pessoa está e se já tomou. Se algo não vai bem, você e seus irmãos ficam sabendo na hora.",
   secondary: "Ver como funciona",
   fine: "Quem toma o remédio não precisa saber mexer em aplicativo. A ligação chega em qualquer telefone.",
-  confirmed: { label: "Agora · Recuidado", text: <><b>Dona Maria tomou a Losartana</b> das 8h.</> },
-  call: { label: "Ligação das 8:15", text: "“Bom dia! Já tomei, minha filha.”" },
+  // Before and after: the children stop asking about the medicine and talk about life.
+  before: { label: "Antes", text: "“Mãe, já tomou o remédio das três?”" },
+  now: {
+    label: "Agora, com o Recuidado",
+    text: "“Oi, mãe! Tudo bem? Domingo eu levo as crianças para o almoço.”",
+    check: "Remédio das 8h confirmado",
+  },
 };
 
 export const timeline = {
