@@ -701,7 +701,7 @@ export class PharmacyCall {
         event_id: `stall_${this.stallPokes}_${this.opts.sessionId}`,
         delegation_id: null,
         content:
-          'The pharmacy answered and is waiting for you. If you already have stock and both prices for every medicine, call record_pharmacy_answer and say only "Muito obrigada, tchau!". Otherwise ask the next short question.',
+          'The pharmacy answered and is waiting for you. If you have not repeated the prices back yet, do it now in one short sentence and wait. If they already confirmed stock and both prices for every medicine, call record_pharmacy_answer and say only "Muito obrigada, tchau!". Otherwise ask the next short question.',
       });
       this.armStall();
     }, this.opts.stallMs ?? 6000);
