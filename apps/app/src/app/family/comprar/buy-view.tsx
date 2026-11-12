@@ -35,7 +35,7 @@ export function BuyView() {
 
       {paid.length === 0 ? (
         <section className="flex flex-col items-center gap-2 rounded-card border border-line-soft bg-surface p-6 text-center">
-          <span className="flex size-14 items-center justify-center rounded-[18px] bg-brand-soft text-brand">
+          <span className="flex size-14 items-center justify-center rounded-full bg-blush text-accent-ink">
             <CartIcon size={28} />
           </span>
           <b className="text-[19px]">Nada para comprar</b>
@@ -71,7 +71,7 @@ export function BuyView() {
           <PharmacyCallCard medications={paid} />
 
           <section className="flex flex-col gap-2">
-            <h2 className="text-[18px] font-extrabold">Farmácias perto dela</h2>
+            <h2 className="text-[18px] font-semibold">Farmácias perto dela</h2>
             <PlacesMap places={pharmacies.slice(0, 3)} homeLabel={`Casa de ${callName(data.patient)}`} />
             <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
               {pharmacies.slice(0, 3).map((p, i) => (

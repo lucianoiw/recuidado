@@ -13,8 +13,8 @@ const KINDS: Record<AlertKind, { label: string; icon: typeof AlertIcon; tone: st
   low_stock: { label: "Remédio acabando", icon: PillIcon, tone: "bg-warn-soft text-warn" },
   emergency: { label: "Emergência", icon: AlertIcon, tone: "bg-danger text-white" },
   emergency_call: { label: "Ligação para a família", icon: PhoneIcon, tone: "bg-danger-soft text-danger" },
-  check_in: { label: "Ligação de volta", icon: PhoneIcon, tone: "bg-brand-soft text-brand" },
-  rotation_turn: { label: "Vez de comprar", icon: CartIcon, tone: "bg-brand-soft text-brand" },
+  check_in: { label: "Ligação de volta", icon: PhoneIcon, tone: "bg-blush text-accent-ink" },
+  rotation_turn: { label: "Vez de comprar", icon: CartIcon, tone: "bg-blush text-accent-ink" },
 };
 
 /** How the alert reached the family. */
@@ -89,7 +89,7 @@ export function AlertsView() {
     <>
       <TopBar backHref="/family" />
       <header className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.01em]">Avisos</h1>
+        <h1 className="font-display text-[32px] leading-[1.08]">Avisos</h1>
         <p className="text-[16px] text-muted">Tudo que o Recuidado avisou à família, do mais novo para o mais antigo.</p>
       </header>
 
@@ -103,7 +103,7 @@ export function AlertsView() {
 
           {alerts && alerts.length === 0 ? (
             <section className="flex flex-col items-center gap-3 rounded-card border border-line-soft bg-surface p-6 text-center">
-              <span className="flex size-16 items-center justify-center rounded-[20px] bg-brand-soft text-brand">
+              <span className="flex size-16 items-center justify-center rounded-full bg-blush text-accent-ink">
                 <BellIcon size={32} />
               </span>
               <b className="text-[19px]">Nenhum aviso ainda</b>
@@ -116,7 +116,7 @@ export function AlertsView() {
 
           {days.map((day) => (
             <section key={day.title} className="flex flex-col gap-2">
-              <h2 className="text-[18px] font-extrabold">{day.title}</h2>
+              <h2 className="text-[18px] font-semibold">{day.title}</h2>
               <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
                 {day.items.map((a) => {
                   const kind = KINDS[a.kind];

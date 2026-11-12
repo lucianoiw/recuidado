@@ -20,12 +20,12 @@ function Option({
       href={href}
       className="flex items-center gap-3.5 rounded-[22px] border-[1.5px] border-line-soft bg-surface p-[18px] text-ink no-underline hover:border-brand"
     >
-      <span className="flex size-[60px] shrink-0 items-center justify-center rounded-[18px] bg-brand-soft text-brand">
+      <span className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
         {icon}
       </span>
       <span className="flex flex-1 flex-col gap-1">
         {badge ? (
-          <span className="w-fit rounded-full bg-brand-soft px-2.5 py-0.5 text-[12px] font-extrabold tracking-wide text-brand">
+          <span className="w-fit rounded-full bg-brand-soft px-2.5 py-0.5 text-[12px] font-semibold tracking-wide text-brand">
             {badge}
           </span>
         ) : null}
@@ -42,7 +42,7 @@ export default function AddMedicationsPage() {
     <Screen audience="family">
       <TopBar backHref="/family" />
       <header className="flex flex-col gap-2">
-        <h1 className="text-[28px] font-extrabold leading-tight">Quais remédios ela toma?</h1>
+        <h1 className="font-display text-[32px] leading-[1.08]">Quais remédios ela toma?</h1>
         <p className="text-muted">Escolha como quer adicionar. Dá para misturar os dois.</p>
       </header>
       <DemoBannerAuto />

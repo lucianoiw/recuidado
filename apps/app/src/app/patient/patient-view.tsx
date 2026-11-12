@@ -115,7 +115,7 @@ export function PatientView() {
     return (
       <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
-          <span className="flex size-36 items-center justify-center rounded-full bg-brand text-white">
+          <span className="flex size-36 items-center justify-center rounded-full bg-ok text-white">
             <CheckIcon size={84} aria-hidden={false} role="img" aria-label="Confirmado" />
           </span>
           <h1 className="text-[40px] font-bold leading-tight">
@@ -142,7 +142,7 @@ export function PatientView() {
                 <li key={d.id}>{doseName(d)}</li>
               ))}
             </ul>
-            <p className="text-[24px] font-semibold text-brand">às {next.time}</p>
+            <p className="text-[24px] font-semibold text-accent-ink">às {next.time}</p>
           </Card>
         ) : null}
         <Button variant="secondary" size="lg" onClick={() => setJustTaken(null)}>
@@ -168,8 +168,8 @@ export function PatientView() {
         } />
 
       {due.length > 0 ? (
-        <Card className="flex flex-col gap-5 border-2 border-line px-4 py-6" aria-live="polite">
-          <p className="flex items-center gap-2.5 text-[26px] font-bold text-brand">
+        <Card className="flex flex-col gap-5 px-5 py-6" aria-live="polite">
+          <p className="flex items-center gap-2.5 text-[26px] font-bold text-accent-ink">
             <ClockIcon size={30} strokeWidth={2.2} />
             Agora, {formatTime(due[0].scheduledAt)}
           </p>
@@ -184,16 +184,11 @@ export function PatientView() {
                     className="h-52 w-full rounded-2xl border border-line bg-surface object-contain"
                   />
                 ) : null}
-                <div className="flex items-start gap-2.5">
-                  <span className="flex h-9 shrink-0 items-center text-brand">
-                    <PillIcon size={28} />
-                  </span>
-                  <div className="flex min-w-0 flex-col">
-                    <h2 className="text-[30px] font-bold leading-tight">{d.medicationName}</h2>
-                    {d.strength ? (
-                      <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
-                    ) : null}
-                  </div>
+                <div className="flex min-w-0 flex-col">
+                  <h2 className="text-[34px] font-bold leading-tight">{d.medicationName}</h2>
+                  {d.strength ? (
+                    <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -205,7 +200,7 @@ export function PatientView() {
         </Card>
       ) : (
         <Card className="flex flex-col gap-2 px-5 py-6">
-          <p className="flex items-center gap-2.5 text-[30px] font-bold leading-tight text-brand">
+          <p className="flex items-center gap-2.5 text-[30px] font-bold leading-tight text-ok">
             <CheckIcon size={34} />
             Tudo certo por agora
           </p>

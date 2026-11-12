@@ -89,7 +89,7 @@ export function PlanView() {
       ) : null}
 
       <Card className="flex flex-col gap-3 border border-line-soft bg-surface">
-        <h2 className="text-[18px] font-extrabold">Grátis, para sempre</h2>
+        <h2 className="text-[18px] font-semibold">Grátis, para sempre</h2>
         <ul className="flex flex-col gap-2">
           {FREE.map((f) => (
             <li key={f} className="flex items-start gap-2 text-[16px]">
@@ -102,11 +102,11 @@ export function PlanView() {
 
       <Card tone={active ? "brand" : "default"} className="flex flex-col gap-3 border border-line-soft">
         <div className="flex items-center gap-3">
-          <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+          <span className="flex size-11 items-center justify-center rounded-full bg-blush text-accent-ink">
             <PhoneIcon size={24} />
           </span>
           <div className="flex flex-col">
-            <h2 className="text-[18px] font-extrabold">{plan.name}</h2>
+            <h2 className="text-[18px] font-semibold">{plan.name}</h2>
             <span className="text-[15px] text-muted">
               {price} por mês{plan.trialDays > 0 ? `, ${plan.trialDays} dias grátis` : ""}
             </span>

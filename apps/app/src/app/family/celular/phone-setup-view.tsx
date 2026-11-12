@@ -31,7 +31,7 @@ export function PhoneSetupView() {
       <ol className="flex flex-col gap-3.5">
         {STEPS.map((t, i) => (
           <li key={t} className="flex items-start gap-3">
-            <span className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-brand text-[15px] font-extrabold text-white">
+            <span className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-brand text-[15px] font-semibold text-white">
               {i + 1}
             </span>
             <span className="pt-0.5 leading-snug">{t}</span>

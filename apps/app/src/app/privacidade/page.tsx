@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-[20px] font-extrabold">{title}</h2>
+      <h2 className="text-[20px] font-semibold">{title}</h2>
       <div className="flex flex-col gap-2 leading-relaxed">{children}</div>
     </section>
   );
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-6 pb-10 pt-6 text-[17px]">
       <Back />
       <header className="flex flex-col gap-2">
-        <h1 className="text-[30px] font-extrabold leading-tight">Como cuidamos dos dados</h1>
+        <h1 className="font-display text-[32px] leading-[1.08]">Como cuidamos dos dados</h1>
         <p className="text-muted">
           Remédio é dado de saúde, e a lei trata dado de saúde como sensível. Por isso guardamos o mínimo e pedimos o
           aceite da pessoa cuidada.

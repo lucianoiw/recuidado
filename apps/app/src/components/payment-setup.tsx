@@ -83,7 +83,7 @@ export function PaymentSetup({
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "flex size-9 shrink-0 items-center justify-center rounded-full text-[15px] font-extrabold",
+                    "flex size-9 shrink-0 items-center justify-center rounded-full text-[15px] font-semibold",
                     p.excluded ? "bg-line-soft text-muted" : "bg-brand-soft text-brand",
                   )}
                 >

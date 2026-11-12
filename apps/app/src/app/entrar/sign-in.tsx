@@ -74,12 +74,12 @@ export function SignIn() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-6 pb-8 pt-6 text-[17px]">
       {step === "email" ? <TopBar backHref="/" /> : <TopBar onBack={() => setStep("email")} />}
-      <Logo size={48} />
+      <Logo size={30} variant="full" className="self-start" />
 
       {step === "email" ? (
         <form onSubmit={sendCode} className="flex flex-1 flex-col gap-5">
           <div className="flex flex-col gap-2">
-            <h1 className="text-[28px] font-extrabold leading-tight tracking-tight">
+            <h1 className="font-display text-[32px] leading-[1.08]">
               {invited ? `Oi, ${invited}. Entre com o seu e-mail.` : "Entre com o seu e-mail."}
             </h1>
             <p className="leading-relaxed text-muted">
@@ -113,7 +113,7 @@ export function SignIn() {
       ) : (
         <form onSubmit={verify} className="flex flex-1 flex-col gap-5">
           <div className="flex flex-col gap-2">
-            <h1 className="text-[28px] font-extrabold leading-tight tracking-tight">Digite o código.</h1>
+            <h1 className="font-display text-[32px] leading-[1.08]">Digite o código.</h1>
             <p className="leading-relaxed text-muted">
               Enviamos 6 números para <b className="text-ink">{email.trim()}</b>. Se preferir, toque no botão do e-mail.
             </p>
@@ -126,7 +126,7 @@ export function SignIn() {
             maxLength={6}
             value={code}
             onValue={(v) => setCode(v.replace(/\D/g, "").slice(0, 6))}
-            className="[&_input]:text-center [&_input]:text-[28px] [&_input]:font-extrabold [&_input]:tracking-[0.3em]"
+            className="[&_input]:text-center [&_input]:text-[28px] [&_input]:font-semibold [&_input]:tracking-[0.3em]"
             autoFocus
           />
           {error ? (

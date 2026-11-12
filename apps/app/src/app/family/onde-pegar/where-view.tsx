@@ -140,7 +140,7 @@ export function WhereView() {
             receita e o cartão do SUS de {patient}. O estoque muda: ligue antes.
           </p>
           <section className="flex flex-col gap-2 rounded-card border border-line-soft bg-surface p-4">
-            <h2 className="text-[18px] font-extrabold">Farmácia de Alto Custo</h2>
+            <h2 className="text-[18px] font-semibold">Farmácia de Alto Custo</h2>
             <p className="text-[15px] leading-snug text-muted">
               Remédios de doenças específicas, entregues pelo Estado. O médico precisa preencher o
               laudo (LME).

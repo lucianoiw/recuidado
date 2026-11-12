@@ -56,7 +56,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
             onClick={() => setSelected(null)}
           >
             <AdvancedMarker position={home} title={homeLabel} zIndex={1}>
-              <span className="flex size-7 items-center justify-center rounded-full border-2 border-white bg-brand text-[13px] font-extrabold text-white shadow-md">
+              <span className="flex size-7 items-center justify-center rounded-full border-2 border-white bg-brand text-[13px] font-semibold text-white shadow-md">
                 C
               </span>
             </AdvancedMarker>
@@ -69,7 +69,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
                 onClick={() => setSelected(i)}
               >
                 <span
-                  className={`flex items-center justify-center rounded-full border-2 border-white font-extrabold text-white shadow-md ${
+                  className={`flex items-center justify-center rounded-full border-2 border-white font-semibold text-white shadow-md ${
                     selected === i ? "size-10 bg-ink text-[16px]" : "size-7 bg-danger text-[13px]"
                   }`}
                 >

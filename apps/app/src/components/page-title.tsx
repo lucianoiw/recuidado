@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export function PageTitle({ title, subtitle }: { title: string; subtitle?: ReactNode }) {
   return (
     <header className="flex flex-col gap-1">
-      <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.01em]">{title}</h1>
+      <h1 className="font-display text-[34px] leading-[1.05]">{title}</h1>
       {subtitle ? <p className="text-[16px] text-muted">{subtitle}</p> : null}
     </header>
   );

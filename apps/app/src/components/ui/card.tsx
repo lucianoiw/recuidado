@@ -7,12 +7,12 @@ type CardProps = HTMLAttributes<HTMLElement> & {
 };
 
 const tones = {
-  default: "border border-line-soft bg-surface",
+  default: "bg-surface shadow-[0_1px_2px_rgba(22,19,20,0.04)]",
   danger: "border-2 border-danger bg-danger-soft",
   warn: "border-2 border-warn bg-warn-soft",
-  brand: "bg-brand-soft",
+  brand: "bg-blush",
 };
 
 export function Card({ tone = "default", as: Tag = "section", className, ...props }: CardProps) {
-  return <Tag className={cn("rounded-card p-4", tones[tone], className)} {...props} />;
+  return <Tag className={cn("rounded-card p-5", tones[tone], className)} {...props} />;
 }

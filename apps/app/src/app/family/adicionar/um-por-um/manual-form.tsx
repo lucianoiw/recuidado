@@ -55,7 +55,7 @@ export function ManualForm() {
   return (
     <>
       <TopBar backHref="/family/adicionar">Adicionar um por um</TopBar>
-      <h1 className="text-[28px] font-extrabold leading-tight">Novo remédio</h1>
+      <h1 className="font-display text-[32px] leading-[1.08]">Novo remédio</h1>
 
       {saved.length > 0 ? (
         <p aria-live="polite" className="flex items-start gap-2 rounded-2xl bg-brand-soft p-3.5 text-[15px] font-semibold text-brand">

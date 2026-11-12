@@ -60,7 +60,7 @@ export function PatientMedsView() {
 
       {next ? (
         <Card className="flex items-center gap-3.5 px-5 py-5">
-          <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand">
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
             <BellIcon size={30} strokeWidth={2.2} />
           </span>
           <span className="flex flex-col">

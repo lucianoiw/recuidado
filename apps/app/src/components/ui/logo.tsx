@@ -1,18 +1,30 @@
-import { HeartCheckIcon } from "./icons";
 import { cn } from "./cn";
 
-/** The Recuidado mark: a heart with a check, on a rounded tile. */
-export function Logo({ size = 56, inverted = false, className }: { size?: number; inverted?: boolean; className?: string }) {
+/**
+ * The Recuidado logo: Luciano's SVG files in /public, used as they are.
+ * Never redraw the logo in code. "mark" is the R with the cross; "full" adds
+ * the word Recuidado.
+ */
+export function Logo({
+  size = 56,
+  variant = "mark",
+  className,
+}: {
+  /** Height in pixels. */
+  size?: number;
+  variant?: "mark" | "full";
+  className?: string;
+}) {
+  const full = variant === "full";
   return (
-    <span
-      className={cn(
-        "inline-flex shrink-0 items-center justify-center",
-        inverted ? "bg-surface text-brand shadow-lg" : "bg-brand text-white",
-        className,
-      )}
-      style={{ width: size, height: size, borderRadius: size * 0.3 }}
-    >
-      <HeartCheckIcon size={size * 0.62} strokeWidth={inverted ? 1.9 : 2} />
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={full ? "/logo-recuidado-texto.svg" : "/logo-recuidado.svg"}
+      alt="Recuidado"
+      height={size}
+      width={Math.round(size * (full ? 1816 / 285 : 260 / 270))}
+      className={cn("shrink-0", className)}
+      style={{ height: size, width: "auto" }}
+    />
   );
 }

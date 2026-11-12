@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { FrameBridge } from "@/components/frame-bridge";
 import { ServiceWorker } from "@/components/service-worker";
 import "@fontsource-variable/atkinson-hyperlegible-next";
+import "@fontsource-variable/inter-tight";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b5d57",
+  themeColor: "#f8f4ef",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

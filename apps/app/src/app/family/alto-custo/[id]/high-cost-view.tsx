@@ -67,7 +67,7 @@ function Checklist({
   if (items.length === 0) return null;
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-[18px] font-extrabold">{title}</h2>
+      <h2 className="text-[18px] font-semibold">{title}</h2>
       <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
         {items.map((item) => (
           <ItemRow key={item.id} item={item} checked={checked.includes(item.id)} onToggle={() => onToggle(item.id)} />
@@ -190,7 +190,7 @@ export function HighCostView({ id }: { id: string }) {
       {saveError ? <p className="text-[15px] font-bold text-danger">{saveError}</p> : null}
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-[18px] font-extrabold">3. Datas para não perder o prazo</h2>
+        <h2 className="text-[18px] font-semibold">3. Datas para não perder o prazo</h2>
         <Field
           type="date"
           label="Dia em que o médico preencheu o laudo LME"
@@ -216,7 +216,7 @@ export function HighCostView({ id }: { id: string }) {
       </section>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-[18px] font-extrabold">4. Onde entregar e retirar</h2>
+        <h2 className="text-[18px] font-semibold">4. Onde entregar e retirar</h2>
         <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
           {highCostUnits.slice(0, 2).map((u) => (
             <li key={u.cnes} className="flex flex-col gap-2 border-b border-line-soft px-4 py-3.5 last:border-b-0">

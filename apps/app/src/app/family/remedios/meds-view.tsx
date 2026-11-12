@@ -122,7 +122,7 @@ function Group({
 }) {
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="flex items-center gap-2 text-[18px] font-extrabold">
+      <h2 className="flex items-center gap-2 text-[18px] font-semibold">
         {icon}
         {title}
       </h2>
@@ -164,7 +164,7 @@ export function MedsView() {
 
       {data.medications.length === 0 ? (
         <section className="flex flex-col items-center gap-3 rounded-card border border-line-soft bg-surface p-6 text-center">
-          <span className="flex size-16 items-center justify-center rounded-[20px] bg-brand-soft text-brand">
+          <span className="flex size-16 items-center justify-center rounded-full bg-blush text-accent-ink">
             <CameraIcon size={32} />
           </span>
           <b className="text-[19px]">Nenhum remédio ainda</b>

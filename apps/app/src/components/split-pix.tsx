@@ -74,7 +74,7 @@ function ShareRow({
       <div className="flex items-center gap-3">
         <span
           aria-hidden="true"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[15px] font-extrabold text-brand"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[15px] font-semibold text-brand"
         >
           {initial(share.name)}
         </span>
@@ -227,7 +227,7 @@ function Rotation({ month, me, onChanged }: { month: MonthSummary; me: string | 
       <div className="flex items-center gap-3 rounded-2xl bg-brand-soft p-3.5">
         <span
           aria-hidden="true"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-[17px] font-extrabold text-white"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-[17px] font-semibold text-white"
         >
           {initial(payer.name)}
         </span>
@@ -304,8 +304,8 @@ export function SplitPix({ month, isDemo, onChanged }: { month: MonthSummary; is
   return (
     <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-[18px] font-extrabold">{rotation ? "Cada mês um compra" : "Dividir entre a família"}</h2>
-        <span className="text-[18px] font-extrabold">{brl.format(month.costCents / 100)}</span>
+        <h2 className="text-[18px] font-semibold">{rotation ? "Cada mês um compra" : "Dividir entre a família"}</h2>
+        <span className="text-[18px] font-semibold">{brl.format(month.costCents / 100)}</span>
       </div>
 
       {rotation ? (

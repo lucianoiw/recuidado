@@ -7,16 +7,16 @@ import { cn } from "./cn";
 
 export type NavItem = { href: string; label: string; icon: ReactNode };
 
-/** Fixed bottom navigation for the family screens. Pair with <Screen withNav>. */
+/** Floating bottom navigation for the family screens. Pair with <Screen withNav>. */
 export function BottomNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
   return (
     <nav
       aria-label="Menu"
-      className="fixed inset-x-0 bottom-0 border-t border-line bg-surface pb-[max(env(safe-area-inset-bottom),12px)]"
+      className="fixed inset-x-0 bottom-0 px-4 pb-[max(env(safe-area-inset-bottom),12px)]"
     >
       <ul
-        className="mx-auto grid max-w-md px-1 pt-2"
+        className="mx-auto grid max-w-md gap-1 rounded-full bg-ink p-1.5 shadow-[0_8px_24px_rgba(22,19,20,0.18)]"
         style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
       >
         {items.map((item) => {
@@ -27,8 +27,8 @@ export function BottomNav({ items }: { items: NavItem[] }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-12 flex-col items-center gap-1 py-1.5 text-[13px] no-underline",
-                  active ? "font-bold text-brand" : "text-muted",
+                  "flex min-h-13 flex-col items-center justify-center gap-0.5 rounded-full py-1.5 text-[12px] font-medium no-underline transition-colors",
+                  active ? "bg-surface text-ink" : "text-white/75 hover:text-white",
                 )}
               >
                 {item.icon}

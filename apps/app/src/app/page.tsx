@@ -14,11 +14,10 @@ export default function Welcome() {
       <SignedInRedirect />
       <div
         aria-hidden="true"
-        className="splash fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-brand text-white"
+        className="splash fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-bg text-ink"
       >
-        <Logo size={112} inverted />
-        <p className="text-[40px] font-extrabold tracking-tight">Recuidado</p>
-        <p className="text-center text-[19px] leading-snug text-white/90">
+        <Logo size={44} variant="full" />
+        <p className="text-center text-[19px] leading-snug text-muted">
           Cuidar de quem
           <br />
           cuidou da gente.
@@ -26,9 +25,9 @@ export default function Welcome() {
       </div>
 
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-7 px-6 pb-8 pt-14">
-        <Logo size={56} />
+        <Logo size={32} variant="full" className="self-start" />
         <div className="flex flex-col gap-2.5">
-          <h1 className="text-[32px] font-extrabold leading-[1.12] tracking-tight">
+          <h1 className="font-display text-[38px] leading-[1.05]">
             O remédio de quem você ama, cuidado pela família toda.
           </h1>
           <p className="text-[18px] leading-relaxed text-muted">
@@ -38,7 +37,7 @@ export default function Welcome() {
         <ul className="flex flex-col gap-4">
           {points.map(({ icon: Icon, title, text }) => (
             <li key={title} className="flex items-center gap-3.5">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
                 <Icon size={24} />
               </span>
               <span className="text-[17px] leading-snug">
@@ -54,7 +53,7 @@ export default function Welcome() {
           <Link href="/family" className={buttonClass({ variant: "secondary" })}>
             Ver a demonstração
           </Link>
-          <Link href="/patient" className="py-2 text-center text-[15px] font-bold text-brand">
+          <Link href="/patient" className="py-2 text-center text-[15px] font-semibold text-ink underline underline-offset-4">
             Abrir o app da Dona Maria
           </Link>
           <p className="text-center text-[13px] text-muted">

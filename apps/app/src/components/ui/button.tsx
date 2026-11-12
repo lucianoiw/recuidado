@@ -7,15 +7,15 @@ export type ButtonSize = "xl" | "lg" | "md";
 
 const variants: Record<ButtonVariant, string> = {
   primary: "bg-brand text-white hover:bg-brand-strong active:bg-brand-strong",
-  secondary: "border-2 border-ink bg-surface text-ink hover:bg-neutral-soft",
+  secondary: "border-[1.5px] border-ink bg-surface text-ink hover:bg-neutral-soft",
   danger: "bg-danger text-white hover:bg-danger-strong active:bg-danger-strong",
   "danger-outline": "border-2 border-danger bg-surface text-danger hover:bg-danger-soft",
 };
 
 const sizes: Record<ButtonSize, string> = {
-  xl: "min-h-22 rounded-control px-3 text-[28px] gap-2.5",
+  xl: "min-h-22 rounded-control px-4 text-[28px] gap-2.5",
   lg: "min-h-16 rounded-control px-5 text-2xl gap-3",
-  md: "min-h-[56px] rounded-2xl px-4 text-[18px] gap-2",
+  md: "min-h-[56px] rounded-control px-5 text-[17px] gap-2",
 };
 
 /** Classes for anything that should look like a button, such as a Link. */
@@ -25,7 +25,7 @@ export function buttonClass({
   className,
 }: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}) {
   return cn(
-    "inline-flex w-full items-center justify-center text-center font-bold leading-tight no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+    "inline-flex w-full items-center justify-center text-center font-semibold leading-tight no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60",
     variants[variant],
     sizes[size],
     className,

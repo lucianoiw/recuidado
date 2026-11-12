@@ -23,7 +23,7 @@ export function TopBar({
     </>
   );
   const backClass =
-    "flex size-11 shrink-0 items-center justify-center rounded-full border border-line-soft bg-surface text-ink";
+    "flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-ink shadow-[0_1px_2px_rgba(22,19,20,0.06)]";
   return (
     <div className="flex items-center gap-3.5">
       {onBack ? (
@@ -45,7 +45,7 @@ export function TopBar({
             aria-valuenow={step}
             aria-label={`Passo ${step} de ${total}`}
           >
-            <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${(step / total) * 100}%` }} />
+            <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${(step / total) * 100}%` }} />
           </div>
           <span className="text-[14px] font-bold text-muted">
             {step} de {total}

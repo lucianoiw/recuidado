@@ -52,7 +52,7 @@ function StepRow({
   const left = step?.state === "waiting" ? countdown(step.at, now) : null;
   return (
     <li className="flex items-start gap-3 border-b border-line-soft p-4 last:border-b-0">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
         {icon}
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -171,7 +171,7 @@ export function DemoView() {
 
       {run && run.transcript.length > 0 ? (
         <section className="flex flex-col gap-2">
-          <h2 className="text-[18px] font-extrabold">O que foi dito na ligação</h2>
+          <h2 className="text-[18px] font-semibold">O que foi dito na ligação</h2>
           <Card className="flex flex-col gap-2 text-[15px] leading-snug">
             {run.transcript.map((t, i) => (
               <p key={i}>

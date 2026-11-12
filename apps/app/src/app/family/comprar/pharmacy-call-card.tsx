@@ -69,11 +69,11 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
   return (
     <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
           <PhoneIcon size={22} />
         </span>
         <div className="flex flex-col gap-0.5">
-          <h2 className="text-[18px] font-extrabold">Perguntar às farmácias</h2>
+          <h2 className="text-[18px] font-semibold">Perguntar às farmácias</h2>
           <p className="text-[15px] leading-snug text-muted">
             O Recuidado liga para as farmácias ao mesmo tempo, pergunta se tem, quanto custa e se sai pelo Farmácia
             Popular, e compara os preços.

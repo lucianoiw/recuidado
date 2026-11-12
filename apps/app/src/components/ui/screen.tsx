@@ -20,7 +20,7 @@ export function Screen({
     <main
       className={cn(
         "mx-auto flex w-full max-w-md flex-1 flex-col px-5 pt-8",
-        audience === "patient" ? "gap-5 pb-6 text-[22px]" : "gap-4 pb-6 text-[17px]",
+        audience === "patient" ? "gap-5 pb-6 font-legible text-[22px]" : "gap-4 pb-6 text-[17px]",
         withNav && "pb-28",
         className,
       )}
@@ -43,9 +43,15 @@ export function ScreenHeader({
   return (
     <header className="flex flex-col gap-1">
       {eyebrow ? (
-        <p className={cn("text-muted", patient ? "text-[22px]" : "text-base")}>{eyebrow}</p>
+        <p className={cn("text-muted", patient ? "text-[22px]" : "text-[15px] font-medium")}>{eyebrow}</p>
       ) : null}
-      <h1 className={cn("font-bold leading-tight", patient ? "text-[38px]" : "text-[28px]")}>
+      <h1
+        className={cn(
+          patient
+            ? "text-[38px] font-bold leading-tight"
+            : "font-display text-[34px] leading-[1.05]",
+        )}
+      >
         {title}
       </h1>
     </header>

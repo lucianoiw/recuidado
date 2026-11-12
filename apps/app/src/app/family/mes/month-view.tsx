@@ -44,7 +44,7 @@ export function MonthView() {
 
       <section className="flex flex-col gap-1 rounded-card bg-brand p-5 text-white">
         <span className="text-[16px] font-bold opacity-90">A família economizou</span>
-        <span className="text-[40px] font-extrabold leading-tight">{brl.format(data.savedCents / 100)}</span>
+        <span className="text-[40px] font-semibold leading-tight">{brl.format(data.savedCents / 100)}</span>
         <span className="text-[15px] opacity-90">
           {data.saved.length === 0
             ? "Nenhum remédio sai grátis ainda."
@@ -103,7 +103,7 @@ export function MonthView() {
       </Link>
 
       <section className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4">
-        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
+        <span className="flex size-11 items-center justify-center rounded-full bg-blush text-accent-ink">
           <PillIcon size={24} />
         </span>
         <span className="flex flex-1 flex-col">
