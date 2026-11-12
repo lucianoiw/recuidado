@@ -471,17 +471,24 @@ export interface PharmacyInquiry {
   finishedAt: string | null;
 }
 
-/** "Perguntar à farmácia": the voice agent calls the pharmacy about these medicines. */
-export async function askPharmacy(medicationIds: string[]): Promise<PharmacyInquiry> {
+/** One round of pharmacy calls: the same medicines asked to each pharmacy at the same time. */
+export interface PharmacyRound {
+  inquiry: PharmacyInquiry | null;
+  inquiries: PharmacyInquiry[];
+}
+
+/** "Perguntar às farmácias": the voice agent calls the pharmacies about these medicines. */
+export async function askPharmacy(medicationIds: string[]): Promise<PharmacyRound> {
   const res = await send("POST", "/pharmacy-inquiries", { medicationIds }, "Não deu para ligar agora.");
   return res.json();
 }
 
-/** The family's most recent pharmacy call, or null. */
-export async function getLatestPharmacyInquiry(): Promise<PharmacyInquiry | null> {
+/** The family's most recent round of pharmacy calls. */
+export async function getLatestPharmacyInquiry(): Promise<PharmacyRound> {
   const res = await apiFetch("/pharmacy-inquiries/latest", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
-  return ((await res.json()) as { inquiry: PharmacyInquiry | null }).inquiry;
+  const body = (await res.json()) as Partial<PharmacyRound>;
+  return { inquiry: body.inquiry ?? null, inquiries: body.inquiries ?? (body.inquiry ? [body.inquiry] : []) };
 }
 
 export interface MonthItem {

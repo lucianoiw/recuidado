@@ -6,6 +6,7 @@ import { CallService, NumberNotAllowedError } from "./call-service.js";
 import type { CallResult, ReminderCall } from "./reminder-call.js";
 import type { Medication } from "./prompt.js";
 import type { PharmacyCall, PharmacyCallResult } from "./pharmacy-call.js";
+import type { SimMedication } from "./sim-pharmacy.js";
 
 // Events, exceptions and logs go to PostHog; logs also stay on stdout.
 const telemetry = telemetryFromEnv("voice");
@@ -89,16 +90,27 @@ function parseCallRequest(body: unknown) {
   };
 }
 
+function positiveInt(v: unknown): number | undefined {
+  return typeof v === "number" && Number.isInteger(v) && v > 0 ? v : undefined;
+}
+
 /** Body of POST /pharmacy-calls. At most 3 medicines, so the call stays short. */
 function parsePharmacyCallRequest(body: unknown) {
   const b = (body ?? {}) as Record<string, unknown>;
   if (typeof b.inquiryId !== "string" || !b.inquiryId) throw new Error("inquiryId is required");
   if (typeof b.phone !== "string" || !b.phone) throw new Error("phone is required");
   const list = Array.isArray(b.medications) ? b.medications : [];
-  const medications: Medication[] = list
-    .map((m) => (typeof m === "string" ? { name: m } : (m as Medication)))
+  const medications: SimMedication[] = list
+    .map((m) => (typeof m === "string" ? { name: m } : (m as SimMedication)))
     .filter((m) => typeof m?.name === "string" && m.name.trim().length > 0)
-    .map((m) => ({ name: m.name.trim(), dose: typeof m.dose === "string" && m.dose.trim() ? m.dose.trim() : undefined }));
+    .map((m) => ({
+      name: m.name.trim(),
+      dose: typeof m.dose === "string" && m.dose.trim() ? m.dose.trim() : undefined,
+      // Only used by the simulated pharmacies (sim-pharmacy.ts) to say a believable price.
+      refPackCents: positiveInt(m.refPackCents),
+      unitsPerPack: positiveInt(m.unitsPerPack),
+      farmaciaPopular: m.farmaciaPopular === true ? true : undefined,
+    }));
   if (medications.length === 0) throw new Error("medications must have at least one item");
   if (medications.length > 3) throw new Error("at most 3 medications per call");
   const familyId = typeof b.familyId === "string" && b.familyId ? b.familyId : undefined;

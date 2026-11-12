@@ -15,6 +15,8 @@ import { and, desc, eq, gte, inArray } from 'drizzle-orm';
 import { type Database, DB, medications, pharmacyInquiries, telemetry, VoiceCallService } from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
 import { readPharmacyTranscript } from './transcript-reader.js';
+import { cmedPriceOf } from '../family/pricing.js';
+import { randomUUID } from 'node:crypto';
 
 /** At most this many medicines per call, so the call stays short. */
 export const MAX_MEDICATIONS_PER_CALL = 3;
@@ -42,6 +44,26 @@ export interface PharmacyVoiceResult {
 
 type Inquiry = typeof pharmacyInquiries.$inferSelect;
 
+/** A pharmacy the agent may call: name shown to the family and the number dialed. */
+export interface PharmacyTarget {
+  name: string;
+  phone: string;
+}
+
+/**
+ * PHARMACY_CALL_TARGETS: "Name|+55...,Name|+55..." (the simulated pharmacies of the demo), or the
+ * single PHARMACY_CALL_PHONE with PHARMACY_CALL_NAME. Numbers never come from the request.
+ */
+export function pharmacyTargets(targets: string | undefined, phone: string | undefined, name: string | undefined): PharmacyTarget[] {
+  const list = (targets ?? '')
+    .split(',')
+    .map((entry) => entry.split('|').map((x) => x.trim()))
+    .filter(([n, p]) => n && p)
+    .map(([n, p]) => ({ name: n, phone: p }));
+  if (list.length > 0) return list.slice(0, 3);
+  return phone ? [{ name: name || 'Farmácia de teste', phone }] : [];
+}
+
 const NO_PLAN_MESSAGE = 'A ligação para a farmácia faz parte do plano Recuidado Família. Ative em Família > Plano.';
 const LIMIT_MESSAGE =
   'Limite de ligações de hoje atingido. Ligações custam dinheiro, por isso há um limite por dia.';
@@ -65,13 +87,17 @@ export class PharmacyService {
   async ask(familyId: string | null, medicationIds: string[], now = new Date()) {
     const voiceUrl = this.config.get<string>('VOICE_URL');
     const token = this.config.get<string>('VOICE_API_TOKEN');
-    const phone = this.config.get<string>('PHARMACY_CALL_PHONE');
-    if (!voiceUrl || !token || !phone) {
+    const targets = pharmacyTargets(
+      this.config.get<string>('PHARMACY_CALL_TARGETS'),
+      this.config.get<string>('PHARMACY_CALL_PHONE'),
+      this.config.get<string>('PHARMACY_CALL_NAME'),
+    );
+    if (!voiceUrl || !token || targets.length === 0) {
       throw new ServiceUnavailableException('Ligação para a farmácia indisponível no momento.');
     }
     const ref = await this.family.resolveFamily(familyId);
 
-    // One call at a time per family: a second tap follows the call already ringing.
+    // One round of calls at a time per family: a second tap follows the calls already ringing.
     const [ongoing] = await this.db
       .select()
       .from(pharmacyInquiries)
@@ -83,12 +109,18 @@ export class PharmacyService {
         ),
       )
       .limit(1);
-    if (ongoing) return this.view(ongoing, now);
+    if (ongoing) return this.batchOf(ongoing, now);
 
     const ids = [...new Set(medicationIds)];
     if (ids.length === 0) throw new BadRequestException('Escolha pelo menos um remédio.');
     const meds = await this.db
-      .select({ id: medications.id, name: medications.name, strength: medications.strength })
+      .select({
+        id: medications.id,
+        name: medications.name,
+        strength: medications.strength,
+        activeIngredient: medications.activeIngredient,
+        freeInFarmaciaPopular: medications.freeInFarmaciaPopular,
+      })
       .from(medications)
       .where(and(eq(medications.patientId, ref.patientId), inArray(medications.id, ids)));
     if (meds.length === 0) throw new NotFoundException('Remédio não encontrado.');
@@ -106,27 +138,59 @@ export class PharmacyService {
       throw new HttpException(LIMIT_MESSAGE, HttpStatus.TOO_MANY_REQUESTS);
     }
 
-    const [inquiry] = await this.db
+    const batchId = randomUUID();
+    const rows = await this.db
       .insert(pharmacyInquiries)
-      .values({
-        familyId: ref.familyId,
-        pharmacyName: this.config.get<string>('PHARMACY_CALL_NAME') ?? 'Farmácia de teste',
-        medications: asked.map((m) => ({ medicationId: m.id, name: m.name, strength: m.strength })),
-        createdAt: now,
-      })
+      .values(
+        targets.map((t) => ({
+          familyId: ref.familyId,
+          pharmacyName: t.name,
+          batchId,
+          medications: asked.map((m) => ({ medicationId: m.id, name: m.name, strength: m.strength })),
+          createdAt: now,
+        })),
+      )
       .returning();
 
+    // The CMED box goes along so a simulated pharmacy can say a believable price; a real one ignores it.
+    const spoken = asked.map((m) => {
+      const price = cmedPriceOf(m.activeIngredient, m.name, m.strength, 1);
+      return {
+        name: m.name,
+        dose: m.strength ?? undefined,
+        refPackCents: price?.packCents,
+        unitsPerPack: price?.unitsPerPack,
+        farmaciaPopular: m.freeInFarmaciaPopular,
+      };
+    });
+    const results = await Promise.allSettled(
+      rows.map((row, i) => this.startCall(row, targets[i].phone, ref.familyId, spoken, voiceUrl, token)),
+    );
+    const started = results.filter((r) => r.status === 'fulfilled').length;
+    telemetry.capture(
+      'pharmacy_call_requested',
+      { batch_id: batchId, pharmacies: rows.length, started, medications: asked.length, demo: ref.isDemo },
+      ref.patientId,
+    );
+    if (started === 0) throw (results[0] as PromiseRejectedResult).reason;
+    return this.batchOf(rows[0], now);
+  }
+
+  /** Asks apps/voice to dial one pharmacy. Marks the inquiry failed when the call does not start. */
+  private async startCall(
+    inquiry: Inquiry,
+    phone: string,
+    familyId: string,
+    meds: { name: string; dose?: string; refPackCents?: number; unitsPerPack?: number; farmaciaPopular: boolean }[],
+    voiceUrl: string,
+    token: string,
+  ) {
     let res: Response;
     try {
       res = await fetch(new URL('/pharmacy-calls', voiceUrl), {
         method: 'POST',
         headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          inquiryId: inquiry.id,
-          familyId: ref.familyId,
-          phone,
-          medications: asked.map((m) => ({ name: m.name, dose: m.strength ?? undefined })),
-        }),
+        body: JSON.stringify({ inquiryId: inquiry.id, familyId, phone, medications: meds }),
       });
     } catch (error) {
       await this.fail(inquiry.id, `voice unreachable: ${(error as Error).message}`);
@@ -142,18 +206,21 @@ export class PharmacyService {
       throw new BadGatewayException('Não foi possível ligar agora. Tente de novo em instantes.');
     }
     const { callId } = (await res.json()) as { callId: string };
-    const [updated] = await this.db
-      .update(pharmacyInquiries)
-      .set({ sessionId: callId })
-      .where(eq(pharmacyInquiries.id, inquiry.id))
-      .returning();
-    telemetry.capture(
-      'pharmacy_call_requested',
-      { inquiry_id: inquiry.id, call_id: callId, medications: asked.length, demo: ref.isDemo },
-      ref.patientId,
-    );
-    this.logger.log(`Calling the pharmacy for inquiry ${inquiry.id} (${callId}).`);
-    return this.view(updated, now);
+    await this.db.update(pharmacyInquiries).set({ sessionId: callId }).where(eq(pharmacyInquiries.id, inquiry.id));
+    this.logger.log(`Calling ${inquiry.pharmacyName} for inquiry ${inquiry.id} (${callId}).`);
+  }
+
+  /** The calls placed together with this one, in the order they were placed. */
+  private async batchOf(row: Inquiry, now = new Date()) {
+    const rows = row.batchId
+      ? await this.db
+          .select()
+          .from(pharmacyInquiries)
+          .where(eq(pharmacyInquiries.batchId, row.batchId))
+          .orderBy(pharmacyInquiries.createdAt, pharmacyInquiries.pharmacyName)
+      : [row];
+    const views = rows.map((r) => this.view(r, now));
+    return { inquiry: views.find((v) => v.id === row.id) ?? views[0], inquiries: views };
   }
 
   /** The family's most recent pharmacy call, or null. */
@@ -165,7 +232,7 @@ export class PharmacyService {
       .where(eq(pharmacyInquiries.familyId, ref.familyId))
       .orderBy(desc(pharmacyInquiries.createdAt))
       .limit(1);
-    return row ? this.view(row, now) : null;
+    return row ? this.batchOf(row, now) : { inquiry: null, inquiries: [] };
   }
 
   /** Stores what the pharmacy said. apps/voice retries the POST, so a finished inquiry is kept as is. */

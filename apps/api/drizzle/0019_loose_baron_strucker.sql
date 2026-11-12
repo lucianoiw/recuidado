@@ -1,0 +1,1 @@
+ALTER TABLE "pharmacy_inquiries" ADD COLUMN "batch_id" uuid;

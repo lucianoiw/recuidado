@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { VoiceTokenGuard } from '../voice/voice-token.guard.js';
 import { PharmacyController } from './pharmacy.controller.js';
-import { PharmacyService } from './pharmacy.service.js';
+import { PharmacyService, pharmacyTargets } from './pharmacy.service.js';
 
 const TOKEN = 'test-token-0123456789';
 const INQUIRY = '6f1c1b0e-7a51-4c55-9a43-2f2d0f8b9e10';
@@ -20,7 +20,7 @@ describe('PharmacyController', () => {
       controllers: [PharmacyController],
       providers: [
         VoiceTokenGuard,
-        { provide: PharmacyService, useValue: { ask, applyResult, latest: vi.fn().mockResolvedValue(null) } },
+        { provide: PharmacyService, useValue: { ask, applyResult, latest: vi.fn().mockResolvedValue({ inquiry: null, inquiries: [] }) } },
         { provide: ConfigService, useValue: { get: (k: string) => (k === 'VOICE_API_TOKEN' ? TOKEN : undefined) } },
       ],
     }).compile();
@@ -58,7 +58,7 @@ describe('PharmacyController', () => {
   it('returns null when there was no call yet', async () => {
     const res = await request(app.getHttpServer()).get('/pharmacy-inquiries/latest');
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ inquiry: null });
+    expect(res.body).toEqual({ inquiry: null, inquiries: [] });
   });
 
   const result = {
@@ -83,5 +83,21 @@ describe('PharmacyController', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ status: 'recorded' });
     expect(applyResult).toHaveBeenCalledWith(INQUIRY, expect.objectContaining({ outcome: 'answered' }));
+  });
+});
+
+describe('pharmacyTargets', () => {
+  it('reads the list of simulated pharmacies', () => {
+    expect(pharmacyTargets('Drogaria Vida|+5500000000011, Farmácia Central|+5500000000012', '+5500000000000', 'X')).toEqual([
+      { name: 'Drogaria Vida', phone: '+5500000000011' },
+      { name: 'Farmácia Central', phone: '+5500000000012' },
+    ]);
+  });
+
+  it('falls back to the single pharmacy number', () => {
+    expect(pharmacyTargets(undefined, '+5500000000000', undefined)).toEqual([
+      { name: 'Farmácia de teste', phone: '+5500000000000' },
+    ]);
+    expect(pharmacyTargets('', undefined, undefined)).toEqual([]);
   });
 });

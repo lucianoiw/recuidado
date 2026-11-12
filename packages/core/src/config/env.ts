@@ -80,6 +80,9 @@ export const envSchema = z.object({
   PHARMACY_CALL_PHONE: optionalString,
   // Name the family screen shows for that number.
   PHARMACY_CALL_NAME: z.string().default('Farmácia de teste'),
+  // Several pharmacies called at once to compare prices: "Name|+55...,Name|+55..." (at most 3).
+  // Wins over PHARMACY_CALL_PHONE. The demo uses the simulated pharmacies of deploy/asterisk.
+  PHARMACY_CALL_TARGETS: optionalString,
   // Minutes to wait after the call before alerting the family.
   DOSE_ALERT_AFTER_MINUTES: z.coerce.number().int().positive().default(30),
   // After she reports an emergency on a call, Recuidado calls her back this many minutes later.

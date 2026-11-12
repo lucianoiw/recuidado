@@ -59,10 +59,10 @@ export class PharmacyController {
     return this.pharmacy.ask(familyId, parse(askBody, body).medicationIds);
   }
 
-  /** The family's most recent pharmacy call, polled by the screen while it rings. */
+  /** The family's most recent round of pharmacy calls, polled by the screen while they ring. */
   @Get('latest')
-  async latest(@FamilyId() familyId: string | null) {
-    return { inquiry: await this.pharmacy.latest(familyId) };
+  latest(@FamilyId() familyId: string | null) {
+    return this.pharmacy.latest(familyId);
   }
 
   /** Called by apps/voice when the pharmacy call ends. */

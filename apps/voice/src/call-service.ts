@@ -8,6 +8,7 @@ import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
 import { AsteriskVoiceGate, openGate, startRecording } from "./ami.js";
+import { actorNumber, buildActorInstructions, simGreeting, simPharmacyFor, type SimMedication, type SimPharmacy } from "./sim-pharmacy.js";
 
 /** One step of a call for the calls panel: a log line of the call and when it happened. */
 export interface CallEvent {
@@ -68,6 +69,7 @@ export function isAllowedPharmacy(config: Pick<VoiceConfig, "allowedNumbers">, e
 
 export interface StartPharmacyCallInput extends PharmacyContext {
   phone: string;
+  medications: SimMedication[];
 }
 
 export interface StartedPharmacyCall {
@@ -185,6 +187,10 @@ export class CallService {
       maxCallMs: Math.max(this.config.maxCallSeconds, 180) * 1000,
       log: trail.log,
     });
+    // A simulated pharmacy: its attendant is a second AI, dialed now so it is ringing when the
+    // assistant gets past the menu. No real pharmacy is called.
+    const sim = simPharmacyFor(destination);
+    if (sim) void this.startActor(sim, input.medications, sessionId, call);
     return { sessionId, call, trail };
   }
 
@@ -200,6 +206,27 @@ export class CallService {
   /** Sends the transcript and the timeline of a call to the calls panel. */
   reportLog(log: CallLog): Promise<void> {
     return this.post("/call-logs", log);
+  }
+
+  /** The attendant AI of a simulated pharmacy. Hangs up when the pharmacy call ends. Never throws. */
+  private async startActor(sim: SimPharmacy, meds: SimMedication[], callerId: string, call: PharmacyCall) {
+    try {
+      const actorId = await this.live.createActorSipCall(
+        actorNumber(sim),
+        buildActorInstructions(sim, meds),
+        simGreeting(sim),
+      );
+      this.log(`[${callerId}] simulated pharmacy ${sim.index} (${sim.name}): actor ${actorId}`);
+      const hangup = () => this.live.hangup(actorId).catch((err: Error) => this.log(`actor hangup: ${err.message}`));
+      // At most 5 minutes, even if the pharmacy call never reports an end.
+      const timer = setTimeout(hangup, 5 * 60 * 1000);
+      void call.result.finally(() => {
+        clearTimeout(timer);
+        void hangup();
+      });
+    } catch (err) {
+      this.log(`[${callerId}] simulated pharmacy ${sim.index}: actor not started: ${(err as Error).message}`);
+    }
   }
 
   /** Sends the result to the Recuidado API, which alerts the family when confirmed is false. */

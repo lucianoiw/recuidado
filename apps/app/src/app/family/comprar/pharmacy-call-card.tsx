@@ -8,6 +8,7 @@ import {
   getLatestPharmacyInquiry,
   type Medication,
   type PharmacyInquiry,
+  type PharmacyRound,
   type TriState,
 } from "@/lib/api";
 import { brl, medLabel } from "@/lib/use-family";
@@ -33,20 +34,21 @@ const ENDED: Partial<Record<PharmacyInquiry["status"], string>> = {
   failed: "A ligação não completou.",
 };
 
-/** "Perguntar à farmácia": the agent calls, asks stock and price, and the answer shows up here. */
+/** "Perguntar às farmácias": the agent calls them at the same time, asks stock and price, and compares. */
 export function PharmacyCallCard({ medications }: { medications: Medication[] }) {
-  const [inquiry, setInquiry] = useState<PharmacyInquiry | null>(null);
+  const [round, setRound] = useState<PharmacyRound>({ inquiry: null, inquiries: [] });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(() => {
-    getLatestPharmacyInquiry().then(setInquiry, (e) => captureError(e, { component: "PharmacyCallCard" }));
+    getLatestPharmacyInquiry().then(setRound, (e) => captureError(e, { component: "PharmacyCallCard" }));
   }, []);
 
   useEffect(load, [load]);
 
-  // While the phone rings, check every 3 seconds.
-  const calling = inquiry?.status === "calling";
+  const inquiries = round.inquiries;
+  // While a phone rings, check every 3 seconds.
+  const calling = inquiries.some((i) => i.status === "calling");
   useEffect(() => {
     if (!calling) return;
     const timer = setInterval(load, 3000);
@@ -58,7 +60,7 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
     setBusy(true);
     setError(null);
     try {
-      setInquiry(await askPharmacy(asked.map((m) => m.id)));
+      setRound(await askPharmacy(asked.map((m) => m.id)));
       track("pharmacy_call_asked", { medications: asked.length });
     } catch (e) {
       setError((e as Error).message);
@@ -67,6 +69,9 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
     }
   };
 
+  const answered = inquiries.filter((i) => i.status === "answered");
+  const several = inquiries.length > 1;
+
   return (
     <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
       <div className="flex items-start gap-3">
@@ -74,27 +79,45 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
           <PhoneIcon size={22} />
         </span>
         <div className="flex flex-col gap-0.5">
-          <h2 className="text-[18px] font-extrabold">Perguntar à farmácia</h2>
+          <h2 className="text-[18px] font-extrabold">Perguntar às farmácias</h2>
           <p className="text-[15px] leading-snug text-muted">
-            O Recuidado liga, pergunta se tem, quanto custa e se sai pelo Farmácia Popular.
+            O Recuidado liga para as farmácias ao mesmo tempo, pergunta se tem, quanto custa e se sai pelo Farmácia
+            Popular, e compara os preços.
           </p>
         </div>
       </div>
 
-      {calling ? (
-        <StatusPill tone="warn" className="w-fit">
-          Ligando para {inquiry.pharmacyName}...
-        </StatusPill>
+      {inquiries.length > 0 ? (
+        <ul className="flex flex-col gap-1.5">
+          {inquiries.map((i) => (
+            <li key={i.id} className="flex items-center justify-between gap-3 text-[15px]">
+              <b>{i.pharmacyName}</b>
+              <StatusPill tone={CALL_STATE[i.status].tone}>{CALL_STATE[i.status].text}</StatusPill>
+            </li>
+          ))}
+        </ul>
       ) : null}
 
-      {inquiry?.status === "answered" ? <Answers inquiry={inquiry} medications={medications} /> : null}
+      {answered.length > 0 ? <Comparison inquiries={answered} medications={medications} several={several} /> : null}
 
-      {inquiry && ENDED[inquiry.status] ? <p className="text-[15px] text-muted">{ENDED[inquiry.status]}</p> : null}
+      {!several && inquiries[0] && ENDED[inquiries[0].status] ? (
+        <p className="text-[15px] text-muted">{ENDED[inquiries[0].status]}</p>
+      ) : null}
+
+      {inquiries.some((i) => i.transcript.length > 0) ? (
+        <div className="flex flex-col gap-1">
+          {inquiries
+            .filter((i) => i.transcript.length > 0)
+            .map((i) => (
+              <Conversation key={i.id} inquiry={i} />
+            ))}
+        </div>
+      ) : null}
 
       {!calling ? (
         <Button variant="secondary" onClick={ask} disabled={busy || asked.length === 0}>
           <PhoneIcon size={20} />
-          {busy ? "Ligando..." : inquiry ? "Perguntar de novo" : "Ligar e perguntar"}
+          {busy ? "Ligando..." : inquiries.length > 0 ? "Perguntar de novo" : "Ligar e perguntar"}
         </Button>
       ) : null}
       {error ? (
@@ -105,12 +128,21 @@ export function PharmacyCallCard({ medications }: { medications: Medication[] })
 
       <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
         <InfoIcon size={16} className="mt-0.5 shrink-0" />
-        Quem liga é uma assistente virtual, e ela se apresenta assim. Na demonstração, a ligação vai para um número de
-        teste, não para uma farmácia de verdade. Preço dito por telefone é referência, não oferta.
+        Quem liga é uma assistente virtual, e ela se apresenta assim. Na demonstração, as farmácias são simuladas: o
+        menu de teclas é de verdade e quem atende é outra IA, com preços de exemplo. Nenhuma farmácia de verdade
+        recebe a ligação. Preço dito por telefone é referência, não oferta.
       </p>
     </section>
   );
 }
+
+const CALL_STATE: Record<PharmacyInquiry["status"], { text: string; tone: "ok" | "warn" | "danger" | "neutral" }> = {
+  calling: { text: "Ligando...", tone: "warn" },
+  answered: { text: "Respondeu", tone: "ok" },
+  unclear: { text: "Não entendi", tone: "neutral" },
+  no_answer: { text: "Não atendeu", tone: "neutral" },
+  failed: { text: "Não completou", tone: "danger" },
+};
 
 /** Pills in the box as the attendant said it, e.g. "caixa com 30 comprimidos" → 30. */
 export function unitsIn(pack: string | undefined): number | null {
@@ -133,63 +165,100 @@ export function vsCeiling(
   return priceCents / units > ceiling.packCents / ceiling.unitsPerPack + 0.01 ? "above" : "within";
 }
 
-function Answers({ inquiry, medications }: { inquiry: PharmacyInquiry; medications: Medication[] }) {
+/** One block per medicine, the pharmacies from the cheapest box to the most expensive. */
+function Comparison({
+  inquiries,
+  medications,
+  several,
+}: {
+  inquiries: PharmacyInquiry[];
+  medications: Medication[];
+  several: boolean;
+}) {
+  const asked = inquiries[0].medications;
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-[15px] text-muted">
-        Resposta da {inquiry.pharmacyName}
-        {inquiry.usedPhoneMenu ? " (passou pelo menu de teclas)" : ""}
-      </span>
-      <ul className="overflow-hidden rounded-xl border border-line-soft">
-        {inquiry.medications.map((m, i) => {
-          const a = inquiry.answers[i];
-          const popular = a ? POPULAR[a.farmaciaPopular] : null;
-          const ceiling = medications.find((x) => x.id === m.medicationId)?.price ?? null;
-          const compare = a?.priceCents != null && ceiling ? vsCeiling(a.priceCents, a.package, ceiling) : null;
-          return (
-            <li key={m.medicationId} className="flex flex-col gap-1 border-b border-line-soft px-3.5 py-3 last:border-b-0">
-              <div className="flex items-center justify-between gap-3">
-                <b>{medLabel(m.name, m.strength)}</b>
-                <StatusPill tone={STOCK[a?.available ?? "unknown"].tone}>{STOCK[a?.available ?? "unknown"].text}</StatusPill>
-              </div>
-              <span className="text-[15px] text-muted">
-                {a?.priceCents != null ? (
-                  <>
-                    <b className="text-ink">{brl.format(a.priceCents / 100)}</b>
-                    {a.package ? `, ${a.package}` : " a caixa"}
-                  </>
-                ) : (
-                  "Não disse o preço"
-                )}
+    <div className="flex flex-col gap-3">
+      {asked.map((m, idx) => {
+        const ceiling = medications.find((x) => x.id === m.medicationId)?.price ?? null;
+        const offers = inquiries
+          .map((inq) => ({ inq, a: inq.answers[idx] }))
+          .sort((x, y) => (x.a?.priceCents ?? Infinity) - (y.a?.priceCents ?? Infinity));
+        const priced = offers.filter((o) => o.a?.available !== "no" && o.a?.priceCents != null);
+        const cheapest = several && priced.length > 1 ? priced[0].inq.id : null;
+        return (
+          <div key={m.medicationId} className="flex flex-col gap-1.5">
+            <b className="text-[17px]">{medLabel(m.name, m.strength)}</b>
+            <ul className="overflow-hidden rounded-xl border border-line-soft">
+              {offers.map(({ inq, a }) => {
+                const popular = a ? POPULAR[a.farmaciaPopular] : null;
+                const compare = a?.priceCents != null && ceiling ? vsCeiling(a.priceCents, a.package, ceiling) : null;
+                return (
+                  <li key={inq.id} className="flex flex-col gap-1 border-b border-line-soft px-3.5 py-3 last:border-b-0">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-bold">{inq.pharmacyName}</span>
+                      {cheapest === inq.id ? (
+                        <StatusPill tone="ok">Mais barato</StatusPill>
+                      ) : (
+                        <StatusPill tone={STOCK[a?.available ?? "unknown"].tone}>
+                          {STOCK[a?.available ?? "unknown"].text}
+                        </StatusPill>
+                      )}
+                    </div>
+                    {a?.available !== "no" ? (
+                      <span className="text-[15px] text-muted">
+                        {a?.priceCents != null ? (
+                          <>
+                            <b className="text-[17px] text-ink">{brl.format(a.priceCents / 100)}</b>
+                            {a.package ? `, ${a.package}` : " a caixa"}
+                            {compare === "above" ? (
+                              <b className="text-danger">. Acima do teto da CMED</b>
+                            ) : compare === "within" ? (
+                              <span>. Dentro do teto</span>
+                            ) : null}
+                          </>
+                        ) : (
+                          "Não disse o preço"
+                        )}
+                      </span>
+                    ) : null}
+                    {popular ? <span className="text-[15px] text-muted">{popular}</span> : null}
+                  </li>
+                );
+              })}
+            </ul>
+            {ceiling ? (
+              <span className="text-[14px] text-muted">
+                Teto CMED: {brl.format(ceiling.packCents / 100)} a caixa com {ceiling.unitsPerPack}
               </span>
-              {ceiling ? (
-                <span className="text-[15px] text-muted">
-                  Teto CMED: {brl.format(ceiling.packCents / 100)} a caixa com {ceiling.unitsPerPack}
-                  {compare === "above" ? (
-                    <b className="text-danger">. Acima do teto</b>
-                  ) : compare === "within" ? (
-                    <b className="text-brand">. Dentro do teto</b>
-                  ) : null}
-                </span>
-              ) : null}
-              {popular ? <span className="text-[15px] text-muted">{popular}</span> : null}
-            </li>
-          );
-        })}
-      </ul>
-      {inquiry.note ? <p className="text-[15px]">{inquiry.note}</p> : null}
-      {inquiry.transcript.length > 0 ? (
-        <details className="text-[15px]">
-          <summary className="cursor-pointer font-bold">Ver a conversa</summary>
-          <ul className="mt-2 flex flex-col gap-1.5">
-            {inquiry.transcript.map((line, i) => (
-              <li key={i}>
-                <b>{line.speaker === "assistant" ? "Recuidado" : "Farmácia"}:</b> {line.text}
-              </li>
-            ))}
-          </ul>
-        </details>
-      ) : null}
+            ) : null}
+          </div>
+        );
+      })}
+      {inquiries
+        .filter((i) => i.note)
+        .map((i) => (
+          <p key={i.id} className="text-[15px]">
+            <b>{i.pharmacyName}:</b> {i.note}
+          </p>
+        ))}
     </div>
+  );
+}
+
+function Conversation({ inquiry }: { inquiry: PharmacyInquiry }) {
+  return (
+    <details className="text-[15px]">
+      <summary className="cursor-pointer font-bold">
+        Ver a conversa com a {inquiry.pharmacyName}
+        {inquiry.usedPhoneMenu ? " (passou pelo menu de teclas)" : ""}
+      </summary>
+      <ul className="mt-2 flex flex-col gap-1.5">
+        {inquiry.transcript.map((line, i) => (
+          <li key={i}>
+            <b>{line.speaker === "assistant" ? "Recuidado" : "Farmácia"}:</b> {line.text}
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }
