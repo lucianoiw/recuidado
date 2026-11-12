@@ -1,3 +1,4 @@
+import type { ProgramMatch } from "./programs";
 import { authHeader, setSession } from "./session";
 import { setMe, clearMe } from "./me";
 import { rememberGender } from "./pronouns";
@@ -78,6 +79,8 @@ export interface Medication {
   highCostConditions?: string[];
   /** The city list has it only at some units, as the list writes it, e.g. "medicamento disponível em SAE/IST/AIDS". */
   ubsRestricted?: string | null;
+  /** Every program that has it (Farmácia Popular, UBS, Alto Custo, home delivery, discounts...), rules checked. */
+  programs?: ProgramMatch[];
   /** Pills left at home and how many days they last; null when nobody counted them. */
   stock?: Stock | null;
   /** Where the family is in the Alto Custo path; null when it is not in the list. */
