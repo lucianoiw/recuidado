@@ -399,6 +399,23 @@ As listas de remédio grátis saíram dos arquivos JSON e foram para o Postgres,
 - **Consulta.** `GET /programs` lista os programas, quantos itens têm e a última atualização. `GET /family/alto-custo` traz doenças, CID e regras de cada remédio.
 - Números de hoje: Farmácia Popular 39 itens, posto 304, Alto Custo SP 302 apresentações de 167 remédios, para 109 doenças.
 
+### Outros programas: entrega em casa, Dose Certa, insumos de diabetes e desconto de laboratório (12/11/2026)
+
+Além dos três programas acima, entraram quatro, com a lista copiada da página oficial em 12/11/2026 (`pnpm --filter @recuidado/data build:curated-programs` gera os arquivos em `seed/programs/`):
+
+| Programa | Quem | Tipo | Itens | Regras |
+| --- | --- | --- | --- | --- |
+| [Remédio em Casa](https://prefeitura.sp.gov.br/web/saude/w/programas/5875) | Prefeitura de SP | entrega em casa, 90 dias | 20 (losartana 50 mg, anlodipino, metformina, sinvastatina, levotiroxina...) | morar na cidade de SP, Cartão SUS, doença crônica estável, acompanhamento na UBS |
+| [Farmácia Dose Certa](https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/farmacia-dose-certa) | Estado de SP (FURP) | grátis no balcão, em estações de metrô | 52 | receita do SUS com nome genérico, 180 dias para uso contínuo; receita particular só em Mandaqui, Pedreira, Guaianazes e Sé |
+| [AMG](https://prefeitura.sp.gov.br/web/saude/w/programas/amg-programa-de-automonitoramento-glicemico) | Prefeitura de SP (Lei 11.347/2006) | insumos | insulina NPH e Regular, aparelho, tiras, lancetas, seringas | diabetes com insulina, formulário do médico |
+| [Vale Mais Saúde](https://www.valemaissaude.com.br/cadastrar) | Novartis | desconto do laboratório | 25 apresentações (Entresto, Diovan, Galvus...) | só a marca; CPF e CRM do médico; valor só na farmácia |
+
+- **Entresto tem dois caminhos.** Alto Custo: grátis, com laudo (LME), CID I50 e início entre 18 e 75 anos, e leva semanas. Vale Mais Saúde: desconto já na farmácia. O app mostra os dois: compra com desconto enquanto o Alto Custo não sai.
+- **Desconto nunca é "grátis".** Programa do tipo `discount` não entra em `freeAt` e o Recuidado não cadastra a família no laboratório.
+- **Remédio SP** ([remediosp.saude.sp.gov.br](https://remediosp.saude.sp.gov.br/)): o pedido do Alto Custo é on-line para qualquer morador do Estado, com conta gov.br. A entrega em casa foi divulgada para a Grande SP; na base pública o campo de entrega (`elegivelTransporte`) está falso em todos os remédios.
+- **Atualização.** Essas listas não têm arquivo oficial para baixar: a revisão é manual, pela data em `program.version`.
+- Mapa completo dos programas pesquisados, com os que ficaram de fora (vacinas, Melhor em Casa, plano de saúde, Justiça): [documento](https://claude.ai/artifact/YMZ6iBWvfm6bTzbSfsLXBK).
+
 ### E se for outro remédio? Mapa de todos os remédios vendidos no Brasil (12/11/2026)
 
 `pnpm --filter @recuidado/data report:coverage` cruza cada princípio ativo e dosagem da tabela da CMED (todos os remédios com preço regulado no Brasil) com os três programas e grava `packages/data/seed/coverage.json`. Resultado de 12/11/2026, em 1.802 princípios ativos:
