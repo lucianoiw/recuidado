@@ -32,7 +32,7 @@ import { stockText } from "@/lib/stock";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 import { useUnseenAlerts } from "@/lib/alerts-seen";
 
-function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
+function rowStatus(d: Dose, now: number, ela: string): { status: RowStatus; text: string } {
   if (d.status === "taken") {
     const via = d.confirmedVia === "voice" ? " por ligação" : "";
     const at = d.confirmedAt ? ` ${formatTime(d.confirmedAt)}` : "";
@@ -40,7 +40,8 @@ function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
   }
   if (d.status === "missed") return { status: "missed", text: "Não tomou" };
   if (new Date(d.scheduledAt).getTime() <= now)
-    return { status: "pending", text: "Esperando" };
+    // Time had passed when the medicine was added: her app asks her about it.
+    return { status: "pending", text: d.beforeAdded ? `Perguntando a ${ela}` : "Esperando" };
   return { status: "upcoming", text: "Mais tarde" };
 }
 
@@ -166,7 +167,11 @@ export function FamilyView() {
             role="alert"
             tone="danger"
             icon={<AlertIcon />}
-            title={`Não confirmou ${names.length > 1 ? "os remédios" : names[0]} das ${formatTime(d.scheduledAt)}`}
+            title={
+              d.confirmedVia === "app"
+                ? `${pr.Ela} disse que não tomou ${names.length > 1 ? "os remédios" : names[0]} das ${formatTime(d.scheduledAt)}`
+                : `Não confirmou ${names.length > 1 ? "os remédios" : names[0]} das ${formatTime(d.scheduledAt)}`
+            }
             actions={
               <>
                 <CallLink member={data.patient} className={pillClass("dark")}>
@@ -187,7 +192,11 @@ export function FamilyView() {
           >
             {names.length > 1 ? <span className="block">{names.join(", ")}</span> : null}
             <span className="block text-muted">
-              {d.familyAlertedAt ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}.` : `Vale ligar para ${pr.ela}.`}
+              {d.confirmedVia === "app" && d.confirmedAt
+                ? `Respondeu no app às ${formatTime(d.confirmedAt)}.`
+                : d.familyAlertedAt
+                  ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}.`
+                  : `Vale ligar para ${pr.ela}.`}
             </span>
           </Notice>
         );
@@ -306,7 +315,7 @@ export function FamilyView() {
         ) : (
           <DoseList>
             {data.today.map((d) => {
-              const s = rowStatus(d, now);
+              const s = rowStatus(d, now, pr.ela);
               return (
                 <DoseRow
                   key={d.id}
