@@ -243,6 +243,8 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
     .notNull()
     .references(() => families.id, { onDelete: 'cascade' }),
   pharmacyName: text().notNull(),
+  // Calls placed together by one tap ("Perguntar às farmácias"), to compare their prices.
+  batchId: uuid(),
   // What was asked, e.g. [{ medicationId, name: "Losartana", strength: "50 mg" }].
   medications: jsonb()
     .$type<{ medicationId: string; name: string; strength: string | null }[]>()

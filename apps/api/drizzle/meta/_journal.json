@@ -134,6 +134,13 @@
       "when": 1794442131802,
       "tag": "0018_aspiring_magneto",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1794442583016,
+      "tag": "0019_loose_baron_strucker",
+      "breakpoints": true
     }
   ]
 }

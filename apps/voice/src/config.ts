@@ -5,6 +5,8 @@ export interface VoiceConfig {
   openaiApiKey: string;
   liveModel: string;
   liveVoice: string;
+  /** Voice of the attendant AI in the simulated pharmacies (another voice than the assistant's). */
+  actorVoice: string;
   delegateModel: string;
   /** Reasoning effort for the delegated model; empty leaves the model default. */
   delegateReasoningEffort?: string;
@@ -56,6 +58,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     openaiApiKey: required(env, "OPENAI_API_KEY"),
     liveModel: env.OPENAI_LIVE_MODEL?.trim() || "gpt-live-1",
     liveVoice: env.OPENAI_LIVE_VOICE?.trim() || "bossa",
+    actorVoice: env.PHARMACY_ACTOR_VOICE?.trim() || "tempo",
     delegateModel: env.OPENAI_DELEGATE_MODEL?.trim() || "gpt-6-luna",
     delegateReasoningEffort: env.OPENAI_DELEGATE_REASONING_EFFORT?.trim() ?? "low",
     greetingCacheDir: env.GREETING_CACHE_DIR?.trim() || "/tmp/recuidado-greetings",

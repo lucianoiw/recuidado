@@ -9,6 +9,8 @@ say() {
   sox /tmp/say.wav -r 8000 -c 1 -b 16 "$OUT/$1.wav"
 }
 say ura-menu "Bem-vindo à Farmácia Teste. Para receitas e documentos, tecle 1. Para preço e estoque de remédios, tecle 2. Para outros assuntos, tecle 9."
+say sim1-menu "Bem-vindo à Drogaria Vida. Para receitas, tecle 1. Para preço e estoque de remédios, tecle 2. Para falar com o financeiro, tecle 9."
+say sim3-menu "Olá, você ligou para a Drogaria Bom Preço. Para entregas, tecle 1. Para trocas, tecle 2. Para falar com um atendente da farmácia, tecle 3."
 say ura-wrong "Esta opção não informa preço de remédios. Voltando ao menu."
 say ura-attendant "Farmácia Teste, boa tarde."
 say ura-hello "Alô? Farmácia Teste."
