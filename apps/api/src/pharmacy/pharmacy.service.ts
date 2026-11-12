@@ -31,6 +31,8 @@ export interface PharmacyVoiceResult {
     medication: string;
     available: 'yes' | 'no' | 'unknown';
     priceCents: number | null;
+    genericPriceCents?: number | null;
+    referencePriceCents?: number | null;
     package?: string | null;
   }[];
   note?: string | null;
@@ -251,6 +253,8 @@ export class PharmacyService {
           medication: i.medication,
           available: i.available,
           priceCents: i.priceCents,
+          genericPriceCents: i.genericPriceCents ?? null,
+          referencePriceCents: i.referencePriceCents ?? null,
           package: i.package ?? undefined,
         })),
         note: result.note ?? null,

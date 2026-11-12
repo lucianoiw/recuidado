@@ -33,6 +33,8 @@ const voiceResultBody = z.object({
         medication: z.string(),
         available: triState,
         priceCents: z.number().int().nonnegative().nullable(),
+        genericPriceCents: z.number().int().nonnegative().nullish(),
+        referencePriceCents: z.number().int().nonnegative().nullish(),
         package: z.string().nullish(),
       }),
     )

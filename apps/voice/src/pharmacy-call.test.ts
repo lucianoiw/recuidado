@@ -110,8 +110,8 @@ test("presses a menu key, then records stock and price and hangs up after the go
   socket.emitEvent(
     fnCall("r1", "record_pharmacy_answer", {
       items: [
-        { medication: "Losartana 50 mg", available: "yes", price_reais: 18.9, package: "caixa com 30 comprimidos" },
-        { medication: "Sinvastatina 20 mg", available: "no", price_reais: null, package: "" },
+        { medication: "Losartana 50 mg", available: "yes", generic_price_reais: 18.9, reference_price_reais: 42.5, price_reais: null, package: "caixa com 30 comprimidos" },
+        { medication: "Sinvastatina 20 mg", available: "no", generic_price_reais: null, reference_price_reais: null, price_reais: null, package: "" },
       ],
       note: "",
     }),
@@ -122,8 +122,8 @@ test("presses a menu key, then records stock and price and hangs up after the go
   assert.equal(result.outcome, "answered");
   assert.deepEqual(result.keysPressed, ["2"]);
   assert.deepEqual(result.items, [
-    { medication: "Losartana 50 mg", available: "yes", priceCents: 1890, package: "caixa com 30 comprimidos" },
-    { medication: "Sinvastatina 20 mg", available: "no", priceCents: null, package: undefined },
+    { medication: "Losartana 50 mg", available: "yes", priceCents: 1890, genericPriceCents: 1890, referencePriceCents: 4250, package: "caixa com 30 comprimidos" },
+    { medication: "Sinvastatina 20 mg", available: "no", priceCents: null, genericPriceCents: null, referencePriceCents: null, package: undefined },
   ]);
   assert.equal(result.endReason, "hung_up_after_goodbye");
   assert.equal(result.durationSeconds, 48);

@@ -467,6 +467,9 @@ export interface PharmacyInquiry {
     available: TriState;
     /** Price of one box said on the phone. Reference, not an offer. */
     priceCents: number | null;
+    /** Box price of the generic and of the reference brand, when said. */
+    genericPriceCents?: number | null;
+    referencePriceCents?: number | null;
     package?: string;
   }[];
   note: string | null;

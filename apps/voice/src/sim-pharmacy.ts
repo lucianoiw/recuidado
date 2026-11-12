@@ -51,6 +51,11 @@ export function simPriceCents(p: SimPharmacy, m: SimMedication): number {
   return Math.max(490, Math.round((base * p.priceFactor) / 100) * 100 - 10);
 }
 
+/** The reference brand costs about 1.8 times the generic, also ending in ,90. */
+export function simReferenceCents(genericCents: number): number {
+  return Math.round((genericCents * 1.8) / 100) * 100 - 10;
+}
+
 function reais(cents: number): string {
   return `R$ ${Math.floor(cents / 100)},${String(cents % 100).padStart(2, "0")}`;
 }
@@ -64,7 +69,8 @@ export function simFacts(p: SimPharmacy, meds: SimMedication[]): string[] {
   return meds.map((m, i) => {
     if (p.outOfStock === i && meds.length > 1) return `${spoken(m)}: está em falta, não tem hoje.`;
     const units = m.unitsPerPack ?? 30;
-    return `${spoken(m)}: tem. ${reais(simPriceCents(p, m))} a caixa com ${units} comprimidos.`;
+    const generic = simPriceCents(p, m);
+    return `${spoken(m)}: tem o genérico por ${reais(generic)} e o de referência por ${reais(simReferenceCents(generic))}, caixa com ${units} comprimidos.`;
   });
 }
 
@@ -81,7 +87,7 @@ export function buildActorInstructions(p: SimPharmacy, meds: SimMedication[], no
     `When the call connects, say: "${simGreeting(p, now)}" Then listen.`,
     "The caller is a virtual assistant asking about medicines for a family. Answer its questions using only these facts:",
     ...simFacts(p, meds).map((f) => `- ${f}`),
-    "Say prices the way people say them on the phone (\"dezesseis e noventa\"). Give each answer when asked; you may give the price and box size together.",
+    "Say prices the way people say them on the phone (\"dezesseis e noventa\"). Give each answer when asked; you may give the price and box size together. If asked only for one price, give the generic first and the reference when asked.",
     "For any medicine not listed, say you need to check and do not have it now. Do not invent other prices or products.",
     "Never ask for or accept personal data, never sell or reserve anything, and never give advice about treatment or doses.",
     "If the caller says goodbye, answer \"Por nada, tchau!\" and then stay silent.",

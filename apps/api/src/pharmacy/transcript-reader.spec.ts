@@ -13,7 +13,9 @@ describe('readPharmacyTranscript', () => {
         {
           medication: 'Rosuvastatina 10 mg',
           available: 'yes',
-          price_reais: 32.5,
+          generic_price_reais: 32.5,
+          reference_price_reais: 61.9,
+          price_reais: null,
           package: 'caixa com 30 comprimidos',
         },
       ],
@@ -30,6 +32,8 @@ describe('readPharmacyTranscript', () => {
           medication: 'Rosuvastatina 10 mg',
           available: 'yes',
           priceCents: 3250,
+          genericPriceCents: 3250,
+          referencePriceCents: 6190,
           package: 'caixa com 30 comprimidos',
         },
       ],
@@ -41,7 +45,7 @@ describe('readPharmacyTranscript', () => {
 
   it('keeps a missing price as null', async () => {
     const { client } = fakeClient({
-      items: [{ medication: 'Losartana', available: 'no', price_reais: null, package: '' }],
+      items: [{ medication: 'Losartana', available: 'no', generic_price_reais: null, reference_price_reais: null, price_reais: null, package: '' }],
       note: 'Chega amanhã.',
     });
     const result = await readPharmacyTranscript(client, ['Losartana'], [{ speaker: 'patient', text: 'Não tem.' }]);
