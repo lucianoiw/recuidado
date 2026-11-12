@@ -48,6 +48,8 @@ export interface PharmacyCallOptions {
   openingWaitMs?: number;
   /** Silence after a menu key or hold message before the AI says "Alô?". Default 9000. */
   silentLineMs?: number;
+  /** A speaker's piece within this many ms of their last one continues their line. Default 1200. */
+  overlapGlueMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -199,6 +201,8 @@ export class PharmacyCall {
   private saidGoodbye = false;
   /** Whether the pharmacy hears the AI now (the voice gate is open). */
   private voiceOpen = false;
+  private mutedSpeech = "";
+  private openLines: Partial<Record<TranscriptLine["speaker"], { line: TranscriptLine; at: number }>> = {};
   private endReason?: string;
   private voicemail = false;
   private assistantAfterAnswer = "";
@@ -511,7 +515,7 @@ export class PharmacyCall {
     this.assistantAfterAnswer = "";
     // The model says goodbye while the answer is recorded: if it already did, hang up shortly.
     const lastAssistant = [...this.transcript].reverse().find((l) => l.speaker === "assistant");
-    if (lastAssistant && GOODBYE.test(lastAssistant.text)) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
+    if ((lastAssistant && GOODBYE.test(lastAssistant.text)) || GOODBYE.test(this.mutedSpeech)) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
     else this.armSilenceHangup();
   }
 
@@ -526,10 +530,13 @@ export class PharmacyCall {
 
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
-    this.appendTranscript("assistant", delta);
-    // An introduction said while muted was not heard: it does not count, the code asks for it again.
     const heard = this.voiceOpen || this.gate.alwaysOpen === true;
-    if (heard && /assistente virtual/i.test(this.transcript.at(-1)?.text ?? "")) this.introduced = true;
+    // What the AI says while muted never reaches the pharmacy: it stays out of the transcript (it read
+    // as a double introduction) and goes to the log when the voice opens.
+    if (heard) this.appendTranscript("assistant", delta);
+    else this.mutedSpeech += delta;
+    // An introduction said while muted was not heard: it does not count, the code asks for it again.
+    if (heard && /assistente virtual/i.test(this.lineOf("assistant"))) this.introduced = true;
     if (heard) this.armQuietPerson();
     if (this.waiting && this.waitAck !== "done") {
       this.waitAck += delta;
@@ -551,8 +558,7 @@ export class PharmacyCall {
     if (!this.answer) {
       // The answer tool can fail on the Live side ("invalid_request_error" on the turn after a key
       // press): a goodbye still ends the call, and the API reads the prices from the transcript.
-      const line = this.transcript.at(-1);
-      if (this.heardOtherSide && line?.speaker === "assistant" && GOODBYE.test(line.text)) {
+      if (this.heardOtherSide && GOODBYE.test(this.lineOf("assistant") + this.mutedSpeech)) {
         this.saidGoodbye = true;
         if (this.quietTimer) clearTimeout(this.quietTimer);
         if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
@@ -649,13 +655,30 @@ export class PharmacyCall {
     void this.endCall();
   }
 
+  /**
+   * Both sides talk at the same time on a phone line. A piece within 1.2 s of the same speaker's last
+   * piece continues their line even if the other side spoke in between, so overlapping speech does not
+   * turn into lines of half words ("Rec" / "Farm" / "uidado").
+   */
   private appendTranscript(speaker: TranscriptLine["speaker"], delta: string) {
     if (!delta) return;
+    const now = Date.now();
+    const open = this.openLines[speaker];
     const last = this.transcript.at(-1);
-    const glue = last && last.speaker === speaker && !this.newLine;
+    if (!this.newLine && open && (last === open.line || now - open.at < (this.opts.overlapGlueMs ?? 1200))) {
+      open.line.text += delta;
+      open.at = now;
+      return;
+    }
     this.newLine = false;
-    if (glue) last.text += delta;
-    else this.transcript.push({ speaker, text: delta });
+    const line: TranscriptLine = { speaker, text: delta };
+    this.transcript.push(line);
+    this.openLines[speaker] = { line, at: now };
+  }
+
+  /** The current line of one speaker ("" if none). */
+  private lineOf(speaker: TranscriptLine["speaker"]): string {
+    return this.openLines[speaker]?.line.text ?? "";
   }
 
   /**
@@ -663,6 +686,10 @@ export class PharmacyCall {
    * who said "Farmácia X, boa tarde" waits for an answer, and silence makes them hang up or say it again.
    */
   private openVoice() {
+    if (!this.voiceOpen && this.mutedSpeech.trim()) {
+      this.log(`said while muted (not heard): ${this.mutedSpeech.trim().slice(0, 300)}`);
+    }
+    this.mutedSpeech = "";
     this.voiceOpen = true;
     return this.gate.unmute();
   }

@@ -607,3 +607,22 @@ test("silence after the hold message: the AI is heard and says only 'Alô?'", as
   await call.endCall();
   await call.result;
 });
+
+test("overlapping speech keeps whole lines; what the AI said while muted stays out of the transcript", async () => {
+  const { socket, call } = setup(60_000, { overlapGlueMs: 25 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o0", delta: "Oi, bom dia!" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i1", delta: "Farmácia Central, bom dia." });
+  await new Promise((r) => setTimeout(r, 30));
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o1", delta: "Aqui é a assistente virtual da Rec" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i2", delta: "Pois" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "o2", delta: "uidado." });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i3", delta: " não?" });
+  await call.endCall();
+  const result = await call.result;
+  assert.deepEqual(result.transcript, [
+    { speaker: "patient", text: "Farmácia Central, bom dia." },
+    { speaker: "assistant", text: "Aqui é a assistente virtual da Recuidado." },
+    { speaker: "patient", text: "Pois não?" },
+  ]);
+});
