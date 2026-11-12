@@ -302,6 +302,7 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
     | 17:59 a 18:05 | 12 | 12 | Uma apresentação repetida; duas terminaram sem "tchau" |
     | 18:10 a 18:19 | 15 | 15 | Uma ficou aberta até 3 min (a IA se apresentou sozinha depois do "Alô?" e o vigia de silêncio não contava isso, corrigido no #182). Uma vez a assistente inventou uma frase fora do assunto ("olha só essa calça...") e o atendente ouviu |
     | 18:39 a 18:44 | 12 | 10 | Duas vezes o "Alô?" saiu junto com o "boa tarde" do atendente: ele ouviu só pedaços, perguntou "Qual remédio?" e a transcrição da assistente perdeu isso. Agora, antes de desligar por silêncio, a assistente pergunta de novo uma vez (#186). Um preço de referência lido como "3,90" |
+    | 18:50 a 18:55 | 15 | 13 | Todas terminaram com "tchau". As duas erradas: o atendente disse "treze e noventa" (registro do atendente) e a transcrição da assistente ouviu "três e noventa". Isso também aconteceria com uma pessoa na linha |
 
     Chamadas de 26 a 74 s (Farmácia Central cerca de 30 s, Drogaria Vida e Bom Preço 50 a 70 s por causa do menu e da espera).
   - **Correções que as rodadas pediram.**
@@ -310,7 +311,7 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
     - Assistente calada 6 s depois que a farmácia respondeu: um lembrete para registrar ou perguntar; se continuar calada, desliga e o Claude lê os preços da transcrição (#166). Resposta registrada sem "tchau": pede o "tchau" uma vez (#179).
     - 25 s sem ouvir nada depois da apresentação: desliga (#171). Veio de uma ligação que ficou muda depois de o Asterisk de teste reiniciar sozinho (causa não encontrada).
     - O atendente simulado diz cada preço com o nome ("o genérico sai sete e noventa"), escrito por extenso nas instruções dele (#176). O serviço de voz registra o que o atendente fala e ouve (#178).
-  - **O que ainda falha e por quê.** O GPT-Live às vezes continua falando sozinho com uma frase sem relação com a ligação (1 vez em 108 ligações medidas). Quase todas as outras falhas vêm de duas IAs conversando: uma fala por cima da outra, a transcrição corta o começo da frase ("Comprimidos" em vez do preço) ou o atendente simulado não responde. Com uma pessoa do outro lado, o que importa é a linha, e isso não muda.
+  - **O que ainda falha e por quê.** O GPT-Live às vezes continua falando sozinho com uma frase sem relação com a ligação (1 vez em 123 ligações medidas). Quase todas as outras falhas vêm de duas IAs conversando: uma fala por cima da outra, a transcrição corta o começo da frase ("Comprimidos" em vez do preço) ou o atendente simulado não responde. Com uma pessoa do outro lado, o que importa é a linha, e isso não muda. A transcrição da linha telefônica confunde "treze" com "três" (3 vezes em 123); repetir o preço para o atendente confirmar resolveria, ainda não está no roteiro.
 
 ## Painel das ligações
 
