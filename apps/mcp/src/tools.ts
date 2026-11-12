@@ -245,7 +245,7 @@ const ALERT_KIND: Record<string, string> = {
   unwell: "não está bem",
   low_stock: "remédio acabando",
   emergency: "emergência",
-  emergency_call: "ligação para o primeiro contato",
+  emergency_call: "ligação de emergência para a família",
   check_in: "ligação de volta para ela",
 };
 

@@ -147,6 +147,14 @@ export class CallService {
     return this.post(`/doses/${encodeURIComponent(doseId)}/voice-result`, result);
   }
 
+  /** Tells the Recuidado API how an emergency call to a caregiver ended; not delivered calls the next one. */
+  reportAlert(
+    doseId: string,
+    result: { sessionId: string; memberId: string; message: string; answered: boolean; delivered: boolean },
+  ): Promise<void> {
+    return this.post(`/doses/${encodeURIComponent(doseId)}/alert-call-result`, result);
+  }
+
   /** Sends what the pharmacy said to the Recuidado API. */
   reportPharmacy(inquiryId: string, result: PharmacyCallResult): Promise<void> {
     return this.post(`/pharmacy-inquiries/${encodeURIComponent(inquiryId)}/voice-result`, result);

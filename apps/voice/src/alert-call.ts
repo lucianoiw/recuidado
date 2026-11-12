@@ -9,6 +9,13 @@ export function buildEmergencyMessage(patientName: string, note?: string): strin
 /** The message ends with the SAMU line: once it is heard, the message was delivered. */
 const MESSAGE_END = /samu|192|noventa e dois/i;
 
+/**
+ * A recording instead of a person: voicemail or the carrier saying the phone is off. The message read to a
+ * recording does not count as heard, so the next caregiver is called.
+ */
+export const NOT_A_PERSON =
+  /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o sinal|caixa postal|caixa de mensagens|desligado ou fora|fora da [áa]rea|n[ãa]o est[áa] dispon[íi]vel|n[ãa]o pode atender/i;
+
 /** Instructions for the one-way alert call: say the message, repeat once if asked, never advise. */
 export function buildAlertInstructions(message: string): string {
   return [
@@ -24,8 +31,10 @@ export function buildAlertInstructions(message: string): string {
 export interface AlertCallResult {
   sessionId: string;
   answered: boolean;
-  /** True when the assistant reached the end of the message (the SAMU line). */
+  /** True when the assistant reached the end of the message (the SAMU line) and a person, not a recording, answered. */
   delivered: boolean;
+  /** Voicemail or a carrier recording answered. */
+  recording?: boolean;
   endReason?: string;
   error?: string;
 }
@@ -50,6 +59,8 @@ export class AlertCall {
   private answered = false;
   private delivered = false;
   private spoken = "";
+  private heard = "";
+  private recording = false;
   private endReason?: string;
   private error?: string;
   private hangupRequested = false;
@@ -114,6 +125,15 @@ export class AlertCall {
         void this.endCall();
         break;
       }
+      case "session.input_transcript.delta":
+        this.heard += String(event.delta ?? "");
+        if (!this.recording && NOT_A_PERSON.test(this.heard)) {
+          this.recording = true;
+          this.log("a recording answered the alert call");
+          this.endReason ??= "voicemail";
+          void this.endCall();
+        }
+        break;
       case "session.output_transcript.delta":
         this.spoken += String(event.delta ?? "");
         if (MESSAGE_END.test(this.spoken)) {
@@ -158,7 +178,8 @@ export class AlertCall {
     this.resolveResult({
       sessionId: this.opts.sessionId,
       answered: this.answered,
-      delivered: this.delivered,
+      delivered: this.delivered && !this.recording,
+      recording: this.recording,
       endReason: this.endReason,
       error: this.error,
     });

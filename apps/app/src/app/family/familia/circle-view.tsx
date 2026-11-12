@@ -163,7 +163,8 @@ function FirstContact({
       </h2>
       <p className="text-[15px] leading-snug text-muted">
         Se {patient} disser na ligação que caiu, que sente dor no peito, falta de ar ou que desmaiou,
-        ligamos só para esta pessoa. As outras recebem a notificação.
+        ligamos primeiro para esta pessoa. Se ela não atender, ligamos para a próxima da família, uma de
+        cada vez, até alguém ouvir o recado. Todas recebem a notificação.
       </p>
       <ul className="overflow-hidden rounded-2xl border border-line-soft" role="radiogroup" aria-label="Primeiro contato em emergência">
         {caregivers.map((c) => {

@@ -201,13 +201,24 @@ const server = createServer(async (req, res) => {
       try {
         const { sessionId, call } = await service.startAlert(b.phone, b.message.trim());
         telemetry.capture("alert_call_started", { ...props, call_id: sessionId }, telemetry.systemId);
-        void call.result.then((result) => {
+        const memberId = typeof b.memberId === "string" ? b.memberId : undefined;
+        void call.result.then(async (result) => {
           telemetry.info(`alert call ${sessionId} ended: delivered=${result.delivered}`, { ...props, call_id: sessionId });
           telemetry.capture(
             "alert_call_ended",
             { ...props, call_id: sessionId, answered: result.answered, delivered: result.delivered, end_reason: result.endReason },
             telemetry.systemId,
           );
+          // The API calls the next caregiver when this one did not hear the message.
+          if (props.dose_id && memberId) {
+            await service.reportAlert(props.dose_id, {
+              sessionId,
+              memberId,
+              message: (b.message as string).trim(),
+              answered: result.answered,
+              delivered: result.delivered,
+            });
+          }
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {
