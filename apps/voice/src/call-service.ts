@@ -239,13 +239,27 @@ export class CallService {
   private watchActor(actorId: string, callerId: string) {
     try {
       const socket = this.live.attach(actorId);
+      // What the attendant says and hears, one line per utterance: tells "the attendant never spoke"
+      // apart from "the caller's transcription lost it".
+      const lines = { said: "", heard: "" };
+      const timers: Partial<Record<keyof typeof lines, NodeJS.Timeout>> = {};
+      const add = (kind: keyof typeof lines, delta: string) => {
+        lines[kind] += delta;
+        if (timers[kind]) clearTimeout(timers[kind]);
+        timers[kind] = setTimeout(() => {
+          if (lines[kind].trim()) this.log(`[${callerId}] actor ${kind}: ${lines[kind].trim()}`);
+          lines[kind] = "";
+        }, 1200);
+      };
       socket.on("message", (data) => {
-        let event: { type?: string; error?: unknown; reason?: unknown };
+        let event: { type?: string; error?: unknown; reason?: unknown; delta?: unknown };
         try {
           event = JSON.parse(String(data));
         } catch {
           return;
         }
+        if (event.type === "session.output_transcript.delta" && typeof event.delta === "string") add("said", event.delta);
+        if (event.type === "session.input_transcript.delta" && typeof event.delta === "string") add("heard", event.delta);
         if (event.type === "error") this.log(`[${callerId}] actor error ${JSON.stringify(event.error)}`);
         if (event.type?.startsWith("transport.") && !event.type.includes("dtmf")) this.log(`[${callerId}] actor ${event.type}`);
         if (event.type === "session.closed") {
