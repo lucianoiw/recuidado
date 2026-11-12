@@ -28,10 +28,10 @@ export const timeline = {
   text: "Na maioria das vezes, a história termina no “Tomei”. A ligação existe para os dias de esquecimento, e o aviso para os dias em que nem a ligação resolve. Veja como foi uma manhã da Dona Maria.",
   // The assistant's own words go in `says`, shown apart in a smaller balloon.
   steps: [
-    { time: "8h00", text: "O celular mostra o remédio da hora, com letra grande e um botão só: “Tomei”." },
+    { time: "8h00", text: "O celular mostra qual remédio tomar naquele horário, com letra grande e um botão só: “Tomei”." },
     {
       time: "8h15",
-      text: "Ela não tocou no botão. O Recuidado liga para o celular ou o fixo, sem precisar de internet.",
+      text: "Passaram 15 minutos sem confirmação. O Recuidado liga para o celular ou o fixo, sem precisar de internet.",
       says: "Oi, Dona Maria, bom dia! Como a senhora está? A senhora já tomou a Losartana das oito da manhã?",
     },
     { time: "8h16", text: "Ela ainda não tomou. A assistente pede que tome agora e liga de novo em 15 minutos." },
@@ -56,14 +56,14 @@ export const howSheIs = {
 
 export const sundayCall = {
   title: "A ligação do Recuidado não substitui a sua",
-  text: "A assistente liga para falar do remédio daquela hora e saber se ela está bem. A conversa sobre o neto, a novela e o almoço de domingo continua sendo sua. No app dela há um botão grande para ela ligar para você quando quiser.",
+  text: "A assistente liga para falar do remédio daquele horário e saber se ela está bem. A conversa sobre o neto, a novela e o almoço de domingo continua sendo sua. No app dela há um botão grande para ela ligar para você quando quiser.",
   fine: "A assistente sempre se apresenta como assistente virtual na primeira frase. Quem atende sabe com quem está falando.",
 };
 
 export const familyView = {
   title: "Você acompanha o dia de quem você cuida sem precisar perguntar",
   paragraphs: [
-    "Na tela Hoje, cada remédio aparece com a hora certa e o que aconteceu: se foi tomado na hora, se precisou da ligação ou se ficou sem confirmar. Todo aviso fica guardado, então o irmão que entrou depois também vê o que aconteceu.",
+    "Na tela Hoje, cada remédio aparece com o horário e o que aconteceu: se foi confirmado no horário, se precisou da ligação ou se ficou sem confirmar. Todo aviso fica guardado, então o irmão que entrou depois também vê o que aconteceu.",
     "No fim do mês, um calendário mostra os dias em que ela tomou tudo, os dias em que precisou da ligação e os que ficaram sem confirmar. Dá para levar esse resumo em PDF para a consulta. Quando a caixa está acabando, a família recebe o aviso antes de faltar.",
   ],
   screen: {
@@ -144,7 +144,7 @@ export const siblings = {
 export const patientApp = {
   title: "Do outro lado, um botão só",
   paragraphs: [
-    "O app de quem toma o remédio mostra o nome do remédio da hora, quanto tomar e o botão “Tomei”. Letra grande, uma coisa por tela, nada para configurar. Quem cadastra tudo é a família.",
+    "O app de quem toma o remédio mostra qual remédio tomar naquele horário, a quantidade e o botão “Tomei”. Letra grande, uma coisa por tela, nada para configurar. Quem cadastra tudo é a família.",
     "Ela também dá o próprio aceite no primeiro acesso. Sem o aceite dela, o Recuidado não liga.",
     "Se ela não usa celular com aplicativo, tudo bem: o lembrete chega por ligação.",
   ],
