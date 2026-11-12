@@ -19,6 +19,12 @@ export function Timeline() {
               <span className={i === timeline.steps.length - 1 ? `${styles.dot} ${styles.last}` : styles.dot} aria-hidden="true" />
               <span className={styles.time}>{step.time}</span>
               <Text size="sm">{step.text}</Text>
+              {step.says && (
+                <p className={styles.says}>
+                  <span className={styles.saysLabel}>A assistente</span>
+                  {step.says}
+                </p>
+              )}
             </li>
           ))}
         </ol>

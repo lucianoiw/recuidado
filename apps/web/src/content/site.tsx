@@ -26,12 +26,22 @@ export const hero = {
 export const timeline = {
   title: "O que acontece quando a pessoa não confirma que tomou o remédio",
   text: "Na maioria das vezes, a história termina no “Tomei”. A ligação existe para os dias de esquecimento, e o aviso para os dias em que nem a ligação resolve. Veja como foi uma manhã da Dona Maria.",
+  // The assistant's own words go in `says`, shown apart in a smaller balloon.
   steps: [
-    { time: "8h00", text: "O celular da Dona Maria mostra o remédio que ela precisa tomar naquela hora, com letra grande e um botão só: “Tomei”." },
-    { time: "8h15", text: "Ela não tocou no botão. O Recuidado liga para ela, no celular ou no telefone fixo, sem precisar de internet. “Oi, Dona Maria, bom dia! Como a senhora está?” Depois pergunta se ela já tomou a Losartana das oito da manhã." },
-    { time: "8h16", text: "Ela diz que ainda não tomou. A assistente pede, com calma, que ela tome agora, e avisa que vai ligar de novo em 15 minutos para confirmar." },
-    { time: "8h31", text: "Se mesmo assim ela não tomou, ou não atendeu, a assistente liga para um dos filhos, com calma e sem alarde: “Olá, Carlos, tudo bem? Aqui é da Recuidado. Tentei falar com a Dona Maria e não consegui contato. Por favor, tente entrar em contato com ela. Obrigado.” Se o Carlos não atende, ela liga para o próximo filho. Todos os irmãos também recebem o aviso no celular e no e-mail." },
-  ],
+    { time: "8h00", text: "O celular mostra o remédio da hora, com letra grande e um botão só: “Tomei”." },
+    {
+      time: "8h15",
+      text: "Ela não tocou no botão. O Recuidado liga para o celular ou o fixo, sem precisar de internet.",
+      says: "Oi, Dona Maria, bom dia! Como a senhora está? A senhora já tomou a Losartana das oito da manhã?",
+    },
+    { time: "8h16", text: "Ela ainda não tomou. A assistente pede que tome agora e liga de novo em 15 minutos." },
+    {
+      time: "8h31",
+      text: "Se ela não tomou ou não atendeu, a assistente liga para um dos filhos. Se ele não atende, liga para o próximo. Todos recebem o aviso no celular e no e-mail.",
+      says: "Olá, Carlos, tudo bem? Aqui é da Recuidado. Tentei falar com a Dona Maria e não consegui contato. Por favor, tente entrar em contato com ela. Obrigado.",
+    },
+  ] as { time: string; text: string; says?: string }[],
+
 };
 
 export const howSheIs = {

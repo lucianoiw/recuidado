@@ -23,25 +23,41 @@
   --p-max: 40em;
 }
 
+/* Phone and tablet: vertical timeline, dots on the left joined by one continuous line. */
 .steps {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 36px;
+  gap: 40px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .step {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-left: 36px;
+}
+
+/* Segment from this dot down to the next one (crosses the gap between steps). */
+.step:not(:last-child)::after {
+  position: absolute;
+  top: 18px;
+  bottom: -58px;
+  left: 6px;
+  width: 1px;
+  background: #d8cfc7;
+  content: "";
 }
 
 .dot {
-  position: relative;
+  position: absolute;
   z-index: 1;
+  top: 12px;
+  left: 0;
   width: 13px;
   height: 13px;
   border-radius: 50%;
@@ -54,10 +70,30 @@
 }
 
 .time {
-  margin-top: 6px;
   color: var(--ink);
   font-size: 38px;
   line-height: 1;
+}
+
+/* What the assistant says on the call: smaller, in a white balloon, apart from the story. */
+.says {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 32em;
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  border-radius: 4px 16px 16px 16px;
+  background: #ffffff;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.saysLabel {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 @media (min-width: 640px) {
@@ -65,22 +101,26 @@
     padding: 112px 0;
   }
 
-  .steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 48px;
-  }
-
   .time {
     font-size: 46px;
   }
+
+  .step:not(:last-child)::after {
+    top: 22px;
+  }
+
+  .dot {
+    top: 16px;
+  }
 }
 
+/* Desktop: four columns, dots on top joined by a horizontal line. */
 @media (min-width: 1024px) {
   .steps {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 36px;
   }
 
-  /* The line that joins the four dots. */
   .steps::before {
     position: absolute;
     z-index: 0;
@@ -90,5 +130,22 @@
     height: 1px;
     background: #d8cfc7;
     content: "";
+  }
+
+  .step {
+    padding-left: 0;
+  }
+
+  .step:not(:last-child)::after {
+    display: none;
+  }
+
+  .dot {
+    position: relative;
+    top: 0;
+  }
+
+  .time {
+    margin-top: 6px;
   }
 }
