@@ -22,6 +22,7 @@ import {
   type Pharmacy,
 } from "@/lib/pharmacies";
 import { highCostUnits, ubsUnits, type SusUnit } from "@/lib/sus-units";
+import { restrictedPlace } from "@/lib/programs";
 import { medLabel, useFamily } from "@/lib/use-family";
 
 type Tab = "fp" | "ubs";
@@ -108,6 +109,10 @@ const atUbs = (m: Med) => m.freeAt?.includes("ubs") ?? false;
 
 /** Where this medicine comes from when it is not at the place on screen. */
 function elsewhere(m: Med, tab: Tab): string {
+  if (m.ubsRestricted && !atUbs(m) && !(tab === "ubs" && atFp(m))) {
+    const { place, detail } = restrictedPlace(m.ubsRestricted);
+    return `Grátis só em ${place}${detail ? `. ${detail}` : ""}`;
+  }
   if (tab === "fp" && atUbs(m)) return "Pegue no posto de saúde";
   if (tab === "ubs" && atFp(m)) return "Pegue na Farmácia Popular";
   if (m.highCost) return "Alto Custo, precisa de laudo";

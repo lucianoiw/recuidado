@@ -27,6 +27,7 @@ import { formatDistance, pharmacies } from "@/lib/pharmacies";
 import { pathLine } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { ubsUnits } from "@/lib/sus-units";
+import { restrictedPlace } from "@/lib/programs";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
 /** Nearest places where it can be free, e.g. "Drogasil, 240 m (Farmácia Popular) ou UBS Sé, 440 m". */
@@ -45,6 +46,16 @@ function freeWhere(m: Medication): string | null {
 
 const shortDate = (iso: string) =>
   new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit", timeZone: "America/Sao_Paulo" });
+
+function RestrictedText({ text }: { text: string }) {
+  const { place, detail } = restrictedPlace(text);
+  return (
+    <>
+      Grátis só em {place}
+      {detail ? <span className="block text-muted">{detail}</span> : null}
+    </>
+  );
+}
 
 function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
   const { getsFree, setBuy } = useBuyChoice();
@@ -87,6 +98,11 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           {where ? (
             <InfoLine icon={<PinIcon />}>
               Grátis em {where}
+            </InfoLine>
+          ) : null}
+          {m.ubsRestricted && !m.freeAt?.includes("ubs") ? (
+            <InfoLine icon={<PinIcon />}>
+              <RestrictedText text={m.ubsRestricted} />
             </InfoLine>
           ) : null}
           {m.stock?.low ? (
