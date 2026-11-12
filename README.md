@@ -165,7 +165,7 @@ Decisão do Luciano de 12/11/2026, por segurança: a tela dela não mostra foto 
 - `PUT /family/medications/:id/photo` (multipart, campo `file`, JPG, PNG ou WEBP, até 8 MB) guarda a foto no Cloudflare R2 (`medication-photos/<família>/<remédio>/<id>.jpg`) e a chave em `medications.photo_key`. Uma foto nova apaga a antiga. `DELETE` tira a foto.
 - `GET /family` devolve `photoUrl` em cada remédio: um link assinado do R2 que vale 12 horas, gerado sem chamar o R2. A foto não fica pública.
 - O app dela mostra a foto grande acima do nome na hora do remédio e em Meus remédios. Sem foto, só nome, dose e horário, como antes.
-- A família demonstração é só leitura, então a foto só pode ser tirada em uma família cadastrada.
+- A família demonstração é só leitura, então a foto só pode ser tirada em uma família cadastrada. Para o vídeo, a Losartana da Dona Maria já vem com foto: uma caixa sintética (gerada por IA, sem marca real, `apps/api/assets/demo-losartana.jpg`), enviada ao R2 a cada início da API.
 
 ## Fluxo de uma dose
 

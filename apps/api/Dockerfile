@@ -15,7 +15,7 @@ RUN pnpm install --frozen-lockfile --filter @recuidado/api...
 COPY apps/api apps/api
 RUN pnpm --filter @recuidado/api build \
   && pnpm deploy --filter @recuidado/api --prod --legacy /out \
-  && cp -r apps/api/dist apps/api/drizzle /out/
+  && cp -r apps/api/dist apps/api/drizzle apps/api/assets /out/
 
 FROM node:22-alpine
 ENV NODE_ENV=production PORT=4000
