@@ -245,7 +245,8 @@ const server = createServer(async (req, res) => {
             await service.reportAlert(props.dose_id, {
               sessionId,
               memberId,
-              message: (b.message as string).trim(),
+              // The template keeps the name slot, so the next caregiver hears their own name.
+              message: typeof b.template === "string" && b.template.length <= 600 ? b.template : (b.message as string).trim(),
               answered: result.answered,
               delivered: result.delivered,
             });

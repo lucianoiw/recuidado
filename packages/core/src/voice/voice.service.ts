@@ -104,6 +104,26 @@ export function namesList(names: string[]): string {
   return names.length < 2 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} e ${names[names.length - 1]}`;
 }
 
+/** Where the caregiver's name goes in a calm message; filled in per caregiver as the call goes down the list. */
+export const NAME_SLOT = '{nome}';
+
+/**
+ * The calm call after a dose that was not confirmed (no answer, or still not taken after the second call). No
+ * alarm and no SAMU: the family is only asked to get in touch with her. Text by Luciano (12/11).
+ */
+export function missedDoseMessage(
+  patientName: string,
+  outcome: VoiceResult['outcome'],
+  gender: 'female' | 'male' = 'female',
+): string {
+  const she = pronoun(gender);
+  const what =
+    outcome === 'not_taken'
+      ? `Falei com ${patientName} e ${she} ainda não tomou o medicamento.`
+      : `Tentei falar com ${patientName} e não consegui contato.`;
+  return `Olá, ${NAME_SLOT}, tudo bem? Aqui é da Recuidado. ${what} Por favor, tente entrar em contato com ${she}. Obrigado.`;
+}
+
 export type CaregiverCallReason = 'emergency' | 'still_unwell' | 'no_answer';
 
 /** What the first contact hears: what she reported, retold, and a request to call her. */
@@ -349,6 +369,7 @@ export class VoiceCallService {
       .set({ status: 'missed' })
       .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
     await this.alertNow(doseId);
+    await this.callFamilyAboutDose(doseId, result.outcome);
     telemetry.capture('dose_voice_result', { ...props, applied: 'missed' }, dose.patientId);
     this.logger.log(`Dose ${doseId} not confirmed by voice (${result.outcome}); alerting family.`);
     return 'missed';
@@ -469,6 +490,20 @@ export class VoiceCallService {
     await this.callNextContact(doseId, caregiverMessage(patient.name, reason, words, patient.gender));
   }
 
+  /**
+   * The dose was not confirmed on the call (no answer, or still not taken after the second call): a calm call to
+   * the first contact, then the next ones only if nobody heard it, same order as the emergency.
+   */
+  private async callFamilyAboutDose(doseId: string, outcome: VoiceResult['outcome']): Promise<void> {
+    try {
+      const patient = await this.patientOf(doseId);
+      if (!patient) return;
+      await this.callNextContact(doseId, missedDoseMessage(patient.name, outcome, patient.gender));
+    } catch (error) {
+      telemetry.captureException(error, { step: 'missed_dose_call', dose_id: doseId });
+    }
+  }
+
   /** The patient of a dose, with the name the family uses. */
   private async patientOf(doseId: string) {
     const [patient] = await this.db
@@ -495,7 +530,8 @@ export class VoiceCallService {
 
   /**
    * Calls the next caregiver in the emergency order after `afterId` (the first contact when absent). A number
-   * outside CALL_ALLOWED_NUMBERS is skipped. When nobody is left to call, the family gets a push saying so.
+   * outside CALL_ALLOWED_NUMBERS is skipped. When nobody is left after an emergency, the family gets a push saying so.
+   * A message with NAME_SLOT is the calm missed-dose call: each caregiver hears their own name.
    */
   async callNextContact(doseId: string, message: string, afterId?: string): Promise<'requested' | 'none_left'> {
     const voiceUrl = this.config.get<string>('VOICE_URL');
@@ -505,25 +541,27 @@ export class VoiceCallService {
     if (!patient) return 'none_left';
     const all = await this.emergencyContacts(patient.familyId);
     const previous = afterId ? all.find((c) => c.id === afterId) : undefined;
+    const calm = message.includes(NAME_SLOT);
     for (const c of contactsAfter(all, afterId)) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',
         headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ doseId, phone: c.phone, message, memberId: c.id }),
+        body: JSON.stringify({ doseId, phone: c.phone, message: message.replace(NAME_SLOT, c.name), template: message, memberId: c.id }),
       });
       const outcome = res.ok ? 'requested' : res.status === 403 ? 'number_not_allowed' : `error_${res.status}`;
-      telemetry.capture('emergency_call', { dose_id: doseId, outcome, next: Boolean(afterId) }, c.id);
+      telemetry.capture('emergency_call', { dose_id: doseId, outcome, next: Boolean(afterId), calm }, c.id);
       this.logger.log(`Dose ${doseId}: emergency call to a caregiver ${outcome}.`);
       if (!res.ok) continue;
       await this.alerts.record(patient.familyId, {
         kind: 'emergency_call',
         title: previous ? `${previous.name} não atendeu. Ligamos para ${c.name}` : `Ligamos para ${c.name}, o primeiro contato`,
-        body: `Recado: "${message.replace(/^Olá, aqui é a assistente virtual da Recuidado\. /, '')}"`,
+        body: `Recado: "${message.replace(NAME_SLOT, c.name).replace(/^Olá, aqui é a assistente virtual da Recuidado\. /, '')}"`,
         doseId,
       });
       return 'requested';
     }
-    if (previous) {
+    // The missed-dose push already asked the family to call her; only the emergency gets a second push.
+    if (previous && !calm) {
       const she = pronoun(patient.gender);
       await this.alerts.notifyCaregivers(patient.familyId, {
         kind: 'emergency',
@@ -538,8 +576,8 @@ export class VoiceCallService {
   }
 
   /**
-   * apps/voice reports how an emergency call to a caregiver ended. Not heard (no answer, voicemail cut before
-   * the SAMU line, busy): the next caregiver is called. The job id is the call id, so a repeated POST calls once.
+   * apps/voice reports how a call to a caregiver ended. Not heard (no answer, voicemail, cut before the end of
+   * the message): the next caregiver is called. The job id is the call id, so a repeated POST calls once.
    */
   async applyAlertCallResult(doseId: string, result: AlertCallResult): Promise<'next' | 'delivered'> {
     telemetry.capture(
