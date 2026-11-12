@@ -296,7 +296,7 @@ export function OnboardingFlow() {
 function Header({ title, text }: { title: string; text?: string }) {
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-[28px] font-extrabold leading-tight tracking-tight">{title}</h1>
+      <h1 className="font-display text-[32px] leading-[1.08]">{title}</h1>
       {text ? <p className="leading-relaxed text-muted">{text}</p> : null}
     </div>
   );
@@ -501,7 +501,7 @@ function PaymentStep({
   const me = data.caregiver.name.trim().toLocaleLowerCase("pt-BR");
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-[19px] font-extrabold">Como vocês pagam o que não é grátis?</h2>
+      <h2 className="text-[19px] font-semibold">Como vocês pagam o que não é grátis?</h2>
       <PaymentSetup
         mode={payment.mode}
         monthName={thisMonthName()}
@@ -525,8 +525,8 @@ function Avatar({ name, tone }: { name: string; tone: "brand" | "blue" }) {
     <span
       aria-hidden="true"
       className={cn(
-        "flex size-11 shrink-0 items-center justify-center rounded-full text-[17px] font-extrabold",
-        tone === "brand" ? "bg-brand-soft text-brand" : "bg-[#e8eef8] text-[#1e4e8c]",
+        "flex size-11 shrink-0 items-center justify-center rounded-full text-[17px] font-semibold",
+        tone === "brand" ? "bg-blush text-accent-ink" : "bg-[#e8eef8] text-[#1e4e8c]",
       )}
     >
       {name.trim().charAt(0).toUpperCase()}

@@ -1,35 +1,50 @@
 @import "tailwindcss";
 
 /*
- * Recuidado design tokens. Prototype: https://claude.ai/artifact/WReu3dBikLk3hJLdvSzH3C
- * Every text/background pair below passes WCAG AA; ink, muted and brand on
- * surface pass AAA (7:1), because the patient screens are read by older adults.
+ * Recuidado design tokens, matching the product site (recuidado.com.br):
+ * cream background, ink-black pill buttons, pink accent, blush highlights,
+ * Inter Tight for the family screens.
+ * The patient screens keep Atkinson Hyperlegible (font-legible), chosen for
+ * older readers. Every text/background pair passes WCAG AA; ink and muted on
+ * surface pass AAA (7:1). Pink (#fe398a) is decoration only, never text on
+ * white: use accent-ink for pink text.
  * Status is never color alone: always pair a tone with a word or an icon.
  */
 @theme {
-  --font-sans: "Atkinson Hyperlegible Next Variable", system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter Tight Variable", system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+  --font-display: "Inter Tight Variable", system-ui, sans-serif;
+  --font-legible: "Atkinson Hyperlegible Next Variable", system-ui, sans-serif;
 
-  --color-bg: #f7f4ee;
+  --color-bg: #f8f4ef;
   --color-surface: #ffffff;
-  --color-ink: #16201f;
-  --color-muted: #4a5553;
-  --color-line: #d9d3c7;
-  --color-line-soft: #ece7de;
+  --color-ink: #161314;
+  --color-body: #3d393b;
+  --color-muted: #57524f;
+  --color-line: #e2dbd3;
+  --color-line-soft: #eee8e1;
 
-  --color-brand: #0b5d57;
-  --color-brand-strong: #084743;
-  --color-brand-soft: #e3f1ee;
+  /* "brand" is the action color: ink-black buttons and the active tab. */
+  --color-brand: #161314;
+  --color-brand-strong: #000000;
+  --color-brand-soft: #fcebf1;
 
+  --color-accent: #fe398a;
+  --color-accent-ink: #b8125a;
+  --color-blush: #fcebf1;
+  --color-cream: #f8f4ef;
+
+  --color-ok: #1d6b47;
+  --color-ok-soft: #e3f2e9;
   --color-warn: #7a4300;
   --color-warn-soft: #fff0d6;
   --color-danger: #a11d17;
   --color-danger-strong: #821610;
   --color-danger-soft: #fce7e5;
-  --color-neutral-soft: #efece6;
+  --color-neutral-soft: #f1ece6;
 
-  --radius-card: 1.25rem;
-  --radius-control: 1.375rem;
+  --radius-card: 1.5rem;
+  --radius-control: 999px;
 }
 
 /* Larger base size: the patient screen is read by older adults. */
@@ -40,6 +55,15 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-ink);
+}
+
+/* Headings follow the site: regular weight, tight tracking. */
+.font-display,
+h1.display,
+h2.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.035em;
 }
 
 /* Thick, high-contrast focus ring for keyboard and switch users. */

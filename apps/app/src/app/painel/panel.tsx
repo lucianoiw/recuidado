@@ -42,10 +42,7 @@ export function Panel() {
   return (
     <main className="flex min-h-dvh flex-col items-center gap-4 overflow-hidden bg-[#efe9df] px-4 pb-4 pt-5">
       <header className="flex w-full max-w-[860px] items-center justify-between gap-4">
-        <span className="flex items-center gap-2.5">
-          <Logo size={36} />
-          <span className="text-[20px] font-extrabold tracking-tight text-brand">Recuidado</span>
-        </span>
+        <Logo size={28} variant="full" />
         <button
           type="button"
           onClick={startOver}
@@ -181,7 +178,7 @@ function Phone({
         <div className="device-power" />
         <div className="device-home" />
       </div>
-      <figcaption className="text-[22px] font-extrabold text-ink">{label}</figcaption>
+      <figcaption className="text-[22px] font-semibold text-ink">{label}</figcaption>
     </figure>
   );
 }
@@ -191,7 +188,7 @@ function EmptyPhone() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-[#fbf8f3] px-8 text-center">
       <Logo size={64} />
-      <p className="text-[22px] font-extrabold leading-tight">Ela não precisa de cadastro.</p>
+      <p className="text-[22px] font-semibold leading-tight">Ela não precisa de cadastro.</p>
       <p className="text-[17px] leading-snug text-muted">
         No celular do filho, abra <b className="text-ink">Família</b> e <b className="text-ink">Celular dela</b>, copie o link e
         cole na barra acima.

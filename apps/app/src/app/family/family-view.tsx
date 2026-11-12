@@ -38,6 +38,9 @@ function rowStatus(d: Dose, now: number): { status: RowStatus; text: string } {
   return { status: "upcoming", text: "Mais tarde" };
 }
 
+const tile =
+  "flex min-h-[172px] flex-col gap-2 rounded-card bg-surface p-4 text-ink no-underline shadow-[0_1px_2px_rgba(22,19,20,0.04)]";
+
 function todayLabel(): string {
   const t = new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
@@ -91,23 +94,23 @@ export function FamilyView() {
       <header className="flex items-center gap-3">
         <span
           aria-hidden="true"
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f3dcc8] text-[19px] font-extrabold text-warn"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush text-[18px] font-semibold text-accent-ink"
         >
           {name.replace(/^(Dona|Seu)\s+/i, "").charAt(0)}
         </span>
-        <div className="flex flex-1 flex-col">
-          <h1 className="text-[22px] font-extrabold leading-tight">{name}</h1>
-          <span className="text-[15px] text-muted">{todayLabel()}</span>
-        </div>
+        <span className="flex flex-1 flex-col leading-tight">
+          <span className="text-[13px] text-muted">Família</span>
+          <span className="text-[16px] font-semibold">{name}</span>
+        </span>
         <Link
           href="/family/avisos"
-          className="relative flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface"
+          className="relative flex size-11 items-center justify-center rounded-full bg-surface shadow-[0_1px_2px_rgba(22,19,20,0.06)]"
         >
           <BellIcon size={22} />
           {unseen > 0 ? (
             <span
               aria-hidden="true"
-              className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-danger px-1.5 text-[13px] font-extrabold text-white"
+              className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent px-1.5 text-[12px] font-semibold text-white"
             >
               {unseen > 9 ? "9+" : unseen}
             </span>
@@ -115,6 +118,11 @@ export function FamilyView() {
           <span className="sr-only">{unseen > 0 ? `Avisos, ${unseen} ${unseen === 1 ? "novo" : "novos"}` : "Avisos"}</span>
         </Link>
       </header>
+
+      <div className="flex flex-col gap-1">
+        <span className="text-[15px] text-muted">Hoje</span>
+        <h1 className="font-display text-[34px] leading-[1.05]">{todayLabel()}</h1>
+      </div>
 
       <DemoBanner isDemo={data.isDemo} />
 
@@ -243,9 +251,60 @@ export function FamilyView() {
         </section>
       ) : null}
 
-      <section className="flex flex-col gap-2">
+      <div className="grid grid-cols-2 gap-3">
+        <a href="#doses" className={tile}>
+          <span className="text-[14px] text-muted">Doses de hoje</span>
+          <span className="flex flex-wrap gap-1" aria-hidden="true">
+            {data.today.map((d) => (
+              <span
+                key={d.id}
+                className={
+                  d.status === "taken"
+                    ? "size-3.5 rounded-full bg-ink"
+                    : d.status === "missed"
+                      ? "size-3.5 rounded-full bg-accent"
+                      : "size-3.5 rounded-full bg-line"
+                }
+              />
+            ))}
+          </span>
+          <span className="mt-auto font-display text-[28px] leading-none">
+            {taken}
+            <span className="text-[16px] text-muted"> de {data.today.length}</span>
+          </span>
+          <span className="text-[14px] text-muted">tomadas</span>
+        </a>
+        <Link href="/family/avisos" className={tile}>
+          <span className="text-[14px] text-muted">Avisos</span>
+          <span className="flex size-10 items-center justify-center rounded-full bg-blush text-accent-ink">
+            <BellIcon size={20} />
+          </span>
+          <span className="mt-auto font-display text-[28px] leading-none">{unseen}</span>
+          <span className="text-[14px] text-muted">{unseen === 1 ? "novo" : "novos"}</span>
+        </Link>
+        <Link href="/family/mes" className={tile}>
+          <span className="text-[14px] text-muted">Economia do mês</span>
+          <span className="flex size-10 items-center justify-center rounded-full bg-blush text-accent-ink">
+            <FreeIcon size={20} />
+          </span>
+          <span className="mt-auto font-display text-[26px] leading-none">{brl.format(savedCents / 100)}</span>
+          <span className="text-[14px] leading-snug text-muted">
+            {costCents > 0 ? `Comprar: até ${brl.format(costCents / 100)}` : "Nada para comprar"}
+          </span>
+        </Link>
+        <Link href="/family/adicionar" className={tile}>
+          <span className="text-[14px] text-muted">Remédios</span>
+          <span className="flex size-10 items-center justify-center rounded-full bg-blush text-accent-ink">
+            <CameraIcon size={20} />
+          </span>
+          <span className="mt-auto text-[17px] font-semibold leading-tight">Adicionar</span>
+          <span className="text-[14px] leading-snug text-muted">Foto da receita ou um por um</span>
+        </Link>
+      </div>
+
+      <section id="doses" className="flex scroll-mt-4 flex-col gap-2">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-[18px] font-extrabold">Doses de hoje</h2>
+          <h2 className="font-display text-[24px]">Doses de hoje</h2>
           {data.today.length > 0 ? (
             <span className="text-[14px] text-muted">
               {taken} de {data.today.length} tomadas
@@ -280,68 +339,18 @@ export function FamilyView() {
         )}
       </section>
 
-      {savedCents > 0 || costCents > 0 ? (
-        <Link
-          href="/family/mes"
-          className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
-        >
-          <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
-            <FreeIcon size={24} />
-          </span>
-          <span className="flex flex-1 flex-col">
-            <b>{savedCents > 0 ? `Economia do mês: ${brl.format(savedCents / 100)}` : "Resumo do mês"}</b>
-            <span className="text-[15px] text-muted">
-              {costCents > 0 ? `Para comprar: até ${brl.format(costCents / 100)}. Dividir com Pix` : "Doses e gastos do mês"}
-            </span>
-          </span>
-          <ChevronRightIcon size={20} className="text-muted" />
-        </Link>
-      ) : null}
-
-      <Link
-        href="/family/avisos"
-        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
-      >
-        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
-          <BellIcon size={24} />
-        </span>
-        <span className="flex flex-1 flex-col">
-          <b>Avisos{unseen === 1 ? " (1 novo)" : unseen > 1 ? ` (${unseen} novos)` : ""}</b>
-          <span className="text-[15px] text-muted">Tudo que o Recuidado avisou à família</span>
-        </span>
-        <ChevronRightIcon size={20} className="text-muted" />
-      </Link>
-
-      <Link
-        href="/family/adicionar"
-        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
-      >
-        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
-          <CameraIcon size={24} />
-        </span>
-        <span className="flex flex-1 flex-col">
-          <b>Adicionar remédios</b>
-          <span className="text-[15px] text-muted">
-            Foto da receita ou um por um
-          </span>
-        </span>
-        <ChevronRightIcon size={20} className="text-muted" />
-      </Link>
-
       <Link
         href="/family/demo"
-        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+        className="flex items-center gap-3 rounded-full bg-ink py-3 pl-3 pr-5 text-white no-underline"
       >
-        <span className="flex size-11 items-center justify-center rounded-[14px] bg-brand-soft text-brand">
-          <ClockIcon size={24} />
+        <span className="flex size-11 items-center justify-center rounded-full bg-surface text-ink">
+          <ClockIcon size={22} />
         </span>
-        <span className="flex flex-1 flex-col">
-          <b>Demo em 2 minutos</b>
-          <span className="text-[15px] text-muted">
-            Lembrete, ligação e aviso, acelerados
-          </span>
+        <span className="flex flex-1 flex-col leading-tight">
+          <b className="font-semibold">Demo em 2 minutos</b>
+          <span className="text-[14px] text-white/75">Lembrete, ligação e aviso, acelerados</span>
         </span>
-        <ChevronRightIcon size={20} className="text-muted" />
+        <ChevronRightIcon size={20} />
       </Link>
     </>
   );

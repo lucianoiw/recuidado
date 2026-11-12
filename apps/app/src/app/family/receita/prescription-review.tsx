@@ -80,12 +80,12 @@ function ReadingSteps() {
   }, []);
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-6 py-8 text-center">
-      <span className="relative flex size-28 items-center justify-center rounded-full bg-brand-soft text-brand">
+      <span className="relative flex size-28 items-center justify-center rounded-full bg-blush text-accent-ink">
         <span className="absolute inset-0 animate-ping rounded-full bg-brand-soft motion-reduce:animate-none" />
         <CameraIcon size={48} className="relative" />
       </span>
       <div className="flex flex-col gap-1" aria-live="polite">
-        <h1 className="text-[26px] font-extrabold">Lendo a receita...</h1>
+        <h1 className="font-display text-[32px] leading-[1.08]">Lendo a receita...</h1>
         <p className="text-muted">Leva uns 15 segundos.</p>
       </div>
       <ul className="flex w-full flex-col gap-3 rounded-card border border-line-soft bg-surface p-4 text-left">
@@ -119,7 +119,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
         <span className="flex size-20 items-center justify-center rounded-full bg-brand text-white">
           <CheckIcon size={44} strokeWidth={2.8} />
         </span>
-        <h1 className="text-[26px] font-extrabold leading-tight">
+        <h1 className="font-display text-[32px] leading-[1.08]">
           Receita salva.
           <br />
           Lembretes ligados.
@@ -131,7 +131,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
 
       {meds.length > 0 ? (
         <section className="rounded-card bg-brand-soft p-4">
-          <p className="text-[22px] font-extrabold text-brand">
+          <p className="text-[22px] font-semibold text-brand">
             {free.length} de {meds.length} remédios podem sair de graça
           </p>
           <p className="text-[15px]">no Farmácia Popular ou na UBS, com receita e documento.</p>
@@ -140,7 +140,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
 
       {free.length > 0 ? (
         <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
-          <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-extrabold">
+          <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
             <FreeIcon size={20} className="text-brand" />
             Grátis, se quiser pegar
           </h2>
@@ -164,7 +164,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
 
       {paid.length > 0 ? (
         <section className="overflow-hidden rounded-card border border-line-soft bg-surface">
-          <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-extrabold">
+          <h2 className="flex items-center gap-2 px-4 pt-3.5 text-[17px] font-semibold">
             <CartIcon size={20} className="text-warn" />
             Precisa comprar
           </h2>
@@ -291,7 +291,7 @@ export function PrescriptionReview() {
       <>
         <TopBar onBack={() => setStep("pick")}>Receita nova</TopBar>
         <header className="flex flex-col gap-1">
-          <h1 className="text-[28px] font-extrabold leading-tight">Confira o que eu li</h1>
+          <h1 className="font-display text-[32px] leading-[1.08]">Confira o que eu li</h1>
           <p className="text-[16px] leading-snug text-muted">
             Compare com a receita. Toque no lápis para corrigir. Os horários viram lembretes.
           </p>
@@ -315,7 +315,7 @@ export function PrescriptionReview() {
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 flex-col">
-                <h2 className="text-[19px] font-extrabold leading-snug">
+                <h2 className="text-[19px] font-semibold leading-snug">
                   {medLabel(d.name || "Sem nome", d.strength || null)}
                 </h2>
                 <span className="text-[15px] text-muted">
@@ -331,7 +331,7 @@ export function PrescriptionReview() {
                 onClick={() => update(d.key, { editing: !d.editing })}
                 className={cn(
                   "flex size-11 shrink-0 items-center justify-center rounded-full border",
-                  d.editing ? "border-brand bg-brand-soft text-brand" : "border-line-soft",
+                  d.editing ? "border-brand bg-blush text-accent-ink" : "border-line-soft",
                 )}
               >
                 <PencilIcon size={20} />
@@ -405,7 +405,7 @@ export function PrescriptionReview() {
     <>
       <TopBar backHref="/family">Receita nova</TopBar>
       <header className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-extrabold leading-tight">Foto da receita</h1>
+        <h1 className="font-display text-[32px] leading-[1.08]">Foto da receita</h1>
         <p className="text-[16px] leading-snug text-muted">
           Deixe a receita inteira na foto, com boa luz. Você confere tudo antes de salvar.
         </p>
@@ -421,7 +421,7 @@ export function PrescriptionReview() {
           <img src={preview} alt="Foto escolhida da receita" className="absolute inset-0 size-full object-cover" />
         ) : (
           <>
-            <span className="flex size-20 items-center justify-center rounded-[24px] bg-brand-soft text-brand">
+            <span className="flex size-20 items-center justify-center rounded-full bg-blush text-accent-ink">
               <CameraIcon size={40} />
             </span>
             <b className="text-[19px]">{file ? file.name : "Tirar ou escolher foto"}</b>

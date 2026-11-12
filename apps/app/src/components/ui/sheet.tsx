@@ -35,7 +35,7 @@ export function Sheet({
       <div className="mx-auto flex w-full max-w-md flex-col gap-4 rounded-t-[28px] bg-bg px-6 pt-3 pb-8 text-ink shadow-[0_-10px_30px_rgba(22,32,31,0.18)]">
         <span aria-hidden="true" className="h-1.5 w-11 self-center rounded-full bg-[#cfc8ba]" />
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-[24px] font-extrabold">{title}</h2>
+          <h2 className="text-[24px] font-semibold">{title}</h2>
           <button
             type="button"
             onClick={onClose}

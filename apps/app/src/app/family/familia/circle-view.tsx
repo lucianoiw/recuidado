@@ -32,7 +32,7 @@ export function CircleView() {
       {data.isDemo ? null : <SignedInAs />}
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-[18px] font-extrabold">{data.isDemo ? "Quem é você na demonstração?" : "Quem cuida"}</h2>
+        <h2 className="text-[18px] font-semibold">{data.isDemo ? "Quem é você na demonstração?" : "Quem cuida"}</h2>
         <ul className="overflow-hidden rounded-card border border-line-soft bg-surface" role={data.isDemo ? "radiogroup" : undefined}>
           {data.caregivers.map((c) => {
             const on = c.id === me;
@@ -49,7 +49,7 @@ export function CircleView() {
                 >
                   <span
                     aria-hidden="true"
-                    className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[17px] font-extrabold text-brand"
+                    className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[17px] font-semibold text-brand"
                   >
                     {c.name.trim().charAt(0).toUpperCase()}
                   </span>
@@ -80,7 +80,7 @@ export function CircleView() {
       <FirstContact caregivers={data.caregivers} patient={patient} onSaved={reload} />
 
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-        <h2 className="flex items-center gap-2 text-[18px] font-extrabold">
+        <h2 className="flex items-center gap-2 text-[18px] font-semibold">
           <BellIcon size={22} className="text-brand" />
           Alertas neste celular
         </h2>
@@ -111,7 +111,7 @@ export function CircleView() {
       </Link>
 
       <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-        <h2 className="text-[18px] font-extrabold">Convidar e instalar</h2>
+        <h2 className="text-[18px] font-semibold">Convidar e instalar</h2>
         {data.isDemo ? null : (
           <Link href="/comecar?passo=3" className={buttonClass({ variant: "secondary" })}>
             Chamar mais alguém
@@ -157,7 +157,7 @@ function FirstContact({
 
   return (
     <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-      <h2 className="flex items-center gap-2 text-[18px] font-extrabold">
+      <h2 className="flex items-center gap-2 text-[18px] font-semibold">
         <PhoneIcon size={22} className="text-danger" />
         Primeiro contato
       </h2>
@@ -250,7 +250,7 @@ function YourData({
 
   return (
     <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-      <h2 className="text-[18px] font-extrabold">Seus dados</h2>
+      <h2 className="text-[18px] font-semibold">Seus dados</h2>
       {isDemo ? null : <p className="text-[15px] leading-snug text-muted">{consentText(consent, patient)}</p>}
       <Link href="/privacidade" className={buttonClass({ variant: "secondary" })}>
         Como cuidamos dos dados

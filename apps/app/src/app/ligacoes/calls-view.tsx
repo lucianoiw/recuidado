@@ -90,7 +90,7 @@ function CallCard({ call }: { call: CallLog }) {
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm sm:p-5">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-[18px] font-extrabold">{kind.label}</h2>
+        <h2 className="text-[18px] font-semibold">{kind.label}</h2>
         <span className="text-[14px] text-muted">
           {time.format(new Date(call.startedAt))}
           {call.durationSeconds != null ? ` · ${clock(call.durationSeconds * 1000)}` : ""}
@@ -160,11 +160,8 @@ export function CallsView() {
     <main className="min-h-dvh bg-[#efe9df] px-4 pb-10 pt-6">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-5">
         <header className="flex flex-col gap-2">
-          <span className="flex items-center gap-2.5">
-            <Logo size={32} />
-            <span className="text-[18px] font-extrabold tracking-tight text-brand">Recuidado</span>
-          </span>
-          <h1 className="text-[28px] font-extrabold leading-tight">Ligações da prova de conceito</h1>
+          <Logo size={26} variant="full" />
+          <h1 className="font-display text-[32px] leading-[1.08]">Ligações da prova de conceito</h1>
           <p className="max-w-2xl text-[16px] text-muted">
             Cada ligação que a assistente fez para a família de demonstração: o áudio gravado, o que cada lado disse e o que o
             sistema fez em cada momento (registro da resposta, frase garantida pelo código, teclas na farmácia). Dados de teste;

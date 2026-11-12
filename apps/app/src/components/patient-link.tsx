@@ -61,7 +61,7 @@ export function PatientLink() {
     <section className="flex items-stretch gap-4 rounded-card border border-line-soft bg-surface p-4">
       <span className="flex size-[132px] shrink-0 items-center justify-center rounded-xl border border-line bg-white p-2">
         {url ? (
-          <QRCodeSVG value={url} size={114} fgColor="#16201f" title="QR code do app dela" />
+          <QRCodeSVG value={url} size={114} fgColor="#161314" title="QR code do app dela" />
         ) : null}
       </span>
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5">

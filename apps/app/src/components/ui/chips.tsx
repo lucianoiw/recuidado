@@ -28,10 +28,10 @@ export function ChipGroup<T extends string>({
               aria-checked={on}
               onClick={() => onChange(o)}
               className={cn(
-                "min-h-11 rounded-xl px-3.5 text-[16px] transition-colors",
+                "min-h-11 rounded-full px-4 text-[16px] transition-colors",
                 on
-                  ? "border-2 border-brand bg-brand-soft font-bold text-brand"
-                  : "border-[1.5px] border-[#cfc8ba] bg-surface font-semibold text-ink hover:border-brand",
+                  ? "border-[1.5px] border-ink bg-ink font-semibold text-white"
+                  : "border-[1.5px] border-line bg-surface font-medium text-ink hover:border-ink",
               )}
             >
               {o}
@@ -59,7 +59,7 @@ export function Segmented<T extends string>({
     <div
       role="tablist"
       aria-label={label}
-      className="grid rounded-[14px] bg-line-soft p-1"
+      className="grid rounded-full bg-line-soft p-1"
       style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
     >
       {options.map((o) => (
@@ -70,7 +70,7 @@ export function Segmented<T extends string>({
           aria-selected={o.value === value}
           onClick={() => onChange(o.value)}
           className={cn(
-            "min-h-11 rounded-[11px] text-[15px] font-bold",
+            "min-h-11 rounded-full text-[15px] font-semibold",
             o.value === value ? "bg-surface text-ink shadow-sm" : "text-muted",
           )}
         >
