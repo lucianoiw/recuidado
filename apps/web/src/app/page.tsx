@@ -1,3 +1,4 @@
+import { Author } from "@/components/sections/author";
 import { Closing } from "@/components/sections/closing";
 import { FamilyView } from "@/components/sections/family-view";
 import { Faq } from "@/components/sections/faq";
@@ -33,6 +34,7 @@ export default function Home() {
         <Faq />
         <Closing />
         <Inside />
+        <Author />
       </main>
       <SiteFooter />
     </>
