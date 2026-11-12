@@ -57,6 +57,11 @@ body {
   color: var(--color-ink);
 }
 
+b,
+strong {
+  font-weight: 600;
+}
+
 /* Headings follow the site: regular weight, tight tracking. */
 .font-display,
 h1.display,

@@ -118,7 +118,7 @@ export async function seedDemoFamily(
   const existing = await db
     .select({ id: medications.id, name: medications.name })
     .from(medications)
-    .where(and(eq(medications.patientId, ids.patientId), inArray(medications.name, DEMO_MEDICATIONS.map((m) => m.name))));
+    .where(and(eq(medications.patientId, ids.patientId), inArray(medications.name, DEMO_MEDICATIONS.map((m) => m.name)), isNull(medications.stoppedAt)));
   const medIds = new Map<string, string>();
   for (const med of DEMO_MEDICATIONS) {
     const values = {

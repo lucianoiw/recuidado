@@ -96,7 +96,7 @@ function ShareRow({
             type="button"
             disabled={saving}
             onClick={() => mark(false)}
-            className="w-fit text-[15px] font-bold text-muted underline"
+            className="w-fit text-[15px] font-semibold text-muted underline"
           >
             Desfazer pagamento
           </button>
@@ -193,11 +193,11 @@ function PaymentForm({ month, me, onDone }: { month: MonthSummary; me: string | 
           setPeople(list);
         }}
       />
-      {error ? <p className="text-[15px] font-bold text-danger">{error}</p> : null}
+      {error ? <p className="text-[15px] font-semibold text-danger">{error}</p> : null}
       <Button disabled={saving || people.every((p) => p.excluded)} onClick={save}>
         {saving ? "Salvando..." : "Salvar"}
       </Button>
-      <button type="button" onClick={() => onDone(false)} className="w-fit text-[15px] font-bold text-muted underline">
+      <button type="button" onClick={() => onDone(false)} className="w-fit text-[15px] font-semibold text-muted underline">
         Cancelar
       </button>
     </div>
@@ -244,7 +244,7 @@ function Rotation({ month, me, onChanged }: { month: MonthSummary; me: string | 
         </StatusPill>
       </div>
       {share.paid ? (
-        <button type="button" disabled={saving} onClick={() => mark(false)} className="w-fit text-[15px] font-bold text-muted underline">
+        <button type="button" disabled={saving} onClick={() => mark(false)} className="w-fit text-[15px] font-semibold text-muted underline">
           Desfazer
         </button>
       ) : (
@@ -302,7 +302,7 @@ export function SplitPix({ month, isDemo, onChanged }: { month: MonthSummary; is
   const rotation = mode === "rotation";
 
   return (
-    <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
+    <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-[18px] font-semibold">{rotation ? "Cada mês um compra" : "Dividir entre a família"}</h2>
         <span className="text-[18px] font-semibold">{brl.format(month.costCents / 100)}</span>
@@ -350,7 +350,7 @@ export function SplitPix({ month, isDemo, onChanged }: { month: MonthSummary; is
         <button
           type="button"
           onClick={() => setChangingKey(true)}
-          className="w-fit text-[15px] font-bold text-brand underline"
+          className="w-fit text-[15px] font-semibold text-brand underline"
         >
           {receiver.id === me ? "Mudar minha chave Pix" : "Eu compro este mês e recebo o Pix"}
         </button>
@@ -366,7 +366,7 @@ export function SplitPix({ month, isDemo, onChanged }: { month: MonthSummary; is
           }}
         />
       ) : month.split.people.length > 1 ? (
-        <button type="button" onClick={() => setEditing(true)} className="w-fit text-[15px] font-bold text-brand underline">
+        <button type="button" onClick={() => setEditing(true)} className="w-fit text-[15px] font-semibold text-brand underline">
           Mudar como vocês pagam
         </button>
       ) : null}

@@ -45,7 +45,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
   return (
     <figure className="flex flex-col gap-2">
       <APIProvider apiKey={KEY} language="pt-BR" region="BR">
-        <div className="aspect-square w-full overflow-hidden rounded-card border border-line-soft bg-surface">
+        <div className="aspect-square w-full overflow-hidden rounded-card bg-surface">
           <Map
             mapId={MAP_ID}
             defaultBounds={bounds([home, ...shown])}
@@ -82,7 +82,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
       </APIProvider>
 
       {current ? (
-        <div className="flex items-center justify-between gap-3 rounded-card border border-line-soft bg-surface px-4 py-3">
+        <div className="flex items-center justify-between gap-3 rounded-card bg-surface px-4 py-3">
           <div className="flex min-w-0 flex-col">
             <b className="leading-snug">
               {(selected ?? 0) + 1}. {current.name}
@@ -96,7 +96,7 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
             target="_blank"
             rel="noreferrer"
             aria-label={`Como chegar em ${current.name}`}
-            className="flex size-11 shrink-0 items-center justify-center rounded-xl border-[1.5px] border-ink text-ink"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-ink text-ink"
           >
             <NavigationIcon size={20} />
           </a>
@@ -104,13 +104,13 @@ export function PlacesMap({ places, homeLabel }: { places: MapPlace[]; homeLabel
       ) : (
         <figcaption className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] text-muted">
           <span className="inline-flex items-center gap-1.5">
-            <span className="flex size-5 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-white">
+            <span className="flex size-5 items-center justify-center rounded-full bg-brand text-[11px] font-semibold text-white">
               C
             </span>
             {homeLabel}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="flex size-5 items-center justify-center rounded-full bg-danger text-[11px] font-bold text-white">
+            <span className="flex size-5 items-center justify-center rounded-full bg-danger text-[11px] font-semibold text-white">
               1
             </span>
             Toque no número para ver

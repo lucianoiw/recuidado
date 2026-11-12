@@ -6,6 +6,7 @@ import { markAlertsSeen } from "@/lib/alerts-seen";
 import { captureError } from "@/lib/analytics";
 import { MonthSummary } from "./month-summary";
 import { formatTime, getAlerts, type AlertKind, type FamilyAlert } from "@/lib/api";
+import { usePronouns } from "@/lib/pronouns";
 
 const KINDS: Record<AlertKind, { label: string; icon: typeof AlertIcon; tone: string }> = {
   dose_missed: { label: "Dose não confirmada", icon: AlertIcon, tone: "bg-danger-soft text-danger" },
@@ -53,6 +54,7 @@ function dayTitle(iso: string, now: Date): string {
 
 /** Every alert the family got, grouped by day, newest first. */
 export function AlertsView() {
+  const pr = usePronouns();
   const [alerts, setAlerts] = useState<FamilyAlert[] | null>(null);
   const [error, setError] = useState(false);
   const [now, setNow] = useState(0);
@@ -102,13 +104,13 @@ export function AlertsView() {
           {!error && !alerts ? <p className="text-muted">Carregando...</p> : null}
 
           {alerts && alerts.length === 0 ? (
-            <section className="flex flex-col items-center gap-3 rounded-card border border-line-soft bg-surface p-6 text-center">
+            <section className="flex flex-col items-center gap-3 rounded-card bg-surface p-6 text-center">
               <span className="flex size-16 items-center justify-center rounded-full bg-blush text-accent-ink">
                 <BellIcon size={32} />
               </span>
               <b className="text-[19px]">Nenhum aviso ainda</b>
               <p className="text-muted">
-                Quando uma dose não for confirmada, ela disser que não está bem, houver uma emergência ou um
+                Quando uma dose não for confirmada, {pr.ela} disser que não está bem, houver uma emergência ou um
                 remédio estiver acabando, o aviso aparece aqui.
               </p>
             </section>
@@ -117,7 +119,7 @@ export function AlertsView() {
           {days.map((day) => (
             <section key={day.title} className="flex flex-col gap-2">
               <h2 className="text-[18px] font-semibold">{day.title}</h2>
-              <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+              <ul className="overflow-hidden rounded-card bg-surface">
                 {day.items.map((a) => {
                   const kind = KINDS[a.kind];
                   const Icon = kind.icon;
@@ -125,13 +127,13 @@ export function AlertsView() {
                     <li key={a.id} className="flex gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0">
                       <span
                         aria-hidden="true"
-                        className={cn("flex size-10 shrink-0 items-center justify-center rounded-[12px]", kind.tone)}
+                        className={cn("flex size-10 shrink-0 items-center justify-center rounded-full", kind.tone)}
                       >
                         <Icon size={20} strokeWidth={2.4} />
                       </span>
                       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <span className="flex items-baseline justify-between gap-2">
-                          <span className="text-[13px] font-bold uppercase tracking-wide text-muted">
+                          <span className="text-[13px] font-semibold uppercase tracking-wide text-muted">
                             {kind.label}
                           </span>
                           <span className="shrink-0 text-[14px] text-muted">{formatTime(a.createdAt)}</span>

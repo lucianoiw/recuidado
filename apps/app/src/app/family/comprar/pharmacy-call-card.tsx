@@ -67,7 +67,7 @@ export function PharmacyCallCard({ medications, calls = true }: { medications: M
   const several = inquiries.length > 1;
 
   return (
-    <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
+    <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
       <div className="flex items-start gap-3">
         <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
           <PhoneIcon size={22} />
@@ -120,7 +120,7 @@ export function PharmacyCallCard({ medications, calls = true }: { medications: M
         </Button>
       ) : null}
       {error ? (
-        <p role="alert" className="text-[15px] font-bold text-danger">
+        <p role="alert" className="text-[15px] font-semibold text-danger">
           {error}
         </p>
       ) : null}
@@ -193,7 +193,7 @@ function Comparison({
                 return (
                   <li key={inq.id} className="flex flex-col gap-1 border-b border-line-soft px-3.5 py-3 last:border-b-0">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="font-bold">{inq.pharmacyName}</span>
+                      <span className="font-semibold">{inq.pharmacyName}</span>
                       {cheapest === inq.id ? (
                         <StatusPill tone="ok">Mais barato</StatusPill>
                       ) : (
@@ -254,7 +254,7 @@ function Comparison({
 function Conversation({ inquiry }: { inquiry: PharmacyInquiry }) {
   return (
     <details className="text-[15px]">
-      <summary className="cursor-pointer font-bold">
+      <summary className="cursor-pointer font-semibold">
         Ver a conversa com a {inquiry.pharmacyName}
         {inquiry.usedPhoneMenu ? " (passou pelo menu de teclas)" : ""}
       </summary>

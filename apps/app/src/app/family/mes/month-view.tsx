@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CartIcon, ChevronLeftIcon, ChevronRightIcon, FreeIcon, InfoIcon, PillIcon } from "@/components/ui";
+import { CartIcon, ChevronLeftIcon, ChevronRightIcon, FreeIcon, InfoIcon, Notice, PillIcon } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { useMonth } from "@/lib/use-month";
 import { brl, medLabel } from "@/lib/use-family";
@@ -43,7 +43,7 @@ export function MonthView() {
       <PageTitle title="Resumo do mês" subtitle={data.label.charAt(0).toUpperCase() + data.label.slice(1)} />
 
       <section className="flex flex-col gap-1 rounded-card bg-brand p-5 text-white">
-        <span className="text-[16px] font-bold opacity-90">A família economizou</span>
+        <span className="text-[16px] font-semibold opacity-90">A família economizou</span>
         <span className="text-[40px] font-semibold leading-tight">{brl.format(data.savedCents / 100)}</span>
         <span className="text-[15px] opacity-90">
           {data.saved.length === 0
@@ -53,17 +53,17 @@ export function MonthView() {
       </section>
 
       {data.saved.length > 0 ? (
-        <ul className="overflow-hidden rounded-card border border-line-soft bg-surface">
+        <ul className="overflow-hidden rounded-card bg-surface">
           {data.saved.map((m) => (
             <li key={m.id} className="flex items-center justify-between gap-3 border-b border-line-soft px-4 py-3 last:border-b-0">
               <span className="flex min-w-0 flex-col">
-                <span className="font-bold">{medLabel(m.name, m.strength)}</span>
+                <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
                 <span className="flex items-center gap-1 text-[14px] text-brand">
                   <FreeIcon size={16} />
                   {placeText(m.freeAt)}
                 </span>
               </span>
-              <span className="whitespace-nowrap font-bold">
+              <span className="whitespace-nowrap font-semibold">
                 {m.monthlyCents > 0 ? brl.format(m.monthlyCents / 100) : "Sem preço"}
               </span>
             </li>
@@ -72,17 +72,16 @@ export function MonthView() {
       ) : null}
 
       {data.highCostPotentialCents > 0 ? (
-        <section className="rounded-card border border-line-soft bg-warn-soft p-4 text-warn">
-          <b>Pode economizar mais {brl.format(data.highCostPotentialCents / 100)} por mês</b>
-          <p className="text-[15px]">Com laudo do médico, pelo Alto Custo do estado.</p>
-        </section>
+        <Notice tone="accent" icon={<FreeIcon />} title={`Pode economizar mais ${brl.format(data.highCostPotentialCents / 100)} por mês`}>
+          Com laudo do médico, pelo Alto Custo do estado.
+        </Notice>
       ) : null}
 
       <Link
         href="/family/comprar"
-        className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+        className="flex items-center gap-3 rounded-card bg-surface p-4 no-underline"
       >
-        <span className="flex size-11 items-center justify-center rounded-[14px] bg-warn-soft text-warn">
+        <span className="flex size-11 items-center justify-center rounded-full bg-warn-soft text-warn">
           <CartIcon size={24} />
         </span>
         <span className="flex flex-1 flex-col">
@@ -102,7 +101,7 @@ export function MonthView() {
         <ChevronRightIcon size={20} className="text-muted" />
       </Link>
 
-      <section className="flex items-center gap-3 rounded-card border border-line-soft bg-surface p-4">
+      <section className="flex items-center gap-3 rounded-card bg-surface p-4">
         <span className="flex size-11 items-center justify-center rounded-full bg-blush text-accent-ink">
           <PillIcon size={24} />
         </span>

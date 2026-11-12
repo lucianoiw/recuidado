@@ -2,7 +2,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { ConflictException, Inject, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Job, Queue } from 'bullmq';
-import { asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, isNull } from 'drizzle-orm';
 import {
   type Database,
   DB,
@@ -56,7 +56,7 @@ export class DemoService {
     const [med] = await this.db
       .select({ id: medications.id, name: medications.name })
       .from(medications)
-      .where(eq(medications.patientId, patientId))
+      .where(and(eq(medications.patientId, patientId), isNull(medications.stoppedAt)))
       .orderBy(asc(medications.createdAt))
       .limit(1);
     if (!med) throw new ConflictException('Adicione pelo menos um remédio antes de rodar a demo.');
@@ -86,6 +86,36 @@ export class DemoService {
     telemetry.capture('demo_run_started', { dose_id: dose.id, medication: med.name, demo: true, demo_family: ref.isDemo }, patientId);
     this.logger.log(`Demo run started with dose ${dose.id}.`);
     return { doseId: dose.id, alreadyRunning: false };
+  }
+
+  /**
+   * Stops a run of this family: drops the reminder, call and family alert still waiting and erases the
+   * extra dose, so the day's history keeps only the real doses. A call already ringing ends by itself.
+   */
+  async stop(familyId: string | null, doseId: string): Promise<void> {
+    const ref = await this.family.resolveFamily(familyId);
+    const [dose] = await this.db
+      .select({ id: doses.id })
+      .from(doses)
+      .innerJoin(medications, eq(doses.medicationId, medications.id))
+      .where(and(eq(doses.id, doseId), eq(doses.demo, true), eq(medications.patientId, ref.patientId)));
+    if (!dose) throw new NotFoundException('Demo não encontrada.');
+    let callActive = false;
+    for (const kind of ['remind', 'call', 'alert-family'] as const) {
+      const job = (await this.queue.getJob(doseJobId(kind, doseId))) as Job<DoseJob> | undefined;
+      if (!job) continue;
+      const state = await job.getState();
+      if (state === 'active') {
+        if (kind === 'call') callActive = true;
+        continue;
+      }
+      if (state === 'delayed' || state === 'waiting' || state === 'prioritized') await job.remove().catch(() => undefined);
+    }
+    // The call in progress still writes its result on this dose: keep it until then.
+    if (!callActive) await this.db.delete(doses).where(eq(doses.id, doseId));
+    if (this.current.get(ref.familyId)?.doseId === doseId) this.current.delete(ref.familyId);
+    telemetry.capture('demo_run_stopped', { dose_id: doseId, call_active: callActive, demo_family: ref.isDemo }, ref.patientId);
+    this.logger.log(`Demo run ${doseId} stopped.`);
   }
 
   /** Where the run is: reminder, call and family alert. */

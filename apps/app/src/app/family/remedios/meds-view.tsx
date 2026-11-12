@@ -11,6 +11,10 @@ import {
   PencilIcon,
   PinIcon,
   PlusIcon,
+  ClockIcon,
+  InfoIcon,
+  InfoLine,
+  PillIcon,
   buttonClass,
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
@@ -38,70 +42,95 @@ function freeWhere(m: Medication): string | null {
   return places.length > 0 ? places.join(" ou ") : null;
 }
 
+const shortDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit", timeZone: "America/Sao_Paulo" });
+
 function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
   const { getsFree, setBuy } = useBuyChoice();
+  const free = getsFree(m);
+  const where = freeWhere(m);
   return (
-    <li className="flex flex-col gap-3 border-b border-line-soft px-4 py-3.5 last:border-b-0">
+    <li className="flex flex-col gap-3 rounded-card bg-surface p-4 shadow-[0_1px_2px_rgba(22,19,20,0.04)]">
       <button
         type="button"
         onClick={() => onEdit(m)}
         aria-label={`Mudar ${medLabel(m.name, m.strength)}`}
-        className="flex min-w-0 flex-col text-left"
+        className="flex min-w-0 flex-col gap-2 text-left"
       >
-        <span className="font-bold">
-          {medLabel(m.name, m.strength)}
-          <PencilIcon size={16} className="ml-1.5 inline align-[-2px] text-muted" />
-        </span>
-        <span className="text-[15px] text-muted">
-          {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
-        </span>
-        <span className="text-[14px] text-muted">
-          {m.photoUrl ? "Com foto do remédio no app dela" : "Sem foto: toque para tirar a foto da caixa"}
-        </span>
-        {freeWhere(m) ? (
-          <span className="mt-1 text-[14px] leading-snug text-brand">
-            <b>Grátis em:</b> {freeWhere(m)}
-          </span>
-        ) : null}
-        {m.stock?.low ? (
-          <span className="flex items-center gap-1.5 text-[15px] font-bold text-warn">
-            <AlertIcon size={16} strokeWidth={2.4} className="shrink-0" />
-            Acabando: {stockText(m.stock)}
-          </span>
-        ) : m.stock ? (
-          <span className="text-[15px] text-muted">Em casa: {stockText(m.stock)}</span>
-        ) : m.times.length > 0 ? (
-          <span className="text-[14px] text-muted">Quantos comprimidos tem em casa? Toque para contar.</span>
-        ) : null}
-        {getsFree(m) ? (
-          m.monthlyCostCents > 0 ? (
-            <span className="text-[15px] font-bold text-brand">
-              Economia de {brl.format(m.monthlyCostCents / 100)} por mês
+        <span className="flex items-start gap-3">
+          {m.photoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
+            <img src={m.photoUrl} alt="" className="size-14 shrink-0 rounded-2xl bg-cream object-cover" />
+          ) : (
+            <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-cream text-muted">
+              <CameraIcon size={22} />
             </span>
-          ) : null
-        ) : (
-          <span className="text-[15px] font-bold">
-            {m.monthlyCostCents > 0
-              ? `Até ${brl.format(m.monthlyCostCents / 100)} por mês (preço máximo CMED)`
-              : m.times.length === 0 && m.price
-                ? `Caixa com ${m.price.unitsPerPack}: até ${brl.format(m.price.packCents / 100)} (CMED)`
-                : "Sem preço ainda"}
+          )}
+          <span className="flex min-w-0 flex-1 flex-col">
+            <span className="text-[18px] font-semibold leading-snug">{medLabel(m.name, m.strength)}</span>
+            <span className="text-[14px] text-muted">
+              {m.photoUrl ? "Tem foto da caixa" : "Toque para tirar a foto da caixa"}
+            </span>
           </span>
-        )}
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cream text-muted">
+            <PencilIcon size={16} />
+          </span>
+        </span>
+        <span className="flex flex-col gap-1.5 border-t border-line-soft pt-3">
+          <InfoLine icon={<ClockIcon />} tone="ink">
+            {m.times.length > 0 ? m.times.join(" e ") : "Sem horário definido"}
+          </InfoLine>
+          {where ? (
+            <InfoLine icon={<PinIcon />}>
+              Grátis em {where}
+            </InfoLine>
+          ) : null}
+          {m.stock?.low ? (
+            <InfoLine icon={<AlertIcon />} tone="warn">
+              <b>Acabando:</b> {stockText(m.stock)}
+            </InfoLine>
+          ) : m.stock ? (
+            <InfoLine icon={<PillIcon />}>Em casa: {stockText(m.stock)}</InfoLine>
+          ) : m.times.length > 0 ? (
+            <InfoLine icon={<PillIcon />}>Quantos tem em casa? Toque para contar.</InfoLine>
+          ) : null}
+          {free ? (
+            m.monthlyCostCents > 0 ? (
+              <InfoLine icon={<FreeIcon />} tone="ok">
+                Economia de <b>{brl.format(m.monthlyCostCents / 100)}</b> por mês
+              </InfoLine>
+            ) : null
+          ) : (
+            <InfoLine icon={<CartIcon />} tone="ink">
+              {m.monthlyCostCents > 0 ? (
+                <>
+                  Até <b>{brl.format(m.monthlyCostCents / 100)}</b> por mês (preço máximo CMED)
+                </>
+              ) : m.times.length === 0 && m.price ? (
+                `Caixa com ${m.price.unitsPerPack}: até ${brl.format(m.price.packCents / 100)} (CMED)`
+              ) : (
+                "Sem preço ainda"
+              )}
+            </InfoLine>
+          )}
+        </span>
       </button>
       {m.highCost ? (
         <Link
           href={`/family/alto-custo/${m.id}`}
-          className={`flex items-center justify-between gap-2 rounded-xl border-[1.5px] px-3.5 py-2.5 text-[15px] font-bold leading-snug no-underline ${
-            m.highCostPath?.due ? "border-warn bg-warn-soft text-warn" : "border-line-soft text-brand"
+          className={`flex items-start justify-between gap-2 rounded-2xl px-3.5 py-3 text-[14px] font-semibold leading-snug no-underline ${
+            m.highCostPath?.due ? "bg-warn-soft text-warn" : "bg-cream text-ink"
           }`}
         >
-          {m.highCostPath ? pathLine(m.highCostPath) : "Pode ser grátis no Alto Custo, com laudo do médico. Ver o caminho"}
-          <ChevronRightIcon size={18} className="shrink-0" />
+          <span className="flex items-start gap-2">
+            <InfoIcon size={17} className="mt-px shrink-0" />
+            {m.highCostPath ? pathLine(m.highCostPath) : "Pode ser grátis no Alto Custo, com laudo do médico. Ver o caminho"}
+          </span>
+          <ChevronRightIcon size={18} className="mt-px shrink-0" />
         </Link>
       ) : null}
       {isFree(m) ? (
-        <FreeOrBuy name={m.name} free={getsFree(m)} onChange={(free) => setBuy(m.id, !free)} />
+        <FreeOrBuy name={m.name} free={free} onChange={(f) => setBuy(m.id, !f)} />
       ) : null}
     </li>
   );
@@ -121,25 +150,33 @@ function Group({
   onEdit: (m: Medication) => void;
 }) {
   return (
-    <section className="flex flex-col gap-2">
-      <h2 className="flex items-center gap-2 text-[18px] font-semibold">
-        {icon}
-        {title}
-      </h2>
-      <div className="overflow-hidden rounded-card border border-line-soft bg-surface">
-        <ul>
-          {meds.map((m) => (
-            <MedRow key={m.id} m={m} onEdit={onEdit} />
-          ))}
-        </ul>
-        <Link
-          href={link.href}
-          className="flex items-center justify-between border-t border-line-soft bg-[#fbfaf7] px-4 py-3.5 font-bold text-brand no-underline"
-        >
-          {link.label}
-          <ChevronRightIcon size={20} />
-        </Link>
+    <section className="flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 font-display text-[24px]">
+          <span className="flex size-8 items-center justify-center rounded-full bg-blush text-accent-ink [&>svg]:size-[17px]">
+            {icon}
+          </span>
+          {title}
+        </h2>
+        <span className="text-[14px] text-muted">{meds.length}</span>
       </div>
+      <ul className="flex flex-col gap-3">
+        {meds.map((m) => (
+          <MedRow key={m.id} m={m} onEdit={onEdit} />
+        ))}
+      </ul>
+      <Link
+        href={link.href}
+        className="flex items-center justify-between rounded-full bg-ink py-2 pl-2 pr-5 text-white no-underline"
+      >
+        <span className="flex items-center gap-3">
+          <span className="flex size-10 items-center justify-center rounded-full bg-surface text-ink [&>svg]:size-5">
+            {icon}
+          </span>
+          <b className="font-semibold">{link.label}</b>
+        </span>
+        <ChevronRightIcon size={20} />
+      </Link>
     </section>
   );
 }
@@ -163,7 +200,7 @@ export function MedsView() {
       />
 
       {data.medications.length === 0 ? (
-        <section className="flex flex-col items-center gap-3 rounded-card border border-line-soft bg-surface p-6 text-center">
+        <section className="flex flex-col items-center gap-3 rounded-card bg-surface p-6 text-center">
           <span className="flex size-16 items-center justify-center rounded-full bg-blush text-accent-ink">
             <CameraIcon size={32} />
           </span>
@@ -174,7 +211,7 @@ export function MedsView() {
 
       {free.length > 0 ? (
         <Group
-          icon={<FreeIcon size={22} className="text-brand" />}
+          icon={<FreeIcon />}
           title="Grátis"
           meds={free}
           link={{ href: "/family/onde-pegar", label: "Ver onde pegar" }}
@@ -184,12 +221,28 @@ export function MedsView() {
 
       {paid.length > 0 ? (
         <Group
-          icon={<CartIcon size={22} className="text-warn" />}
+          icon={<CartIcon />}
           title="Para comprar"
           meds={paid}
           link={{ href: "/family/comprar", label: "Onde comprar e dividir" }}
           onEdit={setEditing}
         />
+      ) : null}
+
+      {data.stoppedMedications && data.stoppedMedications.length > 0 ? (
+        <section className="flex flex-col gap-2">
+          <h2 className="text-[17px] font-semibold">Não toma mais</h2>
+          <ul className="flex flex-col overflow-hidden rounded-card bg-surface">
+            {data.stoppedMedications.map((m) => (
+              <li key={m.id} className="flex flex-col border-b border-line-soft px-4 py-3 last:border-b-0">
+                <span className="text-[16px]">{medLabel(m.name, m.strength)}</span>
+                <span className="text-[14px] text-muted">
+                  Tomou de {shortDate(m.createdAt)} até {shortDate(m.stoppedAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
 
       <EditMedSheet med={editing} onClose={() => setEditing(null)} onSaved={reload} />
@@ -200,16 +253,13 @@ export function MedsView() {
       </Link>
 
       {data.medications.length > 0 ? (
-        <p className="text-[15px] leading-snug text-muted">
-          Toque no nome de um remédio para mudar a dose, o horário ou parar. Remédio que não sai grátis fica em Para comprar: toque em Onde comprar e dividir.
-        </p>
+        <InfoLine icon={<PencilIcon />}>Toque em um remédio para mudar a dose, o horário ou remover.</InfoLine>
       ) : null}
 
       {free.length > 0 ? (
-        <p className="flex items-start gap-2 text-[15px] leading-snug text-muted">
-          <PinIcon size={18} className="mt-0.5 shrink-0" />
+        <InfoLine icon={<InfoIcon />}>
           Para retirar grátis, leve a receita e um documento com foto de {callName(data.patient)}.
-        </p>
+        </InfoLine>
       ) : null}
     </>
   );

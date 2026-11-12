@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { CameraIcon, InfoIcon } from "@/components/ui";
 import { removeMedicationPhoto, setMedicationPhoto, type Medication } from "@/lib/api";
+import { usePronouns } from "@/lib/pronouns";
 
 /** Longest side of the photo sent to the API: enough to read the box, small on mobile data. */
 const MAX_SIDE = 1280;
@@ -25,6 +26,7 @@ async function shrink(file: File): Promise<Blob> {
  * picture, so she does not mistake one pill for another. Saved right away, apart from the form.
  */
 export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: () => void }) {
+  const pr = usePronouns();
   const input = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(med.photoUrl ?? null);
   const [busy, setBusy] = useState(false);
@@ -53,7 +55,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-[15px] font-bold">Foto do remédio de verdade</span>
+      <span className="text-[15px] font-semibold">Foto do remédio de verdade</span>
       {preview ? (
         // eslint-disable-next-line @next/next/no-img-element -- signed R2 link or a local blob
         <img
@@ -64,7 +66,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
       ) : (
         <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
           <InfoIcon size={18} className="mt-0.5 shrink-0" />
-          Tire uma foto da caixa ou do comprimido que ela toma. O app dela mostra só essa foto. Sem foto,
+          Tire uma foto da caixa ou do comprimido que {pr.ela} toma. O app {pr.dela} mostra só essa foto. Sem foto,
           mostra só o nome, a dose e o horário.
         </p>
       )}
@@ -81,7 +83,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
           type="button"
           disabled={busy}
           onClick={() => input.current?.click()}
-          className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface px-3 text-[16px] font-bold disabled:opacity-60"
+          className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-surface px-3 text-[16px] font-semibold disabled:opacity-60"
         >
           <CameraIcon size={20} />
           {busy ? "Salvando..." : preview ? "Trocar foto" : "Tirar foto"}
@@ -91,7 +93,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
             type="button"
             disabled={busy}
             onClick={() => void run(() => removeMedicationPhoto(med.id), null)}
-            className="min-h-11 rounded-xl px-3 text-[16px] font-bold text-danger disabled:opacity-60"
+            className="min-h-11 rounded-xl px-3 text-[16px] font-semibold text-danger disabled:opacity-60"
           >
             Apagar foto
           </button>

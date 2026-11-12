@@ -6,10 +6,11 @@ import { callName, deleteFamilyData, downloadFamilyData, getMe, setEmergencyCont
 import { track } from "@/lib/analytics";
 import { EnableNotifications } from "@/components/enable-notifications";
 import Link from "next/link";
-import { BellIcon, Button, CheckIcon, ChevronRightIcon, PhoneIcon, StatusPill, buttonClass, cn } from "@/components/ui";
+import { BellIcon, Button, FreeIcon, InfoIcon, ShareIcon, CheckIcon, ChevronRightIcon, PhoneIcon, StatusPill, buttonClass, cn } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
+import { pronouns } from "@/lib/pronouns";
 
 function firstName(name: string) {
   return name.trim().split(/\s+/)[0];
@@ -33,7 +34,7 @@ export function CircleView() {
 
       <section className="flex flex-col gap-2">
         <h2 className="text-[18px] font-semibold">{data.isDemo ? "Quem é você na demonstração?" : "Quem cuida"}</h2>
-        <ul className="overflow-hidden rounded-card border border-line-soft bg-surface" role={data.isDemo ? "radiogroup" : undefined}>
+        <ul className="overflow-hidden rounded-card bg-surface" role={data.isDemo ? "radiogroup" : undefined}>
           {data.caregivers.map((c) => {
             const on = c.id === me;
             return (
@@ -80,9 +81,9 @@ export function CircleView() {
       {/* Who the call reaches in an emergency: only with calls (the paid plan). */}
       {data.calls !== false ? <FirstContact caregivers={data.caregivers} patient={patient} onSaved={reload} /> : null}
 
-      <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-        <h2 className="flex items-center gap-2 text-[18px] font-semibold">
-          <BellIcon size={22} className="text-brand" />
+      <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
+        <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
+          <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><BellIcon size={18} /></span>
           Alertas neste celular
         </h2>
         <p className="text-[15px] leading-snug text-muted">
@@ -102,9 +103,10 @@ export function CircleView() {
 
       <Link
         href="/family/plano"
-        className="flex items-center justify-between gap-3 rounded-card border border-line-soft bg-surface p-4 no-underline"
+        className="flex items-center justify-between gap-3 rounded-card bg-surface p-4 no-underline"
       >
-        <span className="flex flex-col">
+        <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><FreeIcon size={18} /></span>
+        <span className="flex flex-1 flex-col">
           <b>Plano</b>
           <span className="text-[15px] text-muted">
             {data.calls === false ? "Grátis. Ligações no plano pago, em breve" : "Ligações para quem não usa celular"}
@@ -113,8 +115,11 @@ export function CircleView() {
         <ChevronRightIcon size={20} className="text-muted" />
       </Link>
 
-      <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-        <h2 className="text-[18px] font-semibold">Convidar e instalar</h2>
+      <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
+        <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
+          <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><ShareIcon size={18} /></span>
+          Convidar e instalar
+        </h2>
         {data.isDemo ? null : (
           <Link href="/comecar?passo=3" className={buttonClass({ variant: "secondary" })}>
             Chamar mais alguém
@@ -158,22 +163,32 @@ function FirstContact({
     }
   }
 
+  // Same order the voice service uses: the marked person first, then the others with a phone, oldest first.
+  const withPhone = caregivers.filter((c) => c.hasPhone);
+  const callOrder = [...withPhone.filter((c) => c.emergencyContact), ...withPhone.filter((c) => !c.emergencyContact)].map(
+    (c) => c.id,
+  );
+  const ordered = [...callOrder.map((id) => caregivers.find((c) => c.id === id)!), ...caregivers.filter((c) => !c.hasPhone)];
+
   return (
-    <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-      <h2 className="flex items-center gap-2 text-[18px] font-semibold">
-        <PhoneIcon size={22} className="text-danger" />
-        Primeiro contato
+    <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
+      <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
+        <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><PhoneIcon size={18} /></span>
+        Quem recebe a ligação
       </h2>
       <p className="text-[15px] leading-snug text-muted">
-        Se {patient} disser na ligação que caiu, que sente dor no peito, falta de ar ou que desmaiou,
-        ligamos primeiro para esta pessoa. Se ela não atender, ligamos para a próxima da família, uma de
-        cada vez, até alguém ouvir o recado. Se {patient} não atender o lembrete ou não tomar o remédio, a
-        ligação segue a mesma ordem, com um recado calmo. Todas recebem a notificação.
+        Ligamos primeiro para quem estiver marcado. Se não atender, ligamos para o próximo da lista, um de
+        cada vez, até alguém atender.
       </p>
-      <ul className="overflow-hidden rounded-2xl border border-line-soft" role="radiogroup" aria-label="Primeiro contato em emergência">
-        {caregivers.map((c) => {
+      <p className="text-[15px] leading-snug text-muted">
+        Vale quando {patient} diz na ligação que caiu, sente dor no peito, falta de ar ou desmaiou, e quando
+        não toma o remédio (aí com um recado calmo). Todos recebem a notificação.
+      </p>
+      <ul className="overflow-hidden rounded-2xl bg-cream" role="radiogroup" aria-label="Quem recebe a ligação primeiro">
+        {ordered.map((c) => {
           const on = Boolean(c.emergencyContact);
           const noPhone = !c.hasPhone;
+          const turn = callOrder.indexOf(c.id) + 1;
           return (
             <li key={c.id} className="border-b border-line-soft last:border-b-0">
               <button
@@ -189,7 +204,11 @@ function FirstContact({
                   <span className="text-[15px] text-muted">
                     {noPhone ? "Sem celular cadastrado" : saving === c.id ? "Salvando..." : c.phone}
                   </span>
-                  {on ? <span className="text-[15px] font-bold text-danger">Recebe a ligação</span> : null}
+                  {turn > 0 ? (
+                    <span className={cn("text-[15px] font-semibold", turn === 1 ? "text-accent-ink" : "text-muted")}>
+                      {turn === 1 ? "Recebe primeiro" : `Recebe em ${turn}º`}
+                    </span>
+                  ) : null}
                 </span>
                 <span
                   className={cn(
@@ -214,9 +233,10 @@ function FirstContact({
 }
 
 function consentText(p: Member, patient: string): string {
-  if (p.consentSource === "patient") return `${patient} aceitou no app dela.`;
-  if (p.consentSource === "caregiver") return `A família disse que ${patient} aceitou. Ela confirma no primeiro acesso ao app dela.`;
-  return `${patient} ainda não aceitou. Sem o aceite dela, o Recuidado não liga.`;
+  const pr = pronouns(p.gender);
+  if (p.consentSource === "patient") return `${patient} aceitou no app ${pr.dela}.`;
+  if (p.consentSource === "caregiver") return `A família disse que ${patient} aceitou. ${pr.Ela} confirma no primeiro acesso ao app ${pr.dela}.`;
+  return `${patient} ainda não aceitou. Sem o aceite ${pr.dela}, o Recuidado não liga.`;
 }
 
 /** LGPD rights: consent status, privacy notice, export and delete. */
@@ -252,8 +272,11 @@ function YourData({
   }
 
   return (
-    <section className="flex flex-col gap-3 rounded-card border border-line-soft bg-surface p-4">
-      <h2 className="text-[18px] font-semibold">Seus dados</h2>
+    <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
+      <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
+        <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><InfoIcon size={18} /></span>
+        Seus dados
+      </h2>
       {isDemo ? null : <p className="text-[15px] leading-snug text-muted">{consentText(consent, patient)}</p>}
       <Link href="/privacidade" className={buttonClass({ variant: "secondary" })}>
         Como cuidamos dos dados
@@ -279,7 +302,7 @@ function YourData({
             Baixar todos os dados
           </button>
           {confirming ? (
-            <div className="flex flex-col gap-2.5 rounded-2xl border-2 border-danger p-3.5" role="alertdialog">
+            <div className="flex flex-col gap-2.5 rounded-2xl p-3.5" role="alertdialog">
               <p className="text-[15px] font-semibold leading-snug">
                 Apagar {patient}, a família, os remédios, as doses e as ligações? Não tem volta.
               </p>
@@ -294,7 +317,7 @@ function YourData({
             <button
               type="button"
               onClick={() => setConfirming(true)}
-              className="py-2 text-center text-[15px] font-bold text-danger"
+              className="py-2 text-center text-[15px] font-semibold text-danger"
             >
               Apagar a família e todos os dados
             </button>
@@ -319,7 +342,7 @@ function SignedInAs() {
   }, []);
   if (!me) return null;
   return (
-    <section className="flex items-center justify-between gap-3 rounded-card border border-line-soft bg-surface p-4">
+    <section className="flex items-center justify-between gap-3 rounded-card bg-surface p-4">
       <span className="flex min-w-0 flex-col">
         <b>Você entrou como {me.name ?? me.email}</b>
         <span className="truncate text-[15px] text-muted">{me.email}</span>
@@ -330,7 +353,7 @@ function SignedInAs() {
           await signOut();
           router.replace("/");
         }}
-        className="min-h-11 shrink-0 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-bold"
+        className="min-h-11 shrink-0 rounded-xl border-[1.5px] border-ink px-3 text-[15px] font-semibold"
       >
         Sair
       </button>

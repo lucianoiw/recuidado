@@ -21,7 +21,7 @@ export function Screen({
       className={cn(
         "mx-auto flex w-full max-w-md flex-1 flex-col px-5 pt-8",
         audience === "patient" ? "gap-5 pb-6 font-legible text-[22px]" : "gap-4 pb-6 text-[17px]",
-        withNav && "pb-28",
+        withNav && "pb-[calc(7rem+env(safe-area-inset-bottom))]",
         className,
       )}
     >
@@ -48,7 +48,7 @@ export function ScreenHeader({
       <h1
         className={cn(
           patient
-            ? "text-[38px] font-bold leading-tight"
+            ? "text-[38px] font-semibold leading-tight"
             : "font-display text-[34px] leading-[1.05]",
         )}
       >

@@ -5,7 +5,7 @@ import {
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
-import { and, asc, eq, gte, lt, ne } from 'drizzle-orm';
+import { and, asc, eq, gte, isNull, lt, ne } from 'drizzle-orm';
 import {
   costShares,
   type Database,
@@ -93,7 +93,7 @@ export class MonthService implements OnApplicationBootstrap {
         buyInsteadOfFree: medications.buyInsteadOfFree,
       })
       .from(medications)
-      .where(eq(medications.patientId, ref.patientId))
+      .where(and(eq(medications.patientId, ref.patientId), isNull(medications.stoppedAt)))
       .orderBy(asc(medications.createdAt));
 
     let priceListDate: string | null = null;

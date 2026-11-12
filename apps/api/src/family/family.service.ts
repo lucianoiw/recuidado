@@ -205,6 +205,7 @@ export class FamilyService implements OnApplicationBootstrap {
         id: members.id,
         name: members.name,
         nickname: members.nickname,
+        gender: members.gender,
         role: members.role,
         relation: members.relation,
         relationOther: members.relationOther,
@@ -237,8 +238,13 @@ export class FamilyService implements OnApplicationBootstrap {
         photoKey: medications.photoKey,
       })
       .from(medications)
-      .where(eq(medications.patientId, patientId))
+      .where(and(eq(medications.patientId, patientId), isNull(medications.stoppedAt)))
       .orderBy(asc(medications.createdAt));
+    const stopped = await this.db
+      .select({ id: medications.id, name: medications.name, strength: medications.strength, createdAt: medications.createdAt, stoppedAt: medications.stoppedAt })
+      .from(medications)
+      .where(and(eq(medications.patientId, patientId), isNotNull(medications.stoppedAt)))
+      .orderBy(desc(medications.stoppedAt));
     const stock = await this.stock.statusFor(meds);
     const photoUrls = new Map<string, string>();
     for (const m of meds) {
@@ -283,6 +289,8 @@ export class FamilyService implements OnApplicationBootstrap {
           };
         },
       ),
+      // Removed from her list: kept to show what she took and until when.
+      stoppedMedications: stopped,
       today: await this.doses.listForDay(patientId),
       unwellReports: await this.unwellReports(patientId, now),
     };
@@ -329,7 +337,7 @@ export class FamilyService implements OnApplicationBootstrap {
     const [row] = await this.db
       .select({ id: medications.id })
       .from(medications)
-      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)));
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId), isNull(medications.stoppedAt)));
     if (!row) throw new NotFoundException('Remédio não encontrado.');
     if (Object.keys(changes).length > 0) {
       await this.db.update(medications).set(changes).where(eq(medications.id, medicationId));
@@ -442,13 +450,22 @@ export class FamilyService implements OnApplicationBootstrap {
   }
 
   /** Family stops a medication: it and its doses are removed. */
-  async removeMedication(familyId: string | null | undefined, medicationId: string): Promise<void> {
+  /**
+   * Takes it off her list without erasing it: the doses she already took or missed stay in the history.
+   * Upcoming doses are deleted (their queued jobs find no dose) and reminders of earlier pending ones
+   * see the stop and do nothing. Taking it again later is a new medication, so nothing clashes.
+   */
+  async removeMedication(familyId: string | null | undefined, medicationId: string, now = new Date()): Promise<void> {
     const { patientId } = await this.writableFamily(familyId);
     const [row] = await this.db
-      .delete(medications)
-      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)))
+      .update(medications)
+      .set({ stoppedAt: now })
+      .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId), isNull(medications.stoppedAt)))
       .returning({ id: medications.id });
     if (!row) throw new NotFoundException('Remédio não encontrado.');
+    await this.db
+      .delete(doses)
+      .where(and(eq(doses.medicationId, medicationId), eq(doses.status, 'pending'), gte(doses.scheduledAt, now)));
   }
 
   /** Saved onboarding answers of one caregiver, to restore the sign-up form. */

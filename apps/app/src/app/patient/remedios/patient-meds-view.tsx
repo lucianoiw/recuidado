@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { PhotoZoom } from "@/components/photo-zoom";
 import { useEffect, useState } from "react";
-import { BellIcon, Card, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
+import { BellIcon, buttonClass } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
 import { formatTime, getFamily, type FamilyOverview } from "@/lib/api";
 
@@ -52,51 +53,36 @@ export function PatientMedsView() {
 
   return (
     <>
-      <ScreenHeader
-        audience="patient"
-        eyebrow={meds.length === 1 ? "1 remédio" : `${meds.length} remédios`}
-        title="Meus remédios"
-      />
+      <header className="flex flex-col gap-1">
+        <p className="text-[22px] text-muted">{meds.length === 1 ? "1 remédio" : `${meds.length} remédios`}</p>
+        <h1 className="font-display text-[44px] leading-[1.02]">Meus remédios</h1>
+      </header>
 
       {next ? (
-        <Card className="flex items-center gap-3.5 px-5 py-5">
-          <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-blush text-accent-ink">
-            <BellIcon size={30} strokeWidth={2.2} />
+        <section className="flex items-center gap-4 rounded-[28px] bg-surface px-5 py-5 shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)]">
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-blush text-accent">
+            <BellIcon size={30} strokeWidth={1.8} />
           </span>
           <span className="flex flex-col">
-            <span className="text-[22px] text-muted">Próximo aviso</span>
-            <b className="text-[28px] leading-tight">{next}</b>
+            <span className="text-[20px] text-muted">Próximo aviso</span>
+            <span className="font-display text-[30px] leading-tight">{next}</span>
           </span>
-        </Card>
+        </section>
       ) : null}
 
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col overflow-hidden rounded-[28px] bg-surface">
         {meds.map((m) => (
-          <li key={m.id}>
-            <Card className="flex flex-col gap-3 px-5 py-5">
-              {m.photoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
-                <img
-                  src={m.photoUrl}
-                  alt={`Foto de ${m.name}`}
-                  className="h-44 w-full rounded-2xl border border-line bg-surface object-contain"
-                />
+          <li key={m.id} className="flex items-center gap-4 border-b border-line-soft px-5 py-5 last:border-b-0">
+            {m.photoUrl ? <PhotoZoom src={m.photoUrl} name={m.name} className="h-32 w-24" /> : null}
+            <div className="flex min-w-0 flex-col">
+              <h2 className="font-display text-[32px] leading-tight">{m.name}</h2>
+              {m.strength ? (
+                <span className="font-sans text-[20px] text-muted">{m.strength.replace(/ /g, "\u00a0")}</span>
               ) : null}
-              <div className="flex items-start gap-2.5">
-                <span className="flex h-9 shrink-0 items-center text-brand">
-                  <PillIcon size={28} />
-                </span>
-                <div className="flex min-w-0 flex-col">
-                  <h2 className="text-[30px] font-bold leading-tight">{m.name}</h2>
-                  {m.strength ? (
-                    <span className="text-[22px] text-muted">{m.strength.replace(/ /g, " ")}</span>
-                  ) : null}
-                </div>
-              </div>
-              <p className="text-[24px] leading-snug">
-                Às <b>{joinTimes(m.times.map(shortTime))}</b>
-              </p>
-            </Card>
+              <span className="mt-1.5 font-display text-[24px] text-accent-ink">
+                {joinTimes(m.times.map(shortTime))}
+              </span>
+            </div>
           </li>
         ))}
       </ul>

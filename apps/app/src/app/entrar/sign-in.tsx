@@ -9,6 +9,7 @@ import { getMe, startSignIn, verifySignIn } from "@/lib/api";
 import { isEmail } from "@/lib/masks";
 import { readSession } from "@/lib/session";
 import { afterSignIn } from "./after-sign-in";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 /** E-mail, then the 6 digit code from the e-mail. No password. */
 export function SignIn() {
@@ -18,6 +19,7 @@ export function SignIn() {
   const [email, setEmail] = useState(params.get("email") ?? "");
   const [code, setCode] = useState("");
   const [step, setStep] = useState<"email" | "code">("email");
+  useScrollTopOn(step);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -105,7 +107,7 @@ export function SignIn() {
             <Button type="submit" disabled={busy}>
               {busy ? "Enviando..." : "Receber o código"}
             </Button>
-            <Link href="/family" className="py-2 text-center text-[15px] font-bold text-brand">
+            <Link href="/family" className="py-2 text-center text-[15px] font-semibold text-brand">
               Só quero ver a demonstração
             </Link>
           </div>
@@ -138,7 +140,7 @@ export function SignIn() {
             <Button type="submit" disabled={busy}>
               {busy ? "Entrando..." : "Entrar"}
             </Button>
-            <button type="button" onClick={() => sendCode()} disabled={busy} className="py-2 text-[15px] font-bold text-brand">
+            <button type="button" onClick={() => sendCode()} disabled={busy} className="py-2 text-[15px] font-semibold text-brand">
               Mandar outro código
             </button>
           </div>

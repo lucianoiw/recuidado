@@ -14,8 +14,8 @@ export interface PaymentPerson {
 }
 
 const MODES: { value: SplitMode; label: string }[] = [
-  { value: "split", label: "Dividir todo mês" },
-  { value: "rotation", label: "Cada mês um compra" },
+  { value: "split", label: "Dividir" },
+  { value: "rotation", label: "Revezar" },
 ];
 
 /** Keeps the saved order and adds the people not in it yet at the end. */
@@ -74,7 +74,7 @@ export function PaymentSetup({
           ? `O primeiro da lista compra em ${monthName}, o segundo no mês seguinte, e assim por diante. O app avisa todo mundo de quem é a vez.`
           : "Quem compra recebe a parte dos outros por Pix. Cada um marca quando pagou."}
       </p>
-      <ol className="flex flex-col overflow-hidden rounded-card border border-line-soft bg-surface">
+      <ol className="flex flex-col overflow-hidden rounded-card bg-surface">
         {people.map((p, i) => {
           const number = p.excluded ? null : ++position;
           return (
@@ -110,7 +110,7 @@ export function PaymentSetup({
                       type="button"
                       disabled={i === 0}
                       onClick={() => move(i, -1)}
-                      className="flex size-11 items-center justify-center rounded-xl border border-line-soft disabled:opacity-30"
+                      className="flex size-11 items-center justify-center rounded-full border border-line-soft disabled:opacity-30"
                     >
                       <ArrowIcon up />
                       <span className="sr-only">Subir {p.name}</span>
@@ -119,7 +119,7 @@ export function PaymentSetup({
                       type="button"
                       disabled={i === people.length - 1}
                       onClick={() => move(i, 1)}
-                      className="flex size-11 items-center justify-center rounded-xl border border-line-soft disabled:opacity-30"
+                      className="flex size-11 items-center justify-center rounded-full border border-line-soft disabled:opacity-30"
                     >
                       <ArrowIcon up={false} />
                       <span className="sr-only">Descer {p.name}</span>
@@ -151,7 +151,7 @@ export function PaymentSetup({
         })}
       </ol>
       {inCount.length === 0 ? (
-        <p className="text-[15px] font-bold text-danger">Deixe pelo menos uma pessoa na conta.</p>
+        <p className="text-[15px] font-semibold text-danger">Deixe pelo menos uma pessoa na conta.</p>
       ) : null}
     </div>
   );

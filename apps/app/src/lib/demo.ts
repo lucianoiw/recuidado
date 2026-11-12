@@ -30,3 +30,11 @@ export function refreshMs(): number {
   const run = readDemoRun();
   return run && Date.now() - run.startedAt < FAST_FOR_MS ? 3_000 : 30_000;
 }
+
+export function clearDemoRun(): void {
+  try {
+    localStorage.removeItem(KEY);
+  } catch {
+    // Private mode: nothing was saved.
+  }
+}

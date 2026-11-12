@@ -47,7 +47,7 @@ export function TopBar({
           >
             <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${(step / total) * 100}%` }} />
           </div>
-          <span className="text-[14px] font-bold text-muted">
+          <span className="text-[14px] font-semibold text-muted">
             {step} de {total}
           </span>
         </>

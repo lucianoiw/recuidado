@@ -46,7 +46,7 @@ export function MedSearch({
 
   return (
     <div className="relative flex min-w-0 flex-col gap-1.5">
-      <label htmlFor={id} className="text-[15px] font-bold">
+      <label htmlFor={id} className="text-[15px] font-semibold">
         Nome do remédio
       </label>
       <input
@@ -115,7 +115,7 @@ export function MedSearch({
                   </span>
                 </span>
                 {free ? (
-                  <span className="whitespace-nowrap rounded-full bg-brand-soft px-2.5 py-1 text-[13px] font-bold text-brand">
+                  <span className="whitespace-nowrap rounded-full bg-brand-soft px-2.5 py-1 text-[13px] font-semibold text-brand">
                     Pode ser grátis
                   </span>
                 ) : null}

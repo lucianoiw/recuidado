@@ -10,7 +10,7 @@ import { captureError, track } from "@/lib/analytics";
 import { brl } from "@/lib/use-family";
 
 const FREE = ["Leitura da receita com IA", "O que sai grátis no Farmácia Popular", "Preço máximo (CMED) do que precisa comprar", "Divisão do custo entre os filhos com Pix", "Lembrete no celular e botão \"Tomei\""];
-const PAID = ["Ligação quando ela não confirma a dose", "Ligação para a família em emergência, e de volta para ela", "Ligação para a farmácia perguntando preço e estoque"];
+const PAID = ["Ligação quando a dose não é confirmada", "Ligação para a família em emergência, e de volta para quem toma o remédio", "Ligação para a farmácia perguntando preço e estoque"];
 
 function dateText(iso: string): string {
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
@@ -83,7 +83,7 @@ export function PlanView() {
 
       {waiting ? (
         <Card tone="warn">
-          <p className="font-bold">Confirmando o pagamento...</p>
+          <p className="font-semibold">Confirmando o pagamento...</p>
           <p className="text-[15px]">Leva alguns segundos. Pode deixar esta tela aberta.</p>
         </Card>
       ) : null}
