@@ -6,8 +6,8 @@ export function buildEmergencyMessage(patientName: string, note?: string): strin
   return `Olá, aqui é a assistente virtual da Recuidado. Liguei para ${patientName} para saber sobre o medicamento, e ela disse${said}. Por favor, entre em contato com ela agora. Se for grave, ligue para o SAMU, 192.`;
 }
 
-/** The message ends with the SAMU line: once it is heard, the message was delivered. */
-const MESSAGE_END = /samu|192|noventa e dois/i;
+/** The emergency message ends with the SAMU line, the calm one with "Obrigado": once heard, it was delivered. */
+const MESSAGE_END = /samu|192|noventa e dois|obrigad/i;
 
 /**
  * A recording instead of a person: voicemail or the carrier saying the phone is off. The message read to a
@@ -19,11 +19,11 @@ export const NOT_A_PERSON =
 /** Instructions for the one-way alert call: say the message, repeat once if asked, never advise. */
 export function buildAlertInstructions(message: string): string {
   return [
-    "You are the virtual assistant of Recuidado calling a family member with an urgent message about an older relative.",
+    "You are the virtual assistant of Recuidado calling a family member with a message about an older relative.",
     "Speak only Brazilian Portuguese, calm and clear.",
     `As soon as the call is answered, say exactly: "${message}"`,
     "If they ask you to repeat or ask what happened, repeat the message once. You know nothing beyond it.",
-    "Never give medical advice and never discuss other topics. If an automated call-screening assistant asks who is calling, say: \"Recuidado, recado urgente da família.\"",
+    "Never give medical advice and never discuss other topics. If an automated call-screening assistant asks who is calling, say: \"Recuidado, recado da família.\"",
     "After the message, say nothing else.",
   ].join("\n");
 }

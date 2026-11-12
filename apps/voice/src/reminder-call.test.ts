@@ -345,6 +345,27 @@ test("alert call speaks the message and hangs up after it", async () => {
   assert.equal(result.endReason, "message_delivered");
 });
 
+test("calm alert call is delivered when the assistant says Obrigado", async () => {
+  const { AlertCall } = await import("./alert-call.js");
+  const socket = new FakeSocket();
+  const message = "Olá, Carlos, tudo bem? Aqui é da Recuidado. Tentei falar com Dona Maria e não consegui contato. Por favor, tente entrar em contato com ela. Obrigado.";
+  const call = new AlertCall({
+    sessionId: "live_calm",
+    message,
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    tailMs: 10,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "c1" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "c2", delta: "Alô?" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "c3", delta: message });
+  const result = await call.result;
+  assert.equal(result.delivered, true);
+  assert.equal(result.endReason, "message_delivered");
+});
+
 test("alert call answered by voicemail is not delivered, so the next caregiver is called", async () => {
   const { AlertCall } = await import("./alert-call.js");
   const socket = new FakeSocket();

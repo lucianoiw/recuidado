@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { caregiverMessage, contactsAfter, namesList, patientWords, quoted, reported } from './voice.service.js';
+import { caregiverMessage, contactsAfter, missedDoseMessage, NAME_SLOT, namesList, patientWords, quoted, reported } from './voice.service.js';
 
 describe('emergency messages', () => {
   it('passes her own words to the first contact and asks to call her', () => {
@@ -56,5 +56,20 @@ describe('emergency call order', () => {
     expect(namesList(['Carlos'])).toBe('Carlos');
     expect(namesList(['Carlos', 'Ana'])).toBe('Carlos e Ana');
     expect(namesList(['Carlos', 'Ana', 'Pedro'])).toBe('Carlos, Ana e Pedro');
+  });
+});
+
+describe('missed dose call', () => {
+  it('is calm, has no SAMU and leaves a slot for each caregiver name', () => {
+    const m = missedDoseMessage('Dona Maria', 'no_answer');
+    expect(m).toBe(
+      `Olá, ${NAME_SLOT}, tudo bem? Aqui é da Recuidado. Tentei falar com Dona Maria e não consegui contato. Por favor, tente entrar em contato com ela. Obrigado.`,
+    );
+    expect(m).not.toMatch(/SAMU|192|urgente/);
+    expect(m.replace(NAME_SLOT, 'Carlos')).toMatch(/^Olá, Carlos, tudo bem\?/);
+  });
+
+  it('says she has not taken it yet when she answered the second call', () => {
+    expect(missedDoseMessage('Seu João', 'not_taken', 'male')).toMatch(/Falei com Seu João e ele ainda não tomou o medicamento\. Por favor, tente entrar em contato com ele\./);
   });
 });
