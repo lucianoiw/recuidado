@@ -54,16 +54,16 @@
 
   .confirmed {
     position: absolute;
-    bottom: 120px;
-    left: 16px;
+    top: 32px;
+    right: 28px;
     width: 290px;
     margin: 0;
   }
 
   .call {
     position: absolute;
-    top: 32px;
-    right: 28px;
+    bottom: 120px;
+    left: 16px;
     width: 270px;
     margin: 0;
   }
@@ -79,7 +79,7 @@
     height: 680px;
   }
 
-  .confirmed {
+  .call {
     left: -48px;
   }
 }
