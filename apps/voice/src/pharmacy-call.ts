@@ -84,6 +84,8 @@ const CLOSED = /hor[áa]rio de (atendimento|funcionamento)|estamos fechad|ligue 
 const GOODBYE = /tchau/i;
 const QUIET_EVENTS = new Set(["session.usage.updated", "response.event", "session.input_audio.append"]);
 const KEYS = /^[0-9*#]{1,8}$/;
+/** The recorded welcome that opens a phone menu ("Olá, você ligou para a Drogaria X"). */
+const WELCOME = /voc[êe] ligou para|bem[- ]vindo|obrigad[oa] por ligar/i;
 /** A recorded menu asking for a key. */
 const MENU = /\b(tecle|digite|pressione|disque)\b/i;
 /** Menu options worth choosing, best first: prices and stock, then a person, then medicines. */
@@ -94,7 +96,7 @@ const OPTION = /([^.]*?)(?:tecle|digite|pressione|disque)\s*(\d|zero|um|dois|tr[
 export function sideByRule(utterance: string, sinceKey: string): OtherSide | null {
   if (VOICEMAIL.test(utterance)) return "voicemail";
   if (CLOSED.test(utterance)) return "closed";
-  if (MENU.test(sinceKey)) return "menu";
+  if (MENU.test(sinceKey) || WELCOME.test(utterance)) return "menu";
   if (HOLD.test(utterance)) return "hold";
   if (WAIT.test(utterance)) return "person_wait";
   return null;
@@ -110,7 +112,9 @@ export function menuKeys(menu: string): string[] {
 /** The key for the best option of a recorded menu, or null when none fits. */
 export function menuChoice(menu: string): string | null {
   const options = [...menu.matchAll(OPTION)].map((m) => ({
-    label: m[1],
+    // Only the option's own words ("Para entregas, tecle 1"), not the welcome before it: a pharmacy
+    // called "Bom Preço" must not make "entregas" look like the price option.
+    label: optionLabel(m[1]),
     key: /^\d$/.test(m[2]) ? m[2] : (DIGIT_WORDS[m[2].toLowerCase()] ?? null),
   }));
   for (const wanted of WANTED) {
@@ -118,6 +122,11 @@ export function menuChoice(menu: string): string | null {
     if (hit) return hit.key;
   }
   return null;
+}
+
+function optionLabel(text: string): string {
+  const parts = text.split(/[.,;:]|\bpara\b/i).filter((p) => p.trim());
+  return parts.at(-1) ?? text;
 }
 
 const DIGIT_WORDS: Record<string, string> = {
@@ -598,6 +607,8 @@ export class PharmacyCall {
     if (piece && (piece.order < this.lastDecisionOrder || piece.order <= this.utteranceStartOrder)) return;
     if (piece) this.lastDecisionOrder = piece.order;
     if (key && key !== "none" && (MENU_KEYS as readonly string[]).includes(key)) this.suggestedKey = key;
+    // A recording the words already recognize in this utterance is not a person, whatever the model says.
+    if (side === "person" && sideByRule(this.utterance, this.otherSideSinceKey())) return;
     if (side && (OTHER_SIDE as readonly string[]).includes(side)) this.applySide(side, "decisions", latency);
   }
 

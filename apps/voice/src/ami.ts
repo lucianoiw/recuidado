@@ -241,3 +241,30 @@ export async function startRecording(
     client.close();
   }
 }
+
+/**
+ * Waits until an Asterisk global variable is "1" (polls Getvar every 400 ms), for at most maxMs or
+ * until stop() says to give up. True when it became "1". Never throws.
+ */
+export async function waitForGlobal(
+  config: AmiConfig,
+  name: string,
+  stop: () => boolean,
+  maxMs = 4 * 60 * 1000,
+): Promise<boolean> {
+  const client = new AmiClient(config);
+  try {
+    await client.open();
+    const until = Date.now() + maxMs;
+    while (!stop() && Date.now() < until) {
+      const res = await client.action({ Action: "Getvar", Variable: name });
+      if (res.Value === "1") return true;
+      await new Promise((r) => setTimeout(r, 400));
+    }
+    return false;
+  } catch {
+    return false;
+  } finally {
+    client.close();
+  }
+}

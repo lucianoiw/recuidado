@@ -125,7 +125,7 @@ export const pharmacyTriggers = [
             "menu: a recording that lists options or asks to press a key or say an option (\"tecle\", \"digite\", \"para ... tecle 2\", \"diga o nome do setor\").",
             "hold: a recording or music asking to wait in line (\"aguarde\", \"todos os atendentes estão ocupados\", \"sua ligação é importante\").",
             "person: a live person talking: a short greeting with the store name (\"Drogaria X, boa tarde\"), an answer, a question.",
-            "A welcome like \"Bem-vindo à Farmácia X\" or \"Obrigado por ligar\" is the start of a recorded menu, not a person.",
+            "A welcome like \"Bem-vindo à Farmácia X\", \"Você ligou para a Drogaria X\" or \"Obrigado por ligar\" is the start of a recorded menu, not a person.",
             "person_wait: a live person asking to wait a moment (\"só um minuto\", \"um momento\", \"já te atendo\", \"aguarda aí\").",
             "closed: a recording saying the store is closed or giving opening hours.",
             "voicemail: a recording asking to leave a message.",

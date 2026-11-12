@@ -534,3 +534,16 @@ test("a key the menu did not offer is never pressed, even if the second model su
   await new Promise((r) => setTimeout(r, 60));
   assert.deepEqual(keysSent(socket), []);
 });
+
+test("a pharmacy named Bom Preço does not make the first option look like prices", () => {
+  const menu =
+    "Olá, você ligou para a drogaria bom preço Para entregas, tecle um. Para trocas, tecle dois. Para falar com um atendente da farmácia, tecle 3";
+  assert.equal(menuChoice(menu), "3");
+  assert.equal(menuChoice("Se você quer saber o preço, tecle 2. Para outros assuntos, tecle 9"), "2");
+});
+
+test("a recorded welcome is a menu, not a person", () => {
+  assert.equal(sideByRule("Olá, você ligou para a Drogaria Bom Preço", ""), "menu");
+  assert.equal(sideByRule("Bem-vindo à Farmácia Teste", ""), "menu");
+  assert.equal(sideByRule("Farmácia Central, boa noite, Marcos falando", ""), null);
+});
