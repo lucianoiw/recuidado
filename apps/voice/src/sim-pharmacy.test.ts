@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { SIM_PHARMACIES, actorNumber, buildActorInstructions, simFacts, simPharmacyFor, simPriceCents } from "./sim-pharmacy.js";
+import { SIM_PHARMACIES, actorNumber, buildActorInstructions, simFacts, simPharmacyFor, simPriceCents, spokenPrice } from "./sim-pharmacy.js";
 import { LiveClient } from "./live.js";
 import type { VoiceConfig } from "./config.js";
 
@@ -24,7 +24,7 @@ test("each pharmacy says a different shelf price, ending in ,90", () => {
 test("facts follow stock and never mention Farmácia Popular", () => {
   const meds = [losartana, { name: "Metformina", dose: "850 mg" }];
   const facts = simFacts(SIM_PHARMACIES[2], meds);
-  assert.match(facts[0], /^Losartana 50 mg: tem o genérico por R\$ \d+,90 e o de referência por R\$ \d+,90, caixa com 28 comprimidos\.$/);
+  assert.match(facts[0], /^Losartana 50 mg: tem\. GENÉRICO: R\$ \d+,90 \("[a-zé ]+ e noventa"\)\. REFERÊNCIA: R\$ \d+,90 \("[a-zé ]+ e noventa"\)\. Caixa com 28 comprimidos\.$/);
   assert.match(facts[1], /em falta/);
   assert.doesNotMatch(simFacts(SIM_PHARMACIES[1], meds).join(" "), /Farmácia Popular/);
   assert.match(buildActorInstructions(SIM_PHARMACIES[0], [losartana]), /Drogaria Vida, (bom dia|boa tarde|boa noite), Rafael falando/);
@@ -50,4 +50,11 @@ test("the actor speaks with the actor voice and has no tools", () => {
   assert.equal(req.session.audio.output.voice, "tempo");
   assert.equal("delegation" in req.session, false);
   assert.equal(req.transport.destination, "+5500000000091");
+});
+
+test("prices are spelled the way an attendant says them", () => {
+  assert.equal(spokenPrice(790), "sete e noventa");
+  assert.equal(spokenPrice(1390), "treze e noventa");
+  assert.equal(spokenPrice(2490), "vinte e quatro e noventa");
+  assert.equal(spokenPrice(3000), "trinta reais");
 });

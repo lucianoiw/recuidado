@@ -519,6 +519,9 @@ export class PharmacyCall {
     });
     this.keysPressed.push(...digits);
     this.log(`pressing keys ${digits.join("")}`);
+    // Measured 12/11: after a key, the attendant once never spoke and the line stayed open until the
+    // 3-minute cap. Silence after a key gets "Alô?" too, and the call ends if nobody ever answers.
+    this.armSilentLine();
   }
 
   private recordAnswer(callId: string, args: Record<string, unknown>) {
@@ -639,10 +642,20 @@ export class PharmacyCall {
    */
   private armSilentLine() {
     if (this.silentLineTimer) clearTimeout(this.silentLineTimer);
-    if (this.introduced || this.silentLinePokes >= 3) return;
+    if (this.introduced) return;
     this.silentLineTimer = setTimeout(() => {
       if (this.introduced || this.answer || this.hangupRequested || this.finished || this.waiting) return;
-      if (this.menuPending || this.side === "menu" || this.keysPressed.length === 0) return;
+      if (this.menuPending || this.keysPressed.length === 0) return;
+      // Still "menu" only because nothing was heard since the key: that is a silent line too.
+      if (this.side === "menu" && this.otherSideSinceKey().trim()) return;
+      if (this.silentLinePokes >= 3) {
+        // A hold message was heard: the queue may be long, keep waiting (the 3-minute cap still holds).
+        if (this.otherSideSinceKey().trim()) return;
+        this.log("nothing heard since the key, even after 3 \"Alô?\", hanging up");
+        this.endReason ??= "silent_line";
+        void this.endCall();
+        return;
+      }
       this.silentLinePokes++;
       this.log(`line silent for ${this.opts.silentLineMs ?? 9000} ms after the menu or hold, saying "Alô?" (${this.silentLinePokes})`);
       this.side = "unclear";
