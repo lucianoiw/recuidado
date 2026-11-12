@@ -32,6 +32,7 @@ import type { MedResult } from "@/lib/med-search";
 import { TimeChips, normalizeTime } from "@/components/time-chips";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel } from "@/lib/use-family";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 interface Draft {
   key: number;
@@ -217,6 +218,7 @@ export function PrescriptionReview() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [step, setStep] = useState<"pick" | "reading" | "review" | "saving" | "done">("pick");
+  useScrollTopOn(step === "saving" ? "review" : step);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);

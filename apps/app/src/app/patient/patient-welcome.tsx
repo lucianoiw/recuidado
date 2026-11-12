@@ -19,6 +19,7 @@ import {
 import { track } from "@/lib/analytics";
 import { callName, setConsent, type FamilyOverview } from "@/lib/api";
 import { enablePush, type PushState } from "@/lib/push";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 const READY_KEY = "recuidado:patient-ready";
 const listeners = new Set<() => void>();
@@ -113,6 +114,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     () => "other" as Platform,
   );
   const [step, setStep] = useState<Step>("hello");
+  useScrollTopOn(step);
   const [installEvent, setInstallEvent] = useState<InstallPromptEvent | null>(
     null,
   );

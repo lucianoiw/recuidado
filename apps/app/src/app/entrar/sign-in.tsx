@@ -9,6 +9,7 @@ import { getMe, startSignIn, verifySignIn } from "@/lib/api";
 import { isEmail } from "@/lib/masks";
 import { readSession } from "@/lib/session";
 import { afterSignIn } from "./after-sign-in";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 /** E-mail, then the 6 digit code from the e-mail. No password. */
 export function SignIn() {
@@ -18,6 +19,7 @@ export function SignIn() {
   const [email, setEmail] = useState(params.get("email") ?? "");
   const [code, setCode] = useState("");
   const [step, setStep] = useState<"email" | "code">("email");
+  useScrollTopOn(step);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

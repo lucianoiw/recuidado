@@ -12,6 +12,7 @@ import { confirmPrescription, getFamily } from "@/lib/api";
 import type { MedResult } from "@/lib/med-search";
 import { parseUnits } from "@/lib/stock";
 import { usePronouns } from "@/lib/pronouns";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 export function ManualForm() {
   const pr = usePronouns();
@@ -23,6 +24,7 @@ export function ManualForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
+  useScrollTopOn(saved.length);
   const [tried, setTried] = useState(false);
   const [picked, setPicked] = useState<MedResult | null>(null);
 

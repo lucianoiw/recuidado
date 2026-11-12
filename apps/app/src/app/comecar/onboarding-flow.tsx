@@ -33,6 +33,7 @@ import {
   type Onboarding,
   type Relation,
 } from "@/lib/onboarding";
+import { useScrollTopOn } from "@/lib/scroll-top";
 
 const TOTAL = 3;
 
@@ -68,6 +69,7 @@ export function OnboardingFlow() {
   const router = useRouter();
   const params = useSearchParams();
   const [step, setStep] = useState(1);
+  useScrollTopOn(step);
   const [email, setEmail] = useState("");
   // Calls are the paid plan; without it the options say so instead of promising a call.
   const [calls, setCalls] = useState(false);
