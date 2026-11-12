@@ -64,7 +64,7 @@ export function BuyView() {
             ))}
           </ul>
 
-          {month && month.costCents > 0 && month.split.shares.length > 0 ? (
+          {month && month.costCents > 0 && month.split.people.length > 0 ? (
             <SplitPix month={month} isDemo={data.isDemo ?? false} onChanged={reloadMonth} />
           ) : null}
 

@@ -1,7 +1,15 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import type { Job } from 'bullmq';
-import { type DoseJob, DOSES_QUEUE, DosesService, MAX_CHECK_INS, telemetry, VoiceCallService } from '@recuidado/core';
+import {
+  type DoseJob,
+  DOSES_QUEUE,
+  DosesService,
+  MAX_CHECK_INS,
+  RotationService,
+  telemetry,
+  VoiceCallService,
+} from '@recuidado/core';
 
 /** The only worker of the doses queue: every job kind goes through here. */
 @Processor(DOSES_QUEUE)
@@ -11,6 +19,7 @@ export class DosesProcessor extends WorkerHost implements OnApplicationBootstrap
   constructor(
     private readonly doses: DosesService,
     private readonly voice: VoiceCallService,
+    private readonly rotation: RotationService,
   ) {
     super();
   }
@@ -39,7 +48,9 @@ export class DosesProcessor extends WorkerHost implements OnApplicationBootstrap
     const data = job.data;
     switch (data.kind) {
       case 'plan':
-        return this.doses.planAll();
+        await this.doses.planAll();
+        // Same hourly tick: the "whose month it is to buy" alert, once a month per family.
+        return this.rotation.notifyAll();
       case 'remind':
         return this.doses.remind(data.doseId, { callAfterMs: data.callAfterMs, alertAfterMs: data.alertAfterMs });
       case 'call':

@@ -151,7 +151,14 @@ export interface Stock {
   low: boolean;
 }
 
-export type AlertKind = "dose_missed" | "unwell" | "low_stock" | "emergency" | "emergency_call" | "check_in";
+export type AlertKind =
+  | "dose_missed"
+  | "unwell"
+  | "low_stock"
+  | "emergency"
+  | "emergency_call"
+  | "check_in"
+  | "rotation_turn";
 
 export interface FamilyAlert {
   id: string;
@@ -356,6 +363,7 @@ export interface OnboardingRecord {
   caregiver: { name: string; phone: string; email?: string; relation: string | null; relationOther: string };
   patient: { name: string; nickname: string; gender: "female" | "male"; phone: string; birth: string; cep: string; usesPhone: boolean; consent: boolean };
   invites: { id: string; name: string; relation: string | null; phone?: string; email?: string; joined: boolean }[];
+  payment?: { mode: SplitMode; people: { name: string; excluded: boolean }[] };
 }
 
 /** The signed-in caregiver's sign-up, or null before the first save. */
@@ -504,6 +512,9 @@ export interface MonthItem {
 
 export type PixKeyType = "cpf" | "phone" | "email" | "random";
 
+/** split: everyone pays a share by Pix. rotation: each month one caregiver buys it all. */
+export type SplitMode = "split" | "rotation";
+
 export interface MonthShare {
   memberId: string;
   name: string;
@@ -531,9 +542,19 @@ export interface MonthSummary {
   /** "2026-11-09": publication date of the CMED list the prices come from. */
   priceListDate: string | null;
   split: {
+    mode: SplitMode;
+    /** Split mode only: who buys and receives the Pix. */
     receiver: { id: string; name: string; keyType: PixKeyType; pixKey: string } | null;
     /** The demo family: its Pix key is fictitious. */
     demoPix: boolean;
+    /** Every caregiver: the ones in the count first, in the rotation order, then the ones out of it. */
+    people: { memberId: string; name: string; excluded: boolean; excludedReason: string | null }[];
+    /** Rotation mode only: who buys this month and the next ones. */
+    rotation: {
+      payer: { id: string; name: string } | null;
+      schedule: { month: string; label: string; memberId: string; name: string }[];
+    } | null;
+    /** Split: one per person in the count. Rotation: only the one whose month it is, with the whole cost. */
     shares: MonthShare[];
   };
   doses: { total: number; taken: number; missed: number; pending: number; byVoice: number };
@@ -548,6 +569,14 @@ export async function getMonth(): Promise<MonthSummary> {
 /** Marks a caregiver's share of this month as paid or not. */
 export async function setSharePaid(memberId: string, paid: boolean): Promise<void> {
   await send("PUT", `/family/shares/${memberId}/paid`, { paid }, "Não deu para salvar.");
+}
+
+/** Split or rotation, every caregiver in the rotation order, and who is out of the count. */
+export async function setPayment(body: {
+  mode: SplitMode;
+  members: { id: string; excluded: boolean; reason?: string | null }[];
+}): Promise<void> {
+  await send("PUT", "/family/payment", body, "Não deu para salvar como vocês pagam.");
 }
 
 /** Saves who receives the Pix (null removes the key). */

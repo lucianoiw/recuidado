@@ -18,8 +18,10 @@ import {
   doses,
   DosesService,
   families,
+  localDate,
   medications,
   members,
+  rotationParticipants,
   StockService,
   voiceCalls,
 } from '@recuidado/core';
@@ -383,6 +385,10 @@ export class FamilyService implements OnApplicationBootstrap {
       .orderBy(asc(members.createdAt));
     const caregiver = people.find((m) => m.id === caregiverId)!;
     const patient = people.find((m) => m.id === patientId)!;
+    const [family] = await this.db
+      .select({ splitMode: families.splitMode })
+      .from(families)
+      .where(eq(families.id, familyId));
     return {
       familyId,
       caregiverId,
@@ -413,6 +419,13 @@ export class FamilyService implements OnApplicationBootstrap {
           email: m.email ?? '',
           joined: m.joinedAt !== null,
         })),
+      payment: {
+        mode: family?.splitMode ?? 'split',
+        people: [
+          ...rotationParticipants(people.filter((m) => m.role === 'caregiver')),
+          ...people.filter((m) => m.role === 'caregiver' && m.splitExcluded),
+        ].map((m) => ({ name: m.name, excluded: m.splitExcluded })),
+      },
     };
   }
 
@@ -538,6 +551,36 @@ export class FamilyService implements OnApplicationBootstrap {
           })),
         );
         for (const i of wanted.values()) if (i.email) newInvites.push({ name: i.name, email: i.email });
+      }
+
+      if (input.payment) {
+        const caregivers = await tx
+          .select({ id: members.id, name: members.name })
+          .from(members)
+          .where(and(eq(members.familyId, familyId), eq(members.role, 'caregiver')));
+        const byName = new Map(caregivers.map((m) => [key(m.name), m.id]));
+        for (const [index, person] of input.payment.people.entries()) {
+          const id = byName.get(key(person.name));
+          if (!id) continue;
+          await tx
+            .update(members)
+            .set({ rotationOrder: index, splitExcluded: person.excluded })
+            .where(eq(members.id, id));
+        }
+        const [family] = await tx
+          .select({ splitMode: families.splitMode })
+          .from(families)
+          .where(eq(families.id, familyId));
+        // The rotation starts this month with the first of the list; the worker tells the family.
+        await tx
+          .update(families)
+          .set({
+            splitMode: input.payment.mode,
+            ...(family?.splitMode !== input.payment.mode || input.payment.mode === 'rotation'
+              ? { rotationStartMonth: localDate(new Date()).slice(0, 7), rotationNotifiedMonth: null }
+              : {}),
+          })
+          .where(eq(families.id, familyId));
       }
       return {
         caregiverId,

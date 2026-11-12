@@ -18,3 +18,5 @@ export * from './stock/stock.js';
 export * from './billing/plan-gate.js';
 export * from './family/demo-family.js';
 export * from './privacy/consent.js';
+export * from './rotation/rotation.js';
+export * from './rotation/rotation.service.js';

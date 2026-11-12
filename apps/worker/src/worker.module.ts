@@ -10,6 +10,7 @@ import {
   EmailService,
   PlanGate,
   PushService,
+  RotationService,
   StockService,
   telemetry,
   validateEnv,
@@ -35,7 +36,7 @@ import { DosesProcessor } from './doses.processor.js';
     BullModule.registerQueue({ name: DOSES_QUEUE }),
     DbModule,
   ],
-  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService, PlanGate],
+  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService, PlanGate, RotationService],
 })
 export class WorkerModule implements OnApplicationShutdown {
   /** Sends buffered events and logs before the container stops. */
