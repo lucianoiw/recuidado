@@ -263,6 +263,14 @@ O agente não só lembra: ele executa no mundo real. Liga para a farmácia, perg
   - **Achado: a transcrição perde a saudação curta.** Duas vezes, o "Farmácia Teste, boa tarde" logo depois da música de espera (ou logo no começo) não apareceu na transcrição, e a IA só se apresentou quando a atendente repetiu "Alô?". Uma atendente de verdade faz isso quando a linha fica muda, e a atendente de teste agora também faz (PR #127). Do fim da saudação até a IA falar leva cerca de 3 s: a transcrição de uma frase curta chega em 1,5 a 2 s e a IA espera 1,2 s de pausa para não cortar a pessoa.
   - **Falta.** Testar com uma farmácia de verdade (depende de ok do Luciano, regra de não ligar para terceiros) e com música de espera real, que é diferente do tom sintético do teste.
 
+## Painel das ligações
+
+[painel.recuidado.com.br/ligacoes](https://painel.recuidado.com.br/ligacoes) mostra cada ligação da família de demonstração: o áudio gravado, a conversa e o que o sistema fez em cada momento (a função que registrou a resposta com os argumentos, a frase garantida pelo código, as teclas e a classificação do outro lado na farmácia). Serve para o vídeo e para os jurados verem que a IA e o código trabalham juntos.
+
+- **Gravação.** Toda ligação passa pelo Asterisk. Logo que a ligação é criada, o serviço de voz pede pelo AMI um `MixMonitor` no canal da IA (as duas vozes, WAV 16 kHz). É só uma cópia do áudio: a ligação não espera por ela, e a latência da voz não muda. Quando a ligação acaba, o Asterisk envia o arquivo para `POST /call-logs/:sessao/recording` em segundo plano (`deploy/asterisk/upload-recording.sh`), e a API guarda no Cloudflare R2 (`R2_*`), ou no Postgres se o R2 não estiver configurado.
+- **Linha do tempo.** O serviço de voz guarda as linhas de log de cada ligação com o tempo desde o início e envia junto com a transcrição para `POST /call-logs`. A tela mostra os passos principais e, num clique, todos.
+- **Privacidade.** A lista e os áudios são públicos só para a família de demonstração (dados sintéticos, vozes da equipe). Transcrição, passos e áudio guardado no Postgres somem depois de `VOICE_TRANSCRIPT_RETENTION_DAYS`; no R2, por regra de ciclo de vida do bucket. Desligar: `RECORD_CALLS=off` no serviço de voz.
+
 ## Plano pago (AbacatePay)
 
 O Recuidado é grátis em tudo que não custa nada a cada uso: leitura da receita, Farmácia Popular, preço CMED, divisão do custo com Pix e lembrete no celular. As ligações (lembrete, emergência e farmácia) são o único custo variável, porque cada minuto paga a linha (Nvoip) e o modelo de voz (GPT-Live). Por isso elas são o plano pago, **Recuidado Família**, R$ 19,90 por mês com 7 dias grátis. O preço é provisório até medirmos o custo por ligação.
