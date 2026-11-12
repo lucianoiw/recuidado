@@ -195,6 +195,8 @@ export class PharmacyCall {
   private durationSeconds?: number;
   private hangupRequested = false;
   private saidGoodbye = false;
+  /** Whether the pharmacy hears the AI now (the voice gate is open). */
+  private voiceOpen = false;
   private endReason?: string;
   private voicemail = false;
   private assistantAfterAnswer = "";
@@ -287,7 +289,7 @@ export class PharmacyCall {
         this.answeredAt = Date.now();
         this.opts.onStatusChange?.("answered");
         // Like LiveKit and Pipecat: the AI is not heard until the other side is known to be a person.
-        void this.gate.mute();
+        void this.closeVoice();
         // Pharmacies and menus usually speak first. If nobody does, open the conversation.
         this.timers.push(setTimeout(() => this.openIfSilent(), this.opts.openingWaitMs ?? 4000));
         break;
@@ -397,7 +399,7 @@ export class PharmacyCall {
     this.introduced = true;
     this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
     this.armQuietPerson();
-    void this.gate.unmute().then(() =>
+    void this.openVoice().then(() =>
       this.send({
         type: "session.commentary.append",
         event_id: `introduce_${this.opts.sessionId}`,
@@ -420,7 +422,7 @@ export class PharmacyCall {
     if (this.heardOtherSide || this.answer || this.hangupRequested) return;
     this.introduced = true;
     this.log("nobody spoke after answer, opening");
-    void this.gate.unmute().then(() =>
+    void this.openVoice().then(() =>
       this.send({
         type: "session.commentary.append",
         event_id: `opening_${this.opts.sessionId}`,
@@ -521,13 +523,16 @@ export class PharmacyCall {
   private onAssistantSpeech(delta: string) {
     if (!delta) return;
     this.appendTranscript("assistant", delta);
-    if (/assistente virtual/i.test(this.transcript.at(-1)?.text ?? "")) this.introduced = true;
+    // An introduction said while muted was not heard: it does not count, the code asks for it again.
+    const heard = this.voiceOpen || this.gate.alwaysOpen === true;
+    if (heard && /assistente virtual/i.test(this.transcript.at(-1)?.text ?? "")) this.introduced = true;
+    if (heard) this.armQuietPerson();
     if (this.waiting && this.waitAck !== "done") {
       this.waitAck += delta;
       if (/aguard/i.test(this.waitAck)) {
         this.waitAck = "done";
         // Let "Claro, eu aguardo" finish, then the AI is not heard until the person speaks again.
-        this.timers.push(setTimeout(() => this.waiting && void this.gate.mute(), 1500));
+        this.timers.push(setTimeout(() => this.waiting && void this.closeVoice(), 1500));
       }
     }
     if (this.menuPending) {
@@ -543,7 +548,7 @@ export class PharmacyCall {
       // The answer tool can fail on the Live side ("invalid_request_error" on the turn after a key
       // press): a goodbye still ends the call, and the API reads the prices from the transcript.
       const line = this.transcript.at(-1);
-      if (this.introduced && line?.speaker === "assistant" && GOODBYE.test(line.text)) {
+      if (this.heardOtherSide && line?.speaker === "assistant" && GOODBYE.test(line.text)) {
         this.saidGoodbye = true;
         if (this.quietTimer) clearTimeout(this.quietTimer);
         if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 2500);
@@ -626,6 +631,16 @@ export class PharmacyCall {
    * Introduce once the person pauses. Shorter when the second model already hears a person: a person
    * who said "Farmácia X, boa tarde" waits for an answer, and silence makes them hang up or say it again.
    */
+  private openVoice() {
+    this.voiceOpen = true;
+    return this.gate.unmute();
+  }
+
+  private closeVoice() {
+    this.voiceOpen = false;
+    return this.gate.mute();
+  }
+
   private armIntroduction() {
     if (this.introTimer) clearTimeout(this.introTimer);
     const confident = this.side === "person" && this.sideSource === "decisions";
@@ -690,7 +705,7 @@ export class PharmacyCall {
     if (!changed) return;
     switch (side) {
       case "menu":
-        void this.gate.mute();
+        void this.closeVoice();
         if (!this.menuPending) {
           // The second model heard a menu the words did not catch (e.g. "diga o nome do setor").
           this.menuPending = true;
@@ -701,7 +716,7 @@ export class PharmacyCall {
         }
         break;
       case "hold":
-        void this.gate.mute();
+        void this.closeVoice();
         if (this.introTimer) clearTimeout(this.introTimer);
         break;
       case "person_wait":
@@ -709,14 +724,14 @@ export class PharmacyCall {
         this.waitAck = "";
         if (this.introTimer) clearTimeout(this.introTimer);
         // Heard for "Claro, eu aguardo"; muted again once it is said.
-        void this.gate.unmute();
+        void this.openVoice();
         break;
       case "person":
         if (this.waiting) this.log("the person is back");
         this.waiting = false;
         // Before the introduction the AI stays muted: the introduction unmutes it once the person pauses.
         // A menu often opens like a person ("Bem-vindo à Farmácia X"), so one early verdict is not enough.
-        if (this.introduced) void this.gate.unmute();
+        if (this.introduced) void this.openVoice();
         else if (!this.menuPending) this.armIntroduction();
         break;
       case "closed":
