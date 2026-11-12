@@ -12,6 +12,8 @@ const ReadingSchema = z.object({
     z.object({
       medication: z.string(),
       available: TriState,
+      generic_price_reais: z.number().nullable(),
+      reference_price_reais: z.number().nullable(),
       price_reais: z.number().nullable(),
       package: z.string(),
     }),
@@ -23,23 +25,38 @@ export interface TranscriptAnswer {
   medication: string;
   available: 'yes' | 'no' | 'unknown';
   priceCents: number | null;
+  genericPriceCents: number | null;
+  referencePriceCents: number | null;
   package?: string;
 }
 
 const SYSTEM = [
   'You read the transcript of a phone call between a virtual assistant and a pharmacy in Brazil.',
-  'The assistant asked about stock and the price of one box for some medicines.',
+  'The assistant asked about stock and the box price of the generic and of the reference brand for some medicines.',
   'The transcript comes from speech recognition and the two sides may be interleaved in small pieces: read them together.',
   'Report only what the pharmacy side said. Never guess or compute a price: if no price was said, use null.',
+  'generic_price_reais: box price of the generic. reference_price_reais: box price of the reference brand. price_reais: a box price said without saying which one. Each in reais or null.',
   'available: "yes" only if they said they have it now, "no" if not, "unknown" otherwise.',
   'package: what the box has as they said it (for example "caixa com 30 comprimidos"), or empty.',
   'note: anything else useful for the family, in Portuguese, short, or empty.',
   'One item per medicine asked about, in the given order.',
 ].join('\n');
 
+function cents(reais: number | null): number | null {
+  return reais != null && Number.isFinite(reais) && reais > 0 ? Math.round(reais * 100) : null;
+}
+
+/** Generic and reference prices in cents; priceCents is the cheapest box said. */
+function prices(generic: number | null, reference: number | null, other: number | null) {
+  const genericPriceCents = cents(generic);
+  const referencePriceCents = cents(reference);
+  const said = [genericPriceCents, referencePriceCents, cents(other)].filter((c): c is number => c != null);
+  return { priceCents: said.length ? Math.min(...said) : null, genericPriceCents, referencePriceCents };
+}
+
 /**
  * Fallback when the call ended before the voice model recorded the answer:
- * reads stock and price from the call transcript.
+ * reads stock and prices from the call transcript.
  */
 export async function readPharmacyTranscript(
   client: Anthropic,
@@ -73,10 +90,7 @@ export async function readPharmacyTranscript(
       .map((i) => ({
         medication: i.medication.trim(),
         available: i.available,
-        priceCents:
-          i.price_reais != null && Number.isFinite(i.price_reais) && i.price_reais > 0
-            ? Math.round(i.price_reais * 100)
-            : null,
+        ...prices(i.generic_price_reais, i.reference_price_reais, i.price_reais),
         package: i.package.trim() || undefined,
       })),
     note: parsed.note.trim() || null,

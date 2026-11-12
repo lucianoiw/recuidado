@@ -18,6 +18,9 @@ export interface PharmacyItem {
   available: TriState;
   /** Price of one box in cents, as the attendant said it. Reference only, not an offer. */
   priceCents: number | null;
+  /** Box price of the generic and of the reference brand, when the attendant said them. */
+  genericPriceCents: number | null;
+  referencePriceCents: number | null;
   package?: string;
 }
 
@@ -150,6 +153,12 @@ function triState(v: unknown): TriState {
 }
 
 /** "18,90" or 18.9 → 1890. Anything else → null. */
+/** The cheapest box price said, generic, reference or unspecified. */
+export function lowestPrice(...cents: (number | null)[]): number | null {
+  const said = cents.filter((c): c is number => c != null);
+  return said.length ? Math.min(...said) : null;
+}
+
 export function toCents(v: unknown): number | null {
   const n = typeof v === "number" ? v : typeof v === "string" ? Number(v.replace(",", ".")) : NaN;
   if (!Number.isFinite(n) || n <= 0 || n > 100_000) return null;
@@ -462,12 +471,18 @@ export class PharmacyCall {
     const rawItems = Array.isArray(args.items) ? args.items : [];
     const items: PharmacyItem[] = rawItems
       .filter((i): i is Record<string, unknown> => typeof i === "object" && i !== null)
-      .map((i) => ({
-        medication: String(i.medication ?? "").trim(),
-        available: triState(i.available),
-        priceCents: toCents(i.price_reais),
-        package: typeof i.package === "string" && i.package.trim() ? i.package.trim() : undefined,
-      }))
+      .map((i) => {
+        const genericPriceCents = toCents(i.generic_price_reais);
+        const referencePriceCents = toCents(i.reference_price_reais);
+        return {
+          medication: String(i.medication ?? "").trim(),
+          available: triState(i.available),
+          priceCents: lowestPrice(genericPriceCents, referencePriceCents, toCents(i.price_reais)),
+          genericPriceCents,
+          referencePriceCents,
+          package: typeof i.package === "string" && i.package.trim() ? i.package.trim() : undefined,
+        };
+      })
       .filter((i) => i.medication);
     const note = typeof args.note === "string" && args.note.trim() ? args.note.trim() : undefined;
     this.answer = { items, note };

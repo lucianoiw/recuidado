@@ -214,6 +214,15 @@ function Comparison({
                         )}
                       </span>
                     ) : null}
+                    {a?.available !== "no" && (a?.genericPriceCents != null || a?.referencePriceCents != null) ? (
+                      <span className="text-[15px] text-muted">
+                        {a.genericPriceCents != null ? `Genérico ${brl.format(a.genericPriceCents / 100)}` : "Sem preço do genérico"}
+                        {" · "}
+                        {a.referencePriceCents != null
+                          ? `Referência ${brl.format(a.referencePriceCents / 100)}`
+                          : "sem preço do referência"}
+                      </span>
+                    ) : null}
                   </li>
                 );
               })}

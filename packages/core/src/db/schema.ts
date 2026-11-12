@@ -274,6 +274,8 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
         medication: string;
         available: 'yes' | 'no' | 'unknown';
         priceCents: number | null;
+        genericPriceCents?: number | null;
+        referencePriceCents?: number | null;
         package?: string;
       }[]
     >()

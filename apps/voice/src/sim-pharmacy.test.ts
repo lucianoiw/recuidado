@@ -24,7 +24,7 @@ test("each pharmacy says a different shelf price, ending in ,90", () => {
 test("facts follow stock and never mention Farmácia Popular", () => {
   const meds = [losartana, { name: "Metformina", dose: "850 mg" }];
   const facts = simFacts(SIM_PHARMACIES[2], meds);
-  assert.match(facts[0], /^Losartana 50 mg: tem\. R\$ \d+,90 a caixa com 28 comprimidos\.$/);
+  assert.match(facts[0], /^Losartana 50 mg: tem o genérico por R\$ \d+,90 e o de referência por R\$ \d+,90, caixa com 28 comprimidos\.$/);
   assert.match(facts[1], /em falta/);
   assert.doesNotMatch(simFacts(SIM_PHARMACIES[1], meds).join(" "), /Farmácia Popular/);
   assert.match(buildActorInstructions(SIM_PHARMACIES[0], [losartana]), /Drogaria Vida, (bom dia|boa tarde|boa noite), Rafael falando/);
