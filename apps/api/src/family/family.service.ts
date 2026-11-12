@@ -25,6 +25,7 @@ import {
   localDate,
   medications,
   members,
+  PlanGate,
   rotationParticipants,
   StockService,
   voiceCalls,
@@ -80,6 +81,7 @@ export class FamilyService implements OnApplicationBootstrap {
     private readonly stock: StockService,
     private readonly alerts: AlertsService,
     private readonly config: ConfigService,
+    private readonly plan: PlanGate,
   ) {
     this.r2 = r2FromConfig(config);
   }
@@ -246,6 +248,8 @@ export class FamilyService implements OnApplicationBootstrap {
     return {
       familyId,
       isDemo,
+      // Calls are the paid part: false on the free plan, and the screens say "plano pago, em breve".
+      calls: await this.plan.callsAllowed(familyId, isDemo),
       patient: shown.find((p) => p.id === patientId)!,
       caregivers: withFirstContact(shown.filter((p) => p.role === 'caregiver')),
       medications: meds.map(

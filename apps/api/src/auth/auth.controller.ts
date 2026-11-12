@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Controller, Get, HttpCode, Post, UnauthorizedException } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
+import { PlanGate } from '@recuidado/core';
 import { Auth, type AuthContext } from './auth.context.js';
 import { AuthService } from './auth.service.js';
 
@@ -25,7 +26,10 @@ function caregiver(auth: AuthContext | null): AuthContext & { kind: 'caregiver' 
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly plan: PlanGate,
+  ) {}
 
   /** Sends the e-mail with the code and the link. */
   @Post('start')
@@ -44,8 +48,11 @@ export class AuthController {
   }
 
   @Get('me')
-  me(@Auth() auth: AuthContext | null) {
-    return this.auth.me(caregiver(auth));
+  async me(@Auth() auth: AuthContext | null) {
+    const me = await this.auth.me(caregiver(auth));
+    // Whether this account gets calls (the paid part). Before the sign-up ends there is no family yet.
+    const calls = me.familyId ? await this.plan.callsAllowed(me.familyId, false) : this.plan.includesEmail(me.email);
+    return { ...me, calls };
   }
 
   @Post('sign-out')

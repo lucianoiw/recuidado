@@ -15,6 +15,7 @@ import {
 import { SkipThrottle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
+import { FamilyId } from '../auth/auth.context.js';
 import { VoiceTokenGuard } from '../voice/voice-token.guard.js';
 import { CallsService, type CallLogInput } from './calls.service.js';
 
@@ -49,7 +50,10 @@ async function readBody(req: Request): Promise<Buffer> {
   return Buffer.concat(chunks);
 }
 
-/** The calls panel: apps/voice and Asterisk write (shared token); the demo family's calls are public. */
+/**
+ * The calls panel: apps/voice and Asterisk write (shared token). Visitors read the demo family's calls;
+ * a signed-in caregiver (or her app link) reads the own family's.
+ */
 @Controller('call-logs')
 export class CallsController {
   constructor(private readonly calls: CallsService) {}
@@ -76,13 +80,21 @@ export class CallsController {
   }
 
   @Get()
-  list(@Query('limit') limit?: string) {
-    return this.calls.listDemo(limit ? Number(limit) || 30 : 30);
+  list(@FamilyId() familyId: string | null, @Query('limit') limit?: string) {
+    return this.calls.list(familyId, limit ? Number(limit) || 30 : 30);
   }
 
   @Get(':sessionId/recording')
-  async recording(@Param('sessionId') sessionId: string, @Res() res: Response) {
-    const found = await this.calls.recording(sessionParam(sessionId));
+  async recording(
+    @Param('sessionId') sessionId: string,
+    @FamilyId() familyId: string | null,
+    @Query('as') as: string | undefined,
+    @Res() res: Response,
+  ) {
+    const found = await this.calls.recording(sessionParam(sessionId), familyId);
+    // A signed-in screen fetches with its Authorization header, so it asks for the signed link as JSON
+    // (an <audio src> cannot send the header, and a redirect to R2 would need CORS on the bucket).
+    if (as === 'json') return res.json({ url: 'url' in found ? found.url : null });
     if ('url' in found) return res.redirect(302, found.url);
     res.setHeader('Content-Type', 'audio/wav');
     res.setHeader('Cache-Control', 'private, max-age=3600');
