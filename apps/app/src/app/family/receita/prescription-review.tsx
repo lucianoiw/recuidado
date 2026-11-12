@@ -116,7 +116,7 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
   return (
     <>
       <div className="flex flex-col items-center gap-3 pt-4 text-center">
-        <span className="flex size-20 items-center justify-center rounded-full bg-brand text-white">
+        <span className="flex size-20 items-center justify-center rounded-full bg-ok-soft text-ok">
           <CheckIcon size={44} strokeWidth={2.8} />
         </span>
         <h1 className="font-display text-[32px] leading-[1.08]">

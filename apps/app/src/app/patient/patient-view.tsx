@@ -3,21 +3,11 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
-import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, ScreenHeader, buttonClass } from "@/components/ui";
+import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, buttonClass } from "@/components/ui";
 import { captureError, identifyMember, track } from "@/lib/analytics";
 import { refreshMs } from "@/lib/demo";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
 import { callName, confirmDose, formatTime, getFamily, telHref, type Dose, type FamilyOverview } from "@/lib/api";
-
-function todayLabel(): string {
-  const text = new Intl.DateTimeFormat("pt-BR", {
-    timeZone: "America/Sao_Paulo",
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(new Date());
-  return text.charAt(0).toUpperCase() + text.slice(1).replace("-feira", "");
-}
 
 function greeting(): string {
   const hour = Number(
@@ -115,10 +105,10 @@ export function PatientView() {
     return (
       <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
-          <span className="flex size-36 items-center justify-center rounded-full bg-ok text-white">
-            <CheckIcon size={84} aria-hidden={false} role="img" aria-label="Confirmado" />
+          <span className="flex size-32 items-center justify-center rounded-full bg-ok-soft text-ok">
+            <CheckIcon size={64} strokeWidth={2.2} aria-hidden={false} role="img" aria-label="Confirmado" />
           </span>
-          <h1 className="text-[40px] font-bold leading-tight">
+          <h1 className="font-display text-[44px] leading-[1.02]">
             Pronto,
             <br />
             {patientName}!
@@ -135,14 +125,14 @@ export function PatientView() {
           </p>
         </div>
         {next ? (
-          <Card className="flex flex-col gap-1 p-5">
-            <p className="text-muted">Próximo remédio</p>
-            <ul className="text-[28px] font-bold leading-tight">
+          <Card className="flex flex-col gap-1 p-5 shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)]">
+            <p className="text-[22px] text-muted">Próximo remédio</p>
+            <ul className="font-display text-[32px] leading-tight">
               {next.doses.map((d) => (
                 <li key={d.id}>{doseName(d)}</li>
               ))}
             </ul>
-            <p className="text-[24px] font-semibold text-accent-ink">às {next.time}</p>
+            <p className="font-display text-[28px] text-accent-ink">às {next.time}</p>
           </Card>
         ) : null}
         <Button variant="secondary" size="lg" onClick={() => setJustTaken(null)}>
@@ -167,17 +157,12 @@ export function PatientView() {
           <h1 className="font-display text-[44px] leading-[1.02]">Hora do remédio</h1>
         </header>
       ) : (
-        <ScreenHeader
-          audience="patient"
-          eyebrow={todayLabel()}
-          title={
-            <>
-              {greeting()},
-              <br />
-              {patientName}
-            </>
-          }
-        />
+        <header className="flex flex-col gap-1">
+          <p className="text-[22px] text-muted">
+            {greeting()}, {patientName}
+          </p>
+          <h1 className="font-display text-[44px] leading-[1.02]">Tudo certo por agora</h1>
+        </header>
       )}
 
       {due.length > 0 ? (
@@ -219,24 +204,25 @@ export function PatientView() {
           {busy ? "Anotando..." : due.length > 1 ? `Tomei os ${due.length}` : "Tomei"}
         </Button>
       ) : (
-        <Card className="flex flex-col gap-2 px-5 py-6">
-          <p className="flex items-center gap-2.5 text-[30px] font-bold leading-tight text-ok">
-            <CheckIcon size={34} />
-            Tudo certo por agora
-          </p>
+        <section className="flex flex-col items-center gap-3 rounded-[28px] bg-surface px-5 py-7 text-center shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)]">
+          <span className="flex size-24 items-center justify-center rounded-full bg-ok-soft text-ok">
+            <CheckIcon size={48} strokeWidth={2.2} />
+          </span>
           {next ? (
-            <p className="text-[24px]">
-              Próximo: {namesOf(next.doses)} às {next.time}
-            </p>
+            <>
+              <p className="text-[22px] text-muted">Próximo remédio</p>
+              <p className="font-display text-[32px] leading-tight">{namesOf(next.doses)}</p>
+              <p className="font-display text-[28px] text-accent-ink">às {next.time}</p>
+            </>
           ) : (
-            <p className="text-[24px]">Não tem mais remédio hoje.</p>
+            <p className="font-display text-[32px] leading-tight">Não tem mais remédio hoje.</p>
           )}
-        </Card>
+        </section>
       )}
 
       {later.length > 0 ? (
         <section className="flex flex-col gap-2.5">
-          <h2 className="text-[24px] font-bold">Mais tarde hoje</h2>
+          <h2 className="font-display text-[28px]">Mais tarde hoje</h2>
           <ul className="flex flex-col gap-2.5">
             {later.map((g) => (
               <li key={g.time} className="flex items-start justify-between gap-3 rounded-card bg-surface px-4 py-4">
@@ -245,7 +231,7 @@ export function PatientView() {
                     <span key={d.id}>{doseName(d)}</span>
                   ))}
                 </span>
-                <span className="font-bold">{g.time}</span>
+                <span className="font-display text-[24px] text-accent-ink">{g.time}</span>
               </li>
             ))}
           </ul>

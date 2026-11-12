@@ -81,7 +81,7 @@ function Dots({ step }: { step: number }) {
         {[1, 2, 3, 4, 5].map((i) => (
           <span
             key={i}
-            className={`h-2.5 rounded-full ${i === step ? "w-7" : "w-2.5"} ${i <= step ? "bg-brand" : "bg-line"}`}
+            className={`h-2.5 rounded-full ${i === step ? "w-7" : "w-2.5"} ${i <= step ? "bg-accent" : "bg-line"}`}
           />
         ))}
       </div>
@@ -91,11 +91,7 @@ function Dots({ step }: { step: number }) {
 
 function Badge({ children }: { children: ReactNode }) {
   return (
-    <span className="flex size-36 items-center justify-center rounded-full bg-brand-soft">
-      <span className="flex size-28 items-center justify-center rounded-full bg-brand text-white">
-        {children}
-      </span>
-    </span>
+    <span className="flex size-32 items-center justify-center rounded-full bg-blush text-accent">{children}</span>
   );
 }
 
@@ -189,9 +185,9 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         <Dots step={1} />
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
           <Badge>
-            <HeartIcon size={60} strokeWidth={2.2} />
+            <HeartIcon size={56} strokeWidth={1.8} />
           </Badge>
-          <h1 className="text-[42px] font-bold leading-tight">Oi, {name}!</h1>
+          <h1 className="font-display text-[44px] leading-[1.02]">Oi, {name}!</h1>
           <p className="text-[26px] leading-snug">
             {host} preparou o Recuidado para você.
           </p>
@@ -202,6 +198,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         </div>
         <Button
           size="xl"
+          className="font-display"
           // She already said yes in this app: no need to ask again.
           onClick={() => go(data.patient.consentSource === "patient" ? afterConsent : "consent")}
         >
@@ -215,13 +212,13 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     return (
       <div className="flex flex-1 flex-col gap-5">
         <Dots step={2} />
-        <h1 className="text-[36px] font-bold leading-tight">Combinado, {name}?</h1>
+        <h1 className="font-display text-[40px] leading-[1.04]">Combinado, {name}?</h1>
         {declined ? (
-          <Card className="px-4 py-5 text-[24px] leading-snug" role="status">
+          <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5 text-[24px] leading-snug" role="status">
             Tudo bem. O Recuidado não vai avisar nem ligar. Se mudar de ideia, toque em <b>Aceito</b>.
           </Card>
         ) : (
-          <Card className="px-4 py-5">
+          <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5">
             <ul className="flex flex-col gap-3.5 text-[24px] leading-snug">
               <li>O celular avisa na hora do remédio.</li>
               <li>
@@ -237,7 +234,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
           </p>
         ) : null}
         <div className="mt-auto flex flex-col gap-3">
-          <Button size="xl" onClick={() => answer(true)} disabled={busy}>
+          <Button size="xl" className="font-display" onClick={() => answer(true)} disabled={busy}>
             {busy ? "Só um instante..." : "Aceito"}
           </Button>
           {declined ? null : (
@@ -245,7 +242,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
               Não quero
             </Button>
           )}
-          <Link href="/privacidade" className="py-2 text-center text-[22px] font-bold text-brand">
+          <Link href="/privacidade" className="py-2 text-center text-[22px] font-semibold text-ink underline underline-offset-4">
             Como cuidamos dos seus dados
           </Link>
         </div>
@@ -257,12 +254,12 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
     return (
       <div className="flex flex-1 flex-col gap-4">
         <Dots step={3} />
-        <h1 className="text-[34px] font-bold leading-tight">
+        <h1 className="font-display text-[36px] leading-[1.06]">
           Coloque o Recuidado na tela do celular
         </h1>
         <p className="text-[22px] text-muted">Assim você abre com um toque.</p>
         {platform === "ios" ? (
-          <Card className="px-4 py-5">
+          <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5">
             <ol className="flex flex-col gap-3.5">
               <InstallStep n={1}>
                 Toque em{" "}
@@ -288,7 +285,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
             Toque em <b>Colocar na tela</b> e depois em <b>Instalar</b>.
           </p>
         ) : (
-          <Card className="px-4 py-5">
+          <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5">
             <ol className="flex flex-col gap-3.5">
               <InstallStep n={1}>
                 Toque nos <b>três pontinhos</b>, em cima da tela.
@@ -301,11 +298,11 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         )}
         <div className="mt-auto flex flex-col gap-3">
           {installEvent ? (
-            <Button size="xl" onClick={install}>
+            <Button size="xl" className="font-display" onClick={install}>
               Colocar na tela
             </Button>
           ) : (
-            <Button size="xl" onClick={() => go("notify")}>
+            <Button size="xl" className="font-display" onClick={() => go("notify")}>
               Já coloquei
             </Button>
           )}
@@ -324,9 +321,9 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         <Dots step={4} />
         <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
           <Badge>
-            <BellIcon size={60} strokeWidth={2.2} />
+            <BellIcon size={56} strokeWidth={1.8} />
           </Badge>
-          <h1 className="text-[38px] font-bold leading-tight">
+          <h1 className="font-display text-[40px] leading-[1.04]">
             Posso avisar na hora do remédio?
           </h1>
           {hours.length > 0 ? (
@@ -349,17 +346,17 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
                 : "Se você não tocar em Tomei, o Recuidado liga para você."}
             </Card>
           ) : (
-            <Card className="px-4 py-4 text-left text-[22px] leading-snug">
+            <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-4 text-left text-[22px] leading-snug">
               Quando o celular perguntar, toque em <b>Permitir</b>.
             </Card>
           )}
         </div>
         {blocked ? (
-          <Button size="xl" onClick={() => go("done")}>
+          <Button size="xl" className="font-display" onClick={() => go("done")}>
             Continuar
           </Button>
         ) : (
-          <Button size="xl" onClick={allow} disabled={busy}>
+          <Button size="xl" className="font-display" onClick={allow} disabled={busy}>
             {busy ? "Só um instante..." : "Sim, pode avisar"}
           </Button>
         )}
@@ -379,9 +376,9 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
       <Dots step={5} />
       <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
         <Badge>
-          <CheckIcon size={66} strokeWidth={2.8} />
+          <CheckIcon size={60} strokeWidth={2.2} />
         </Badge>
-        <h1 className="text-[42px] font-bold leading-tight">Pronto, {name}!</h1>
+        <h1 className="font-display text-[44px] leading-[1.02]">Pronto, {name}!</h1>
         <p className="text-[26px] leading-snug">
           Quando o celular tocar, abra e toque em <b>Tomei</b>.
         </p>
@@ -394,6 +391,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
       </div>
       <Button
         size="xl"
+        className="font-display"
         onClick={() => {
           track("patient_welcome_done", { push: push ?? "skipped" });
           markReady();
@@ -409,7 +407,7 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
 function InstallStep({ n, children }: { n: number; children: ReactNode }) {
   return (
     <li className="flex items-start gap-3.5">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-[24px] font-bold text-white">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush font-display text-[24px] text-accent-ink">
         {n}
       </span>
       <span className="pt-1 text-[24px] leading-snug">{children}</span>
