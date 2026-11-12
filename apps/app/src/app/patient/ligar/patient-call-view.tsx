@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { PhoneIcon, ScreenHeader, buttonClass } from "@/components/ui";
+import { PhoneIcon, buttonClass } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
 import { getFamily, telHref, type FamilyOverview } from "@/lib/api";
 
@@ -25,7 +25,10 @@ export function PatientCallView() {
 
   return (
     <>
-      <ScreenHeader audience="patient" eyebrow="Família" title="Para quem ligar?" />
+      <header className="flex flex-col gap-1">
+        <p className="text-[22px] text-muted">Família</p>
+        <h1 className="font-display text-[44px] leading-[1.02]">Para quem ligar?</h1>
+      </header>
       {callable.length > 0 ? (
         <ul className="flex flex-col gap-3">
           {callable.map((c) => (
