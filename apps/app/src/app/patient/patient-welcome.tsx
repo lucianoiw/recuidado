@@ -208,15 +208,21 @@ export function PatientWelcome({ data, earlier }: { data: FamilyOverview; earlie
         <h1 className="font-display text-[40px] leading-[1.04]">Combinado, {name}?</h1>
         {declined ? (
           <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5 text-[24px] leading-snug" role="status">
-            Tudo bem. O Recuidado não vai avisar nem ligar. Se mudar de ideia, toque em <b>Aceito</b>.
+            Tudo bem. O Recuidado não vai {data.calls === false ? "avisar" : "avisar nem ligar"}. Se mudar de ideia, toque em <b>Aceito</b>.
           </Card>
         ) : (
           <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5">
             <ul className="flex flex-col gap-3.5 text-[24px] leading-snug">
               <li>O celular avisa na hora do remédio.</li>
-              <li>
-                Se você não tocar em <b>Tomei</b>, uma assistente virtual liga. Não é uma pessoa.
-              </li>
+              {data.calls === false ? (
+                <li>
+                  Se você não tocar em <b>Tomei</b>, {host} recebe um aviso.
+                </li>
+              ) : (
+                <li>
+                  Se você não tocar em <b>Tomei</b>, uma assistente virtual liga. Não é uma pessoa.
+                </li>
+              )}
               <li>{host} {family.length > 1 ? "e a família ficam" : "fica"} sabendo se você tomou.</li>
             </ul>
           </Card>

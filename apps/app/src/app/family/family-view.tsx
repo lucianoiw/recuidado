@@ -339,7 +339,9 @@ export function FamilyView() {
         </span>
         <span className="flex flex-1 flex-col leading-tight">
           <b className="font-semibold">Demo em 2 minutos</b>
-          <span className="text-[14px] text-white/75">Lembrete, ligação e aviso, acelerados</span>
+          <span className="text-[14px] text-white/75">
+            {data.calls === false ? "Lembrete e aviso, acelerados" : "Lembrete, ligação e aviso, acelerados"}
+          </span>
         </span>
         <ChevronRightIcon size={20} />
       </Link>

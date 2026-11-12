@@ -39,11 +39,12 @@ export function PhoneSetupView() {
           </li>
         ))}
       </ol>
-      <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
-        {data?.calls === false
-          ? `${pr.Ela} não usa celular? A ligação no horário de cada remédio é do plano pago, que chega em breve.`
-          : `${pr.Ela} não usa celular? Tudo bem: a gente liga no horário de cada remédio.`}
-      </p>
+      {/* Calls are the paid plan: the free plan does not mention them. */}
+      {data?.calls === false ? null : (
+        <p className="rounded-2xl bg-brand-soft p-3.5 text-[15px] leading-snug">
+          {`${pr.Ela} não usa celular? Tudo bem: a gente liga no horário de cada remédio.`}
+        </p>
+      )}
       <div className="mt-auto pt-2">
         <Link href="/family" className={buttonClass()}>
           Pronto, ir para o painel

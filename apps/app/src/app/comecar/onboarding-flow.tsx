@@ -262,19 +262,24 @@ export function OnboardingFlow() {
                 })}
               </div>
               <Field
-                label="Nome na ligação e no app"
+                label={calls ? "Nome na ligação e no app" : "Nome no app"}
                 value={p.nickname}
                 onValue={(v) => patch("patient", { nickname: v })}
                 placeholder="Dona Maria"
                 autoComplete="off"
               />
               <span className="text-[14px] text-muted">
-                Pode mudar, por exemplo para um apelido. A assistente começa com &ldquo;Oi,{" "}
-                {p.nickname.trim() || "Dona Maria"}&rdquo; e fala &ldquo;{p.gender === "male" ? "o senhor" : "a senhora"}&rdquo;.
+                Pode mudar, por exemplo para um apelido.
+                {calls ? (
+                  <>
+                    {" "}A assistente começa com &ldquo;Oi, {p.nickname.trim() || "Dona Maria"}&rdquo; e fala &ldquo;
+                    {p.gender === "male" ? "o senhor" : "a senhora"}&rdquo;.
+                  </>
+                ) : null}
               </span>
             </fieldset>
             <Field
-              label="Telefone, para a ligação"
+              label={calls ? "Telefone, para a ligação" : she === "ele" ? "Telefone dele" : "Telefone dela"}
               inputMode="tel"
               placeholder="(11) 90000-0000"
               mask={maskPhone}
@@ -302,7 +307,7 @@ export function OnboardingFlow() {
                   title: "Não usa",
                   text: calls
                     ? "A gente liga no horário de cada remédio."
-                    : "A ligação no horário do remédio é do plano pago, que chega em breve. Até lá, a família é avisada se a dose não for confirmada.",
+                    : "A família é avisada se a dose não for confirmada.",
                 },
               ].map((o) => (
                 <button
@@ -349,8 +354,9 @@ export function OnboardingFlow() {
                 {p.consent ? <CheckIcon size={16} strokeWidth={3} /> : null}
               </span>
               <span className="text-[15px] leading-snug">
-                Conversei com {nickname} e {she} aceita receber lembretes e ligações de uma assistente virtual, e que a
-                família veja se {she} tomou o remédio.{p.usesPhone ? ` ${she === "ele" ? "Ele" : "Ela"} também confirma isso no app.` : ""}
+                Conversei com {nickname} e {she} aceita receber{" "}
+                {calls ? "lembretes e ligações de uma assistente virtual" : "lembretes no celular"}, e que a família veja
+                se {she} tomou o remédio.{p.usesPhone ? ` ${she === "ele" ? "Ele" : "Ela"} também confirma isso no app.` : ""}
               </span>
             </button>
             <Link href="/privacidade" className="text-[15px] font-semibold text-brand">
