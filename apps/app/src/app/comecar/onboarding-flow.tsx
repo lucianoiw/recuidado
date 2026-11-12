@@ -54,6 +54,12 @@ function swapTitle(t: Title, gender: "female" | "male"): Title {
   return i >= 0 ? TITLES[gender][i]! : t;
 }
 
+/** True when the family typed a name of its own ("Mariazinha"), which the buttons must keep. */
+function typedByHand(p: { nickname: string; name: string }): boolean {
+  const n = p.nickname.trim();
+  return n !== "" && !(["female", "male"] as const).some((g) => TITLES[g].some((t) => callAs(t, p.name) === n));
+}
+
 function callAs(title: Title, name: string): string {
   const first = name.trim().split(/\s+/)[0] ?? "";
   return [title, first].filter(Boolean).join(" ");
@@ -199,7 +205,7 @@ export function OnboardingFlow() {
             <Field
               label="Nome"
               value={p.name}
-              onValue={(v) => patch("patient", { name: v, nickname: callAs(titleOf(p.nickname, p.gender), v) })}
+              onValue={(v) => patch("patient", { name: v, nickname: typedByHand(p) ? p.nickname : callAs(titleOf(p.nickname, p.gender), v) })}
               placeholder="Maria Helena"
               aria-invalid={tried && p.name.trim().length < 2}
             />
@@ -218,7 +224,7 @@ export function OnboardingFlow() {
                     onClick={() =>
                       patch("patient", {
                         gender: o.value,
-                        nickname: callAs(swapTitle(titleOf(p.nickname, p.gender), o.value), p.name),
+                        nickname: typedByHand(p) ? p.nickname : callAs(swapTitle(titleOf(p.nickname, p.gender), o.value), p.name),
                       })
                     }
                     className={cn(
@@ -235,7 +241,7 @@ export function OnboardingFlow() {
               <legend className="mb-2 text-[15px] font-semibold">Como a família chama</legend>
               <div className="flex flex-wrap gap-2" role="radiogroup">
                 {TITLES[p.gender].map((t) => {
-                  const on = titleOf(p.nickname, p.gender) === t;
+                  const on = p.nickname.trim() !== "" && p.nickname.trim() === callAs(t, p.name);
                   return (
                     <button
                       key={t || "nome"}
@@ -253,12 +259,17 @@ export function OnboardingFlow() {
                   );
                 })}
               </div>
-              {p.name.trim() ? (
-                <span className="text-[15px] text-muted">
-                  Na ligação e no app: <b className="text-ink">{callAs(titleOf(p.nickname, p.gender), p.name)}</b>. A
-                  assistente fala &ldquo;{p.gender === "male" ? "o senhor" : "a senhora"}&rdquo;.
-                </span>
-              ) : null}
+              <Field
+                label="Nome na ligação e no app"
+                value={p.nickname}
+                onValue={(v) => patch("patient", { nickname: v })}
+                placeholder="Dona Maria"
+                autoComplete="off"
+              />
+              <span className="text-[14px] text-muted">
+                Pode mudar, por exemplo para um apelido. A assistente começa com &ldquo;Oi,{" "}
+                {p.nickname.trim() || "Dona Maria"}&rdquo; e fala &ldquo;{p.gender === "male" ? "o senhor" : "a senhora"}&rdquo;.
+              </span>
             </fieldset>
             <Field
               label="Telefone, para a ligação"
