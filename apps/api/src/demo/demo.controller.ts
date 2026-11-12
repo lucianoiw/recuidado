@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { FamilyId } from '../auth/auth.context.js';
 import { DemoService } from './demo.service.js';
 
@@ -14,6 +14,13 @@ export class DemoController {
   @HttpCode(200)
   start(@FamilyId({ write: true }) familyId: string | null) {
     return this.demo.start(familyId);
+  }
+
+  /** Stops the run: nothing else is sent, and the button is free for a new run. */
+  @Delete(':doseId')
+  @HttpCode(204)
+  async stop(@Param('doseId', ParseUUIDPipe) doseId: string, @FamilyId({ write: true }) familyId: string | null) {
+    await this.demo.stop(familyId, doseId);
   }
 
   @Get(':doseId')

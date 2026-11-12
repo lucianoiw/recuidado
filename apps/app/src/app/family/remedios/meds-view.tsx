@@ -27,7 +27,6 @@ import { pathLine } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { ubsUnits } from "@/lib/sus-units";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
-import { usePronouns } from "@/lib/pronouns";
 
 /** Nearest places where it can be free, e.g. "Drogasil, 240 m (Farmácia Popular) ou UBS Sé, 440 m". */
 function freeWhere(m: Medication): string | null {
@@ -43,8 +42,10 @@ function freeWhere(m: Medication): string | null {
   return places.length > 0 ? places.join(" ou ") : null;
 }
 
+const shortDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit", timeZone: "America/Sao_Paulo" });
+
 function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
-  const pr = usePronouns();
   const { getsFree, setBuy } = useBuyChoice();
   const free = getsFree(m);
   const where = freeWhere(m);
@@ -59,7 +60,7 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
         <span className="flex items-start gap-3">
           {m.photoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
-            <img src={m.photoUrl} alt="" className="h-24 w-16 shrink-0 rounded-2xl bg-cream object-cover" />
+            <img src={m.photoUrl} alt="" className="size-14 shrink-0 rounded-2xl bg-cream object-cover" />
           ) : (
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-cream text-muted">
               <CameraIcon size={22} />
@@ -68,7 +69,7 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="text-[18px] font-semibold leading-snug">{medLabel(m.name, m.strength)}</span>
             <span className="text-[14px] text-muted">
-              {m.photoUrl ? `Com foto da caixa no app ${pr.dela}` : "Toque para tirar a foto da caixa"}
+              {m.photoUrl ? "Tem foto da caixa" : "Toque para tirar a foto da caixa"}
             </span>
           </span>
           <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cream text-muted">
@@ -228,6 +229,22 @@ export function MedsView() {
         />
       ) : null}
 
+      {data.stoppedMedications && data.stoppedMedications.length > 0 ? (
+        <section className="flex flex-col gap-2">
+          <h2 className="text-[17px] font-semibold">Não toma mais</h2>
+          <ul className="flex flex-col overflow-hidden rounded-card bg-surface">
+            {data.stoppedMedications.map((m) => (
+              <li key={m.id} className="flex flex-col border-b border-line-soft px-4 py-3 last:border-b-0">
+                <span className="text-[16px]">{medLabel(m.name, m.strength)}</span>
+                <span className="text-[14px] text-muted">
+                  Tomou de {shortDate(m.createdAt)} até {shortDate(m.stoppedAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <EditMedSheet med={editing} onClose={() => setEditing(null)} onSaved={reload} />
 
       <Link href="/family/adicionar" className={buttonClass()}>
@@ -236,7 +253,7 @@ export function MedsView() {
       </Link>
 
       {data.medications.length > 0 ? (
-        <InfoLine icon={<PencilIcon />}>Toque em um remédio para mudar a dose, o horário ou parar.</InfoLine>
+        <InfoLine icon={<PencilIcon />}>Toque em um remédio para mudar a dose, o horário ou remover.</InfoLine>
       ) : null}
 
       {free.length > 0 ? (

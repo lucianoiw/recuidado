@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PhotoZoom } from "@/components/photo-zoom";
 import { useEffect, useState } from "react";
 import { BellIcon, buttonClass } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
@@ -72,10 +73,7 @@ export function PatientMedsView() {
       <ul className="flex flex-col overflow-hidden rounded-[28px] bg-surface">
         {meds.map((m) => (
           <li key={m.id} className="flex items-center gap-4 border-b border-line-soft px-5 py-5 last:border-b-0">
-            {m.photoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
-              <img src={m.photoUrl} alt={`Foto de ${m.name}`} className="h-32 w-24 shrink-0 rounded-2xl bg-cream object-cover" />
-            ) : null}
+            {m.photoUrl ? <PhotoZoom src={m.photoUrl} name={m.name} className="h-32 w-24" /> : null}
             <div className="flex min-w-0 flex-col">
               <h2 className="font-display text-[32px] leading-tight">{m.name}</h2>
               {m.strength ? (

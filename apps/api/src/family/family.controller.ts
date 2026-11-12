@@ -148,7 +148,7 @@ export class FamilyController {
     await this.family.removeMedicationPhoto(familyId, id);
   }
 
-  /** Family stops a medication. */
+  /** Family removes a medication from her list. Kept, with its history, as stopped. */
   @Delete('medications/:id')
   @HttpCode(204)
   async removeMedication(@Param('id', new ParseUUIDPipe()) id: string, @FamilyId({ write: true }) familyId: string | null) {

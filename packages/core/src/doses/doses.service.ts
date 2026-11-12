@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Queue } from 'bullmq';
-import { and, asc, eq, gte, lt, sql } from 'drizzle-orm';
+import { and, asc, eq, gte, isNull, lt, ne, or, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.module.js';
 import { doses, medications, members } from '../db/schema.js';
 import { AlertsService } from '../alerts/alerts.service.js';
@@ -44,17 +44,18 @@ export class DosesService {
 
   /** Creates the doses of the next two local days for every medication. */
   async planAll(now = new Date()): Promise<void> {
-    const meds = await this.db.select({ id: medications.id }).from(medications);
+    const meds = await this.db.select({ id: medications.id }).from(medications).where(isNull(medications.stoppedAt));
     for (const med of meds) await this.scheduleForMedication(med.id, now);
   }
 
   /** Creates the upcoming doses of one medication and queues their reminders. Safe to call again. */
   async scheduleForMedication(medicationId: string, now = new Date()): Promise<void> {
     const [med] = await this.db
-      .select({ times: medications.times })
+      .select({ times: medications.times, stoppedAt: medications.stoppedAt })
       .from(medications)
       .where(eq(medications.id, medicationId));
     if (!med) throw new NotFoundException('Medicação não encontrada.');
+    if (med.stoppedAt) return;
 
     const times = upcomingDoseTimes(med.times, now);
     if (times.length === 0) return;
@@ -210,6 +211,8 @@ export class DosesService {
       .where(
         and(
           eq(medications.patientId, patientId),
+          // A removed medication keeps what she already did today, not what was still waiting.
+          or(isNull(medications.stoppedAt), ne(doses.status, 'pending')),
           gte(doses.scheduledAt, start),
           lt(doses.scheduledAt, end),
         ),
@@ -230,11 +233,16 @@ export class DosesService {
         patientName: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         gender: members.gender,
         familyId: members.familyId,
+        stoppedAt: medications.stoppedAt,
       })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
       .where(eq(doses.id, doseId));
+    if (row?.stoppedAt) {
+      this.logger.log(`Dose ${doseId} skipped: its medication was removed.`);
+      return null;
+    }
     if (!row) {
       this.logger.warn(`Dose ${doseId} not found.`);
       return null;

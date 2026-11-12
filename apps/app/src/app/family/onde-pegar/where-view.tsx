@@ -2,6 +2,7 @@
 
 import { callName } from "@/lib/api";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   CheckIcon,
@@ -169,7 +170,8 @@ function XSmall() {
 
 export function WhereView() {
   const { data } = useFamily();
-  const [tab, setTab] = useState<Tab>("fp");
+  const params = useSearchParams();
+  const [tab, setTab] = useState<Tab>(params.get("tab") === "ubs" ? "ubs" : "fp");
 
   const patient = data ? callName(data.patient) : "a pessoa cuidada";
   const list = pharmacies.slice(0, 6);

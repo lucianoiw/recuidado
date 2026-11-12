@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import Anthropic from '@anthropic-ai/sdk';
 import { ConfigService } from '@nestjs/config';
-import { and, desc, eq, gte, inArray } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNull } from 'drizzle-orm';
 import { type Database, DB, medications, pharmacyInquiries, telemetry, VoiceCallService } from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
 import { readPharmacyTranscript } from './transcript-reader.js';
@@ -122,7 +122,7 @@ export class PharmacyService {
         activeIngredient: medications.activeIngredient,
       })
       .from(medications)
-      .where(and(eq(medications.patientId, ref.patientId), inArray(medications.id, ids)));
+      .where(and(eq(medications.patientId, ref.patientId), inArray(medications.id, ids), isNull(medications.stoppedAt)));
     if (meds.length === 0) throw new NotFoundException('Remédio não encontrado.');
     const asked = meds
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))

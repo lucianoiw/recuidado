@@ -9,6 +9,7 @@ import { searchMedications, strengthChoices } from "@/lib/med-search";
 import { removeMedication, updateMedication, type Medication } from "@/lib/api";
 import { parseUnits } from "@/lib/stock";
 import { medLabel } from "@/lib/use-family";
+import { usePronouns } from "@/lib/pronouns";
 
 /** Change the dose text, the times or the pills at home of a medication, or stop it. */
 export function EditMedSheet({
@@ -33,6 +34,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
   const initialUnits = med.stock ? String(med.stock.units) : "";
   const [units, setUnits] = useState(initialUnits);
   const parsedUnits = parseUnits(units);
+  const pr = usePronouns();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,9 +76,13 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
     return (
       <>
         <p className="text-[17px] leading-snug">
-          Tirar <b>{medLabel(med.name, med.strength)}</b> da lista? Os lembretes e as ligações dele
-          param.
+          Remover <b>{medLabel(med.name, med.strength)}</b> dos remédios {pr.dela}?
         </p>
+        <ul className="flex list-disc flex-col gap-1 pl-5 text-[15px] leading-snug text-muted">
+          <li>Os lembretes e as ligações dele param.</li>
+          <li>O histórico do que {pr.ela} já tomou fica guardado.</li>
+          <li>Se {pr.ela} voltar a tomar, é só adicionar de novo.</li>
+        </ul>
         {error ? (
           <p role="alert" className="font-semibold text-danger">
             {error}
@@ -84,7 +90,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
         ) : null}
         <div className="flex flex-col gap-2">
           <Button variant="danger" disabled={busy} onClick={() => run(() => removeMedication(med.id))}>
-            {busy ? "Tirando..." : "Sim, tirar da lista"}
+            {busy ? "Removendo..." : "Sim, remover"}
           </Button>
           <Button variant="secondary" disabled={busy} onClick={() => setConfirming(false)}>
             Voltar
@@ -161,7 +167,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
           onClick={() => setConfirming(true)}
           className="min-h-12 font-semibold text-danger"
         >
-          Parar este remédio
+          Remover dos remédios
         </button>
       </div>
     </>

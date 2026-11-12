@@ -18,8 +18,8 @@ import {
   type StatusTone,
 } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
-import { callName, getDemoRun, startDemoRun, type DemoRun, type DemoStep } from "@/lib/api";
-import { readDemoRun, saveDemoRun } from "@/lib/demo";
+import { callName, getDemoRun, startDemoRun, stopDemoRun, type DemoRun, type DemoStep } from "@/lib/api";
+import { clearDemoRun, readDemoRun, saveDemoRun } from "@/lib/demo";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
 import { pronouns } from "@/lib/pronouns";
@@ -132,6 +132,26 @@ export function DemoView() {
     }
   }
 
+  async function stop() {
+    const id = following.current ?? doseId;
+    if (!id) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await stopDemoRun(id);
+      clearDemoRun();
+      following.current = null;
+      setDoseId(null);
+      setRun(null);
+      track("demo_run_stopped");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Não deu para parar a demo.");
+      captureError(e, { screen: "demo" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const name = data ? callName(data.patient) : "Dona Maria";
   const pr = pronouns(data?.patient.gender);
   const running = doseId !== null;
@@ -198,6 +218,11 @@ export function DemoView() {
         <ClockIcon size={22} />
         {running ? "Demo em andamento" : run?.finished ? "Rodar de novo" : "Começar a demo"}
       </Button>
+      {running ? (
+        <button type="button" onClick={stop} disabled={busy} className="-mt-1 min-h-12 font-semibold text-danger">
+          {busy ? "Parando..." : "Parar a demo"}
+        </button>
+      ) : null}
 
       <Link href="/patient" className={buttonClass({ variant: "secondary" })}>
         Abrir o app de {name}

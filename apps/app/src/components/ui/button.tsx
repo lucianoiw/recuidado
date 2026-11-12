@@ -14,7 +14,7 @@ const variants: Record<ButtonVariant, string> = {
 
 const sizes: Record<ButtonSize, string> = {
   xl: "min-h-22 rounded-control px-4 text-[28px] gap-2.5",
-  lg: "min-h-16 rounded-control px-5 text-2xl gap-3",
+  lg: "min-h-16 rounded-control px-4 text-[22px] gap-2.5",
   md: "min-h-[56px] rounded-control px-5 text-[17px] gap-2",
 };
 

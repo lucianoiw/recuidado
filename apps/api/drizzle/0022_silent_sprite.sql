@@ -1,0 +1,1 @@
+ALTER TABLE "medications" ADD COLUMN "stopped_at" timestamp with time zone;

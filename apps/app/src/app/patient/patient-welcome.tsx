@@ -14,8 +14,8 @@ import {
   BellIcon,
   CheckIcon,
   HeartIcon,
-  ShareIcon,
 } from "@/components/ui";
+import { InstallSteps, readPlatform, type InstallPromptEvent, type Platform } from "@/components/install-app";
 import { track } from "@/lib/analytics";
 import { callName, setConsent, type FamilyOverview } from "@/lib/api";
 import { enablePush, type PushState } from "@/lib/push";
@@ -55,23 +55,6 @@ function markReady() {
   listeners.forEach((l) => l());
 }
 
-type Platform = "installed" | "ios" | "other";
-
-function readPlatform(): Platform {
-  const standalone =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    (navigator as Navigator & { standalone?: boolean }).standalone === true;
-  if (standalone) return "installed";
-  return /iPhone|iPad|iPod/.test(navigator.userAgent) ? "ios" : "other";
-}
-
-const noSubscribe = () => () => {};
-
-interface InstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
-
 type Step = "hello" | "consent" | "install" | "notify" | "done";
 
 function Dots({ step }: { step: number }) {
@@ -109,7 +92,7 @@ function joinTimes(list: string[]): string {
 /** First access on Dona Maria's phone: hello, her consent (LGPD), add to home screen, allow reminders, ready. */
 export function PatientWelcome({ data }: { data: FamilyOverview }) {
   const platform = useSyncExternalStore(
-    noSubscribe,
+    () => () => {},
     readPlatform,
     () => "other" as Platform,
   );
@@ -260,43 +243,12 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
           Coloque o Recuidado na tela do celular
         </h1>
         <p className="text-[22px] text-muted">Assim você abre com um toque.</p>
-        {platform === "ios" ? (
-          <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5">
-            <ol className="flex flex-col gap-3.5">
-              <InstallStep n={1}>
-                Toque em{" "}
-                <ShareIcon
-                  size={24}
-                  className="inline align-[-4px]"
-                  aria-hidden={false}
-                  role="img"
-                  aria-label="Compartilhar"
-                />{" "}
-                <b>Compartilhar</b>, embaixo da tela.
-              </InstallStep>
-              <InstallStep n={2}>
-                Toque em <b>Adicionar à Tela de Início</b>.
-              </InstallStep>
-              <InstallStep n={3}>
-                Toque em <b>Adicionar</b>.
-              </InstallStep>
-            </ol>
-          </Card>
-        ) : installEvent ? (
+        {installEvent ? (
           <p className="text-[24px] leading-snug">
             Toque em <b>Colocar na tela</b> e depois em <b>Instalar</b>.
           </p>
         ) : (
-          <Card className="shadow-[0_12px_28px_-16px_rgba(22,19,20,0.35)] px-5 py-5">
-            <ol className="flex flex-col gap-3.5">
-              <InstallStep n={1}>
-                Toque nos <b>três pontinhos</b>, em cima da tela.
-              </InstallStep>
-              <InstallStep n={2}>
-                Toque em <b>Adicionar à tela inicial</b> ou <b>Instalar</b>.
-              </InstallStep>
-            </ol>
-          </Card>
+          <InstallSteps platform={platform} />
         )}
         <div className="mt-auto flex flex-col gap-3">
           {installEvent ? (
@@ -406,13 +358,3 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
   );
 }
 
-function InstallStep({ n, children }: { n: number; children: ReactNode }) {
-  return (
-    <li className="flex items-start gap-3.5">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blush font-display text-[24px] text-accent-ink">
-        {n}
-      </span>
-      <span className="pt-1 text-[24px] leading-snug">{children}</span>
-    </li>
-  );
-}

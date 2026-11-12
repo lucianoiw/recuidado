@@ -189,6 +189,7 @@ export class VoiceCallService {
         familyName: families.name,
         medication: medications.name,
         strength: medications.strength,
+        stoppedAt: medications.stoppedAt,
       })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
@@ -196,6 +197,10 @@ export class VoiceCallService {
       .innerJoin(families, eq(members.familyId, families.id))
       .where(eq(doses.id, doseId));
     if (!row) throw new NotFoundException('Dose não encontrada.');
+    if (row.stoppedAt && !checkIn) {
+      this.logger.log(`Medication of dose ${doseId} was removed; not calling.`);
+      return null;
+    }
     if (row.status !== 'pending' && !checkIn) {
       this.logger.log(`Dose ${doseId} is ${row.status}; not calling.`);
       return null;

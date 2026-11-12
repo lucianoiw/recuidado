@@ -1,5 +1,7 @@
 "use client";
 
+import { PhotoZoom } from "@/components/photo-zoom";
+import { InstallAppButton } from "@/components/install-app";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
@@ -173,12 +175,7 @@ export function PatientView() {
         >
           <p className="font-display text-[32px] text-accent-ink">{formatTime(due[0].scheduledAt)}</p>
           {due.length === 1 && photoOf.get(due[0].medicationId) ? (
-            // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, the real box
-            <img
-              src={photoOf.get(due[0].medicationId)!}
-              alt={`Foto de ${due[0].medicationName}`}
-              className="my-3 h-44 w-full rounded-2xl bg-cream object-contain"
-            />
+            <PhotoZoom src={photoOf.get(due[0].medicationId)!} name={due[0].medicationName} className="my-3 h-44 w-32" />
           ) : (
             <span className="my-3 flex size-28 items-center justify-center rounded-full bg-blush text-accent">
               <BellIcon size={52} strokeWidth={1.8} />
@@ -227,7 +224,7 @@ export function PatientView() {
           <ul className="flex flex-col gap-2.5">
             {later.map((g) => (
               <li key={g.time} className="flex items-start justify-between gap-3 rounded-card bg-surface px-4 py-4">
-                <span className="flex flex-col font-semibold">
+                <span className="flex min-w-0 flex-col gap-1 text-[19px] font-semibold leading-snug">
                   {g.doses.map((d) => (
                     <span key={d.id}>{doseName(d)}</span>
                   ))}
@@ -247,7 +244,7 @@ export function PatientView() {
         {callable.length === 1 ? (
           <CallLink member={callable[0]} className={buttonClass({ variant: "secondary", size: "lg" })}>
             <PhoneIcon size={26} />
-            Ligar para {callable[0].name.trim().split(/\s+/)[0]}
+            <span className="whitespace-nowrap">Ligar para {callable[0].name.trim().split(/\s+/)[0]}</span>
           </CallLink>
         ) : callable.length > 1 ? (
           <Link href="/patient/ligar" className={buttonClass({ variant: "secondary", size: "lg" })}>
@@ -256,6 +253,7 @@ export function PatientView() {
           </Link>
         ) : null}
         <EnableNotifications memberId={data.patient.id} label="Receber lembretes no celular" large />
+        <InstallAppButton />
       </div>
     </>
   );
