@@ -12,7 +12,8 @@ import {
 } from "@/components/ui";
 import { PageTitle } from "@/components/page-title";
 import { track } from "@/lib/analytics";
-import { getHighCost, saveHighCost, type HighCostItem, type HighCostPath } from "@/lib/api";
+import { getHighCost, saveHighCost, type HighCostItem, type HighCostPath, type HighCostRule } from "@/lib/api";
+import { capitalize, formatCid } from "@/lib/programs";
 import { dueText, formatDay } from "@/lib/high-cost";
 import { formatDistance, mapsUrl } from "@/lib/pharmacies";
 import { highCostUnits } from "@/lib/sus-units";
@@ -51,6 +52,71 @@ function ItemRow({
         </span>
       </label>
     </li>
+  );
+}
+
+function RuleRow({ rule, ela }: { rule: HighCostRule; ela: string }) {
+  const status = rule.status ?? "missing";
+  const look =
+    status === "yes"
+      ? { box: "bg-ok-soft text-ok", mark: <CheckIcon size={14} strokeWidth={2.8} />, label: `${ela} atende`, tone: "text-ok" }
+      : status === "no"
+        ? { box: "bg-danger-soft text-danger", mark: <XMark />, label: `${ela} não atende`, tone: "text-danger" }
+        : { box: "bg-warn-soft text-warn", mark: <b className="text-[14px] leading-none">?</b>, label: "Confirme com o médico", tone: "text-warn" };
+  return (
+    <li className="flex items-start gap-2.5">
+      <span className={`mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full ${look.box}`}>{look.mark}</span>
+      <span className="flex min-w-0 flex-col">
+        <span className="text-[16px] leading-snug">{capitalize(rule.text)}</span>
+        <span className={`text-[14px] font-semibold ${look.tone}`}>{look.label}</span>
+      </span>
+    </li>
+  );
+}
+
+function XMark() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+/** Diseases the Alto Custo gives this medicine for, the CID codes the doctor writes on the LME and the rules. */
+function WhoGetsIt({ med, ela }: { med: HighCostPath["medication"]; ela: string }) {
+  const conditions = med.conditions ?? [];
+  const rules = med.rules ?? [];
+  if (conditions.length === 0 && rules.length === 0) return null;
+  const codes = (med.conditionCodes ?? []).map(formatCid);
+  return (
+    <section className="flex flex-col gap-2">
+      <h2 className="text-[18px] font-semibold">Para quem o Estado dá</h2>
+      <div className="flex flex-col gap-3 rounded-card bg-surface p-4">
+        {conditions.length > 0 ? (
+          <div className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-1">
+              {conditions.map((c) => (
+                <li key={c} className="text-[17px] font-semibold leading-snug">
+                  {c}
+                </li>
+              ))}
+            </ul>
+            {codes.length > 0 ? (
+              <span className="text-[14px] text-muted">
+                CID no laudo: {codes.join(", ")}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
+        {rules.length > 0 ? (
+          <ul className="flex flex-col gap-2.5 border-t border-line-soft pt-3">
+            {rules.map((r) => (
+              <RuleRow key={r.text} rule={r} ela={ela} />
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </section>
   );
 }
 
@@ -145,6 +211,8 @@ export function HighCostView({ id }: { id: string }) {
         </Card>
       ) : null}
 
+      <WhoGetsIt med={med} ela={pr.Ela} />
+
       {status.due ? (
         <section role="alert" className="flex items-start gap-2.5 rounded-card bg-warn-soft p-4">
           <AlertIcon size={22} strokeWidth={2.4} className="mt-0.5 shrink-0 text-warn" />
@@ -153,7 +221,7 @@ export function HighCostView({ id }: { id: string }) {
       ) : null}
 
       <p className="text-[15px] leading-snug">
-        {guide.disease ? (
+        {(med.conditions?.length ?? 0) > 0 ? null : guide.disease ? (
           <>
             Pela cartilha da Secretaria da Saúde, para <b>{guide.disease}</b>.{" "}
           </>
@@ -170,7 +238,8 @@ export function HighCostView({ id }: { id: string }) {
           ? `${pr.Ela} já recebe. Para continuar, a família entrega estes papéis na renovação.`
           : `${status.done} de ${status.total} itens prontos.`}
       </p>
-      {guide.notes.map((n) => (
+      {/* The age rules above come from the same SES-SP page; the notes would say them twice. */}
+      {((med.rules?.length ?? 0) > 0 ? [] : guide.notes).map((n) => (
         <p key={n} className="flex items-start gap-2 text-[15px] leading-snug text-muted">
           <InfoIcon size={18} className="mt-0.5 shrink-0" />
           {n}

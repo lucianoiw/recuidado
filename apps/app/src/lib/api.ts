@@ -74,6 +74,10 @@ export interface Medication {
   highCost?: boolean;
   /** Extra Farmácia Popular rule (age, diagnosis), already in pt-BR; null when none. */
   farmaciaPopularRule?: string | null;
+  /** Diseases the Alto Custo gives it for (SES-SP). Empty when not Alto Custo. */
+  highCostConditions?: string[];
+  /** The city list has it only at some units, as the list writes it, e.g. "medicamento disponível em SAE/IST/AIDS". */
+  ubsRestricted?: string | null;
   /** Pills left at home and how many days they last; null when nobody counted them. */
   stock?: Stock | null;
   /** Where the family is in the Alto Custo path; null when it is not in the list. */
@@ -140,8 +144,25 @@ export interface HighCostStatus {
   due: { kind: "lme" | "renewal"; by: string; daysLeft: number } | null;
 }
 
+export interface HighCostRule {
+  kind: string;
+  text: string;
+  /** yes: she meets it; missing: we cannot tell (diagnosis, notes); no: she does not. */
+  status?: "yes" | "missing" | "no";
+}
+
 export interface HighCostPath {
-  medication: { id: string; name: string; strength: string | null; monthlyCostCents: number; highCost: boolean };
+  medication: {
+    id: string;
+    name: string;
+    strength: string | null;
+    monthlyCostCents: number;
+    highCost: boolean;
+    /** Diseases the Alto Custo gives it for, their CID codes and its rules checked against the patient. */
+    conditions?: string[];
+    conditionCodes?: string[];
+    rules?: HighCostRule[];
+  };
   guide: HighCostGuide;
   status: HighCostStatus;
 }
