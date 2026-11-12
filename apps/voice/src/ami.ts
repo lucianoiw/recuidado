@@ -243,7 +243,7 @@ export async function startRecording(
 }
 
 /**
- * Waits until an Asterisk global variable is "1" (polls Getvar every 400 ms), for at most maxMs or
+ * Waits until an Asterisk global variable turns "1" (polls Getvar every 400 ms), for at most maxMs or
  * until stop() says to give up. True when it became "1". Never throws.
  */
 export async function waitForGlobal(
@@ -256,9 +256,12 @@ export async function waitForGlobal(
   try {
     await client.open();
     const until = Date.now() + maxMs;
+    // A "1" left by an earlier call does not count: it must be seen unset (or "0") first.
+    let reset = false;
     while (!stop() && Date.now() < until) {
       const res = await client.action({ Action: "Getvar", Variable: name });
-      if (res.Value === "1") return true;
+      if (res.Value === "1" && reset) return true;
+      if (res.Value !== "1") reset = true;
       await new Promise((r) => setTimeout(r, 400));
     }
     return false;
