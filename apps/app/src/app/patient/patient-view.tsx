@@ -169,26 +169,48 @@ export function PatientView() {
 
       {due.length > 0 ? (
         <Card className="flex flex-col gap-5 px-5 py-6" aria-live="polite">
-          <p className="flex items-center gap-2.5 text-[26px] font-bold text-accent-ink">
-            <ClockIcon size={30} strokeWidth={2.2} />
-            Agora, {formatTime(due[0].scheduledAt)}
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="flex w-fit items-center gap-2 rounded-full bg-blush px-4 py-1.5 text-[22px] font-bold text-accent-ink">
+              <ClockIcon size={24} strokeWidth={2.2} />
+              {formatTime(due[0].scheduledAt)}
+            </p>
+            <p className="mt-2 text-[30px] font-bold leading-tight">Hora do remédio</p>
+          </div>
           <ul className="flex flex-col divide-y divide-line-soft">
             {due.map((d) => (
-              <li key={d.id} className="flex flex-col gap-2.5 py-3.5 first:pt-0 last:pb-0">
-                {photoOf.get(d.medicationId) ? (
+              <li key={d.id} className="flex flex-col gap-3 py-4 first:pt-1 last:pb-1">
+                {photoOf.get(d.medicationId) && due.length === 1 ? (
                   // eslint-disable-next-line @next/next/no-img-element -- signed R2 link
                   <img
                     src={photoOf.get(d.medicationId)!}
                     alt={`Foto de ${d.medicationName}`}
-                    className="h-52 w-full rounded-2xl border border-line bg-surface object-contain"
+                    className="h-52 w-full rounded-2xl bg-cream object-contain"
                   />
                 ) : null}
-                <div className="flex min-w-0 flex-col">
-                  <h2 className="text-[34px] font-bold leading-tight">{d.medicationName}</h2>
-                  {d.strength ? (
-                    <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
+                <div className="flex items-center gap-3.5">
+                  {photoOf.get(d.medicationId) && due.length > 1 ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- signed R2 link
+                    <img
+                      src={photoOf.get(d.medicationId)!}
+                      alt={`Foto de ${d.medicationName}`}
+                      className="size-20 shrink-0 rounded-2xl bg-cream object-cover"
+                    />
+                  ) : due.length > 1 ? (
+                    <span
+                      aria-hidden="true"
+                      className="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-cream text-[34px] font-bold text-muted"
+                    >
+                      {d.medicationName.charAt(0)}
+                    </span>
                   ) : null}
+                  <div className="flex min-w-0 flex-col">
+                    <h2 className={due.length > 1 ? "text-[28px] font-bold leading-tight" : "text-[34px] font-bold leading-tight"}>
+                      {d.medicationName}
+                    </h2>
+                    {d.strength ? (
+                      <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
+                    ) : null}
+                  </div>
                 </div>
               </li>
             ))}
