@@ -162,22 +162,32 @@ function FirstContact({
     }
   }
 
+  // Same order the voice service uses: the marked person first, then the others with a phone, oldest first.
+  const withPhone = caregivers.filter((c) => c.hasPhone);
+  const callOrder = [...withPhone.filter((c) => c.emergencyContact), ...withPhone.filter((c) => !c.emergencyContact)].map(
+    (c) => c.id,
+  );
+  const ordered = [...callOrder.map((id) => caregivers.find((c) => c.id === id)!), ...caregivers.filter((c) => !c.hasPhone)];
+
   return (
     <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
       <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
         <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><PhoneIcon size={18} /></span>
-        Primeiro contato
+        Quem recebe a ligação
       </h2>
       <p className="text-[15px] leading-snug text-muted">
-        Se {patient} disser na ligação que caiu, que sente dor no peito, falta de ar ou que desmaiou,
-        ligamos primeiro para esta pessoa. Se ela não atender, ligamos para a próxima da família, uma de
-        cada vez, até alguém ouvir o recado. Se {patient} não atender o lembrete ou não tomar o remédio, a
-        ligação segue a mesma ordem, com um recado calmo. Todas recebem a notificação.
+        Ligamos primeiro para quem estiver marcado. Se não atender, ligamos para o próximo da lista, um de
+        cada vez, até alguém atender.
       </p>
-      <ul className="overflow-hidden rounded-2xl bg-cream" role="radiogroup" aria-label="Primeiro contato em emergência">
-        {caregivers.map((c) => {
+      <p className="text-[15px] leading-snug text-muted">
+        Vale quando {patient} diz na ligação que caiu, sente dor no peito, falta de ar ou desmaiou, e quando
+        não toma o remédio (aí com um recado calmo). Todos recebem a notificação.
+      </p>
+      <ul className="overflow-hidden rounded-2xl bg-cream" role="radiogroup" aria-label="Quem recebe a ligação primeiro">
+        {ordered.map((c) => {
           const on = Boolean(c.emergencyContact);
           const noPhone = !c.hasPhone;
+          const turn = callOrder.indexOf(c.id) + 1;
           return (
             <li key={c.id} className="border-b border-line-soft last:border-b-0">
               <button
@@ -193,7 +203,11 @@ function FirstContact({
                   <span className="text-[15px] text-muted">
                     {noPhone ? "Sem celular cadastrado" : saving === c.id ? "Salvando..." : c.phone}
                   </span>
-                  {on ? <span className="text-[15px] font-semibold text-danger">Recebe a ligação</span> : null}
+                  {turn > 0 ? (
+                    <span className={cn("text-[15px] font-semibold", turn === 1 ? "text-accent-ink" : "text-muted")}>
+                      {turn === 1 ? "Recebe primeiro" : `Recebe em ${turn}º`}
+                    </span>
+                  ) : null}
                 </span>
                 <span
                   className={cn(
