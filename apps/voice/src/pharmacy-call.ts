@@ -54,6 +54,8 @@ export interface PharmacyCallOptions {
   stallMs?: number;
   /** Estimated ms of audio per character of the assistant's transcript. Default 65 (about 15 per second). */
   speechCharMs?: number;
+  /** Nothing heard for this long after the introduction ends the call. Default 25000. */
+  deadLineMs?: number;
   /** After a person speaks, wait this long for the assistant to introduce itself before asking it to. */
   introduceAfterMs?: number;
   /** Pause before introducing when the second model already hears a person. */
@@ -212,6 +214,7 @@ export class PharmacyCall {
   private introDefers = 0;
   private stallTimer?: NodeJS.Timeout;
   private stallPokes = 0;
+  private deadLineTimer?: NodeJS.Timeout;
   private openLines: Partial<Record<TranscriptLine["speaker"], { line: TranscriptLine; at: number }>> = {};
   private endReason?: string;
   private voicemail = false;
@@ -425,6 +428,7 @@ export class PharmacyCall {
       return;
     }
     this.introduced = true;
+    this.armDeadLine();
     this.log(`person on the line (${this.side ?? "unclassified"}) and no introduction yet, introducing`);
     this.armQuietPerson();
     // The model usually already said its introduction while muted and would not repeat it: tell it so.
@@ -455,6 +459,7 @@ export class PharmacyCall {
     if (this.heardOtherSide || this.answer || this.hangupRequested) return;
     this.introduced = true;
     this.log("nobody spoke after answer, opening");
+    this.armDeadLine();
     void this.openVoice().then(() =>
       this.send({
         type: "session.commentary.append",
@@ -686,6 +691,21 @@ export class PharmacyCall {
     this.timers.push(this.stallTimer);
   }
 
+  /**
+   * Nothing at all heard for a long time after the introduction: the line is dead (once, the test
+   * Asterisk restarted in the middle of a call and it stayed open until the 3-minute cap). Hang up.
+   */
+  private armDeadLine() {
+    if (this.deadLineTimer) clearTimeout(this.deadLineTimer);
+    this.deadLineTimer = setTimeout(() => {
+      if (this.answer || this.hangupRequested || this.finished || this.waiting || this.side === "hold") return;
+      this.log(`nothing heard for ${this.opts.deadLineMs ?? 25000} ms after the introduction, hanging up`);
+      this.endReason ??= "silent_line";
+      void this.endCall();
+    }, this.opts.deadLineMs ?? 25000);
+    this.timers.push(this.deadLineTimer);
+  }
+
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
@@ -784,6 +804,7 @@ export class PharmacyCall {
     if (this.quietTimer) clearTimeout(this.quietTimer);
     this.armSilentLine();
     this.armStall();
+    if (this.deadLineTimer) this.armDeadLine();
     this.inputOrder++;
     if (eventId) this.inputPieces.set(eventId, { order: this.inputOrder, at: now });
     this.utterance += delta;
