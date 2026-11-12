@@ -18,7 +18,8 @@ import {
   cn,
 } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
-import { lookupCep, type CepLookup } from "@/lib/cep";
+import { locateCep, lookupCep, type CepLookup } from "@/lib/cep";
+import { AreaMap } from "@/components/area-map";
 import { useCanShare } from "@/lib/origin";
 import { inputClass } from "@/components/ui";
 import { isCep, isDate, isEmail, isPhone, maskCep, maskDate, maskPhone } from "@/lib/masks";
@@ -74,6 +75,7 @@ export function OnboardingFlow() {
   const [data, setData] = useState<Onboarding>(emptyOnboarding);
   const [tried, setTried] = useState(false);
   const [cepOk, setCepOk] = useState(true);
+  const [area, setArea] = useState<CepFound | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -280,8 +282,9 @@ export function OnboardingFlow() {
             />
             <div className="grid grid-cols-2 items-start gap-3">
               <Field label="Nascimento" inputMode="numeric" placeholder="dd/mm/aaaa" mask={maskDate} value={p.birth} onValue={(v) => patch("patient", { birth: v })} aria-invalid={tried && !isDate(p.birth)} />
-              <CepField value={p.cep} onValue={(v) => patch("patient", { cep: v })} invalid={tried && !isCep(p.cep)} onLookup={setCepOk} />
+              <CepField value={p.cep} onValue={(v) => patch("patient", { cep: v })} invalid={tried && !isCep(p.cep)} onLookup={setCepOk} onFound={setArea} />
             </div>
+            {area && isCep(p.cep) ? <CepArea found={area} /> : null}
             <fieldset className="flex flex-col gap-2.5">
               <legend className="mb-2.5 text-[15px] font-semibold">Usa celular com internet?</legend>
               {[
@@ -608,16 +611,42 @@ function Avatar({ name, tone }: { name: string; tone: "brand" | "blue" }) {
   );
 }
 
+type CepFound = Extract<CepLookup, { state: "found" }>;
+
+/** Full-width address of the CEP and a thin map of the area where we look for pharmacies. */
+function CepArea({ found }: { found: CepFound }) {
+  const [point, setPoint] = useState<{ key: string; lat: number; lng: number } | null>(null);
+  const key = [found.street, found.district, found.city, found.uf].join("|");
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    locateCep(found, ctrl.signal).then((p) => {
+      if (!ctrl.signal.aborted && p) setPoint({ key, ...p });
+    });
+    return () => ctrl.abort();
+  }, [found, key]);
+
+  const place = [found.street, found.district, `${found.city}/${found.uf}`].filter(Boolean).join(", ");
+  return (
+    <div className="-mt-1 flex flex-col gap-2">
+      <p className="text-[15px] font-semibold leading-snug text-brand">{place}</p>
+      {point?.key === key ? <AreaMap lat={point.lat} lng={point.lng} label={found.district || found.city} /> : null}
+    </div>
+  );
+}
+
 function CepField({
   value,
   onValue,
   invalid,
   onLookup,
+  onFound,
 }: {
   value: string;
   onValue: (v: string) => void;
   invalid: boolean;
   onLookup: (ok: boolean) => void;
+  onFound: (found: CepFound | null) => void;
 }) {
   const [lookup, setLookup] = useState<CepLookup>({ state: "idle" });
 
@@ -626,6 +655,7 @@ function CepField({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLookup({ state: "idle" });
       onLookup(true);
+      onFound(null);
       return;
     }
     const ctrl = new AbortController();
@@ -633,11 +663,12 @@ function CepField({
     lookupCep(value, ctrl.signal).then((r) => {
       if (ctrl.signal.aborted) return;
       setLookup(r);
+      onFound(r.state === "found" ? r : null);
       // A lookup that fails for network reasons does not block the form.
       onLookup(r.state !== "not-found");
     });
     return () => ctrl.abort();
-  }, [value, onLookup]);
+  }, [value, onLookup, onFound]);
 
   const found = lookup.state === "found";
   const missing = lookup.state === "not-found";
@@ -667,9 +698,7 @@ function CepField({
         ) : null}
       </span>
       <span id="cep-status" aria-live="polite" className={cn("text-[14px] font-semibold", found ? "text-brand" : missing ? "text-danger" : "text-muted")}>
-        {lookup.state === "found"
-          ? [lookup.district, `${lookup.city}/${lookup.uf}`].filter(Boolean).join(", ")
-          : lookup.state === "not-found"
+        {lookup.state === "not-found"
             ? "CEP não encontrado"
             : lookup.state === "loading"
               ? "Procurando..."
