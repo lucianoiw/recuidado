@@ -69,7 +69,8 @@ export function BuyView() {
             <SplitPix month={month} isDemo={data.isDemo ?? false} onChanged={reloadMonth} />
           ) : null}
 
-          <PharmacyCallCard medications={paid} calls={data.calls !== false} />
+          {/* Calling pharmacies is part of the paid plan: the free plan does not show it at all. */}
+          {data.calls !== false ? <PharmacyCallCard medications={paid} /> : null}
 
           <section className="flex flex-col gap-2">
             <h2 className="text-[18px] font-semibold">Farmácias perto {pronouns(data.patient.gender).dela}</h2>

@@ -87,8 +87,8 @@ export function CircleView() {
           Alertas neste celular
         </h2>
         <p className="text-[15px] leading-snug text-muted">
-          Se {patient} não confirmar o remédio, nem pelo app nem pela ligação, avisamos a família
-          por notificação. Cada pessoa liga ou desliga no próprio celular.
+          Se {patient} não confirmar o remédio
+          {data.calls === false ? " no app" : ", nem pelo app nem pela ligação"}, avisamos a família por notificação. Cada pessoa liga ou desliga no próprio celular.
         </p>
         {caregiver ? (
           <EnableNotifications
@@ -109,7 +109,7 @@ export function CircleView() {
         <span className="flex flex-1 flex-col">
           <b>Plano</b>
           <span className="text-[15px] text-muted">
-            {data.calls === false ? "Grátis. Ligações no plano pago, em breve" : "Ligações para quem não usa celular"}
+            {data.calls === false ? "Grátis" : "Ligações para quem não usa celular"}
           </span>
         </span>
         <ChevronRightIcon size={20} className="text-muted" />
@@ -130,7 +130,7 @@ export function CircleView() {
         </Link>
       </section>
 
-      <YourData isDemo={Boolean(data.isDemo)} caregiver={caregiver} patient={patient} consent={data.patient} />
+      <YourData isDemo={Boolean(data.isDemo)} caregiver={caregiver} patient={patient} consent={data.patient} calls={data.calls !== false} />
     </>
   );
 }
@@ -232,11 +232,11 @@ function FirstContact({
   );
 }
 
-function consentText(p: Member, patient: string): string {
+function consentText(p: Member, patient: string, calls: boolean): string {
   const pr = pronouns(p.gender);
   if (p.consentSource === "patient") return `${patient} aceitou no app ${pr.dela}.`;
   if (p.consentSource === "caregiver") return `A família disse que ${patient} aceitou. ${pr.Ela} confirma no primeiro acesso ao app ${pr.dela}.`;
-  return `${patient} ainda não aceitou. Sem o aceite ${pr.dela}, o Recuidado não liga.`;
+  return `${patient} ainda não aceitou. Sem o aceite ${pr.dela}, o Recuidado não ${calls ? "liga" : "manda lembretes"}.`;
 }
 
 /** LGPD rights: consent status, privacy notice, export and delete. */
@@ -245,11 +245,13 @@ function YourData({
   caregiver,
   patient,
   consent,
+  calls,
 }: {
   isDemo: boolean;
   caregiver: Member | undefined;
   patient: string;
   consent: Member;
+  calls: boolean;
 }) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
@@ -277,7 +279,7 @@ function YourData({
         <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><InfoIcon size={18} /></span>
         Seus dados
       </h2>
-      {isDemo ? null : <p className="text-[15px] leading-snug text-muted">{consentText(consent, patient)}</p>}
+      {isDemo ? null : <p className="text-[15px] leading-snug text-muted">{consentText(consent, patient, calls)}</p>}
       <Link href="/privacidade" className={buttonClass({ variant: "secondary" })}>
         Como cuidamos dos dados
       </Link>

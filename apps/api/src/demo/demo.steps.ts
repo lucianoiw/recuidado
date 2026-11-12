@@ -107,7 +107,7 @@ export function demoSteps(f: RunFacts): RunSteps {
   } else if (f.alert.state === 'waiting' || f.alert.state === 'active' || f.alert.state === 'prioritized') {
     family = step('active', 'Avisando a família.');
   } else {
-    family = step('waiting', 'Esperando a ligação.');
+    family = step('waiting', f.callsAllowed === false ? 'Esperando o lembrete.' : 'Esperando a ligação.');
   }
 
   const finished = taken || f.dose.familyAlertedAt !== null || family.state === 'failed';

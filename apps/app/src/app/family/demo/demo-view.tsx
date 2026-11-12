@@ -166,17 +166,13 @@ export function DemoView() {
 
       <Card className="flex flex-col gap-2 text-[16px] leading-snug">
         <p>
-          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular {pr.dela}, ligação da IA e aviso para a
-          família. A espera, que no dia a dia é de minutos, aqui é de segundos.
+          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular {pr.dela},
+          {data?.calls === false ? "" : " ligação da IA"} e aviso para a família. A espera, que no dia a dia é de minutos, aqui é de segundos.
         </p>
         <p className="text-muted">A agenda normal dos remédios continua igual.</p>
       </Card>
 
-      {data?.calls === false ? (
-        <p className="rounded-card bg-warn-soft p-4 text-[15px] text-warn">
-          A ligação é do plano pago, que chega em breve. A demo mostra o lembrete e o aviso para a família.
-        </p>
-      ) : !hasPhone && data ? (
+      {data?.calls !== false && !hasPhone && data ? (
         <p className="rounded-card bg-warn-soft p-4 text-[15px] text-warn">
           {name} está sem telefone no cadastro, então a ligação vai ser pulada.
         </p>
@@ -184,7 +180,9 @@ export function DemoView() {
 
       <ul className="overflow-hidden rounded-card bg-surface">
         <StepRow icon={<BellIcon size={22} />} title={`Lembrete para ${name}`} step={run?.reminder ?? null} now={now} />
-        <StepRow icon={<PhoneIcon size={22} />} title="Ligação da IA" step={run?.call ?? null} now={now} />
+        {data?.calls === false ? null : (
+          <StepRow icon={<PhoneIcon size={22} />} title="Ligação da IA" step={run?.call ?? null} now={now} />
+        )}
         <StepRow icon={<UsersIcon size={22} />} title="Família avisada" step={run?.family ?? null} now={now} />
       </ul>
 

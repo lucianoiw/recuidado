@@ -274,7 +274,7 @@ export function MedsView() {
         </section>
       ) : null}
 
-      <EditMedSheet med={editing} onClose={() => setEditing(null)} onSaved={reload} />
+      <EditMedSheet med={editing} onClose={() => setEditing(null)} onSaved={reload} calls={data.calls !== false} />
 
       <Link href="/family/adicionar" className={buttonClass()}>
         <PlusIcon size={22} />

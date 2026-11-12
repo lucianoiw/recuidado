@@ -16,19 +16,32 @@ export function EditMedSheet({
   med,
   onClose,
   onSaved,
+  calls = true,
 }: {
   med: Medication | null;
   onClose: () => void;
   onSaved: () => void;
+  /** The family gets calls (paid plan). Without it, nothing here mentions calls. */
+  calls?: boolean;
 }) {
   return (
     <Sheet open={med !== null} onClose={onClose} title={med ? medLabel(med.name, null) : ""}>
-      {med ? <EditForm key={med.id} med={med} onClose={onClose} onSaved={onSaved} /> : null}
+      {med ? <EditForm key={med.id} med={med} onClose={onClose} onSaved={onSaved} calls={calls} /> : null}
     </Sheet>
   );
 }
 
-function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => void; onSaved: () => void }) {
+function EditForm({
+  med,
+  onClose,
+  onSaved,
+  calls,
+}: {
+  med: Medication;
+  onClose: () => void;
+  onSaved: () => void;
+  calls: boolean;
+}) {
   const [strength, setStrength] = useState(med.strength ?? "");
   const [times, setTimes] = useState<string[]>(med.times);
   const initialUnits = med.stock ? String(med.stock.units) : "";
@@ -79,7 +92,7 @@ function EditForm({ med, onClose, onSaved }: { med: Medication; onClose: () => v
           Remover <b>{medLabel(med.name, med.strength)}</b> dos remédios {pr.dela}?
         </p>
         <ul className="flex list-disc flex-col gap-1 pl-5 text-[15px] leading-snug text-muted">
-          <li>Os lembretes e as ligações dele param.</li>
+          <li>{calls ? "Os lembretes e as ligações dele param." : "Os lembretes dele param."}</li>
           <li>O histórico do que {pr.ela} já tomou fica guardado.</li>
           <li>Se {pr.ela} voltar a tomar, é só adicionar de novo.</li>
         </ul>
