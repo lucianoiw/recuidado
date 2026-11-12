@@ -38,6 +38,20 @@ export function upcomingDoseTimes(times: string[], now: Date, days = 2): Date[] 
   return result;
 }
 
+/**
+ * Dose instants of today (local day) that already passed. A medicine added in the middle of the
+ * day gets these too, without reminders: her screen asks whether she took them.
+ */
+export function earlierTodayDoseTimes(times: string[], now: Date): Date[] {
+  const date = localDate(now);
+  const result: Date[] = [];
+  for (const time of times) {
+    const at = localDateTime(date, time);
+    if (at && at.getTime() <= now.getTime()) result.push(at);
+  }
+  return result;
+}
+
 /** Minutes between the scheduled time and now; negative if early. */
 export const minutesSince = (scheduledAt: Date, now = new Date()) =>
   Math.round((now.getTime() - scheduledAt.getTime()) / 60000);

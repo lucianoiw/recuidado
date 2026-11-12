@@ -3,11 +3,11 @@
 import { PhotoZoom } from "@/components/photo-zoom";
 import { InstallAppButton } from "@/components/install-app";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { EnableNotifications } from "@/components/enable-notifications";
 import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, buttonClass } from "@/components/ui";
 import { captureError, identifyMember, track } from "@/lib/analytics";
-import { refreshMs } from "@/lib/demo";
+import { useLiveRefresh } from "@/lib/live";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
 import { CallLink, canCall } from "@/components/call-link";
 import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
@@ -62,15 +62,7 @@ export function PatientView() {
     );
   }, []);
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const tick = () => {
-      load();
-      timer = setTimeout(tick, refreshMs());
-    };
-    tick();
-    return () => clearTimeout(timer);
-  }, [load]);
+  useLiveRefresh(load);
 
   if (error) {
     return <p className="text-[24px] text-muted">Sem conexão. Tente de novo em instantes.</p>;
