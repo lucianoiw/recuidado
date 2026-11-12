@@ -655,3 +655,10 @@ test("the introduction waits until the model stops its own muted introduction", 
   await call.endCall();
   await call.result;
 });
+
+test("nothing heard after the introduction: the call ends as a silent line", async () => {
+  const { socket, call } = setup(5, { deadLineMs: 40 });
+  socket.emitEvent({ type: "transport.answered", event_id: "a1" });
+  const result = await call.result;
+  assert.equal(result.endReason, "silent_line");
+});
