@@ -111,7 +111,7 @@ function parsePharmacyCallRequest(body: unknown) {
       unitsPerPack: positiveInt(m.unitsPerPack),
     }));
   if (medications.length === 0) throw new Error("medications must have at least one item");
-  if (medications.length > 3) throw new Error("at most 3 medications per call");
+  if (medications.length > 30) throw new Error("at most 30 medications per call");
   const familyId = typeof b.familyId === "string" && b.familyId ? b.familyId : undefined;
   return { inquiryId: b.inquiryId, familyId, phone: b.phone, medications };
 }

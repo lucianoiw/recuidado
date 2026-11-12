@@ -183,8 +183,9 @@ export class CallService {
       socket,
       gate,
       hangup: () => this.live.hangup(sessionId),
-      // Recorded menus take time: allow a bit longer than a reminder call.
-      maxCallMs: Math.max(this.config.maxCallSeconds, 180) * 1000,
+      // Recorded menus take time: allow a bit longer than a reminder call, and 40 s more for each
+      // extra medicine (about one question, the prices and the read-back).
+      maxCallMs: (Math.max(this.config.maxCallSeconds, 180) + 40 * (input.medications.length - 1)) * 1000,
       log: trail.log,
     });
     // A simulated pharmacy: its attendant is a second AI, dialed now so it is ringing when the

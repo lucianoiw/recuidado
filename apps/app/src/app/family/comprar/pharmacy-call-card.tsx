@@ -14,7 +14,6 @@ import {
 import { brl, medLabel } from "@/lib/use-family";
 
 /** At most this many medicines per call, the same limit as the API. */
-const MAX_PER_CALL = 3;
 
 const STOCK: Record<TriState, { text: string; tone: "ok" | "danger" | "neutral" }> = {
   yes: { text: "Tem", tone: "ok" },
@@ -49,7 +48,7 @@ export function PharmacyCallCard({ medications, calls = true }: { medications: M
     return () => clearInterval(timer);
   }, [calling, load]);
 
-  const asked = medications.slice(0, MAX_PER_CALL);
+  const asked = medications;
   const ask = async () => {
     setBusy(true);
     setError(null);
