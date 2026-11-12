@@ -27,6 +27,8 @@ export interface CmedOffer {
   packCents: number;
   /** packCents / unitsPerPack. Fractional cents are kept until the monthly total is rounded. */
   perUnitCents: number;
+  /** Prescription stripe printed on the box; null when the list does not say. */
+  stripe: "red" | "black" | "none" | null;
 }
 
 export interface CmedPrice {
@@ -42,6 +44,10 @@ export interface CmedPrice {
   monthlyMaxCents: number | null;
   /** Publication date of the CMED list, e.g. "2026-11-09". */
   listDate: string | null;
+  /** Some matched presentation is sold as a generic (product type "Genérico"). */
+  hasGeneric: boolean;
+  /** Strictest stripe among the matched presentations (black over red over none). */
+  stripe: "red" | "black" | "none" | null;
 }
 
 /** Bigger packs are hospital or institutional sizes. */
@@ -76,6 +82,7 @@ function load(path = join(SEED_DIR, "cmed-pmc.csv.gz")): Map<string, CmedOffer[]
       unitsPerPack,
       packCents,
       perUnitCents: packCents / unitsPerPack,
+      stripe: row.stripe === "red" || row.stripe === "black" || row.stripe === "none" ? row.stripe : null,
     };
     const list = byKey.get(key);
     if (list) list.push(offer);
@@ -124,5 +131,13 @@ export function findCmedPrice(
     monthlyCents: units > 0 ? Math.round(cheapest.perUnitCents * units) : null,
     monthlyMaxCents: units > 0 ? Math.round(priciest.perUnitCents * units) : null,
     listDate: loadListDate(),
+    hasGeneric: sorted.some((offer) => offer.productType.startsWith("Genérico")),
+    stripe: strictestStripe(sorted.map((offer) => offer.stripe)),
   };
+}
+
+const STRIPE_ORDER = ["black", "red", "none"] as const;
+
+function strictestStripe(stripes: CmedOffer["stripe"][]): CmedPrice["stripe"] {
+  return STRIPE_ORDER.find((stripe) => stripes.includes(stripe)) ?? null;
 }

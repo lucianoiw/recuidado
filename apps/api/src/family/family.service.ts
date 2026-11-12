@@ -34,6 +34,7 @@ import { type R2Bucket, r2FromConfig } from '../calls/r2.js';
 import { seedDemoFamily } from './demo-seed.js';
 import { highCostStatus, todayInSaoPaulo, type HighCostStatus } from './high-cost.js';
 import type { HighCostBody, MedicationUpdateBody, OnboardingBody } from './onboarding.schema.js';
+import { medicationBox } from './box.js';
 import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 
 // Synthetic demo family (Hack Brasil rule 6.9). Same family name the voice demo uses.
@@ -278,6 +279,13 @@ export class FamilyService implements OnApplicationBootstrap {
             stock: stock.get(med.id) ?? null,
             // Photo of the real box or pill taken by the family; null when there is none.
             photoUrl: photoUrls.get(med.id) ?? null,
+            // Text of the drawn box the family screens show while there is no photo.
+            box: {
+              ...medicationBox(med.name, activeIngredient, price?.hasGeneric ?? false),
+              unitsPerPack: price?.unitsPerPack ?? null,
+              form: price?.form ?? null,
+              stripe: price?.stripe ?? null,
+            },
             // Where the family is in the Alto Custo path, for the reminders.
             highCostPath: access.highCost
               ? highCostPathOf(activeIngredient ?? med.name, {

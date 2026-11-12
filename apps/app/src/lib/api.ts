@@ -82,6 +82,15 @@ export interface Medication {
   price?: MedicationPrice | null;
   /** Photo of the real box or pill taken by the family (signed link); null when there is none. */
   photoUrl?: string | null;
+  /** Text of the drawn box the family screens show while there is no photo. */
+  box?: {
+    title: string;
+    substance: string | null;
+    generic: boolean;
+    unitsPerPack: number | null;
+    form: string | null;
+    stripe: "red" | "black" | "none" | null;
+  };
 }
 
 export interface MedicationPrice {

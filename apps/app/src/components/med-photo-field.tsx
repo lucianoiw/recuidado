@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { CameraIcon, InfoIcon } from "@/components/ui";
+import { MedBox } from "@/components/med-box";
 import { removeMedicationPhoto, setMedicationPhoto, type Medication } from "@/lib/api";
 import { usePronouns } from "@/lib/pronouns";
 
@@ -64,11 +65,14 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
           className="h-44 w-full rounded-2xl border border-line bg-surface object-contain"
         />
       ) : (
-        <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
-          <InfoIcon size={18} className="mt-0.5 shrink-0" />
-          Tire uma foto da caixa ou do comprimido que {pr.ela} toma. O app {pr.dela} mostra só essa foto. Sem foto,
-          mostra só o nome, a dose e o horário.
-        </p>
+        <div className="flex items-start gap-3">
+          <MedBox med={med} className="w-24 rounded-xl" />
+          <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
+            <InfoIcon size={18} className="mt-0.5 shrink-0" />
+            Tire uma foto da caixa ou do comprimido que {pr.ela} toma. O app {pr.dela} mostra só essa foto. Sem foto,
+            mostra só o nome, a dose e o horário.
+          </p>
+        </div>
       )}
       <input
         ref={input}
