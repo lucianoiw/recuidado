@@ -235,7 +235,8 @@ export const inside = {
 };
 
 export const footer = {
-  text: "Recuidado, produto em validação e ainda não comercializado. Os exemplos usam dados fictícios. A Dona Maria é uma personagem.",
+  text: "Recuidado, produto em validação e ainda não comercializado. Os exemplos usam dados fictícios.",
+  character: "A Dona Maria é uma personagem.",
   privacy: "Privacidade",
   email: "privacidade@recuidado.com.br",
 };
