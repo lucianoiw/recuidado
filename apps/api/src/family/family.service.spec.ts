@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { maskPhone, freeAccessOf, withFirstContact } from './family.service.js';
+import { ageOn, maskPhone, freeAccessOf, withFirstContact } from './family.service.js';
 
 describe('freeAccessOf', () => {
   it('says where a medicine is free and flags Alto Custo', () => {
-    expect(freeAccessOf('Losartana Potássica', '50 mg')).toEqual({
+    expect(freeAccessOf('Losartana Potássica', '50 mg')).toMatchObject({
       freeAt: ['farmacia_popular', 'ubs'],
       highCost: false,
       farmaciaPopularRule: null,
+      ubsRestricted: null,
     });
     expect(freeAccessOf('atorvastatina', '20 mg')).toMatchObject({ freeAt: [], highCost: true });
     expect(freeAccessOf('vitamina inventada', '1 mg')).toMatchObject({ freeAt: [], highCost: false });
@@ -23,6 +24,27 @@ describe('freeAccessOf', () => {
     expect(dapa.farmaciaPopularRule).toContain('65 anos');
     // Entresto: Alto Custo with LME, however the prescription writes the combo.
     expect(freeAccessOf('sacubitril + valsartana', '50 mg', 'Entresto')).toMatchObject({ freeAt: [], highCost: true });
+  });
+
+  it('checks the age rules with her birth date', () => {
+    // Dapagliflozina in the Farmácia Popular: 65 or older.
+    expect(freeAccessOf('dapagliflozina', '10 mg', null, undefined, { age: 78 }).freeAt).toEqual(['farmacia_popular']);
+    expect(freeAccessOf('dapagliflozina', '10 mg', null, undefined, { age: 60 }).freeAt).toEqual([]);
+    expect(freeAccessOf('dapagliflozina', '10 mg', null, undefined, {}).freeAt).toEqual(['farmacia_popular']);
+    // Entresto: the Alto Custo lists the diseases, the CID codes and the age to start, from Remédio SP.
+    const entresto = freeAccessOf('sacubitril + valsartana', '97 mg + 103 mg', 'Entresto');
+    expect(entresto.highCostConditions?.[0]).toMatch(/Insuficiência cardíaca/);
+    const ceaf = entresto.programs?.find((p) => p.programId === 'ceaf_sp');
+    expect(ceaf?.conditionCodes).toEqual(['I500', 'I501', 'I509']);
+    expect(ceaf?.rules.map((r) => r.kind)).toEqual(['min_age', 'note']);
+  });
+});
+
+describe('ageOn', () => {
+  it('counts whole years on the São Paulo date', () => {
+    expect(ageOn('1948-03-10', new Date('2026-11-12T12:00:00Z'))).toBe(78);
+    expect(ageOn('1948-11-13', new Date('2026-11-12T12:00:00Z'))).toBe(77);
+    expect(ageOn(null, new Date())).toBeNull();
   });
 });
 

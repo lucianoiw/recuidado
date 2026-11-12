@@ -1,0 +1,3524 @@
+{
+  "source": {
+    "cmed": "seed/cmed-pmc.csv.gz",
+    "programs": "seed/programs/*.json",
+    "built_at": "2026-11-12"
+  },
+  "totals": {
+    "activeIngredients": 1802,
+    "freePlain": 124,
+    "freeRestricted": 53,
+    "highCostOnly": 157,
+    "buy": 1468,
+    "atFarmaciaPopular": 28,
+    "atUbs": 116,
+    "highCostAny": 175
+  },
+  "free": [
+    {
+      "activeIngredient": "Abatacepte",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Aceponato de metilprednisolona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de ciproterona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "50 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Acetato de desmopressina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de dexametasona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "1 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Acetato de fludrocortisona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de glatirâmer",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de gosserrelina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de hidrocortisona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Acetato de lanreotida",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de leuprorrelina",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de medroxiprogesterona",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "150 mg/ml"
+      ],
+      "ubs": [
+        "150 mg/ml",
+        "10 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Acetato de metilprednisolona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de octreotida",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de sódio trihidratado",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetato de triptorrelina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acetazolamida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Aciclovir",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "200 mg"
+      ],
+      "ubsRestricted": [
+        "400 mg",
+        "50 mg/g",
+        "30 mg/g"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Acido acetilsalicilico",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Ácido fólico",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "5 mg",
+        "5 mg/ml",
+        "0,2 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Ácido ursodesoxicólico",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ácido zoledrônico",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ácido zoledrônico monoidratado",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Acitretina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Adalimumabe",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Adapaleno",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "1 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Albendazol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "40 mg/ml",
+        "400 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Alendronato de sódio",
+      "strengths": 1,
+      "farmaciaPopular": [
+        "70 mg"
+      ],
+      "ubs": [
+        "70 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Alentuzumabe",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Alfadornase",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Alfaepoetina",
+      "strengths": 15,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Alfainterferona 2b",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Alfavelaglicerase",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Alopurinol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Ambrisentana",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Amoxicilina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "50 mg/ml",
+        "500 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Amoxicilina trihidratada",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg",
+        "50 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Atenolol",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "25 mg"
+      ],
+      "ubs": [
+        "50 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Atorvastatina cálcica",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "10 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Azatioprina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Azitromicina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg",
+        "40 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Baricitinibe",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Benzoilmetronidazol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "40 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Besilato de anlodipino",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "5 mg"
+      ],
+      "ubs": [
+        "5 mg",
+        "10 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Betainterferona 1a",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bezafibrato",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bicarbonato de sódio",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bimatoprosta",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Biotina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bissulfato de clopidogrel",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bosentana",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bosentana monoidratada",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Brinzolamida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Brometo de ipratrópio",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "0,25 mg/ml",
+        "20 mcg/dose"
+      ],
+      "ubs": [
+        "0,25 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Brometo de piridostigmina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Brometo de tiotrópio monoidratado + Cloridrato de olodaterol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Brometo de umeclidínio",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bromidrato de fenoterol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Bromidrato de galantamina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Budesonida",
+      "strengths": 11,
+      "farmaciaPopular": [
+        "32 mcg/dose",
+        "50 mcg/dose",
+        "32 mcg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Budesonida + Fumarato de formoterol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "12 mcg + 400 mcg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Budesonida + Fumarato de formoterol diidratado",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "12 mcg + 400 mcg",
+        "6 mcg + 200 mcg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Butilbrometo de escopolamina",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cabergolina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "0,5 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Calcipotriol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Calcitriol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Captopril",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "25 mg"
+      ],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Carbamazepina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "200 mg",
+        "20 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Carbonato de lítio",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "300 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Carvedilol",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "6,25 mg",
+        "12,5 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cefalexina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "50 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cefalexina monoidratada",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [
+        "50 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Certolizumabe pegol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cetoconazol",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg/g",
+        "20 mg/g + 0,64 mg/g + 2,5 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Ciclosporina",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ciprofibrato",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Citrato de sildenafila",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Citrato de tofacitinibe",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cladribina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Claritromicina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg",
+        "50 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Clobazam",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Clonazepam",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "2 mg",
+        "2,5 mg/ml",
+        "0,5 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloranfenicol + Aminoácidos + Acetato de retinol + Metionina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 ui/g + 25 mg/g + 5 mg/g + 5 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloreto de sódio",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "9 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de amantadina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de amiodarona",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "200 mg",
+        "200 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de amitriptilina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de biperideno",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "2 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de bupropiona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "150 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de cinacalcete",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de ciprofloxacino",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de ciprofloxacino monoidratado",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de clindamicina monoidratado",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "300 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de clomipramina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de clorpromazina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg",
+        "100 mg",
+        "40 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de donepezila",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de donepezila monoidratado",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de dorzolamida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de doxiciclina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de fingolimode",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de fluoxetina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg",
+        "20 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de imipramina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de loperamida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "2 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de memantina",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de metadona",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de metformina",
+      "strengths": 6,
+      "farmaciaPopular": [
+        "850 mg",
+        "500 mg"
+      ],
+      "ubs": [
+        "850 mg",
+        "500 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de metilfenidato",
+      "strengths": 7,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "10 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de metoclopramida monoidratado",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de moxifloxacino",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "400 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de naltrexona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "50 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de nortriptilina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de pilocarpina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "20 mg/ml"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de piridoxina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "40 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de prometazina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg/ml",
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de propranolol",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "40 mg"
+      ],
+      "ubs": [
+        "40 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de raloxifeno",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de sertralina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "50 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de sevelâmer",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de terbinafina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "250 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de tiamina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "300 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Cloridrato de tramadol",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "50 mg",
+        "50 mg/ml"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de triexifenidil",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Cloridrato de valaciclovir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "500 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Cloridrato de ziprasidona monoidratado",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Clozapina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Danazol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Dapagliflozina",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "10 mg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Darunavir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "600 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Deferasirox",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Deferiprona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Dexametasona",
+      "strengths": 8,
+      "farmaciaPopular": [],
+      "ubs": [
+        "1 mg/g",
+        "0,1 mg/ml"
+      ],
+      "ubsRestricted": [
+        "1 mg/ml"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Diazepam",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "5 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Diclofenaco potássico",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "50 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Diclofenaco sódico",
+      "strengths": 7,
+      "farmaciaPopular": [],
+      "ubs": [
+        "50 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dicloridrato de daclatasvir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "60 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Dicloridrato de pramipexol",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Dicloridrato de pramipexol monoidratado",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Dicloridrato de sapropterina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Dicloridrato de trientina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Difosfato de cloroquina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Difosfato de primaquina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "15 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Digoxina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "0,25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dimenidrinato + Cloridrato de piridoxina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg/ml + 5 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dinitrato de isossorbida",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "5 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dipirona",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg/ml",
+        "500 mg",
+        "500 mg + 65 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dipirona + Butilbrometo de escopolamina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "6,67 mg/ml + 333,4 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dipirona monoidratada",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg",
+        "500 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dipirona monoidratada + Butilbrometo de escopolamina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "6,67 mg/ml + 333,4 mg/ml",
+        "333,4 mg/ml + 6,67 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Dipropionato de beclometasona",
+      "strengths": 7,
+      "farmaciaPopular": [
+        "50 mcg",
+        "50 mcg/dose",
+        "200 mcg/dose",
+        "250 mcg/dose"
+      ],
+      "ubs": [
+        "50 mcg",
+        "50 mcg/dose",
+        "200 mcg/dose"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Divalproato de sódio",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Dolutegravir sódico",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "50 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Doxiciclina monoidratada",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Efavirenz",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "30 mg/ml"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Eltrombopague olamina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Embonato de triptorrelina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Enantato de estradiol + Algestona acetofenida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "150 mg/ml + 10 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Enoxaparina sódica",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "40 mg",
+        "60 mg",
+        "20 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Entacapona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Espironolactona",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "25 mg"
+      ],
+      "ubs": [
+        "25 mg",
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Estriol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "1 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Etanercepte",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Etanolato de darunavir",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "75 mg",
+        "150 mg",
+        "600 mg",
+        "800 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Etinilestradiol + Levonorgestrel",
+      "strengths": 4,
+      "farmaciaPopular": [
+        "0,15 mg + 0,03 mg"
+      ],
+      "ubs": [
+        "0,15 mg + 0,03 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Etonogestrel",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "68 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Etossuximida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Etravirina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "100 mg",
+        "200 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Everolimo",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Fenobarbital",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg",
+        "40 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Fenofibrato",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Filgrastim",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Finasterida",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "5 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Fluconazol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "150 mg"
+      ],
+      "ubsRestricted": [
+        "100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Fosfato de codeína",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Fosfato de oseltamivir",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "75 mg",
+        "30 mg",
+        "45 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Fumarato de dimetila",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Fumarato de formoterol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Furosemida",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "40 mg"
+      ],
+      "ubs": [
+        "40 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Fusidato de sódio",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Gabapentina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "300 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Galsulfase",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Genfibrozila",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Glibenclamida",
+      "strengths": 1,
+      "farmaciaPopular": [
+        "5 mg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Gliclazida",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "60 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Golimumabe",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Haloperidol",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "5 mg",
+        "2 mg/ml",
+        "1 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Hemifumarato de quetiapina",
+      "strengths": 7,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Hemifumarato de tenofovir alafenamida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "25 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Hemitartarato de rivastigmina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Hialuronato de sódio",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Hidroclorotiazida",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "25 mg"
+      ],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Hidrocortisona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Hidrogenotartarato de rivastigmina",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Hidroxiureia",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ibandronato de sódio",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ibandronato de sódio monoidratado",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ibuprofeno",
+      "strengths": 9,
+      "farmaciaPopular": [],
+      "ubs": [
+        "300 mg",
+        "50 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Iloprosta",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Imiquimode",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "50 mg/g"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Imunoglobulina humana",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Infliximabe",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Insulina asparte",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Insulina degludeca",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Insulina glargina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 ui/ml",
+        "100 ui/ml + 80 ui"
+      ],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Insulina humana",
+      "strengths": 5,
+      "farmaciaPopular": [
+        "100 ui/ml"
+      ],
+      "ubs": [
+        "100 ui/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Insulina lispro",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Isoniazida + Rifampicina + Pirazinamida + Cloridrato de etambutol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "150 mg + 75 mg + 400 mg + 275 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Isotretinoína",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Itraconazol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Ivacaftor",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Ivermectina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "6 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Lamotrigina",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Laronidase",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Latanoprosta",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Leflunomida",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Levetiracetam",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Levodopa + Carbidopa",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "25 mg + 250 mg",
+        "250 mg + 25 mg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [
+        "25 mg + 250 mg",
+        "250 mg + 25 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Levodopa + Carbidopa monoidratada",
+      "strengths": 1,
+      "farmaciaPopular": [
+        "25 mg + 250 mg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [
+        "25 mg + 250 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Levodopa + Cloridrato de benserazida",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "100 mg + 25 mg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [
+        "200 mg + 50 mg",
+        "100 mg + 25 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Levofloxacino",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "500 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Levomefolato de cálcio",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "15 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Levonorgestrel",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "0,75 mg"
+      ],
+      "ubsRestricted": [
+        "52 mg",
+        "19,5 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Levotiroxina sódica",
+      "strengths": 16,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mcg",
+        "50 mcg",
+        "100 mcg",
+        "12,5 mcg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Linezolida",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "600 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Lopinavir + Ritonavir",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "80 mg/ml + 20 mg/ml"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Loratadina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "1 mg/ml",
+        "10 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Losartana potássica",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "50 mg"
+      ],
+      "ubs": [
+        "50 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Maleato de dexclorfeniramina",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [
+        "0,4 mg/ml",
+        "0,4 mg/ml + 4 mg/ml + 20 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Maleato de enalapril",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "10 mg"
+      ],
+      "ubs": [
+        "5 mg",
+        "20 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Maleato de timolol",
+      "strengths": 2,
+      "farmaciaPopular": [
+        "5 mg/ml",
+        "2,5 mg/ml"
+      ],
+      "ubs": [],
+      "ubsRestricted": [
+        "5 mg/ml"
+      ],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Maraviroque",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "150 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Mebendazol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Mepolizumabe",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Mesalazina",
+      "strengths": 8,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Mesilato de desferroxamina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Mesilato de doxazosina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "2 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Mesilato de rasagilina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Metildopa",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "250 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Metoclopramida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Metotrexato",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Metotrexato de sódio",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Metronidazol",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "250 mg",
+        "100 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Micofenolato de mofetila",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Micofenolato de sódio",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Miconazol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Miglustate",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Mononitrato de isossorbida",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg",
+        "5 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Mupirocina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "20 mg/g"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Naproxeno",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Naproxeno sódico",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Natalizumabe",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Nevirapina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "200 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Nicotina",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "7 mg",
+        "14 mg",
+        "21 mg",
+        "2 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Nifedipino",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Nistatina",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 ui/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Nitrato de miconazol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg/g"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Nitrofurantoína",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Noretisterona",
+      "strengths": 1,
+      "farmaciaPopular": [
+        "0,35 mg"
+      ],
+      "ubs": [
+        "0,35 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Norfloxacino",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "400 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Olanzapina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Omalizumabe",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Omeprazol",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Omeprazol magnésico",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "20 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Pancreatina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Paracetamol",
+      "strengths": 8,
+      "farmaciaPopular": [],
+      "ubs": [
+        "200 mg/ml",
+        "500 mg",
+        "500 mg + 30 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Paricalcitol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Penicilamina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Pentoxifilina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "400 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Periciazina",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "40 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Permetrina",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "10 mg/ml",
+        "50 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Picossulfato de sódio",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Picossulfato de sódio monoidratado",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Pirazinamida",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "500 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Pirimetamina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "25 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Pravastatina sódica",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "20 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Praziquantel",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "600 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Prednisona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "5 mg",
+        "20 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Primidona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Progesterona",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "200 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Prometazina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "25 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Propilenoglicolato de darunavir",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "75 mg",
+        "150 mg",
+        "600 mg",
+        "800 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Propionato de clobetasol",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Raltegravir potássico",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "400 mg",
+        "100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Rifampicina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "300 mg",
+        "20 mg/ml"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Riluzol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Risanquizumabe",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Risdiplam",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Risedronato sódico",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Risperidona",
+      "strengths": 8,
+      "farmaciaPopular": [],
+      "ubs": [
+        "2 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Ritonavir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Rituximabe",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Rivastigmina",
+      "strengths": 9,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Romosozumabe",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sacarato de hidróxido férrico",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sacubitril valsartana sódica hidratada",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Secuquinumabe",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Selexipague",
+      "strengths": 8,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sinvastatina",
+      "strengths": 4,
+      "farmaciaPopular": [
+        "10 mg",
+        "20 mg",
+        "40 mg"
+      ],
+      "ubs": [
+        "10 mg",
+        "20 mg",
+        "40 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Sirolimo",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sofosbuvir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "400 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Sofosbuvir + Velpatasvir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "400 mg + 100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Sofosbuvir + Voxilaprevir + Velpatasvir",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "400 mg + 100 mg + 100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Somatropina",
+      "strengths": 13,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Succinato de metoprolol",
+      "strengths": 3,
+      "farmaciaPopular": [
+        "25 mg"
+      ],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Succinato sódico de metilprednisolona",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sulfassalazina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sulfato de abacavir",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "20 mg/ml",
+        "300 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Sulfato de hidroxicloroquina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Sulfato de morfina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "30 mg"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Sulfato de salbutamol",
+      "strengths": 6,
+      "farmaciaPopular": [
+        "100 mcg/dose",
+        "5 mg/ml",
+        "100 mcg",
+        "100 mcg/jato"
+      ],
+      "ubs": [
+        "100 mcg/dose",
+        "100 mcg",
+        "100 mcg/jato"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Sulfato de trimetoprima + Sulfametoxazol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "40 mg/ml + 8 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Tacrolimo",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Tacrolimo monoidratado",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Tafamidis",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Talidomida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Tartarato de brimonidina",
+      "strengths": 6,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "2 mg/ml"
+      ],
+      "highCost": true,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Teofilina",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [
+        "100 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Teriflunomida",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Tetracloridrato de trientina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Tinidazol",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [
+        "500 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Tobramicina",
+      "strengths": 5,
+      "farmaciaPopular": [],
+      "ubs": [
+        "3 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Tocilizumabe",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Topiramato",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Travoprosta",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Trifenatato de vilanterol + Brometo de umeclidínio + Furoato de fluticasona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Trimetoprima + Sulfametoxazol",
+      "strengths": 4,
+      "farmaciaPopular": [],
+      "ubs": [
+        "800 mg + 160 mg",
+        "40 mg/ml + 8 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Triptorrelina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Undecilato de testosterona",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "250 mg/ml"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    },
+    {
+      "activeIngredient": "Ustequinumabe",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Valerato de estradiol + Enantato de noretisterona",
+      "strengths": 1,
+      "farmaciaPopular": [
+        "50 mg/ml + 5 mg/ml"
+      ],
+      "ubs": [
+        "50 mg/ml + 5 mg/ml"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Valproato de sódio",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Varfarina sódica",
+      "strengths": 3,
+      "farmaciaPopular": [],
+      "ubs": [
+        "5 mg",
+        "2,5 mg"
+      ],
+      "ubsRestricted": [],
+      "highCost": false,
+      "bucket": "free_plain"
+    },
+    {
+      "activeIngredient": "Vedolizumabe",
+      "strengths": 2,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Vigabatrina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [],
+      "highCost": true,
+      "bucket": "high_cost"
+    },
+    {
+      "activeIngredient": "Zidovudina",
+      "strengths": 1,
+      "farmaciaPopular": [],
+      "ubs": [],
+      "ubsRestricted": [
+        "100 mg"
+      ],
+      "highCost": false,
+      "bucket": "free_restricted"
+    }
+  ]
+}

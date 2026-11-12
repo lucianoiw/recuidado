@@ -16,6 +16,7 @@ import { PharmacyModule } from './pharmacy/pharmacy.module.js';
 import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { PrivacyModule } from './privacy/privacy.module.js';
+import { ProgramsModule } from './programs/programs.module.js';
 import { VoiceModule } from './voice/voice.module.js';
 import { CallsModule } from './calls/calls.module.js';
 
@@ -57,6 +58,7 @@ import { CallsModule } from './calls/calls.module.js';
     PushModule,
     PrescriptionsModule,
     PrivacyModule,
+    ProgramsModule,
     VoiceModule,
     CallsModule,
   ],

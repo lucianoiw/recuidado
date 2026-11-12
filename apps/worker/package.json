@@ -2,7 +2,7 @@
   "name": "@recuidado/worker",
   "version": "0.1.0",
   "private": true,
-  "description": "Recuidado worker: runs the doses queue (reminders, voice calls, check-ins, family alerts). No HTTP.",
+  "description": "Recuidado worker: runs the doses queue (reminders, voice calls, check-ins, family alerts) and the monthly refresh of the free-medicine programs. No HTTP.",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -19,6 +19,7 @@
     "@nestjs/config": "^12.1.1",
     "@nestjs/core": "^12.0.1",
     "@recuidado/core": "workspace:*",
+    "@recuidado/data": "workspace:*",
     "bullmq": "^6.7.3",
     "ioredis": "^6.0.0",
     "reflect-metadata": "^0.2.2",

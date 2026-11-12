@@ -7,17 +7,17 @@
  * loose_match_key (salt-free, order-free, with strengths). A prescription item
  * is looked up with looseMatchKey(ingredients, strengths) from this package.
  *
- * The CEAF list is national; raw/ceaf-sp-drugs.txt (the São Paulo state list)
+ * The CEAF list is national; seed/ceaf-sp-drugs.txt (the São Paulo state list)
  * narrows it to what SES-SP actually dispenses: ceaf_sp.
  *
- * Input: seed/pfpb-free-items.json, seed/remume-sp.json, seed/ceaf.json, raw/ceaf-sp-drugs.txt
+ * Input: seed/pfpb-free-items.json, seed/remume-sp.json, seed/ceaf.json, seed/ceaf-sp-drugs.txt
  * Output: seed/free-access.csv
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeCsv } from "./lib/csv.ts";
 import { looseKey, looseMatchKey } from "./lib/normalize.ts";
-import { RAW_DIR, seedPath } from "./lib/paths.ts";
+import { SEED_DIR, seedPath } from "./lib/paths.ts";
 import type { CeafItem } from "./fetch-ceaf.ts";
 import type { FreeItem } from "./fetch-free-items.ts";
 import type { RemumeItem } from "./fetch-remume.ts";
@@ -45,7 +45,7 @@ export interface FreeAccessRow {
 }
 
 /** Word sets of the state list: "formoterol-budesonida" -> {formoterol, budesonida}. */
-export function readStateCeaf(path = join(RAW_DIR, "ceaf-sp-drugs.txt")): Set<string>[] | null {
+export function readStateCeaf(path = join(SEED_DIR, "ceaf-sp-drugs.txt")): Set<string>[] | null {
   if (!existsSync(path)) return null;
   return readFileSync(path, "utf8")
     .split("\n")

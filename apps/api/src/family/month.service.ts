@@ -16,12 +16,13 @@ import {
   localDateTime,
   medications,
   members,
+  ProgramsService,
   RotationService,
   rotationParticipants,
   rotationSchedule,
   type SplitMode,
 } from '@recuidado/core';
-import { FamilyService, freeAccessOf } from './family.service.js';
+import { ageOn, FamilyService, freeAccessOf } from './family.service.js';
 import { normalizePixKey, pixCopyPaste, pixKeyType, type PixKeyType } from './pix.js';
 import { cmedPriceOf, monthlyCostOf } from './pricing.js';
 
@@ -67,6 +68,7 @@ export class MonthService implements OnApplicationBootstrap {
     @Inject(DB) private readonly db: Database,
     private readonly family: FamilyService,
     private readonly rotation: RotationService,
+    private readonly programs: ProgramsService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -97,8 +99,11 @@ export class MonthService implements OnApplicationBootstrap {
       .orderBy(asc(medications.createdAt));
 
     let priceListDate: string | null = null;
+    const programIndex = await this.programs.answerIndex();
+    const [patient] = await this.db.select({ birthDate: members.birthDate }).from(members).where(eq(members.id, ref.patientId));
+    const patientFacts = { age: ageOn(patient?.birthDate ?? null, now) };
     const items = meds.map((m) => {
-      const access = freeAccessOf(m.activeIngredient ?? m.name, m.strength, m.name);
+      const access = freeAccessOf(m.activeIngredient ?? m.name, m.strength, m.name, programIndex, patientFacts);
       const price = cmedPriceOf(m.activeIngredient, m.name, m.strength, m.times.length);
       priceListDate ??= price?.listDate ?? null;
       const freeAt = access.freeAt ?? [];

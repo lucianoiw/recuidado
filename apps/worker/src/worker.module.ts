@@ -9,6 +9,8 @@ import {
   DosesService,
   EmailService,
   PlanGate,
+  PROGRAMS_QUEUE,
+  ProgramsService,
   PushService,
   RotationService,
   StockService,
@@ -17,10 +19,11 @@ import {
   VoiceCallService,
 } from '@recuidado/core';
 import { DosesProcessor } from './doses.processor.js';
+import { ProgramsProcessor } from './programs.processor.js';
 
 /**
- * The worker process: no HTTP server, no controllers. Only the doses queue and the services its
- * jobs use (reminder push, voice call request, family alert, stock). The same services the API
+ * The worker process: no HTTP server, no controllers. The doses queue, the monthly refresh of the
+ * free-medicine programs, and the services their jobs use (reminder push, voice call request, family alert, stock). The same services the API
  * uses, so there is one implementation of each step.
  */
 @Module({
@@ -33,10 +36,10 @@ import { DosesProcessor } from './doses.processor.js';
         connection: new Redis(config.getOrThrow<string>('REDIS_URL'), { maxRetriesPerRequest: null }),
       }),
     }),
-    BullModule.registerQueue({ name: DOSES_QUEUE }),
+    BullModule.registerQueue({ name: DOSES_QUEUE }, { name: PROGRAMS_QUEUE }),
     DbModule,
   ],
-  providers: [DosesProcessor, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService, PlanGate, RotationService],
+  providers: [DosesProcessor, ProgramsProcessor, ProgramsService, DosesService, VoiceCallService, PushService, EmailService, AlertsService, StockService, PlanGate, RotationService],
 })
 export class WorkerModule implements OnApplicationShutdown {
   /** Sends buffered events and logs before the container stops. */

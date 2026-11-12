@@ -9,6 +9,7 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/worker/package.json apps/worker/
 # Workspace libraries used by the worker. Their "prepare" script builds dist/ on install.
 COPY packages/telemetry packages/telemetry
+COPY packages/data packages/data
 COPY packages/core packages/core
 RUN pnpm install --frozen-lockfile --filter @recuidado/worker...
 COPY apps/worker apps/worker

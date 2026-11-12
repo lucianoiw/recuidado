@@ -1,0 +1,5545 @@
+{
+  "program": {
+    "id": "remume_sp",
+    "name": "Posto de saúde (UBS) da Prefeitura de São Paulo",
+    "kind": "free",
+    "level": "municipal",
+    "region": "3550308",
+    "channel": "Na farmácia da UBS, com a receita.",
+    "sourceUrl": "https://prefeitura.sp.gov.br/web/saude/w/atencao_basica/rela%C3%A7%C3%A3o-municipal-de-medicamentos-remume",
+    "version": "2026-11-11",
+    "documents": [
+      "Receita do médico",
+      "Cartão do SUS"
+    ],
+    "rules": []
+  },
+  "items": [
+    {
+      "programId": "remume_sp",
+      "key": "abacavir-sulfato-abc-20-mg-ml-solucao-oral",
+      "name": "abacavir, sulfato (ABC) 20 mg/mL solução oral",
+      "activeIngredients": [
+        "abacavir"
+      ],
+      "looseKey": "abacavir",
+      "looseMatchKey": "abacavir 20 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "abacavir-sulfato-abc-300-mg-comprimido",
+      "name": "abacavir, sulfato (ABC) 300 mg comprimido",
+      "activeIngredients": [
+        "abacavir"
+      ],
+      "looseKey": "abacavir",
+      "looseMatchKey": "abacavir 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "aciclovir-30-mg-g-3-pomada-oftalmica",
+      "name": "aciclovir 30 mg/g (3%) pomada oftálmica",
+      "activeIngredients": [
+        "aciclovir"
+      ],
+      "looseKey": "aciclovir",
+      "looseMatchKey": "aciclovir 30 mg/g",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia/ AMAE/ AE e em unidades de referência em Oftalmologia",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "aciclovir-50-mg-g-5-creme",
+      "name": "aciclovir 50 mg/g (5%) creme",
+      "activeIngredients": [
+        "aciclovir"
+      ],
+      "looseKey": "aciclovir",
+      "looseMatchKey": "aciclovir 50 mg/g",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em SAE/IST/AIDS, Centro de Especialidades Odontológicas, Casa Ser, Hospital Dia/ AMAE/ AE",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "aciclovir-200-mg-comprimido",
+      "name": "aciclovir 200 mg comprimido",
+      "activeIngredients": [
+        "aciclovir"
+      ],
+      "looseKey": "aciclovir",
+      "looseMatchKey": "aciclovir 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "aciclovir-400-mg-comprimido",
+      "name": "aciclovir 400 mg comprimido",
+      "activeIngredients": [
+        "aciclovir"
+      ],
+      "looseKey": "aciclovir",
+      "looseMatchKey": "aciclovir 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "acido-acetilsalicilico-100-mg-comprimido",
+      "name": "ácido acetilsalicílico 100 mg comprimido",
+      "activeIngredients": [
+        "ácido acetilsalicílico"
+      ],
+      "looseKey": "acido acetilsalicilico",
+      "looseMatchKey": "acido acetilsalicilico 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "acido-folico-0-2-mg-ml-solucao-oral-gotas",
+      "name": "ácido fólico 0,2 mg/mL solução oral (gotas)",
+      "activeIngredients": [
+        "ácido fólico"
+      ],
+      "looseKey": "acido folico",
+      "looseMatchKey": "acido folico 0.2 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "acido-folico-5-mg-comprimido",
+      "name": "ácido fólico 5 mg comprimido",
+      "activeIngredients": [
+        "ácido fólico"
+      ],
+      "looseKey": "acido folico",
+      "looseMatchKey": "acido folico 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "acido-folinico-5-mg-ml-solucao-oral",
+      "name": "ácido folínico 5 mg/mL solução oral",
+      "activeIngredients": [
+        "ácido folínico"
+      ],
+      "looseKey": "acido folinico",
+      "looseMatchKey": "acido folinico 5 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "acido-paraminossalicilico-4g-sache-granulado-revestido",
+      "name": "ácido paraminossalicílico 4g sachê granulado revestido",
+      "activeIngredients": [
+        "ácido paraminossalicílico"
+      ],
+      "looseKey": "acido paraminossalicilico",
+      "looseMatchKey": "acido paraminossalicilico 4 g",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "adapaleno-1-mg-g-0-1-gel",
+      "name": "adapaleno 1 mg/g (0,1%) gel",
+      "activeIngredients": [
+        "adapaleno"
+      ],
+      "looseKey": "adapaleno",
+      "looseMatchKey": "adapaleno 1 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "albendazol-40-mg-ml-suspensao-oral",
+      "name": "albendazol 40 mg/mL suspensão oral",
+      "activeIngredients": [
+        "albendazol"
+      ],
+      "looseKey": "albendazol",
+      "looseMatchKey": "albendazol 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "albendazol-400-mg-comprimido-mastigavel",
+      "name": "albendazol 400 mg comprimido mastigável",
+      "activeIngredients": [
+        "albendazol"
+      ],
+      "looseKey": "albendazol",
+      "looseMatchKey": "albendazol 400 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "alendronato-de-sodio-70-mg-comprimido",
+      "name": "alendronato de sódio 70 mg comprimido",
+      "activeIngredients": [
+        "alendronato de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 70 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "alfapeginterferona-2a-180-mcg-seringa-preenchida",
+      "name": "alfapeginterferona 2A 180 mcg seringa preenchida",
+      "activeIngredients": [
+        "alfapeginterferona"
+      ],
+      "looseKey": "alfapeginterferona",
+      "looseMatchKey": "alfapeginterferona 180 mcg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "algestona-acetofenida-150-mg-ml-enantato-de-estradiol-10-mg-ml-solucao-injetavel",
+      "name": "algestona acetofenida 150 mg/mL + enantato de estradiol 10 mg/mL solução injetável",
+      "activeIngredients": [
+        "algestona acetofenida",
+        "enantato de estradiol"
+      ],
+      "looseKey": "algestona acetofenida + estradiol",
+      "looseMatchKey": "algestona acetofenida + estradiol 10 mg/ml + 150 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "alopurinol-100-mg-comprimido",
+      "name": "alopurinol 100 mg comprimido",
+      "activeIngredients": [
+        "alopurinol"
+      ],
+      "looseKey": "alopurinol",
+      "looseMatchKey": "alopurinol 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "amiodarona-cloridrato-200-mg-comprimido",
+      "name": "amiodarona, cloridrato 200 mg comprimido",
+      "activeIngredients": [
+        "amiodarona"
+      ],
+      "looseKey": "amiodarona",
+      "looseMatchKey": "amiodarona 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "amitriptilina-cloridrato-25-mg-comprimido",
+      "name": "amitriptilina, cloridrato 25 mg comprimido",
+      "activeIngredients": [
+        "amitriptilina"
+      ],
+      "looseKey": "amitriptilina",
+      "looseMatchKey": "amitriptilina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "amoxicilina-50-mg-ml-po-para-suspensao-oral",
+      "name": "amoxicilina 50 mg/mL pó para suspensão oral",
+      "activeIngredients": [
+        "amoxicilina"
+      ],
+      "looseKey": "amoxicilina",
+      "looseMatchKey": "amoxicilina 50 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "amoxicilina-500-mg-capsula",
+      "name": "amoxicilina 500 mg cápsula",
+      "activeIngredients": [
+        "amoxicilina"
+      ],
+      "looseKey": "amoxicilina",
+      "looseMatchKey": "amoxicilina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "anlodipino-besilato-5-mg-comprimido",
+      "name": "anlodipino, besilato 5 mg comprimido",
+      "activeIngredients": [
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino",
+      "looseMatchKey": "anlodipino 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "anlodipino-besilato-10-mg-comprimido",
+      "name": "anlodipino, besilato 10 mg comprimido",
+      "activeIngredients": [
+        "anlodipino"
+      ],
+      "looseKey": "anlodipino",
+      "looseMatchKey": "anlodipino 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "atazanavir-sulfato-atv-300-mg-capsula",
+      "name": "atazanavir, sulfato (ATV) 300 mg cápsula",
+      "activeIngredients": [
+        "atazanavir"
+      ],
+      "looseKey": "atazanavir",
+      "looseMatchKey": "atazanavir 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "atenolol-50-mg-comprimido",
+      "name": "atenolol 50 mg comprimido",
+      "activeIngredients": [
+        "atenolol"
+      ],
+      "looseKey": "atenolol",
+      "looseMatchKey": "atenolol 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "atorvastatina-10-mg-comprimido",
+      "name": "atorvastatina 10 mg comprimido",
+      "activeIngredients": [
+        "atorvastatina"
+      ],
+      "looseKey": "atorvastatina",
+      "looseMatchKey": "atorvastatina 10 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "azitromicina-40-mg-ml-suspensao-oral",
+      "name": "azitromicina 40 mg/mL suspensão oral",
+      "activeIngredients": [
+        "azitromicina"
+      ],
+      "looseKey": "azitromicina",
+      "looseMatchKey": "azitromicina 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "azitromicina-500-mg-comprimido",
+      "name": "azitromicina 500 mg comprimido",
+      "activeIngredients": [
+        "azitromicina"
+      ],
+      "looseKey": "azitromicina",
+      "looseMatchKey": "azitromicina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "beclometasona-dipropionato-50-mcg-dose-po-solucao-inalante-ou-aerossol-oral",
+      "name": "beclometasona, dipropionato 50 mcg/dose pó, solução inalante ou aerossol oral",
+      "activeIngredients": [
+        "beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 50 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "beclometasona-dipropionato-200-mcg-dose-aerossol-oral",
+      "name": "beclometasona, dipropionato 200 mcg/dose aerossol oral",
+      "activeIngredients": [
+        "beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 200 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "beclometasona-dipropionato-50-mcg-dose-aerossol-nasal",
+      "name": "beclometasona, dipropionato 50 mcg/dose aerossol nasal",
+      "activeIngredients": [
+        "beclometasona"
+      ],
+      "looseKey": "beclometasona",
+      "looseMatchKey": "beclometasona 50 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "benzilpenicilina-benzatina-600-000-ui-po-para-suspensao-injetavel-fam",
+      "name": "benzilpenicilina benzatina 600.000 UI pó para suspensão injetável fam",
+      "activeIngredients": [
+        "benzilpenicilina benzatina"
+      ],
+      "looseKey": "benzilpenicilina benzatina",
+      "looseMatchKey": "benzilpenicilina benzatina 600 ui",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "benzilpenicilina-benzatina-1-200-000-ui-po-para-suspensao-injetavel-fam",
+      "name": "benzilpenicilina benzatina 1.200.000 UI pó para suspensão injetável fam",
+      "activeIngredients": [
+        "benzilpenicilina benzatina"
+      ],
+      "looseKey": "benzilpenicilina benzatina",
+      "looseMatchKey": "benzilpenicilina benzatina",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "benzoilmetronidazol-40-mg-ml-equivalente-a-25-mg-de-metronidazol-suspensao-oral-ou-secnidazol-30-mg-ml-suspensao-oral",
+      "name": "benzoilmetronidazol 40 mg/mL (equivalente a 25 mg de metronidazol) suspensão oral ou secnidazol 30 mg/mL suspensão oral",
+      "activeIngredients": [
+        "benzoilmetronidazol"
+      ],
+      "looseKey": "benzoilmetronidazol",
+      "looseMatchKey": "benzoilmetronidazol 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "biperideno-cloridrato-2-mg-comprimido",
+      "name": "biperideno, cloridrato 2 mg comprimido",
+      "activeIngredients": [
+        "biperideno"
+      ],
+      "looseKey": "biperideno",
+      "looseMatchKey": "biperideno 2 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "brimonidina-2-mg-ml-0-2-solucao-oftalmica",
+      "name": "brimonidina 2 mg/mL (0,2%) solução oftálmica",
+      "activeIngredients": [
+        "brimonidina"
+      ],
+      "looseKey": "brimonidina",
+      "looseMatchKey": "brimonidina 2 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "bupropiona-cloridrato-150-mg-comprimido",
+      "name": "bupropiona, cloridrato 150 mg comprimido",
+      "activeIngredients": [
+        "bupropiona"
+      ],
+      "looseKey": "bupropiona",
+      "looseMatchKey": "bupropiona 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cabergolina-0-5-mg-comprimido",
+      "name": "cabergolina 0,5 mg comprimido",
+      "activeIngredients": [
+        "cabergolina"
+      ],
+      "looseKey": "cabergolina",
+      "looseMatchKey": "cabergolina 0.5 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "captopril-25-mg-comprimido",
+      "name": "captopril 25 mg comprimido",
+      "activeIngredients": [
+        "captopril"
+      ],
+      "looseKey": "captopril",
+      "looseMatchKey": "captopril 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carbamazepina-20-mg-ml-2-suspensao-oral",
+      "name": "carbamazepina 20 mg/mL (2%) suspensão oral",
+      "activeIngredients": [
+        "carbamazepina"
+      ],
+      "looseKey": "carbamazepina",
+      "looseMatchKey": "carbamazepina 20 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carbamazepina-200-mg-comprimido",
+      "name": "carbamazepina 200 mg comprimido",
+      "activeIngredients": [
+        "carbamazepina"
+      ],
+      "looseKey": "carbamazepina",
+      "looseMatchKey": "carbamazepina 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carbonato-de-calcio-1-250-mg-equivalente-a-500-mg-de-ca-comprimido",
+      "name": "carbonato de cálcio 1.250 mg (equivalente a 500 mg de Ca++) comprimido",
+      "activeIngredients": [
+        "carbonato de cálcio",
+        ") comprimido"
+      ],
+      "looseKey": ") comprimido + calcio",
+      "looseMatchKey": ") comprimido + calcio 1.25 mg + 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carbonato-de-calcio-1-500-mg-equivalente-a-600-mg-de-ca-colecalciferol-vit-d3-400-ui-comprimido",
+      "name": "carbonato de cálcio 1.500 mg (equivalente a 600 mg de Ca++) + colecalciferol (vit D3) 400 UI comprimido",
+      "activeIngredients": [
+        "carbonato de cálcio",
+        ")",
+        "colecalciferol (vit d"
+      ],
+      "looseKey": ") + calcio + colecalciferol (vit d",
+      "looseMatchKey": ") + calcio + colecalciferol (vit d 1.5 mg + 400 ui + 600 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carbonato-de-litio-300-mg-comprimido",
+      "name": "carbonato de lítio 300 mg comprimido",
+      "activeIngredients": [
+        "carbonato de lítio"
+      ],
+      "looseKey": "litio",
+      "looseMatchKey": "litio 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carvedilol-6-25-mg-comprimido",
+      "name": "carvedilol 6,25 mg comprimido",
+      "activeIngredients": [
+        "carvedilol"
+      ],
+      "looseKey": "carvedilol",
+      "looseMatchKey": "carvedilol 6.25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "carvedilol-12-5-mg-comprimido",
+      "name": "carvedilol 12,5 mg comprimido",
+      "activeIngredients": [
+        "carvedilol"
+      ],
+      "looseKey": "carvedilol",
+      "looseMatchKey": "carvedilol 12.5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cefalexina-50-mg-ml-suspensao-oral",
+      "name": "cefalexina 50 mg/mL suspensão oral",
+      "activeIngredients": [
+        "cefalexina"
+      ],
+      "looseKey": "cefalexina",
+      "looseMatchKey": "cefalexina 50 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cefalexina-comprimido-500-mg",
+      "name": "cefalexina comprimido 500 mg",
+      "activeIngredients": [
+        "cefalexina comprimido"
+      ],
+      "looseKey": "cefalexina comprimido",
+      "looseMatchKey": "cefalexina comprimido 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cetoconazol-20-mg-g-2-creme",
+      "name": "cetoconazol 20 mg/g (2%) creme",
+      "activeIngredients": [
+        "cetoconazol"
+      ],
+      "looseKey": "cetoconazol",
+      "looseMatchKey": "cetoconazol 20 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cetoconazol-2-shampoo",
+      "name": "cetoconazol 2% shampoo",
+      "activeIngredients": [
+        "cetoconazol"
+      ],
+      "looseKey": "cetoconazol",
+      "looseMatchKey": "cetoconazol 2 %",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cianocobalamina-vit-b12-2-5-mg-ml-2-500-mcg-solucao-injetavel",
+      "name": "cianocobalamina (vit. B12) 2,5 mg/mL (2.500 mcg) solução injetável",
+      "activeIngredients": [
+        "cianocobalamina (vit. b"
+      ],
+      "looseKey": "cianocobalamina (vit. b",
+      "looseMatchKey": "cianocobalamina (vit. b 2.5 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ciprofloxacino-cloridrato-500-mg-comprimido",
+      "name": "ciprofloxacino, cloridrato 500 mg comprimido",
+      "activeIngredients": [
+        "ciprofloxacino"
+      ],
+      "looseKey": "ciprofloxacino",
+      "looseMatchKey": "ciprofloxacino 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ciproterona-50-mg-comprimido",
+      "name": "ciproterona 50 mg comprimido",
+      "activeIngredients": [
+        "ciproterona"
+      ],
+      "looseKey": "ciproterona",
+      "looseMatchKey": "ciproterona 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Saúde Integral da População LGBTIA+ da SMS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "claritromicina-50-mg-ml-po-para-suspensao-oral",
+      "name": "claritromicina 50 mg/mL pó para suspensão oral",
+      "activeIngredients": [
+        "claritromicina"
+      ],
+      "looseKey": "claritromicina",
+      "looseMatchKey": "claritromicina 50 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "claritromicina-500-mg-comprimido",
+      "name": "claritromicina 500 mg comprimido",
+      "activeIngredients": [
+        "claritromicina"
+      ],
+      "looseKey": "claritromicina",
+      "looseMatchKey": "claritromicina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde e em unidades de referência para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clindamicina-cloridrato-300-mg-capsula",
+      "name": "clindamicina, cloridrato 300 mg cápsula",
+      "activeIngredients": [
+        "clindamicina"
+      ],
+      "looseKey": "clindamicina",
+      "looseMatchKey": "clindamicina 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clofazimina-100-mg-comprimido",
+      "name": "clofazimina 100 mg comprimido",
+      "activeIngredients": [
+        "clofazimina"
+      ],
+      "looseKey": "clofazimina",
+      "looseMatchKey": "clofazimina 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clofazimina-100-mg-clofazimina-50-mg-rifampicina-300-mg-dapsona-100-mg-multibacilar-adulto-comprimidos-em-blister",
+      "name": "clofazimina 100 mg + clofazimina 50 mg + rifampicina 300 mg + dapsona 100 mg (multibacilar) adulto comprimidos em blister",
+      "activeIngredients": [
+        "clofazimina",
+        "clofazimina",
+        "rifampicina",
+        "dapsona"
+      ],
+      "looseKey": "clofazimina + clofazimina + dapsona + rifampicina",
+      "looseMatchKey": "clofazimina + clofazimina + dapsona + rifampicina 100 mg + 100 mg + 300 mg + 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para o tratamento da hanseníase",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clofazimina-150-mg-clofazimina-50-mg-rifampicina-300-mg-rifampicina-150-mg-dapsona-50-mg-multibacilar-pediatrico-comprimidos-em-blister",
+      "name": "clofazimina 150 mg + clofazimina 50 mg + rifampicina 300 mg + rifampicina 150 mg + dapsona 50 mg (multibacilar) pediátrico comprimidos em blister",
+      "activeIngredients": [
+        "clofazimina",
+        "clofazimina",
+        "rifampicina",
+        "rifampicina",
+        "dapsona"
+      ],
+      "looseKey": "clofazimina + clofazimina + dapsona + rifampicina + rifampicina",
+      "looseMatchKey": "clofazimina + clofazimina + dapsona + rifampicina + rifampicina 150 mg + 150 mg + 300 mg + 50 mg + 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para o tratamento da hanseníase",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clomipramina-cloridrato-25-mg-comprimido",
+      "name": "clomipramina, cloridrato 25 mg comprimido",
+      "activeIngredients": [
+        "clomipramina"
+      ],
+      "looseKey": "clomipramina",
+      "looseMatchKey": "clomipramina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clonazepam-2-5-mg-ml-0-25-solucao-oral-gotas",
+      "name": "clonazepam 2,5 mg/mL (0,25%) solução oral gotas",
+      "activeIngredients": [
+        "clonazepam"
+      ],
+      "looseKey": "clonazepam",
+      "looseMatchKey": "clonazepam 2.5 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clonazepam-0-5-mg-comprimido",
+      "name": "clonazepam 0,5 mg comprimido",
+      "activeIngredients": [
+        "clonazepam"
+      ],
+      "looseKey": "clonazepam",
+      "looseMatchKey": "clonazepam 0.5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clonazepam-2-mg-comprimido",
+      "name": "clonazepam 2 mg comprimido",
+      "activeIngredients": [
+        "clonazepam"
+      ],
+      "looseKey": "clonazepam",
+      "looseMatchKey": "clonazepam 2 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cloranfenicol-5-mg-g-retinol-acetato-10-000-ui-g-aminoacidos-25-mg-g-metionina-5-mg-g-pomada-oftalmica",
+      "name": "cloranfenicol 5 mg/g + retinol, acetato 10.000 UI/g + aminoácidos 25 mg/g + metionina 5 mg/g pomada oftálmica",
+      "activeIngredients": [
+        "cloranfenicol",
+        "retinol",
+        "aminoácidos",
+        "metionina"
+      ],
+      "looseKey": "aminoacidos + cloranfenicol + metionina + retinol",
+      "looseMatchKey": "aminoacidos + cloranfenicol + metionina + retinol 10 ui/g + 25 mg/g + 5 mg/g + 5 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cloreto-de-sodio-9-mg-ml-0-9-0-154-meq-ml-solucao-injetavel-ampola",
+      "name": "cloreto de sódio 9 mg/mL (0,9 % - 0,154 mEq/mL) solução injetável ampola",
+      "activeIngredients": [
+        "cloreto de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 9 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cloreto-de-sodio-9-mg-ml-0-9-solucao-nasal-gotas",
+      "name": "cloreto de sódio 9 mg/mL (0,9%) solução nasal gotas",
+      "activeIngredients": [
+        "cloreto de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 9 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clorpromazina-cloridrato-40-mg-ml-4-solucao-oral-gotas",
+      "name": "clorpromazina, cloridrato 40 mg/mL (4%) solução oral (gotas)",
+      "activeIngredients": [
+        "clorpromazina"
+      ],
+      "looseKey": "clorpromazina",
+      "looseMatchKey": "clorpromazina 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clorpromazina-cloridrato-25-mg-comprimido",
+      "name": "clorpromazina, cloridrato 25 mg comprimido",
+      "activeIngredients": [
+        "clorpromazina"
+      ],
+      "looseKey": "clorpromazina",
+      "looseMatchKey": "clorpromazina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "clorpromazina-cloridrato-100-mg-comprimido",
+      "name": "clorpromazina, cloridrato 100 mg comprimido",
+      "activeIngredients": [
+        "clorpromazina"
+      ],
+      "looseKey": "clorpromazina",
+      "looseMatchKey": "clorpromazina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "colecalciferol-vitamina-d3-1000-ui-gota-solucao-oral",
+      "name": "colecalciferol (vitamina D3) 1000 UI/gota solução oral",
+      "activeIngredients": [
+        "colecalciferol (vitamina d"
+      ],
+      "looseKey": "colecalciferol (vitamina d",
+      "looseMatchKey": "colecalciferol (vitamina d 1000 ui/gota",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde Dispensação sob protocolo mediante prescrição da rede pública ou privada Necessário formulário para dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "cynara-scolymus-l-alcachofra-24-a-48-mg-derivados-de-acido-cafeoilquinico-expressos-em-acido-clorogenico",
+      "name": "Cynara scolymus L. (alcachofra) 24 a 48 mg derivados de ácido cafeoilquínico expressos em ácido clorogênico",
+      "activeIngredients": [
+        "cynara scolymus l."
+      ],
+      "looseKey": "cynara scolymus l.",
+      "looseMatchKey": "cynara scolymus l. 48 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "daclatasvir-60-mg-comprimido",
+      "name": "daclatasvir 60 mg comprimido",
+      "activeIngredients": [
+        "daclatasvir"
+      ],
+      "looseKey": "daclatasvir",
+      "looseMatchKey": "daclatasvir 60 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dapsona-100-mg-comprimido",
+      "name": "dapsona 100 mg comprimido",
+      "activeIngredients": [
+        "dapsona"
+      ],
+      "looseKey": "dapsona",
+      "looseMatchKey": "dapsona 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "darunavir-drv-75-mg-comprimido",
+      "name": "darunavir (DRV) 75 mg comprimido",
+      "activeIngredients": [
+        "darunavir"
+      ],
+      "looseKey": "darunavir",
+      "looseMatchKey": "darunavir 75 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "darunavir-drv-150-mg-comprimido",
+      "name": "darunavir (DRV) 150 mg comprimido",
+      "activeIngredients": [
+        "darunavir"
+      ],
+      "looseKey": "darunavir",
+      "looseMatchKey": "darunavir 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "darunavir-drv-600-mg-comprimido",
+      "name": "darunavir (DRV) 600 mg comprimido",
+      "activeIngredients": [
+        "darunavir"
+      ],
+      "looseKey": "darunavir",
+      "looseMatchKey": "darunavir 600 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "darunavir-drv-800-mg-comprimido",
+      "name": "darunavir (DRV) 800 mg comprimido",
+      "activeIngredients": [
+        "darunavir"
+      ],
+      "looseKey": "darunavir",
+      "looseMatchKey": "darunavir 800 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dexametasona-0-1-mg-ml-solucao-oral",
+      "name": "dexametasona 0,1 mg/mL solução oral",
+      "activeIngredients": [
+        "dexametasona"
+      ],
+      "looseKey": "dexametasona",
+      "looseMatchKey": "dexametasona 0.1 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dexametasona-1-mg-g-0-1-creme",
+      "name": "dexametasona 1 mg/g (0,1%) creme",
+      "activeIngredients": [
+        "dexametasona"
+      ],
+      "looseKey": "dexametasona",
+      "looseMatchKey": "dexametasona 1 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dexametasona-1-mg-ml-0-1-suspensao-oftalmica",
+      "name": "dexametasona 1 mg/mL (0,1%) suspensão oftálmica",
+      "activeIngredients": [
+        "dexametasona"
+      ],
+      "looseKey": "dexametasona",
+      "looseMatchKey": "dexametasona 1 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dexclorfeniramina-maleato-0-4-mg-ml-solucao-oral",
+      "name": "dexclorfeniramina, maleato 0,4 mg/mL solução oral",
+      "activeIngredients": [
+        "dexclorfeniramina"
+      ],
+      "looseKey": "dexclorfeniramina",
+      "looseMatchKey": "dexclorfeniramina 0.4 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dextrana-1-mg-ml-hipromelose-3-mg-ml-0-3-solucao-oftalmica",
+      "name": "dextrana 1 mg/mL + hipromelose 3 mg/mL (0,3%) solução oftálmica",
+      "activeIngredients": [
+        "dextrana",
+        "hipromelose"
+      ],
+      "looseKey": "dextrana + hipromelose",
+      "looseMatchKey": "dextrana + hipromelose 0.3 % + 1 mg/ml + 3 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "diazepam-5-mg-comprimido",
+      "name": "diazepam 5 mg comprimido",
+      "activeIngredients": [
+        "diazepam"
+      ],
+      "looseKey": "diazepam",
+      "looseMatchKey": "diazepam 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "diclofenaco-50-mg-comprimido",
+      "name": "diclofenaco 50 mg comprimido",
+      "activeIngredients": [
+        "diclofenaco"
+      ],
+      "looseKey": "diclofenaco",
+      "looseMatchKey": "diclofenaco 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "digoxina-0-25-mg-comprimido",
+      "name": "digoxina 0,25 mg comprimido",
+      "activeIngredients": [
+        "digoxina"
+      ],
+      "looseKey": "digoxina",
+      "looseMatchKey": "digoxina 0.25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dimenidrinato-25-mg-ml-piridoxina-cloridrato-vit-b6-5-mg-ml-solucao-oral-gotas",
+      "name": "dimenidrinato 25 mg/mL + piridoxina, cloridrato (vit. B6) 5 mg/mL solução oral gotas",
+      "activeIngredients": [
+        "dimenidrinato",
+        "piridoxina"
+      ],
+      "looseKey": "dimenidrinato + piridoxina",
+      "looseMatchKey": "dimenidrinato + piridoxina 25 mg/ml + 5 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dipirona-sodica-500-mg-ml-solucao-oral-gotas",
+      "name": "dipirona sódica 500 mg/mL solução oral gotas",
+      "activeIngredients": [
+        "dipirona sódica"
+      ],
+      "looseKey": "dipirona",
+      "looseMatchKey": "dipirona 500 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dipirona-sodica-500-mg-comprimido",
+      "name": "dipirona sódica 500 mg comprimido",
+      "activeIngredients": [
+        "dipirona sódica"
+      ],
+      "looseKey": "dipirona",
+      "looseMatchKey": "dipirona 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "dolutegravir-50-mg-dtg-comprimido",
+      "name": "dolutegravir 50 mg (DTG) comprimido",
+      "activeIngredients": [
+        "dolutegravir"
+      ],
+      "looseKey": "dolutegravir",
+      "looseMatchKey": "dolutegravir 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "doxazosina-2-mg-comprimido",
+      "name": "doxazosina 2 mg comprimido",
+      "activeIngredients": [
+        "doxazosina"
+      ],
+      "looseKey": "doxazosina",
+      "looseMatchKey": "doxazosina 2 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "doxiciclina-cloridrato-100-mg-comprimido",
+      "name": "doxiciclina, cloridrato 100 mg comprimido",
+      "activeIngredients": [
+        "doxiciclina"
+      ],
+      "looseKey": "doxiciclina",
+      "looseMatchKey": "doxiciclina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "efavirenz-efz-30-mg-ml-solucao-oral",
+      "name": "efavirenz (EFZ) 30 mg/mL solução oral",
+      "activeIngredients": [
+        "efavirenz"
+      ],
+      "looseKey": "efavirenz",
+      "looseMatchKey": "efavirenz 30 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "efavirenz-efz-200-mg-comprimido",
+      "name": "efavirenz (EFZ) 200 mg comprimido",
+      "activeIngredients": [
+        "efavirenz"
+      ],
+      "looseKey": "efavirenz",
+      "looseMatchKey": "efavirenz 200 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "efavirenz-efz-600-mg-comprimido",
+      "name": "efavirenz (EFZ) 600 mg comprimido",
+      "activeIngredients": [
+        "efavirenz"
+      ],
+      "looseKey": "efavirenz",
+      "looseMatchKey": "efavirenz 600 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "enalapril-maleato-5-mg-comprimido",
+      "name": "enalapril, maleato 5 mg comprimido",
+      "activeIngredients": [
+        "enalapril"
+      ],
+      "looseKey": "enalapril",
+      "looseMatchKey": "enalapril 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "enalapril-maleato-20-mg-comprimido",
+      "name": "enalapril, maleato 20 mg comprimido",
+      "activeIngredients": [
+        "enalapril"
+      ],
+      "looseKey": "enalapril",
+      "looseMatchKey": "enalapril 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "enfuvirtida-t-20-90-mg-ml-po-para-solucao-injetavel",
+      "name": "enfuvirtida (T-20) 90 mg/mL pó para solução injetavel",
+      "activeIngredients": [
+        "enfuvirtida (t-"
+      ],
+      "looseKey": "enfuvirtida (t-",
+      "looseMatchKey": "enfuvirtida (t- 90 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "enoxaparina-sodica-20-mg-equivalente-a-100-mg-ml-solucao-injetavel-seringa-0-2-ml-sc",
+      "name": "enoxaparina sódica 20 mg (equivalente a 100 mg/mL) solução injetável seringa 0,2 mL SC",
+      "activeIngredients": [
+        "enoxaparina sódica"
+      ],
+      "looseKey": "enoxaparina",
+      "looseMatchKey": "enoxaparina 20 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação exclusiva para usuários em tratamento na Rede Municipal de Saúde Necessário formulário para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "enoxaparina-sodica-40-mg-equivalente-a-100-mg-ml-solucao-injetavel-seringa-0-4-ml-sc",
+      "name": "enoxaparina sódica 40 mg (equivalente a 100 mg/mL) solução injetável seringa 0,4 mL SC",
+      "activeIngredients": [
+        "enoxaparina sódica"
+      ],
+      "looseKey": "enoxaparina",
+      "looseMatchKey": "enoxaparina 40 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação exclusiva para usuários em tratamento na Rede Municipal de Saúde Necessário formulário para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "enoxaparina-sodica-60-mg-equivalente-a-100-mg-ml-solucao-injetavel-seringa-0-6-ml-sc",
+      "name": "enoxaparina sódica 60 mg (equivalente a 100 mg/mL) solução injetável seringa 0,6 mL SC",
+      "activeIngredients": [
+        "enoxaparina sódica"
+      ],
+      "looseKey": "enoxaparina",
+      "looseMatchKey": "enoxaparina 60 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação exclusiva para usuários em tratamento na Rede Municipal de Saúde Necessário formulário para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "entecavir-0-5-mg-comprimido",
+      "name": "entecavir 0,5 mg comprimido",
+      "activeIngredients": [
+        "entecavir"
+      ],
+      "looseKey": "entecavir",
+      "looseMatchKey": "entecavir 0.5 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "escopolamina-10-mg-ml-solucao-oral-gotas-ou-comprimido-10-mg",
+      "name": "escopolamina 10 mg/mL solução oral gotas ou comprimido 10 mg",
+      "activeIngredients": [
+        "escopolamina"
+      ],
+      "looseKey": "escopolamina",
+      "looseMatchKey": "escopolamina 10 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "escopolamina-6-67-mg-ml-dipirona-sodica-333-4-mg-ml-solucao-oral-gotas",
+      "name": "escopolamina 6,67 mg/mL + dipirona sódica 333,4 mg/mL solução oral gotas",
+      "activeIngredients": [
+        "escopolamina",
+        "dipirona sódica"
+      ],
+      "looseKey": "dipirona + escopolamina",
+      "looseMatchKey": "dipirona + escopolamina 333.4 mg/ml + 6.67 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "espiramicina-500-mg-equivalente-a-1-500-000-ui-comprimido",
+      "name": "espiramicina 500 mg (equivalente a 1.500.000 UI) comprimido",
+      "activeIngredients": [
+        "espiramicina"
+      ],
+      "looseKey": "espiramicina",
+      "looseMatchKey": "espiramicina 500 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "espironolactona-25-mg-comprimido",
+      "name": "espironolactona 25 mg comprimido",
+      "activeIngredients": [
+        "espironolactona"
+      ],
+      "looseKey": "espironolactona",
+      "looseMatchKey": "espironolactona 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "espironolactona-100-mg-comprimido",
+      "name": "espironolactona 100 mg comprimido",
+      "activeIngredients": [
+        "espironolactona"
+      ],
+      "looseKey": "espironolactona",
+      "looseMatchKey": "espironolactona 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "estradiol-valerato-1mg-comprimido",
+      "name": "estradiol, valerato 1mg comprimido",
+      "activeIngredients": [
+        "estradiol"
+      ],
+      "looseKey": "estradiol",
+      "looseMatchKey": "estradiol 1 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "estradiol-valerato-2mg-comprimido",
+      "name": "estradiol, valerato 2mg comprimido",
+      "activeIngredients": [
+        "estradiol"
+      ],
+      "looseKey": "estradiol",
+      "looseMatchKey": "estradiol 2 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Saúde Integral da População LGBTIA+ da SMS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "estriol-1-mg-g-0-1-creme-vaginal",
+      "name": "estriol 1 mg/g (0,1%) creme vaginal",
+      "activeIngredients": [
+        "estriol"
+      ],
+      "looseKey": "estriol",
+      "looseMatchKey": "estriol 1 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "etambutol-cloridrato-400-mg-comprimido",
+      "name": "etambutol, cloridrato 400 mg comprimido",
+      "activeIngredients": [
+        "etambutol"
+      ],
+      "looseKey": "etambutol",
+      "looseMatchKey": "etambutol 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "etionamida-250-mg-comprimido",
+      "name": "etionamida 250 mg comprimido",
+      "activeIngredients": [
+        "etionamida"
+      ],
+      "looseKey": "etionamida",
+      "looseMatchKey": "etionamida 250 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "etonogestrel-68-mg-implante-subdermico",
+      "name": "etonogestrel 68 mg implante subdérmico",
+      "activeIngredients": [
+        "etonogestrel"
+      ],
+      "looseKey": "etonogestrel",
+      "looseMatchKey": "etonogestrel 68 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência.",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "etravirina-etr-100-mg-comprimido",
+      "name": "etravirina (ETR) 100 mg comprimido",
+      "activeIngredients": [
+        "etravirina"
+      ],
+      "looseKey": "etravirina",
+      "looseMatchKey": "etravirina 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "etravirina-etr-200-mg-comprimido",
+      "name": "etravirina (ETR) 200 mg comprimido",
+      "activeIngredients": [
+        "etravirina"
+      ],
+      "looseKey": "etravirina",
+      "looseMatchKey": "etravirina 200 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fenitoina-ou-fenitoina-sodica-100-mg-comprimido",
+      "name": "fenitoína ou fenitoína sódica 100 mg comprimido",
+      "activeIngredients": [
+        "fenitoína ou fenitoína sódica"
+      ],
+      "looseKey": "fenitoina ou fenitoina",
+      "looseMatchKey": "fenitoina ou fenitoina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fenobarbital-100-mg-comprimido",
+      "name": "fenobarbital 100 mg comprimido",
+      "activeIngredients": [
+        "fenobarbital"
+      ],
+      "looseKey": "fenobarbital",
+      "looseMatchKey": "fenobarbital 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fenobarbital-40-mg-ml-4-solucao-oral-gotas",
+      "name": "fenobarbital 40 mg/mL (4%) solução oral gotas",
+      "activeIngredients": [
+        "fenobarbital"
+      ],
+      "looseKey": "fenobarbital",
+      "looseMatchKey": "fenobarbital 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fenoterol-5-mg-ml-solucao-inalante-gotas",
+      "name": "fenoterol 5 mg/mL solução inalante gotas",
+      "activeIngredients": [
+        "fenoterol"
+      ],
+      "looseKey": "fenoterol",
+      "looseMatchKey": "fenoterol 5 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "finasterida-5-mg-comprimido",
+      "name": "finasterida 5 mg comprimido",
+      "activeIngredients": [
+        "finasterida"
+      ],
+      "looseKey": "finasterida",
+      "looseMatchKey": "finasterida 5 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento por urologista",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fluconazol-100-mg-capsula",
+      "name": "fluconazol 100 mg cápsula",
+      "activeIngredients": [
+        "fluconazol"
+      ],
+      "looseKey": "fluconazol",
+      "looseMatchKey": "fluconazol 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fluconazol-150-mg-capsula",
+      "name": "fluconazol 150 mg cápsula",
+      "activeIngredients": [
+        "fluconazol"
+      ],
+      "looseKey": "fluconazol",
+      "looseMatchKey": "fluconazol 150 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "fluoxetina-cloridrato-20-mg-capsula",
+      "name": "fluoxetina, cloridrato 20 mg cápsula",
+      "activeIngredients": [
+        "fluoxetina"
+      ],
+      "looseKey": "fluoxetina",
+      "looseMatchKey": "fluoxetina 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "folinato-de-calcio-15-mg-comprimido",
+      "name": "folinato de cálcio 15 mg comprimido",
+      "activeIngredients": [
+        "folinato de cálcio"
+      ],
+      "looseKey": "calcio",
+      "looseMatchKey": "calcio 15 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "formoterol-6-mcg-budesonida-200-mcg-po-em-capsula-para-inalacao",
+      "name": "formoterol 6 mcg + budesonida 200 mcg pó em cápsula para inalação",
+      "activeIngredients": [
+        "formoterol",
+        "budesonida"
+      ],
+      "looseKey": "budesonida + formoterol",
+      "looseMatchKey": "budesonida + formoterol 200 mcg + 6 mcg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "formoterol-12-mcg-budesonida-400-mcg-po-em-capsula-para-inalacao",
+      "name": "formoterol 12 mcg + budesonida 400 mcg pó em cápsula para inalação",
+      "activeIngredients": [
+        "formoterol",
+        "budesonida"
+      ],
+      "looseKey": "budesonida + formoterol",
+      "looseMatchKey": "budesonida + formoterol 12 mcg + 400 mcg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "furosemida-40-mg-comprimido",
+      "name": "furosemida 40 mg comprimido",
+      "activeIngredients": [
+        "furosemida"
+      ],
+      "looseKey": "furosemida",
+      "looseMatchKey": "furosemida 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "gabapentina-300-mg-comprimido",
+      "name": "gabapentina 300 mg comprimido",
+      "activeIngredients": [
+        "gabapentina"
+      ],
+      "looseKey": "gabapentina",
+      "looseMatchKey": "gabapentina 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "gliclazida-60-mg-comprimido-de-liberacao-prolongada",
+      "name": "gliclazida 60 mg comprimido de liberação prolongada",
+      "activeIngredients": [
+        "gliclazida"
+      ],
+      "looseKey": "gliclazida",
+      "looseMatchKey": "gliclazida 60 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "glycine-max-l-merril-isoflavonas-de-soja-minimo-de-50-mg-de-isoflavonas-totais",
+      "name": "Glycine max (L.) Merril.(isoflavonas de soja) mínimo de 50 mg de isoflavonas totais",
+      "activeIngredients": [
+        "glycine max merril. mínimo de"
+      ],
+      "looseKey": "glycine max merril. minimo de",
+      "looseMatchKey": "glycine max merril. minimo de 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "haloperidol-2-mg-ml-0-2-solucao-oral-gotas",
+      "name": "haloperidol 2 mg/mL (0,2%) solução oral gotas",
+      "activeIngredients": [
+        "haloperidol"
+      ],
+      "looseKey": "haloperidol",
+      "looseMatchKey": "haloperidol 2 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "haloperidol-1-mg-comprimido",
+      "name": "haloperidol 1 mg comprimido",
+      "activeIngredients": [
+        "haloperidol"
+      ],
+      "looseKey": "haloperidol",
+      "looseMatchKey": "haloperidol 1 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "haloperidol-5-mg-comprimido",
+      "name": "haloperidol 5 mg comprimido",
+      "activeIngredients": [
+        "haloperidol"
+      ],
+      "looseKey": "haloperidol",
+      "looseMatchKey": "haloperidol 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "haloperidol-decanoato-70-52-mg-ml-equivalente-a-50-mg-ml-de-haloperidol-solucao-injetavel",
+      "name": "haloperidol, decanoato 70,52 mg/mL (equivalente a 50 mg/mL de haloperidol) solução injetável",
+      "activeIngredients": [
+        "haloperidol"
+      ],
+      "looseKey": "haloperidol",
+      "looseMatchKey": "haloperidol 70.52 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "harpagophytum-procumbens-burch-dc-garra-do-diabo-harpagosideo-5-mg-a-50-mg-comprimido",
+      "name": "Harpagophytum procumbens (Burch.) DC. (garra do diabo) harpagosídeo 5 mg a 50 mg comprimido",
+      "activeIngredients": [
+        "harpagophytum procumbens dc. harpagosídeo"
+      ],
+      "looseKey": "harpagophytum procumbens dc. harpagosideo",
+      "looseMatchKey": "harpagophytum procumbens dc. harpagosideo 5 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "hidroclorotiazida-25-mg-comprimido",
+      "name": "hidroclorotiazida 25 mg comprimido",
+      "activeIngredients": [
+        "hidroclorotiazida"
+      ],
+      "looseKey": "hidroclorotiazida",
+      "looseMatchKey": "hidroclorotiazida 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "hidrocortisona-acetato-10-mg-g-1-creme",
+      "name": "hidrocortisona, acetato 10 mg/g (1%) creme",
+      "activeIngredients": [
+        "hidrocortisona"
+      ],
+      "looseKey": "hidrocortisona",
+      "looseMatchKey": "hidrocortisona 10 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "hidroxido-de-aluminio-60-mg-ml-a-63-mg-ml-suspensao-oral",
+      "name": "hidróxido de alumínio 60 mg/mL a 63 mg/mL suspensão oral",
+      "activeIngredients": [
+        "hidróxido de alumínio"
+      ],
+      "looseKey": "hidroxido de aluminio",
+      "looseMatchKey": "hidroxido de aluminio 60 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "hipoclorito-de-sodio-25-mg-ml-de-cloro-ativo-2-5-solucao",
+      "name": "hipoclorito de sódio 25 mg/mL de cloro ativo (2,5 %) solução",
+      "activeIngredients": [
+        "hipoclorito de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 25 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ibuprofeno-50-mg-ml-suspensao-oral-gotas",
+      "name": "ibuprofeno 50 mg/mL suspensão oral gotas",
+      "activeIngredients": [
+        "ibuprofeno"
+      ],
+      "looseKey": "ibuprofeno",
+      "looseMatchKey": "ibuprofeno 50 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ibuprofeno-300-mg-comprimido",
+      "name": "ibuprofeno 300 mg comprimido",
+      "activeIngredients": [
+        "ibuprofeno"
+      ],
+      "looseKey": "ibuprofeno",
+      "looseMatchKey": "ibuprofeno 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "imipramina-cloridrato-25-mg-comprimido",
+      "name": "imipramina, cloridrato 25 mg comprimido",
+      "activeIngredients": [
+        "imipramina"
+      ],
+      "looseKey": "imipramina",
+      "looseMatchKey": "imipramina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "imiquimode-50-mg-g-5-creme",
+      "name": "imiquimode 50 mg/g (5%) creme",
+      "activeIngredients": [
+        "imiquimode"
+      ],
+      "looseKey": "imiquimode",
+      "looseMatchKey": "imiquimode 50 mg/g",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "imunoglobulina-anti-rho-d-250-mcg-a-300-mcg-solucao-injetavel-fam",
+      "name": "imunoglobulina anti Rho (D) 250 mcg a 300 mcg solução injetável fam",
+      "activeIngredients": [
+        "imunoglobulina anti rho"
+      ],
+      "looseKey": "imunoglobulina anti rho",
+      "looseMatchKey": "imunoglobulina anti rho 250 mcg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivo para procedimento",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "imunoglobulina-humana-anti-hepatite-b-1000-ui-5-ml-solucao-injetavel",
+      "name": "imunoglobulina humana anti-hepatite B 1000 UI/ 5 mL solução injetável",
+      "activeIngredients": [
+        "imunoglobulina humana anti-hepatite b"
+      ],
+      "looseKey": "imunoglobulina humana anti-hepatite b",
+      "looseMatchKey": "imunoglobulina humana anti-hepatite b 1000 ui",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-humana-nph-100-ui-ml-suspensao-injetavel-frasco",
+      "name": "insulina humana NPH 100 UI/mL suspensão injetável frasco",
+      "activeIngredients": [
+        "insulina humana nph"
+      ],
+      "looseKey": "insulina humana",
+      "looseMatchKey": "insulina humana 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-humana-nph-100-ui-ml-suspensao-injetavel-caneta",
+      "name": "insulina humana NPH 100 UI/mL suspensão injetável caneta",
+      "activeIngredients": [
+        "insulina humana nph"
+      ],
+      "looseKey": "insulina humana",
+      "looseMatchKey": "insulina humana 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-humana-nph-100-ui-ml-suspensao-injetavel-carpule-tubete",
+      "name": "Insulina humana NPH 100 UI/mL suspensão injetável carpule / tubete",
+      "activeIngredients": [
+        "insulina humana nph"
+      ],
+      "looseKey": "insulina humana",
+      "looseMatchKey": "insulina humana 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-humana-regular-100-ui-ml-solucao-injetavel-frasco",
+      "name": "insulina humana regular 100 UI/mL solução injetável frasco",
+      "activeIngredients": [
+        "insulina humana regular"
+      ],
+      "looseKey": "insulina humana regular",
+      "looseMatchKey": "insulina humana regular 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-humana-regular-100-ui-ml-solucao-injetavel-caneta",
+      "name": "insulina humana regular 100 UI/mL solução injetável caneta",
+      "activeIngredients": [
+        "insulina humana regular"
+      ],
+      "looseKey": "insulina humana regular",
+      "looseMatchKey": "insulina humana regular 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-humana-regular-100-ui-ml-solucao-injetavel-carpule-tubete",
+      "name": "insulina humana regular 100 UI/mL solução injetável carpule / tubete",
+      "activeIngredients": [
+        "insulina humana regular"
+      ],
+      "looseKey": "insulina humana regular",
+      "looseMatchKey": "insulina humana regular 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "insulina-analoga-glargina-100-ui-ml-solucao-injetavel-carpule-tubete",
+      "name": "Insulina análoga glargina 100 UI/mL solução injetável carpule / tubete",
+      "activeIngredients": [
+        "insulina análoga glargina"
+      ],
+      "looseKey": "insulina glargina",
+      "looseMatchKey": "insulina glargina 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde Orientação técnica para prescrição e dispensação Necessário formulário para dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ipratropio-brometo-0-25-mg-ml-0-025-solucao-inalante-gotas",
+      "name": "ipratrópio, brometo 0,25 mg/mL (0,025%) solução inalante gotas",
+      "activeIngredients": [
+        "ipratrópio"
+      ],
+      "looseKey": "ipratropio",
+      "looseMatchKey": "ipratropio 0.25 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "isoniazida-100-mg-comprimido",
+      "name": "isoniazida 100 mg comprimido",
+      "activeIngredients": [
+        "isoniazida"
+      ],
+      "looseKey": "isoniazida",
+      "looseMatchKey": "isoniazida 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - medicamento exclusivo para tratamento de esquemas especiais de TB/MNT; tratamento da Infeccção Latente da Tuberculose (ILTB) e tratamento de crianças",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "isoniazida-300-mg-comprimido",
+      "name": "isoniazida 300 mg comprimido",
+      "activeIngredients": [
+        "isoniazida"
+      ],
+      "looseKey": "isoniazida",
+      "looseMatchKey": "isoniazida 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento utilizado no tratamento de ILTB em unidades IST/Aids; tratamento de ILTB, associado a rifapentina 150mg, exclusivo em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "isoniazida-150-mg-rifampicina-300-mg-comprimido",
+      "name": "isoniazida 150 mg + rifampicina 300 mg comprimido",
+      "activeIngredients": [
+        "isoniazida",
+        "rifampicina"
+      ],
+      "looseKey": "isoniazida + rifampicina",
+      "looseMatchKey": "isoniazida + rifampicina 150 mg + 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento exclusivo para tratamento com esquema básico de TB nas Unidades de Saúde; tratamento de esquemas especiais de TB em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "isoniazida-75-mg-rifampicina-150-mg-comprimido",
+      "name": "isoniazida 75 mg + rifampicina 150 mg comprimido",
+      "activeIngredients": [
+        "isoniazida",
+        "rifampicina"
+      ],
+      "looseKey": "isoniazida + rifampicina",
+      "looseMatchKey": "isoniazida + rifampicina 150 mg + 75 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento exclusivo para tratamento com esquema básico de TB nas Unidades de Saúde; tratamento de esquemas especiais de TB em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "isossorbida-dinitrato-5-mg-comprimido-sublingual-ou-propatilnitrato-10-mg-comprimido",
+      "name": "isossorbida, dinitrato 5 mg comprimido sublingual ou propatilnitrato 10 mg comprimido",
+      "activeIngredients": [
+        "isossorbida"
+      ],
+      "looseKey": "isossorbida",
+      "looseMatchKey": "isossorbida 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "isossorbida-mononitrato-20-mg-comprimido",
+      "name": "isossorbida, mononitrato 20 mg comprimido",
+      "activeIngredients": [
+        "isossorbida"
+      ],
+      "looseKey": "isossorbida",
+      "looseMatchKey": "isossorbida 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "itraconazol-100-mg-capsula",
+      "name": "itraconazol 100 mg cápsula",
+      "activeIngredients": [
+        "itraconazol"
+      ],
+      "looseKey": "itraconazol",
+      "looseMatchKey": "itraconazol 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ivermectina-6-mg-comprimido",
+      "name": "ivermectina 6 mg comprimido",
+      "activeIngredients": [
+        "ivermectina"
+      ],
+      "looseKey": "ivermectina",
+      "looseMatchKey": "ivermectina 6 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "lamivudina-3tc-10-mg-ml-solucao-oral",
+      "name": "lamivudina (3TC) 10 mg/mL solução oral",
+      "activeIngredients": [
+        "lamivudina ("
+      ],
+      "looseKey": "lamivudina (",
+      "looseMatchKey": "lamivudina ( 10 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "lamivudina-3tc-150-mg-comprimido",
+      "name": "lamivudina (3TC) 150 mg comprimido",
+      "activeIngredients": [
+        "lamivudina ("
+      ],
+      "looseKey": "lamivudina (",
+      "looseMatchKey": "lamivudina ( 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levodopa-100-mg-benserazida-25-mg-capsula-de-liberacao-prolongada-hbs",
+      "name": "levodopa 100 mg + benserazida 25 mg cápsula de liberação prolongada (HBS)",
+      "activeIngredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "looseKey": "benserazida + levodopa",
+      "looseMatchKey": "benserazida + levodopa 100 mg + 25 mg",
+      "extendedRelease": true,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levodopa-100-mg-benserazida-25-mg-comprimido",
+      "name": "levodopa 100 mg + benserazida 25 mg comprimido",
+      "activeIngredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "looseKey": "benserazida + levodopa",
+      "looseMatchKey": "benserazida + levodopa 100 mg + 25 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levodopa-100-mg-benserazida-25-mg-comprimido-dispersivel",
+      "name": "levodopa 100 mg + benserazida 25 mg comprimido dispersível",
+      "activeIngredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "looseKey": "benserazida + levodopa",
+      "looseMatchKey": "benserazida + levodopa 100 mg + 25 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levodopa-200-mg-benserazida-50-mg-comprimido",
+      "name": "levodopa 200 mg + benserazida 50 mg comprimido",
+      "activeIngredients": [
+        "levodopa",
+        "benserazida"
+      ],
+      "looseKey": "benserazida + levodopa",
+      "looseMatchKey": "benserazida + levodopa 200 mg + 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levodopa-250-mg-carbidopa-25-mg-comprimido",
+      "name": "levodopa 250 mg + carbidopa 25 mg comprimido",
+      "activeIngredients": [
+        "levodopa",
+        "carbidopa"
+      ],
+      "looseKey": "carbidopa + levodopa",
+      "looseMatchKey": "carbidopa + levodopa 25 mg + 250 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levofloxacino-250-mg-comprimido",
+      "name": "levofloxacino 250 mg comprimido",
+      "activeIngredients": [
+        "levofloxacino"
+      ],
+      "looseKey": "levofloxacino",
+      "looseMatchKey": "levofloxacino 250 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levofloxacino-500-mg-comprimido",
+      "name": "levofloxacino 500 mg comprimido",
+      "activeIngredients": [
+        "levofloxacino"
+      ],
+      "looseKey": "levofloxacino",
+      "looseMatchKey": "levofloxacino 500 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levonorgestrel-0-75-mg-comprimido-cartela",
+      "name": "levonorgestrel 0,75 mg comprimido cartela",
+      "activeIngredients": [
+        "levonorgestrel"
+      ],
+      "looseKey": "levonorgestrel",
+      "looseMatchKey": "levonorgestrel 0.75 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levonorgestrel-0-15-mg-etinilestradiol-0-03-mg-comprimido-cartela",
+      "name": "levonorgestrel 0,15 mg + etinilestradiol 0,03 mg comprimido cartela",
+      "activeIngredients": [
+        "levonorgestrel",
+        "etinilestradiol"
+      ],
+      "looseKey": "etinilestradiol + levonorgestrel",
+      "looseMatchKey": "etinilestradiol + levonorgestrel 0.03 mg + 0.15 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levonorgestrel-19-5-mg-sistema-intrauterino-siu",
+      "name": "levonorgestrel 19,5 mg sistema intrauterino (SIU)",
+      "activeIngredients": [
+        "levonorgestrel"
+      ],
+      "looseKey": "levonorgestrel",
+      "looseMatchKey": "levonorgestrel 19.5 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Necessário formulário para procedimento",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levonorgestrel-52-mg-sistema-intrauterino-siu",
+      "name": "levonorgestrel 52 mg sistema intrauterino (SIU)",
+      "activeIngredients": [
+        "levonorgestrel"
+      ],
+      "looseKey": "levonorgestrel",
+      "looseMatchKey": "levonorgestrel 52 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Necessário formulário para procedimento",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levotiroxina-sodica-12-5-mcg-comprimido",
+      "name": "levotiroxina sódica 12,5 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina sódica"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 12.5 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levotiroxina-sodica-25-mcg-comprimido",
+      "name": "levotiroxina sódica 25 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina sódica"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 25 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levotiroxina-sodica-50-mcg-comprimido",
+      "name": "levotiroxina sódica 50 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina sódica"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 50 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "levotiroxina-sodica-100-mcg-comprimido",
+      "name": "levotiroxina sódica 100 mcg comprimido",
+      "activeIngredients": [
+        "levotiroxina sódica"
+      ],
+      "looseKey": "levotiroxina",
+      "looseMatchKey": "levotiroxina 100 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "linezolida-600-mg-comprimido",
+      "name": "linezolida 600 mg comprimido",
+      "activeIngredients": [
+        "linezolida"
+      ],
+      "looseKey": "linezolida",
+      "looseMatchKey": "linezolida 600 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "loperamida-2-mg-comprimido",
+      "name": "loperamida 2 mg comprimido",
+      "activeIngredients": [
+        "loperamida"
+      ],
+      "looseKey": "loperamida",
+      "looseMatchKey": "loperamida 2 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "lopinavir-lpv-80-mg-ml-ritonavir-r-20-mg-ml-solucao-oral",
+      "name": "lopinavir (LPV) 80 mg/mL + ritonavir (r) 20 mg/mL solução oral",
+      "activeIngredients": [
+        "lopinavir",
+        "ritonavir"
+      ],
+      "looseKey": "lopinavir + ritonavir",
+      "looseMatchKey": "lopinavir + ritonavir 20 mg/ml + 80 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "lopinavir-lpv-100-mg-ritonavir-r-25-mg-comprimido",
+      "name": "lopinavir (LPV) 100 mg + ritonavir (r) 25 mg comprimido",
+      "activeIngredients": [
+        "lopinavir",
+        "ritonavir"
+      ],
+      "looseKey": "lopinavir + ritonavir",
+      "looseMatchKey": "lopinavir + ritonavir 100 mg + 25 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "loratadina-1-mg-ml-solucao-oral",
+      "name": "loratadina 1 mg/mL solução oral",
+      "activeIngredients": [
+        "loratadina"
+      ],
+      "looseKey": "loratadina",
+      "looseMatchKey": "loratadina 1 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "loratadina-10-mg-comprimido",
+      "name": "loratadina 10 mg comprimido",
+      "activeIngredients": [
+        "loratadina"
+      ],
+      "looseKey": "loratadina",
+      "looseMatchKey": "loratadina 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "losartana-potassica-50-mg-comprimido",
+      "name": "losartana potássica 50 mg comprimido",
+      "activeIngredients": [
+        "losartana potássica"
+      ],
+      "looseKey": "losartana",
+      "looseMatchKey": "losartana 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "maraviroque-mvq-150-mg-comprimido",
+      "name": "maraviroque (MVQ) 150 mg comprimido",
+      "activeIngredients": [
+        "maraviroque"
+      ],
+      "looseKey": "maraviroque",
+      "looseMatchKey": "maraviroque 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "maytenus-ilicifolia-mart-ex-reissek-espinheira-santa-taninos-totais-13-mg-a-20-mg-comprimido",
+      "name": "Maytenus ilicifolia Mart. ex. Reissek. (espinheira santa) taninos totais 13 mg a 20 mg comprimido",
+      "activeIngredients": [
+        "maytenus ilicifolia mart. ex. reissek. taninos totais"
+      ],
+      "looseKey": "maytenus ilicifolia mart. ex. reissek. taninos totais",
+      "looseMatchKey": "maytenus ilicifolia mart. ex. reissek. taninos totais 13 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "mebendazol-20-mg-ml-suspensao-oral",
+      "name": "mebendazol 20 mg/mL suspensão oral",
+      "activeIngredients": [
+        "mebendazol"
+      ],
+      "looseKey": "mebendazol",
+      "looseMatchKey": "mebendazol 20 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "medroxiprogesterona-acetato-10-mg-comprimido",
+      "name": "medroxiprogesterona, acetato 10 mg comprimido",
+      "activeIngredients": [
+        "medroxiprogesterona"
+      ],
+      "looseKey": "medroxiprogesterona",
+      "looseMatchKey": "medroxiprogesterona 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "medroxiprogesterona-acetato-25-mg-estradiol-cipionato-5-mg-suspensao-injetavel",
+      "name": "medroxiprogesterona, acetato 25 mg + estradiol cipionato 5 mg suspensão injetável",
+      "activeIngredients": [
+        "medroxiprogesterona",
+        "estradiol cipionato"
+      ],
+      "looseKey": "estradiol cipionato + medroxiprogesterona",
+      "looseMatchKey": "estradiol cipionato + medroxiprogesterona 25 mg + 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "medroxiprogesterona-acetato-150-mg-ml-suspensao-injetavel",
+      "name": "medroxiprogesterona, acetato 150 mg/mL suspensão injetável",
+      "activeIngredients": [
+        "medroxiprogesterona"
+      ],
+      "looseKey": "medroxiprogesterona",
+      "looseMatchKey": "medroxiprogesterona 150 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metformina-cloridrato-500-mg-comprimido",
+      "name": "metformina, cloridrato 500 mg comprimido",
+      "activeIngredients": [
+        "metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metformina-cloridrato-850-mg-comprimido",
+      "name": "metformina, cloridrato 850 mg comprimido",
+      "activeIngredients": [
+        "metformina"
+      ],
+      "looseKey": "metformina",
+      "looseMatchKey": "metformina 850 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metildopa-250-mg-comprimido",
+      "name": "metildopa 250 mg comprimido",
+      "activeIngredients": [
+        "metildopa"
+      ],
+      "looseKey": "metildopa",
+      "looseMatchKey": "metildopa 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metilfenidato-10-mg-comprimido",
+      "name": "metilfenidato 10 mg comprimido",
+      "activeIngredients": [
+        "metilfenidato"
+      ],
+      "looseKey": "metilfenidato",
+      "looseMatchKey": "metilfenidato 10 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para os pacientes em tratamento na Rede Municipal de Saúde Orientação técnica para prescrição",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metoclopramida-cloridrato-10-mg-comprimido",
+      "name": "metoclopramida, cloridrato 10 mg comprimido",
+      "activeIngredients": [
+        "metoclopramida"
+      ],
+      "looseKey": "metoclopramida",
+      "looseMatchKey": "metoclopramida 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metronidazol-100-mg-g-10-creme-ou-gel-vaginal",
+      "name": "metronidazol 100 mg/g (10%) creme ou gel vaginal",
+      "activeIngredients": [
+        "metronidazol"
+      ],
+      "looseKey": "metronidazol",
+      "looseMatchKey": "metronidazol 100 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "metronidazol-250-mg-comprimido",
+      "name": "metronidazol 250 mg comprimido",
+      "activeIngredients": [
+        "metronidazol"
+      ],
+      "looseKey": "metronidazol",
+      "looseMatchKey": "metronidazol 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "miconazol-nitrato-20-mg-g-2-creme-vaginal",
+      "name": "miconazol, nitrato 20 mg/g (2%) creme vaginal",
+      "activeIngredients": [
+        "miconazol"
+      ],
+      "looseKey": "miconazol",
+      "looseMatchKey": "miconazol 20 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "mikania-glomerata-spreng-guaco-solucao-oral",
+      "name": "Mikania glomerata spreng (guaco) solução oral",
+      "activeIngredients": [
+        "mikania glomerata spreng solução oral"
+      ],
+      "looseKey": "mikania glomerata spreng solucao oral",
+      "looseMatchKey": "mikania glomerata spreng solucao oral",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "morfina-sulfato-30-mg-comprimido-de-liberacao-modificada",
+      "name": "morfina, sulfato 30 mg comprimido de liberação modificada",
+      "activeIngredients": [
+        "morfina"
+      ],
+      "looseKey": "morfina",
+      "looseMatchKey": "morfina 30 mg",
+      "extendedRelease": true,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "moxifloxacino-400-mg-comprimido",
+      "name": "moxifloxacino 400 mg comprimido",
+      "activeIngredients": [
+        "moxifloxacino"
+      ],
+      "looseKey": "moxifloxacino",
+      "looseMatchKey": "moxifloxacino 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "mupirocina-20-mg-g-pomada-bisnaga",
+      "name": "mupirocina 20 mg/g pomada bisnaga",
+      "activeIngredients": [
+        "mupirocina"
+      ],
+      "looseKey": "mupirocina",
+      "looseMatchKey": "mupirocina 20 mg/g",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia/ AMAE/ AE/ Centros de Exame da Mulher",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "naltrexona-50-mg-comprimido",
+      "name": "naltrexona 50 mg comprimido",
+      "activeIngredients": [
+        "naltrexona"
+      ],
+      "looseKey": "naltrexona",
+      "looseMatchKey": "naltrexona 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em UBS e CAPS AD",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nevirapina-nvp-10-mg-ml-suspensao-oral",
+      "name": "nevirapina (NVP) 10 mg/mL suspensão oral",
+      "activeIngredients": [
+        "nevirapina"
+      ],
+      "looseKey": "nevirapina",
+      "looseMatchKey": "nevirapina 10 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nevirapina-nvp-200-mg-comprimido",
+      "name": "nevirapina (NVP) 200 mg comprimido",
+      "activeIngredients": [
+        "nevirapina"
+      ],
+      "looseKey": "nevirapina",
+      "looseMatchKey": "nevirapina 200 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nicotina-2-mg-goma-de-mascar",
+      "name": "nicotina 2 mg goma de mascar",
+      "activeIngredients": [
+        "nicotina"
+      ],
+      "looseKey": "nicotina",
+      "looseMatchKey": "nicotina 2 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nicotina-7-mg-adesivo-transdermico",
+      "name": "nicotina 7 mg adesivo transdérmico",
+      "activeIngredients": [
+        "nicotina"
+      ],
+      "looseKey": "nicotina",
+      "looseMatchKey": "nicotina 7 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nicotina-14-mg-adesivo-transdermico",
+      "name": "nicotina 14 mg adesivo transdérmico",
+      "activeIngredients": [
+        "nicotina"
+      ],
+      "looseKey": "nicotina",
+      "looseMatchKey": "nicotina 14 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nicotina-21-mg-adesivo-transdermico",
+      "name": "nicotina 21 mg adesivo transdérmico",
+      "activeIngredients": [
+        "nicotina"
+      ],
+      "looseKey": "nicotina",
+      "looseMatchKey": "nicotina 21 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Controle de Tabagismo do SUS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nifedipino-20-mg-comprimido-liberacao-prolongada",
+      "name": "nifedipino 20 mg comprimido liberação prolongada",
+      "activeIngredients": [
+        "nifedipino"
+      ],
+      "looseKey": "nifedipino",
+      "looseMatchKey": "nifedipino 20 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nirmatrelvir-ritonavir-comprimidos-revestidos",
+      "name": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "activeIngredients": [
+        "nirmatrelvir",
+        "ritonavir comprimidos revestidos"
+      ],
+      "looseKey": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "looseMatchKey": "nirmatrelvir + ritonavir comprimidos revestidos",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivo para tratamento de COVID-19",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nistatina-100-000-ui-ml-suspensao-oral",
+      "name": "nistatina 100.000 UI/mL suspensão oral",
+      "activeIngredients": [
+        "nistatina"
+      ],
+      "looseKey": "nistatina",
+      "looseMatchKey": "nistatina 100 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nitrofurantoina-100-mg-comprimido",
+      "name": "nitrofurantoína 100 mg comprimido",
+      "activeIngredients": [
+        "nitrofurantoína"
+      ],
+      "looseKey": "nitrofurantoina",
+      "looseMatchKey": "nitrofurantoina 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "noretisterona-0-35-mg-comprimido-cartela",
+      "name": "noretisterona 0,35 mg comprimido cartela",
+      "activeIngredients": [
+        "noretisterona"
+      ],
+      "looseKey": "noretisterona",
+      "looseMatchKey": "noretisterona 0.35 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "noretisterona-enantato-50-mg-ml-estradiol-valerato-5-mg-ml-solucao-injetavel",
+      "name": "noretisterona, enantato 50 mg/mL + estradiol, valerato 5 mg/mL solução injetável",
+      "activeIngredients": [
+        "noretisterona",
+        "estradiol"
+      ],
+      "looseKey": "estradiol + noretisterona",
+      "looseMatchKey": "estradiol + noretisterona 5 mg/ml + 50 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "norfloxacino-400-mg-comprimido",
+      "name": "norfloxacino 400 mg comprimido",
+      "activeIngredients": [
+        "norfloxacino"
+      ],
+      "looseKey": "norfloxacino",
+      "looseMatchKey": "norfloxacino 400 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "nortriptilina-cloridrato-25-mg-comprimido",
+      "name": "nortriptilina, cloridrato 25 mg comprimido",
+      "activeIngredients": [
+        "nortriptilina"
+      ],
+      "looseKey": "nortriptilina",
+      "looseMatchKey": "nortriptilina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "oleo-mineral-frasco",
+      "name": "óleo mineral frasco",
+      "activeIngredients": [
+        "óleo mineral frasco"
+      ],
+      "looseKey": "oleo mineral frasco",
+      "looseMatchKey": "oleo mineral frasco",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "omeprazol-20-mg-capsula",
+      "name": "omeprazol 20 mg cápsula",
+      "activeIngredients": [
+        "omeprazol"
+      ],
+      "looseKey": "omeprazol",
+      "looseMatchKey": "omeprazol 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "oseltamivir-30-mg-capsula",
+      "name": "oseltamivir 30 mg cápsula",
+      "activeIngredients": [
+        "oseltamivir"
+      ],
+      "looseKey": "oseltamivir",
+      "looseMatchKey": "oseltamivir 30 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "oseltamivir-45-mg-capsula",
+      "name": "oseltamivir 45 mg cápsula",
+      "activeIngredients": [
+        "oseltamivir"
+      ],
+      "looseKey": "oseltamivir",
+      "looseMatchKey": "oseltamivir 45 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "oseltamivir-75-mg-capsula",
+      "name": "oseltamivir 75 mg cápsula",
+      "activeIngredients": [
+        "oseltamivir"
+      ],
+      "looseKey": "oseltamivir",
+      "looseMatchKey": "oseltamivir 75 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "oxido-de-zinco-150-a-250-mg-g-retinol-vit-a-colecalciferol-pomada",
+      "name": "óxido de zinco 150 a 250 mg/g + retinol (vit. A) + colecalciferol pomada",
+      "activeIngredients": [
+        "óxido de zinco",
+        "retinol",
+        "colecalciferol pomada"
+      ],
+      "looseKey": "colecalciferol pomada + oxido de zinco + retinol",
+      "looseMatchKey": "colecalciferol pomada + oxido de zinco + retinol 250 mg/g",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "paracetamol-200-mg-ml-solucao-oral-gotas",
+      "name": "paracetamol 200 mg/mL solução oral gotas",
+      "activeIngredients": [
+        "paracetamol"
+      ],
+      "looseKey": "paracetamol",
+      "looseMatchKey": "paracetamol 200 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "paracetamol-500-mg-comprimido",
+      "name": "paracetamol 500 mg comprimido",
+      "activeIngredients": [
+        "paracetamol"
+      ],
+      "looseKey": "paracetamol",
+      "looseMatchKey": "paracetamol 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pentoxifilina-400-mg-comprimido",
+      "name": "pentoxifilina 400 mg comprimido",
+      "activeIngredients": [
+        "pentoxifilina"
+      ],
+      "looseKey": "pentoxifilina",
+      "looseMatchKey": "pentoxifilina 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência de hanseníase",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "periciazina-40-mg-ml-4-solucao-oral-gotas",
+      "name": "periciazina 40 mg/mL (4%) solução oral gotas",
+      "activeIngredients": [
+        "periciazina"
+      ],
+      "looseKey": "periciazina",
+      "looseMatchKey": "periciazina 40 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "permetrina-10-mg-ml-1-locao-capilar",
+      "name": "permetrina 10 mg/mL (1%) loção capilar",
+      "activeIngredients": [
+        "permetrina"
+      ],
+      "looseKey": "permetrina",
+      "looseMatchKey": "permetrina 10 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "permetrina-50-mg-ml-5-creme-ou-locao",
+      "name": "permetrina 50 mg/mL (5%) creme ou loção",
+      "activeIngredients": [
+        "permetrina"
+      ],
+      "looseKey": "permetrina",
+      "looseMatchKey": "permetrina 50 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pilocarpina-cloridrato-20-mg-ml-2-solucao-oftalmica",
+      "name": "pilocarpina, cloridrato 20 mg/mL (2%) solução oftálmica",
+      "activeIngredients": [
+        "pilocarpina"
+      ],
+      "looseKey": "pilocarpina",
+      "looseMatchKey": "pilocarpina 20 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pirazinamida-500-mg-comprimido",
+      "name": "pirazinamida 500 mg comprimido",
+      "activeIngredients": [
+        "pirazinamida"
+      ],
+      "looseKey": "pirazinamida",
+      "looseMatchKey": "pirazinamida 500 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pirazinamida-150-mg-comprimido-dispersivel",
+      "name": "pirazinamida 150 mg comprimido dispersível",
+      "activeIngredients": [
+        "pirazinamida"
+      ],
+      "looseKey": "pirazinamida",
+      "looseMatchKey": "pirazinamida 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência -exclusivo para tratamento de TB em crianças e de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "piridoxina-cloridrato-vit-b6-40-mg-comprimido",
+      "name": "piridoxina, cloridrato (vit. B6) 40 mg comprimido",
+      "activeIngredients": [
+        "piridoxina"
+      ],
+      "looseKey": "piridoxina",
+      "looseMatchKey": "piridoxina 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde e em unidades de referência para tratamento de Tuberculose em condições específicas",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "piridoxina-cloridrato-vit-b6-50-mg-comprimido",
+      "name": "piridoxina, cloridrato (vit. B6) 50 mg comprimido",
+      "activeIngredients": [
+        "piridoxina"
+      ],
+      "looseKey": "piridoxina",
+      "looseMatchKey": "piridoxina 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência -exclusivo para tratamento de TB em gestantes",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pirimetamina-25-mg-comprimido",
+      "name": "pirimetamina 25 mg comprimido",
+      "activeIngredients": [
+        "pirimetamina"
+      ],
+      "looseKey": "pirimetamina",
+      "looseMatchKey": "pirimetamina 25 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pirimetamina-3-mg-ml-solucao-oral",
+      "name": "pirimetamina 3 mg/mL solução oral",
+      "activeIngredients": [
+        "pirimetamina"
+      ],
+      "looseKey": "pirimetamina",
+      "looseMatchKey": "pirimetamina 3 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "pravastatina-20-mg-comprimido",
+      "name": "pravastatina 20 mg comprimido",
+      "activeIngredients": [
+        "pravastatina"
+      ],
+      "looseKey": "pravastatina",
+      "looseMatchKey": "pravastatina 20 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "praziquantel-600-mg-comprimido",
+      "name": "praziquantel 600 mg comprimido",
+      "activeIngredients": [
+        "praziquantel"
+      ],
+      "looseKey": "praziquantel",
+      "looseMatchKey": "praziquantel 600 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência , utilizado no tratamento da esquistossomose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "prednisolona-fosfato-sodico-4-02-mg-ml-equivalente-a-3-mg-ml-de-prednisolona-solucao-oral",
+      "name": "prednisolona, fosfato sódico 4,02 mg/mL (equivalente a 3 mg/mL de prednisolona) solução oral",
+      "activeIngredients": [
+        "prednisolona"
+      ],
+      "looseKey": "prednisolona",
+      "looseMatchKey": "prednisolona 4.02 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "prednisona-5-mg-comprimido",
+      "name": "prednisona 5 mg comprimido",
+      "activeIngredients": [
+        "prednisona"
+      ],
+      "looseKey": "prednisona",
+      "looseMatchKey": "prednisona 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "prednisona-20-mg-comprimido",
+      "name": "prednisona 20 mg comprimido",
+      "activeIngredients": [
+        "prednisona"
+      ],
+      "looseKey": "prednisona",
+      "looseMatchKey": "prednisona 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "primaquina-15-mg-comprimido",
+      "name": "primaquina 15 mg comprimido",
+      "activeIngredients": [
+        "primaquina"
+      ],
+      "looseKey": "primaquina",
+      "looseMatchKey": "primaquina 15 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "progesterona-200-mg-capsula-gelatinosa",
+      "name": "progesterona 200 mg cápsula gelatinosa",
+      "activeIngredients": [
+        "progesterona"
+      ],
+      "looseKey": "progesterona",
+      "looseMatchKey": "progesterona 200 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "prometazina-cloridrato-25-mg-comprimido",
+      "name": "prometazina, cloridrato 25 mg comprimido",
+      "activeIngredients": [
+        "prometazina"
+      ],
+      "looseKey": "prometazina",
+      "looseMatchKey": "prometazina 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "propiltiuracila-100-mg-comprimido",
+      "name": "propiltiuracila 100 mg comprimido",
+      "activeIngredients": [
+        "propiltiuracila"
+      ],
+      "looseKey": "propiltiuracila",
+      "looseMatchKey": "propiltiuracila 100 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "propranolol-cloridrato-40-mg-comprimido",
+      "name": "propranolol, cloridrato 40 mg comprimido",
+      "activeIngredients": [
+        "propranolol"
+      ],
+      "looseKey": "propranolol",
+      "looseMatchKey": "propranolol 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "raltegravir-ral-100-mg-comprimido",
+      "name": "raltegravir (RAL) 100 mg comprimido",
+      "activeIngredients": [
+        "raltegravir"
+      ],
+      "looseKey": "raltegravir",
+      "looseMatchKey": "raltegravir 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "raltegravir-ral-100-mg-granulado-sache",
+      "name": "raltegravir (RAL) 100 mg granulado sachê",
+      "activeIngredients": [
+        "raltegravir"
+      ],
+      "looseKey": "raltegravir",
+      "looseMatchKey": "raltegravir 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "raltegravir-ral-400-mg-comprimido",
+      "name": "raltegravir (RAL) 400 mg comprimido",
+      "activeIngredients": [
+        "raltegravir"
+      ],
+      "looseKey": "raltegravir",
+      "looseMatchKey": "raltegravir 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "retinol-acetato-vit-a-50-000-ui-ml-colecalciferol-vit-d-10-000-ui-ml-solucao-oral-gotas",
+      "name": "retinol, acetato (vit. A) 50.000 UI/mL + colecalciferol (vit. D) 10.000 UI/mL solução oral gotas",
+      "activeIngredients": [
+        "retinol",
+        "colecalciferol"
+      ],
+      "looseKey": "colecalciferol + retinol",
+      "looseMatchKey": "colecalciferol + retinol 10 ui/ml + 50 ui/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifabutina-150-mg-capsula",
+      "name": "rifabutina 150 mg cápsula",
+      "activeIngredients": [
+        "rifabutina"
+      ],
+      "looseKey": "rifabutina",
+      "looseMatchKey": "rifabutina 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para o tratamento de TB para pacientes em uso de inibidores de protease;",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifampicina-20-mg-ml-2-suspensao-oral",
+      "name": "rifampicina 20 mg/mL (2%) suspensão oral",
+      "activeIngredients": [
+        "rifampicina"
+      ],
+      "looseKey": "rifampicina",
+      "looseMatchKey": "rifampicina 20 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de TB em crianças; cobertura de foco de meningites bacterianas e doenca miningocóccica; tratamento da Infeccção Latente da Tuberculose (ILTB); tratamento de esquemas especiais de TB",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifampicina-300-mg-capsula",
+      "name": "rifampicina 300 mg cápsula",
+      "activeIngredients": [
+        "rifampicina"
+      ],
+      "looseKey": "rifampicina",
+      "looseMatchKey": "rifampicina 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para cobertura de foco de meningites bacterianas e doença meningocóccica; hidradenite supurativa; tratamento da Infeccção Latente da Tuberculose (ILTB); tratamento de esquemas especiais de TB/ MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifampicina-150-mg-isoniazida-75-mg-pirazinamida-400-mg-etambutol-cloridrato-275-mg-comprimido",
+      "name": "rifampicina 150 mg + isoniazida 75 mg + pirazinamida 400 mg + etambutol, cloridrato 275 mg comprimido",
+      "activeIngredients": [
+        "rifampicina",
+        "isoniazida",
+        "pirazinamida",
+        "etambutol"
+      ],
+      "looseKey": "etambutol + isoniazida + pirazinamida + rifampicina",
+      "looseMatchKey": "etambutol + isoniazida + pirazinamida + rifampicina 150 mg + 275 mg + 400 mg + 75 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento exclusivo para tratamento de TB nas Unidades de Saúde; tratamento de esquemas especiais de TB em unidades de referência",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifampicina-75-mg-isoniazida-50-mg-pirazinamida-150-mg-comprimido-dispersivel",
+      "name": "rifampicina 75 mg + isoniazida 50 mg + pirazinamida 150 mg comprimido dispersível",
+      "activeIngredients": [
+        "rifampicina",
+        "isoniazida",
+        "pirazinamida"
+      ],
+      "looseKey": "isoniazida + pirazinamida + rifampicina",
+      "looseMatchKey": "isoniazida + pirazinamida + rifampicina 150 mg + 50 mg + 75 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de tuberculose em crianças",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifampicina-75-mg-isoniazida-50-mg-comprimido-dispersivel",
+      "name": "rifampicina 75 mg + isoniazida 50 mg comprimido dispersível",
+      "activeIngredients": [
+        "rifampicina",
+        "isoniazida"
+      ],
+      "looseKey": "isoniazida + rifampicina",
+      "looseMatchKey": "isoniazida + rifampicina 50 mg + 75 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de tuberculose em crianças",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "rifapentina-150-mg-comprimido",
+      "name": "rifapentina 150 mg comprimido",
+      "activeIngredients": [
+        "rifapentina"
+      ],
+      "looseKey": "rifapentina",
+      "looseMatchKey": "rifapentina 150 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento da Infecção Latente de Tuberculose (ILTB)",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "risperidona-2-mg-comprimido",
+      "name": "risperidona 2 mg comprimido",
+      "activeIngredients": [
+        "risperidona"
+      ],
+      "looseKey": "risperidona",
+      "looseMatchKey": "risperidona 2 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ritonavir-100-mg-ml-po-para-suspensao-oral",
+      "name": "ritonavir 100 mg/mL pó para suspensão oral",
+      "activeIngredients": [
+        "ritonavir"
+      ],
+      "looseKey": "ritonavir",
+      "looseMatchKey": "ritonavir 100 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ritonavir-rtv-100-mg-comprimido",
+      "name": "ritonavir (RTV) 100 mg comprimido",
+      "activeIngredients": [
+        "ritonavir"
+      ],
+      "looseKey": "ritonavir",
+      "looseMatchKey": "ritonavir 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sais-para-reidratacao-oral-po-para-solucao-oral",
+      "name": "sais para reidratação oral pó para solução oral",
+      "activeIngredients": [
+        "sais para reidratação oral pó para solução oral"
+      ],
+      "looseKey": "sais para reidratacao oral po para solucao oral",
+      "looseMatchKey": "sais para reidratacao oral po para solucao oral",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "salbutamol-sulfato-100-mcg-dose-aerossol-oral-frasco",
+      "name": "salbutamol, sulfato 100 mcg/dose aerossol oral frasco",
+      "activeIngredients": [
+        "salbutamol"
+      ],
+      "looseKey": "salbutamol",
+      "looseMatchKey": "salbutamol 100 mcg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sertralina-50-mg-comprimido",
+      "name": "sertralina 50 mg comprimido",
+      "activeIngredients": [
+        "sertralina"
+      ],
+      "looseKey": "sertralina",
+      "looseMatchKey": "sertralina 50 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sinvastatina-10-mg-comprimido",
+      "name": "sinvastatina 10 mg comprimido",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 10 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sinvastatina-20-mg-comprimido",
+      "name": "sinvastatina 20 mg comprimido",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 20 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sinvastatina-40-mg-comprimido",
+      "name": "sinvastatina 40 mg comprimido",
+      "activeIngredients": [
+        "sinvastatina"
+      ],
+      "looseKey": "sinvastatina",
+      "looseMatchKey": "sinvastatina 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sofosbuvir-400-mg-comprimido-revestido",
+      "name": "sofosbuvir 400 mg comprimido revestido",
+      "activeIngredients": [
+        "sofosbuvir"
+      ],
+      "looseKey": "sofosbuvir",
+      "looseMatchKey": "sofosbuvir 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sofosbuvir-400-mg-velpatasvir-100-mg-comprimido-revestido",
+      "name": "sofosbuvir 400 mg + velpatasvir 100 mg comprimido revestido",
+      "activeIngredients": [
+        "sofosbuvir",
+        "velpatasvir"
+      ],
+      "looseKey": "sofosbuvir + velpatasvir",
+      "looseMatchKey": "sofosbuvir + velpatasvir 100 mg + 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sofosbuvir-400-mg-velpatasvir-100-mg-voxilaprevir-100-mg-comprimido-revestido",
+      "name": "sofosbuvir 400 mg + velpatasvir 100 mg + voxilaprevir 100 mg comprimido revestido",
+      "activeIngredients": [
+        "sofosbuvir",
+        "velpatasvir",
+        "voxilaprevir"
+      ],
+      "looseKey": "sofosbuvir + velpatasvir + voxilaprevir",
+      "looseMatchKey": "sofosbuvir + velpatasvir + voxilaprevir 100 mg + 100 mg + 400 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sofosbuvir-200-mg-velpatasvir-50-mg-granulado",
+      "name": "sofosbuvir 200 mg + velpatasvir 50 mg granulado",
+      "activeIngredients": [
+        "sofosbuvir",
+        "velpatasvir"
+      ],
+      "looseKey": "sofosbuvir + velpatasvir",
+      "looseMatchKey": "sofosbuvir + velpatasvir 200 mg + 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência para tratamento de hepatites virais Exclusivamente para pacientes em tratamento de hepatites virais",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sulfadiazina-500-mg-comprimido",
+      "name": "sulfadiazina 500 mg comprimido",
+      "activeIngredients": [
+        "sulfadiazina"
+      ],
+      "looseKey": "sulfadiazina",
+      "looseMatchKey": "sulfadiazina 500 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sulfadiazina-150-mg-ml-solucao-oral",
+      "name": "sulfadiazina 150 mg/mL solução oral",
+      "activeIngredients": [
+        "sulfadiazina"
+      ],
+      "looseKey": "sulfadiazina",
+      "looseMatchKey": "sulfadiazina 150 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento de toxoplasmose",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sulfametoxazol-40-mg-ml-trimetoprima-8-mg-ml-suspensao-oral",
+      "name": "sulfametoxazol 40 mg/mL + trimetoprima 8 mg/mL suspensão oral",
+      "activeIngredients": [
+        "sulfametoxazol",
+        "trimetoprima"
+      ],
+      "looseKey": "sulfametoxazol + trimetoprima",
+      "looseMatchKey": "sulfametoxazol + trimetoprima 40 mg/ml + 8 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sulfametoxazol-800-mg-trimetoprima-160-mg-comprimido",
+      "name": "sulfametoxazol 800 mg + trimetoprima 160 mg comprimido",
+      "activeIngredients": [
+        "sulfametoxazol",
+        "trimetoprima"
+      ],
+      "looseKey": "sulfametoxazol + trimetoprima",
+      "looseMatchKey": "sulfametoxazol + trimetoprima 160 mg + 800 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sulfato-ferroso-heptahidratado-125-mg-ml-equivalente-a-25-mg-de-fe-solucao-oral-gotas",
+      "name": "sulfato ferroso heptahidratado 125 mg/mL (equivalente a 25 mg de Fe++) solução oral gotas",
+      "activeIngredients": [
+        "sulfato ferroso heptahidratado",
+        ") solução oral gotas"
+      ],
+      "looseKey": ") solucao oral gotas + sulfato ferroso heptahidratado",
+      "looseMatchKey": ") solucao oral gotas + sulfato ferroso heptahidratado 125 mg/ml + 25 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "sulfato-ferroso-heptahidratado-equivalente-a-40-mg-de-fe-comprimido",
+      "name": "sulfato ferroso heptahidratado equivalente a 40 mg de Fe++ comprimido",
+      "activeIngredients": [
+        "sulfato ferroso heptahidratado equivalente a",
+        "comprimido"
+      ],
+      "looseKey": "comprimido + sulfato ferroso heptahidratado equivalente a",
+      "looseMatchKey": "comprimido + sulfato ferroso heptahidratado equivalente a 40 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "talidomida-100-mg-comprimido",
+      "name": "talidomida 100 mg comprimido",
+      "activeIngredients": [
+        "talidomida"
+      ],
+      "looseKey": "talidomida",
+      "looseMatchKey": "talidomida 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência em hanseníase",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tenofovir-300-mg-comprimido",
+      "name": "tenofovir 300 mg comprimido",
+      "activeIngredients": [
+        "tenofovir"
+      ],
+      "looseKey": "tenofovir",
+      "looseMatchKey": "tenofovir 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência para tratamento de hepatites virais.",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tenofovir-alafenamida-25-mg-comprimido",
+      "name": "tenofovir alafenamida 25 mg comprimido",
+      "activeIngredients": [
+        "tenofovir alafenamida"
+      ],
+      "looseKey": "tenofovir alafenamida",
+      "looseMatchKey": "tenofovir alafenamida 25 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência para tratamento de hepatites virais.",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tenofovir-tdf-300-mg-lamivudina-3tc-300-mg-efavirenz-efz-600-mg-comprimido",
+      "name": "tenofovir (TDF) 300 mg + lamivudina (3TC) 300 mg + efavirenz (EFZ) 600 mg comprimido",
+      "activeIngredients": [
+        "tenofovir",
+        "lamivudina (",
+        "efavirenz"
+      ],
+      "looseKey": "efavirenz + lamivudina ( + tenofovir",
+      "looseMatchKey": "efavirenz + lamivudina ( + tenofovir 300 mg + 300 mg + 600 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tenofovir-tdf-300-mg-entricitabina-ftc-200-mg",
+      "name": "tenofovir (TDF) 300 mg + entricitabina (FTC) 200 mg",
+      "activeIngredients": [
+        "tenofovir",
+        "entricitabina"
+      ],
+      "looseKey": "entricitabina + tenofovir",
+      "looseMatchKey": "entricitabina + tenofovir 200 mg + 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tenofovir-tdf-300-mg-lamivudina-3tc-300-mg",
+      "name": "tenofovir (TDF) 300 mg + lamivudina (3TC) 300 mg",
+      "activeIngredients": [
+        "tenofovir",
+        "lamivudina ("
+      ],
+      "looseKey": "lamivudina ( + tenofovir",
+      "looseMatchKey": "lamivudina ( + tenofovir 300 mg + 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS e em unidades de referência para tratamento de hepatites virais.",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "teofilina-100-mg-capsula-de-liberacao-prolongada",
+      "name": "teofilina 100 mg cápsula de liberação prolongada",
+      "activeIngredients": [
+        "teofilina"
+      ],
+      "looseKey": "teofilina",
+      "looseMatchKey": "teofilina 100 mg",
+      "extendedRelease": true,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "terbinafina-250-mg-comprimido",
+      "name": "terbinafina 250 mg comprimido",
+      "activeIngredients": [
+        "terbinafina"
+      ],
+      "looseKey": "terbinafina",
+      "looseMatchKey": "terbinafina 250 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "terizidona-250-mg-comprimido",
+      "name": "terizidona 250 mg comprimido",
+      "activeIngredients": [
+        "terizidona"
+      ],
+      "looseKey": "terizidona",
+      "looseMatchKey": "terizidona 250 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência - exclusivo para tratamento de esquemas especiais de TB/MNT",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "testosterona-undecanoato-250-mg-ml-solucao-injetavel",
+      "name": "testosterona, undecanoato 250 mg/mL solução injetável",
+      "activeIngredients": [
+        "testosterona"
+      ],
+      "looseKey": "testosterona",
+      "looseMatchKey": "testosterona 250 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes cadastrados no Programa de Saúde Integral da População LGBTIA+ da SMS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tiamazol-5-mg-comprimido",
+      "name": "tiamazol 5 mg comprimido",
+      "activeIngredients": [
+        "tiamazol"
+      ],
+      "looseKey": "tiamazol",
+      "looseMatchKey": "tiamazol 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tiamina-cloridrato-vit-b1-300-mg-comprimido",
+      "name": "tiamina, cloridrato (vit. B1) 300 mg comprimido",
+      "activeIngredients": [
+        "tiamina"
+      ],
+      "looseKey": "tiamina",
+      "looseMatchKey": "tiamina 300 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "timolol-maleato-5-mg-ml-0-5-solucao-oftalmica",
+      "name": "timolol, maleato 5 mg/mL (0,5%) solução oftálmica",
+      "activeIngredients": [
+        "timolol"
+      ],
+      "looseKey": "timolol",
+      "looseMatchKey": "timolol 5 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Dispensação mediante prescrição da rede pública ou privada exclusiva por médico oftalmologista",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tinidazol-500-mg-comprimido",
+      "name": "tinidazol 500 mg comprimido",
+      "activeIngredients": [
+        "tinidazol"
+      ],
+      "looseKey": "tinidazol",
+      "looseMatchKey": "tinidazol 500 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tobramicina-3-mg-ml-0-3-solucao-oftalmica",
+      "name": "tobramicina 3 mg/mL (0,3%) solução oftálmica",
+      "activeIngredients": [
+        "tobramicina"
+      ],
+      "looseKey": "tobramicina",
+      "looseMatchKey": "tobramicina 3 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "tramadol-50-mg-comprimido",
+      "name": "tramadol 50 mg comprimido",
+      "activeIngredients": [
+        "tramadol"
+      ],
+      "looseKey": "tramadol",
+      "looseMatchKey": "tramadol 50 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em unidades de referência Exclusivamente para pacientes em tratamento em Hospital Dia",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "ureia-100-mg-g-10-creme",
+      "name": "ureia 100 mg/g (10%) creme",
+      "activeIngredients": [
+        "ureia"
+      ],
+      "looseKey": "ureia",
+      "looseMatchKey": "ureia 100 mg/g",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento para pacientes em tratamento nas unidades de hanseníase",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "valaciclovir-500-mg-comprimido",
+      "name": "valaciclovir 500 mg comprimido",
+      "activeIngredients": [
+        "valaciclovir"
+      ],
+      "looseKey": "valaciclovir",
+      "looseMatchKey": "valaciclovir 500 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS Exclusivamente para pacientes em tratamento nestas unidades",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "valeriana-officinalis-l-valeriana-sesquiterpenos-0-8-mg-a-3-5-mg-comprimido",
+      "name": "Valeriana officinalis L. (valeriana) sesquiterpenos 0,8 mg a 3,5 mg comprimido",
+      "activeIngredients": [
+        "valeriana officinalis l. sesquiterpenos"
+      ],
+      "looseKey": "valeriana officinalis l. sesquiterpenos",
+      "looseMatchKey": "valeriana officinalis l. sesquiterpenos 0.8 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível nas Unidades de Saúde Exclusivamente para pacientes em tratamento na Rede Municipal de Saúde O rientação técnica para prescrição e dispensação",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "valproato-de-sodio-57-624-mg-ml-equivalente-a-50-mg-de-acido-valproico-solucao-oral-ou-xarope",
+      "name": "valproato de sódio 57, 624 mg/mL (equivalente a 50 mg de ácido valpróico) solução oral ou xarope",
+      "activeIngredients": [
+        "valproato de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 624 mg/ml",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "valproato-de-sodio-576-mg-equivalente-a-500-mg-de-acido-valproico-comprimido-revestido-ou-capsula",
+      "name": "valproato de sódio 576 mg (equivalente a 500 mg de ácido valpróico) comprimido revestido ou cápsula",
+      "activeIngredients": [
+        "valproato de sódio"
+      ],
+      "looseKey": "sodio",
+      "looseMatchKey": "sodio 576 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "varfarina-sodica-2-5-mg-comprimido",
+      "name": "varfarina sódica 2,5 mg comprimido",
+      "activeIngredients": [
+        "varfarina sódica"
+      ],
+      "looseKey": "varfarina",
+      "looseMatchKey": "varfarina 2.5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "varfarina-sodica-5-mg-comprimido",
+      "name": "varfarina sódica 5 mg comprimido",
+      "activeIngredients": [
+        "varfarina sódica"
+      ],
+      "looseKey": "varfarina",
+      "looseMatchKey": "varfarina 5 mg",
+      "extendedRelease": false,
+      "access": "open",
+      "availability": "medicamento disponível nas Unidades de Saúde",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "zidovudina-azt-10-mg-ml-solucao-injetavel",
+      "name": "zidovudina (AZT) 10 mg/mL solução injetável",
+      "activeIngredients": [
+        "zidovudina"
+      ],
+      "looseKey": "zidovudina",
+      "looseMatchKey": "zidovudina 10 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "zidovudina-azt-10-mg-ml-solucao-oral",
+      "name": "zidovudina (AZT) 10 mg/mL solução oral",
+      "activeIngredients": [
+        "zidovudina"
+      ],
+      "looseKey": "zidovudina",
+      "looseMatchKey": "zidovudina 10 mg/ml",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "zidovudina-azt-100-mg-capsula",
+      "name": "zidovudina (AZT) 100 mg cápsula",
+      "activeIngredients": [
+        "zidovudina"
+      ],
+      "looseKey": "zidovudina",
+      "looseMatchKey": "zidovudina 100 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    },
+    {
+      "programId": "remume_sp",
+      "key": "zidovudina-azt-300-mg-lamivudina-3tc-150-mg-comprimido",
+      "name": "zidovudina (AZT) 300 mg + lamivudina (3TC) 150 mg comprimido",
+      "activeIngredients": [
+        "zidovudina",
+        "lamivudina ("
+      ],
+      "looseKey": "lamivudina ( + zidovudina",
+      "looseMatchKey": "lamivudina ( + zidovudina 150 mg + 300 mg",
+      "extendedRelease": false,
+      "access": "restricted",
+      "availability": "medicamento disponível em SAE/IST/AIDS",
+      "group": null,
+      "conditions": [],
+      "conditionCodes": [],
+      "rules": [],
+      "sourceUrl": null
+    }
+  ]
+}
