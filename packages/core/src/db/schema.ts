@@ -1,6 +1,7 @@
 import {
   type AnyPgColumn,
   boolean,
+  customType,
   date,
   integer,
   jsonb,
@@ -269,4 +270,36 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
   error: text(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   finishedAt: timestamp({ withTimezone: true }),
+});
+
+const bytea = customType<{ data: Buffer }>({ dataType: () => 'bytea' });
+
+/** One step of a call for the calls panel: what the AI or our code did, and when (ms after the call started). */
+export interface CallEvent {
+  atMs: number;
+  text: string;
+}
+
+/**
+ * Every phone call (reminder, call back, family member, pharmacy) with its transcript, the steps our code
+ * took and the recording made by Asterisk. Shown on the calls panel of the proof of concept.
+ * The recording lives in R2 (recordingKey) or, without R2, in this row (recording).
+ */
+export const callLogs = pgTable('call_logs', {
+  id: uuid().primaryKey().defaultRandom(),
+  sessionId: text().notNull().unique(),
+  kind: text().$type<'reminder' | 'recall' | 'check_in' | 'caregiver' | 'pharmacy'>(),
+  familyId: uuid().references(() => families.id, { onDelete: 'cascade' }),
+  doseId: uuid().references(() => doses.id, { onDelete: 'cascade' }),
+  inquiryId: uuid().references(() => pharmacyInquiries.id, { onDelete: 'cascade' }),
+  outcome: text(),
+  durationSeconds: integer(),
+  // Emptied after VOICE_TRANSCRIPT_RETENTION_DAYS, with events and recording.
+  transcript: jsonb().$type<{ speaker: string; text: string }[]>().notNull().default([]),
+  events: jsonb().$type<CallEvent[]>().notNull().default([]),
+  recordingKey: text(),
+  recording: bytea(),
+  recordingBytes: integer(),
+  startedAt: timestamp({ withTimezone: true }),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });

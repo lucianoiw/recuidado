@@ -28,6 +28,8 @@ export interface VoiceConfig {
   ami?: AmiConfig;
   /** Classify the other side of a pharmacy call (menu, hold, person...) with GPT-Live Decisions. */
   pharmacyDecisions: boolean;
+  /** Record every call in Asterisk (MixMonitor through AMI) for the calls panel. Needs ami. */
+  recordCalls: boolean;
 }
 
 function required(env: NodeJS.ProcessEnv, name: string): string {
@@ -71,6 +73,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     apiUrl: env.API_URL?.trim() || undefined,
     ami: loadAmi(env),
     pharmacyDecisions: (env.PHARMACY_DECISIONS?.trim() || "on") !== "off",
+    recordCalls: (env.RECORD_CALLS?.trim() || "on") !== "off",
   };
 }
 

@@ -63,6 +63,13 @@ else
   export AMI_ENABLED=no AMI_SECRET=unused
 fi
 
+# Where upload-recording.sh posts call recordings (calls panel). Readable by Asterisk only.
+mkdir -p /etc/recuidado
+printf 'API_URL=%s\nVOICE_API_TOKEN=%s\n' "${API_URL:-}" "${VOICE_API_TOKEN:-}" > /etc/recuidado/upload.env
+chown root:asterisk /etc/recuidado/upload.env
+chmod 640 /etc/recuidado/upload.env
+mkdir -p /var/spool/asterisk/recuidado && chown asterisk:asterisk /var/spool/asterisk/recuidado
+
 VARS='$AMI_ENABLED $AMI_SECRET $SIP_TLS_PORT $NVOIP_LOCAL_PORT $NVOIP_SIP_HOST $NVOIP_SIP_USER $NVOIP_SIP_PASSWORD $OPENAI_SIP_USERNAME $OPENAI_SIP_PASSWORD $RTP_START $RTP_END $ALLOWED_REGEX $EXTERNAL_ADDR_LINES'
 for f in /opt/recuidado/templates/*.conf; do
   envsubst "$VARS" < "$f" > "/etc/asterisk/$(basename "$f")"

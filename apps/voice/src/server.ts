@@ -135,7 +135,7 @@ const server = createServer(async (req, res) => {
       const startedAt = Date.now();
       let callId: string | undefined;
       try {
-        const { sessionId, call } = await service.start(callInput, (status) => {
+        const { sessionId, call, trail } = await service.start(callInput, (status) => {
           telemetry.capture(`call_${status}`, { dose_id: input.doseId, call_id: callId }, distinctId);
         });
         callId = sessionId;
@@ -176,6 +176,16 @@ const server = createServer(async (req, res) => {
             properties: { dose_id: input.doseId, outcome: result.outcome },
           });
           await service.report(input.doseId, { ...result, checkIn: input.checkIn, recall: input.recall });
+          await service.reportLog({
+            sessionId,
+            kind: input.checkIn ? "check_in" : input.recall ? "recall" : "reminder",
+            doseId: input.doseId,
+            outcome: result.outcome,
+            durationSeconds: result.durationSeconds,
+            startedAt: trail.startedAt.toISOString(),
+            transcript: result.transcript,
+            events: trail.events,
+          });
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {
@@ -199,7 +209,7 @@ const server = createServer(async (req, res) => {
       }
       const props = { dose_id: typeof b.doseId === "string" ? b.doseId : undefined };
       try {
-        const { sessionId, call } = await service.startAlert(b.phone, b.message.trim());
+        const { sessionId, call, trail } = await service.startAlert(b.phone, b.message.trim());
         telemetry.capture("alert_call_started", { ...props, call_id: sessionId }, telemetry.systemId);
         void call.result.then((result) => {
           telemetry.info(`alert call ${sessionId} ended: delivered=${result.delivered}`, { ...props, call_id: sessionId });
@@ -208,6 +218,16 @@ const server = createServer(async (req, res) => {
             { ...props, call_id: sessionId, answered: result.answered, delivered: result.delivered, end_reason: result.endReason },
             telemetry.systemId,
           );
+          void service.reportLog({
+            sessionId,
+            kind: "caregiver",
+            doseId: props.dose_id,
+            outcome: result.delivered ? "delivered" : result.answered ? "answered" : "no_answer",
+            durationSeconds: result.durationSeconds,
+            startedAt: trail.startedAt.toISOString(),
+            transcript: result.spoken ? [{ speaker: "assistant", text: result.spoken }] : [],
+            events: trail.events,
+          });
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {
@@ -227,7 +247,7 @@ const server = createServer(async (req, res) => {
       const distinctId = input.familyId ?? telemetry.systemId;
       const props = { inquiry_id: input.inquiryId, medications: input.medications.length };
       try {
-        const { sessionId, call } = await service.startPharmacy(input);
+        const { sessionId, call, trail } = await service.startPharmacy(input);
         const record: PharmacyCallRecord = { inquiryId: input.inquiryId, call };
         pharmacyCalls.set(sessionId, record);
         telemetry.capture("pharmacy_call_started", { ...props, call_id: sessionId }, distinctId);
@@ -261,6 +281,16 @@ const server = createServer(async (req, res) => {
             properties: { inquiry_id: input.inquiryId, outcome: result.outcome },
           });
           await service.reportPharmacy(input.inquiryId, result);
+          await service.reportLog({
+            sessionId,
+            kind: "pharmacy",
+            inquiryId: input.inquiryId,
+            outcome: result.outcome,
+            durationSeconds: result.durationSeconds,
+            startedAt: trail.startedAt.toISOString(),
+            transcript: result.transcript,
+            events: trail.events,
+          });
         });
         return json(res, 202, { callId: sessionId });
       } catch (err) {

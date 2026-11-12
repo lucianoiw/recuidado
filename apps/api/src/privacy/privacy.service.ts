@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { and, asc, eq, inArray, isNull, lt, sql } from 'drizzle-orm';
 import {
   alerts,
+  callLogs,
   costShares,
   type Database,
   DB,
@@ -70,6 +71,11 @@ export class PrivacyService implements OnApplicationBootstrap, OnApplicationShut
         ),
       )
       .returning({ id: voiceCalls.id });
+    // The calls panel: transcript, steps and the recording kept in Postgres. R2 objects expire by the bucket's lifecycle rule.
+    await this.db
+      .update(callLogs)
+      .set({ transcript: [], events: [], recording: null })
+      .where(and(lt(callLogs.createdAt, before), sql`(jsonb_array_length(${callLogs.transcript}) > 0 or ${callLogs.recording} is not null)`));
     if (purged.length > 0) {
       telemetry.capture('transcripts_purged', { calls: purged.length, retention_days: days });
       this.logger.log(`Emptied ${purged.length} call transcripts older than ${days} days.`);

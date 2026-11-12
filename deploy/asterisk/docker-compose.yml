@@ -17,6 +17,10 @@ services:
       - CALL_ALLOWED_NUMBERS=${CALL_ALLOWED_NUMBERS}
       # Optional: enables AMI on 5038 (private networks only) for recuidado/voice. Same value as ASTERISK_AMI_SECRET there.
       - AMI_SECRET=${AMI_SECRET:-}
+      # Call recordings: Asterisk posts each WAV to the API (POST /call-logs/<session>/recording).
+      # Same values as API_URL and VOICE_API_TOKEN in recuidado/voice. Empty: recordings stay on disk.
+      - API_URL=${API_URL:-}
+      - VOICE_API_TOKEN=${VOICE_API_TOKEN:-}
       - ACME_JSON=/acme/acme.json
     volumes:
       # Certificate Traefik (Coolify proxy) issued for SIP_DOMAIN, through the

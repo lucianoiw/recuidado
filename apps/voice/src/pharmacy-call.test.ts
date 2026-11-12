@@ -217,6 +217,7 @@ test("pharmacy session has no greeting input and both tools", () => {
     port: 0,
     voiceApiToken: "t",
     pharmacyDecisions: true,
+    recordCalls: false,
   } satisfies VoiceConfig;
   const req = new LiveClient(config).buildPharmacySessionRequest("+5511912345678", context);
   assert.equal("input" in req.session, false);

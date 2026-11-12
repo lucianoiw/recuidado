@@ -26,6 +26,9 @@ export interface AlertCallResult {
   answered: boolean;
   /** True when the assistant reached the end of the message (the SAMU line). */
   delivered: boolean;
+  /** What the assistant said (the calls panel). */
+  spoken: string;
+  durationSeconds?: number;
   endReason?: string;
   error?: string;
 }
@@ -48,6 +51,7 @@ type LiveEvent = { type: string; event_id?: string; [key: string]: unknown };
 export class AlertCall {
   private readonly seen = new Set<string>();
   private answered = false;
+  private answeredAt?: number;
   private delivered = false;
   private spoken = "";
   private endReason?: string;
@@ -98,6 +102,7 @@ export class AlertCall {
       case "transport.answered":
         this.answered = true;
         this.log("alert call answered");
+        this.answeredAt = Date.now();
         this.opts.socket.send(
           JSON.stringify({
             type: "session.commentary.append",
@@ -159,6 +164,8 @@ export class AlertCall {
       sessionId: this.opts.sessionId,
       answered: this.answered,
       delivered: this.delivered,
+      spoken: this.spoken.trim(),
+      durationSeconds: this.answeredAt ? (Date.now() - this.answeredAt) / 1000 : undefined,
       endReason: this.endReason,
       error: this.error,
     });

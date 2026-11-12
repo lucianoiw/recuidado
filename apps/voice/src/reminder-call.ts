@@ -283,6 +283,7 @@ export class ReminderCall {
     const emergency = args.emergency === true;
     if (taken !== undefined) this.answer = { taken, feelsUnwell: emergency ? true : feelsUnwell, emergency, note };
     this.log(`dose answer recorded: taken=${String(taken)}`);
+    this.log(`function ${DOSE_TOOL_NAME}(${item.arguments ?? "{}"})`);
 
     this.send({
       type: "response.item.create",
@@ -311,12 +312,14 @@ export class ReminderCall {
       this.emergencyLinePending = true;
       if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
       this.goodbyeTimer = undefined;
+      const line = withoutSaidOpener(requiredLine, this.assistantSinceGreeting);
       this.log("answer recorded without the family line: asking for it");
+      this.log(`required line sent: "${line}"`);
       this.send({
         type: "session.commentary.append",
         event_id: `emergency_${item.call_id}`,
         delegation_id: null,
-        content: `Say now, calmly and exactly: "${withoutSaidOpener(requiredLine, this.assistantSinceGreeting)}"`,
+        content: `Say now, calmly and exactly: "${line}"`,
       });
       this.armSilenceHangup();
       return;

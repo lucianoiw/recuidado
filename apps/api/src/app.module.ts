@@ -17,6 +17,7 @@ import { PushModule } from './push/push.module.js';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { PrivacyModule } from './privacy/privacy.module.js';
 import { VoiceModule } from './voice/voice.module.js';
+import { CallsModule } from './calls/calls.module.js';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { VoiceModule } from './voice/voice.module.js';
     PrescriptionsModule,
     PrivacyModule,
     VoiceModule,
+    CallsModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
