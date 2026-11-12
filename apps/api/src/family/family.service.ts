@@ -1,4 +1,6 @@
 import { randomUUID } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import {
   ForbiddenException,
   Inject,
@@ -86,16 +88,18 @@ export class FamilyService implements OnApplicationBootstrap {
     const ids = await this.ensureDemoFamily();
     await this.resetDemoFirstContact(ids.familyId);
     await this.clearDemoAlerts(ids.familyId);
-    if (!this.config.get<boolean>('DEMO_SEED_ENABLED')) return;
-    try {
-      // Fixed story of Dona Maria: three medicines, times, stock and a week of history.
-      const medIds = await seedDemoFamily(this.db, ids);
-      for (const id of medIds) await this.doses.scheduleForMedication(id);
-      this.logger.log('Demo family seeded.');
-    } catch (error) {
-      // The app works without the demo story; never block the boot on it.
-      this.logger.error(`Demo family seed failed: ${String(error)}`);
+    if (this.config.get<boolean>('DEMO_SEED_ENABLED')) {
+      try {
+        // Fixed story of Dona Maria: three medicines, times, stock and a week of history.
+        const medIds = await seedDemoFamily(this.db, ids);
+        for (const id of medIds) await this.doses.scheduleForMedication(id);
+        this.logger.log('Demo family seeded.');
+      } catch (error) {
+        // The app works without the demo story; never block the boot on it.
+        this.logger.error(`Demo family seed failed: ${String(error)}`);
+      }
     }
+    await this.seedDemoPhoto(ids.patientId);
   }
 
   /** Deletes the demo family alerts older than DEMO_CLEAR_ALERTS_BEFORE (test calls), before the seed adds its history back. */
@@ -406,6 +410,25 @@ export class FamilyService implements OnApplicationBootstrap {
       .where(and(eq(medications.id, medicationId), eq(medications.patientId, patientId)));
     if (!row) throw new NotFoundException('Remédio não encontrado.');
     return row.photoKey;
+  }
+
+  /**
+   * Photo of the Losartana box in the demo family, so the video shows her screen with the
+   * family's photo. Synthetic image (generated, no real brand). Sent to R2 on every boot.
+   */
+  private async seedDemoPhoto(patientId: string): Promise<void> {
+    if (!this.r2) return;
+    try {
+      const key = 'demo/losartana.jpg';
+      const file = await readFile(join(import.meta.dirname, '..', '..', 'assets', 'demo-losartana.jpg'));
+      await this.r2.put(key, file, 'image/jpeg');
+      await this.db
+        .update(medications)
+        .set({ photoKey: key })
+        .where(and(eq(medications.patientId, patientId), eq(medications.name, 'Losartana')));
+    } catch (error) {
+      this.logger.error(`Demo photo seed failed: ${String(error)}`);
+    }
   }
 
   /** Family stops a medication: it and its doses are removed. */
