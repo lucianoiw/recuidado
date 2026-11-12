@@ -73,6 +73,8 @@ export interface Medication {
   highCostPath?: HighCostStatus | null;
   /** CMED ceiling price (PMC, São Paulo); null when the list has no match. */
   price?: MedicationPrice | null;
+  /** Photo of the real box or pill taken by the family (signed link); null when there is none. */
+  photoUrl?: string | null;
 }
 
 export interface MedicationPrice {
@@ -394,6 +396,20 @@ export async function updateMedication(
 export async function removeMedication(id: string): Promise<void> {
   const res = await apiFetch(`/family/medications/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error(await errorMessage(res, "Não deu para tirar o remédio."));
+}
+
+/** Family saves a photo of the real box or pill: her screen shows only this photo. */
+export async function setMedicationPhoto(id: string, photo: Blob): Promise<void> {
+  const form = new FormData();
+  form.append("file", photo, "foto.jpg");
+  const res = await apiFetch(`/family/medications/${id}/photo`, { method: "PUT", body: form });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para salvar a foto."));
+}
+
+/** Family removes the photo: her screen shows name, dose and time only. */
+export async function removeMedicationPhoto(id: string): Promise<void> {
+  const res = await apiFetch(`/family/medications/${id}/photo`, { method: "DELETE" });
+  if (!res.ok) throw new Error(await errorMessage(res, "Não deu para tirar a foto."));
 }
 
 export type DemoStepState = "waiting" | "active" | "done" | "skipped" | "failed";

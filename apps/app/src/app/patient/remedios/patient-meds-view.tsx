@@ -74,6 +74,14 @@ export function PatientMedsView() {
         {meds.map((m) => (
           <li key={m.id}>
             <Card className="flex flex-col gap-3 px-5 py-5">
+              {m.photoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element -- signed R2 link, taken by the family
+                <img
+                  src={m.photoUrl}
+                  alt={`Foto de ${m.name}`}
+                  className="h-44 w-full rounded-2xl border border-line bg-surface object-contain"
+                />
+              ) : null}
               <div className="flex items-start gap-2.5">
                 <span className="flex h-9 shrink-0 items-center text-brand">
                   <PillIcon size={28} />

@@ -11,12 +11,20 @@ import {
   Post,
   Put,
   UnauthorizedException,
+  UnsupportedMediaTypeException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { z } from 'zod';
 import { Auth, type AuthContext, CaregiverId, FamilyId } from '../auth/auth.context.js';
 import { AuthService } from '../auth/auth.service.js';
 import { FamilyService } from './family.service.js';
 import { buyChoiceBody, highCostBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
+
+/** Photos of the box or pill. The app shrinks them before sending; this is a ceiling. */
+const MAX_PHOTO_BYTES = 8 * 1024 * 1024;
+const PHOTO_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
@@ -117,6 +125,27 @@ export class FamilyController {
     @FamilyId({ write: true }) familyId: string | null,
   ) {
     await this.family.saveHighCost(familyId, id, parse(highCostBody, body));
+  }
+
+  /** Photo of the real box or pill (multipart, field "file"). Her screen shows only this photo. */
+  @Put('medications/:id/photo')
+  @HttpCode(204)
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: MAX_PHOTO_BYTES, files: 1 } }))
+  async setMedicationPhoto(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @UploadedFile() file: { buffer: Buffer; mimetype: string } | undefined,
+    @FamilyId({ write: true }) familyId: string | null,
+  ) {
+    if (!file) throw new BadRequestException('Envie a foto no campo "file".');
+    if (!PHOTO_TYPES.has(file.mimetype)) throw new UnsupportedMediaTypeException('Envie uma foto JPG, PNG ou WEBP.');
+    await this.family.setMedicationPhoto(familyId, id, { data: file.buffer, contentType: file.mimetype });
+  }
+
+  /** Removes the photo: her screen shows name, dose and time only. */
+  @Delete('medications/:id/photo')
+  @HttpCode(204)
+  async removeMedicationPhoto(@Param('id', new ParseUUIDPipe()) id: string, @FamilyId({ write: true }) familyId: string | null) {
+    await this.family.removeMedicationPhoto(familyId, id);
   }
 
   /** Family stops a medication. */

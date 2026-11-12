@@ -1,0 +1,1 @@
+ALTER TABLE "medications" ADD COLUMN "photo_key" text;

@@ -55,6 +55,9 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
         <span className="text-[15px] text-muted">
           {m.times.length > 0 ? m.times.join(", ") : "Sem horário definido"}
         </span>
+        <span className="text-[14px] text-muted">
+          {m.photoUrl ? "Com foto do remédio no app dela" : "Sem foto: toque para tirar a foto da caixa"}
+        </span>
         {freeWhere(m) ? (
           <span className="mt-1 text-[14px] leading-snug text-brand">
             <b>Grátis em:</b> {freeWhere(m)}

@@ -152,8 +152,10 @@ export function PatientView() {
     );
   }
 
-  // The first caregiver with a phone: one big button to reach the family.
-  const callable = data.caregivers.find((c) => telHref(c) !== null);
+  // Caregivers with a phone. One: call straight away. More: a screen with one button each.
+  const callable = data.caregivers.filter((c) => telHref(c) !== null);
+  // Photo of the real box or pill, only when the family took one. Never a generic picture.
+  const photoOf = new Map(data.medications.map((m) => [m.id, m.photoUrl ?? null]));
 
   return (
     <>
@@ -173,15 +175,25 @@ export function PatientView() {
           </p>
           <ul className="flex flex-col gap-3.5">
             {due.map((d) => (
-              <li key={d.id} className="flex items-start gap-2.5">
-                <span className="flex h-9 shrink-0 items-center text-brand">
-                  <PillIcon size={28} />
-                </span>
-                <div className="flex min-w-0 flex-col">
-                  <h2 className="text-[30px] font-bold leading-tight">{d.medicationName}</h2>
-                  {d.strength ? (
-                    <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
-                  ) : null}
+              <li key={d.id} className="flex flex-col gap-2.5">
+                {photoOf.get(d.medicationId) ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- signed R2 link
+                  <img
+                    src={photoOf.get(d.medicationId)!}
+                    alt={`Foto de ${d.medicationName}`}
+                    className="h-52 w-full rounded-2xl border border-line bg-surface object-contain"
+                  />
+                ) : null}
+                <div className="flex items-start gap-2.5">
+                  <span className="flex h-9 shrink-0 items-center text-brand">
+                    <PillIcon size={28} />
+                  </span>
+                  <div className="flex min-w-0 flex-col">
+                    <h2 className="text-[30px] font-bold leading-tight">{d.medicationName}</h2>
+                    {d.strength ? (
+                      <span className="text-[22px] text-muted">{d.strength.replace(/ /g, "\u00a0")}</span>
+                    ) : null}
+                  </div>
                 </div>
               </li>
             ))}
@@ -230,11 +242,16 @@ export function PatientView() {
           <PillIcon size={26} />
           Meus remédios
         </Link>
-        {callable ? (
-          <a href={telHref(callable)!} className={buttonClass({ variant: "secondary", size: "lg" })}>
+        {callable.length === 1 ? (
+          <a href={telHref(callable[0])!} className={buttonClass({ variant: "secondary", size: "lg" })}>
             <PhoneIcon size={26} />
-            Ligar para {callable.name.trim().split(/\s+/)[0]}
+            Ligar para {callable[0].name.trim().split(/\s+/)[0]}
           </a>
+        ) : callable.length > 1 ? (
+          <Link href="/patient/ligar" className={buttonClass({ variant: "secondary", size: "lg" })}>
+            <PhoneIcon size={26} />
+            Ligar para a família
+          </Link>
         ) : null}
         <EnableNotifications memberId={data.patient.id} label="Receber lembretes no celular" large />
       </div>
