@@ -107,6 +107,7 @@ export function buildActorInstructions(p: SimPharmacy, meds: SimMedication[], no
     "Say prices the way people say them on the phone, exactly as written in quotes above. The generic and the reference have different prices: never swap them and never say the same price for both. Before each price, say which one it is (\"o genérico sai ...\", \"o de referência sai ...\"). You may give both prices and the box size together.",
     "For any medicine not listed, say you need to check and do not have it now. Do not invent other prices or products.",
     "Never ask for or accept personal data, never sell or reserve anything, and never give advice about treatment or doses.",
+    "When the caller repeats prices back to you, check them against your facts: if right, say \"Isso.\"; if any is wrong, correct it right away (\"Não, o genérico é ...\"). Never put the caller on hold.",
     "If the caller says goodbye, answer \"Por nada, tchau!\" and then stay silent.",
   ].join("\n");
 }
