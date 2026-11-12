@@ -36,7 +36,7 @@ describe('freeAccessOf', () => {
     expect(entresto.highCostConditions?.[0]).toMatch(/Insuficiência cardíaca/);
     const ceaf = entresto.programs?.find((p) => p.programId === 'ceaf_sp');
     expect(ceaf?.conditionCodes).toEqual(['I500', 'I501', 'I509']);
-    expect(ceaf?.rules.map((r) => r.kind)).toEqual(['min_age', 'note']);
+    expect(ceaf?.rules.map((r) => r.kind)).toEqual(['min_age', 'start_max_age']);
   });
 });
 

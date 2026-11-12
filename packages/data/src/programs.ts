@@ -20,6 +20,11 @@ export type ProgramKind = "free" | "high_cost" | "home_delivery" | "supplies" | 
 export type ProgramRule =
   | { kind: "min_age"; value: number; text: string }
   | { kind: "max_age"; value: number; text: string }
+  /**
+   * Oldest age to start the treatment (Alto Custo protocols). Who already receives it keeps it, so an
+   * older patient is "missing" (we do not know if she already receives it), never "no".
+   */
+  | { kind: "start_max_age"; value: number; text: string }
   /** The patient must have one of these conditions (we never know it for sure: always "missing"). */
   | { kind: "condition"; value: string[]; text: string }
   /** IBGE code of the city ("3550308") or state ("35") the patient must live in. */
@@ -105,6 +110,8 @@ export function checkRule(rule: ProgramRule, patient: Patient = {}): CheckedRule
         return age === null ? "missing" : age >= rule.value ? "yes" : "no";
       case "max_age":
         return age === null ? "missing" : age <= rule.value ? "yes" : "no";
+      case "start_max_age":
+        return age !== null && age <= rule.value ? "yes" : "missing";
       case "residence":
         if (!patient.cityIbge) return "missing";
         return patient.cityIbge.startsWith(rule.value) ? "yes" : "no";

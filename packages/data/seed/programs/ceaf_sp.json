@@ -7,7 +7,7 @@
     "region": "35",
     "channel": "Na Farmácia de Medicamentos Especializados do Estado, depois que o médico preenche o laudo (LME).",
     "sourceUrl": "https://saude.sp.gov.br/ses/perfil/gestor/assistencia-farmaceutica/medicamentos-dos-componentes-da-assistencia-farmaceutica/links-do-componente-especializado-da-assistencia-farmaceutica/relacao-estadual-de-medicamentos-do-componente-especializado-da-assistencia-farmaceutica/consulta-por-medicamento",
-    "version": "2026-11-12",
+    "version": "2026-11-12-r2",
     "documents": [
       "Laudo LME original, preenchido pelo médico",
       "Receita original em duas vias",
@@ -7765,7 +7765,8 @@
           "text": "a partir de 18 anos"
         },
         {
-          "kind": "note",
+          "kind": "start_max_age",
+          "value": 75,
           "text": "para começar o tratamento pelo SUS, até 75 anos; quem já recebe continua depois"
         }
       ],
@@ -7799,7 +7800,8 @@
           "text": "a partir de 18 anos"
         },
         {
-          "kind": "note",
+          "kind": "start_max_age",
+          "value": 75,
           "text": "para começar o tratamento pelo SUS, até 75 anos; quem já recebe continua depois"
         }
       ],
@@ -7833,7 +7835,8 @@
           "text": "a partir de 18 anos"
         },
         {
-          "kind": "note",
+          "kind": "start_max_age",
+          "value": 75,
           "text": "para começar o tratamento pelo SUS, até 75 anos; quem já recebe continua depois"
         }
       ],

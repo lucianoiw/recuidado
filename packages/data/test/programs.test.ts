@@ -30,6 +30,18 @@ describe("program index", () => {
     expect(access.highCost).toBe(true);
     expect(access.highCostConditions.length).toBeGreaterThan(0);
   });
+
+  it("checks the Alto Custo age to start: yes within it, missing past it (she may already receive it)", () => {
+    const startRule = (age?: number) =>
+      index
+        .find("sacubitril + valsartana", "97 mg + 103 mg", "Entresto", age === undefined ? {} : { age })
+        .programs.find((p) => p.programId === "ceaf_sp")
+        ?.rules.find((r) => r.kind === "start_max_age");
+    expect(startRule(68)?.status).toBe("yes");
+    expect(startRule(80)?.status).toBe("missing");
+    expect(startRule()?.status).toBe("missing");
+    expect(checkRule({ kind: "start_max_age", value: 75, text: "" }, { age: 75 }).status).toBe("yes");
+  });
 });
 
 describe("coverage map", () => {
