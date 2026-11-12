@@ -60,6 +60,22 @@ function reais(cents: number): string {
   return `R$ ${Math.floor(cents / 100)},${String(cents % 100).padStart(2, "0")}`;
 }
 
+const UNITS = ["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];
+const TENS = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
+
+function words(n: number): string {
+  if (n < 20) return UNITS[n];
+  if (n < 100) return n % 10 ? `${TENS[Math.floor(n / 10)]} e ${UNITS[n % 10]}` : TENS[n / 10];
+  return String(n);
+}
+
+/** A price the way an attendant says it: "sete e noventa". */
+export function spokenPrice(cents: number): string {
+  const r = Math.floor(cents / 100);
+  const c = cents % 100;
+  return c ? `${words(r)} e ${words(c)}` : `${words(r)} reais`;
+}
+
 function spoken(m: Medication): string {
   return m.dose ? `${m.name} ${m.dose}` : m.name;
 }
@@ -70,7 +86,8 @@ export function simFacts(p: SimPharmacy, meds: SimMedication[]): string[] {
     if (p.outOfStock === i && meds.length > 1) return `${spoken(m)}: está em falta, não tem hoje.`;
     const units = m.unitsPerPack ?? 30;
     const generic = simPriceCents(p, m);
-    return `${spoken(m)}: tem o genérico por ${reais(generic)} e o de referência por ${reais(simReferenceCents(generic))}, caixa com ${units} comprimidos.`;
+    const reference = simReferenceCents(generic);
+    return `${spoken(m)}: tem. GENÉRICO: ${reais(generic)} ("${spokenPrice(generic)}"). REFERÊNCIA: ${reais(reference)} ("${spokenPrice(reference)}"). Caixa com ${units} comprimidos.`;
   });
 }
 
@@ -87,7 +104,7 @@ export function buildActorInstructions(p: SimPharmacy, meds: SimMedication[], no
     `When the call connects, say: "${simGreeting(p, now)}" Then listen.`,
     "The caller is a virtual assistant asking about medicines for a family. Answer its questions using only these facts:",
     ...simFacts(p, meds).map((f) => `- ${f}`),
-    "Say prices the way people say them on the phone (\"dezesseis e noventa\"). Give each answer when asked; you may give the price and box size together. If asked only for one price, give the generic first and the reference when asked.",
+    "Say prices the way people say them on the phone, exactly as written in quotes above. The generic and the reference have different prices: never swap them and never say the same price for both. Before each price, say which one it is (\"o genérico sai ...\", \"o de referência sai ...\"). You may give both prices and the box size together.",
     "For any medicine not listed, say you need to check and do not have it now. Do not invent other prices or products.",
     "Never ask for or accept personal data, never sell or reserve anything, and never give advice about treatment or doses.",
     "If the caller says goodbye, answer \"Por nada, tchau!\" and then stay silent.",
