@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PhoneIcon, buttonClass } from "@/components/ui";
 import { captureError, track } from "@/lib/analytics";
-import { getFamily, telHref, type FamilyOverview } from "@/lib/api";
+import { CallLink, canCall } from "@/components/call-link";
+import { getFamily, type FamilyOverview } from "@/lib/api";
 
 /** One big button per family member with a phone. Her only choice here is whom to call. */
 export function PatientCallView() {
@@ -21,7 +22,7 @@ export function PatientCallView() {
   if (error) return <p className="text-[24px] text-muted">Sem conexão. Tente de novo em instantes.</p>;
   if (!data) return <p className="text-[24px] text-muted">Carregando...</p>;
 
-  const callable = data.caregivers.filter((c) => telHref(c) !== null);
+  const callable = data.caregivers.filter(canCall);
 
   return (
     <>
@@ -33,14 +34,14 @@ export function PatientCallView() {
         <ul className="flex flex-col gap-3">
           {callable.map((c) => (
             <li key={c.id}>
-              <a
-                href={telHref(c)!}
+              <CallLink
+                member={c}
                 onClick={() => track("patient_call_tapped", { caregivers: callable.length })}
                 className={buttonClass({ size: "xl" })}
               >
                 <PhoneIcon size={32} />
                 Ligar para {c.name.trim().split(/\s+/)[0]}
-              </a>
+              </CallLink>
             </li>
           ))}
         </ul>

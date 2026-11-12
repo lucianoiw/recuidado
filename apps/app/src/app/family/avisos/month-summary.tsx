@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, ShareIcon, cn } from "@/components/ui";
 import { track } from "@/lib/analytics";
 import { getFamily, type FamilyOverview } from "@/lib/api";
+import { usePronouns } from "@/lib/pronouns";
 
 // Illustrative month numbers for the hackathon demo. Synthetic, not computed from the doses yet.
 const MONTHS = ["Jun", "Jul", "Ago", "Set", "Out", "Nov"];
@@ -48,6 +49,7 @@ function Stat({ label, value, sub, brand }: { label: string; value: string; sub:
 
 /** Month at a glance on top of the alerts: numbers, calendar, last months, per medicine. */
 export function MonthSummary() {
+  const pr = usePronouns();
   const [data, setData] = useState<FamilyOverview | null>(null);
   const [t, setT] = useState<ReturnType<typeof today> | null>(null);
   useEffect(() => {
@@ -180,7 +182,7 @@ export function MonthSummary() {
         <ShareIcon size={20} />
         Levar o resumo para a consulta
       </button>
-      <p className="-mt-2 text-center text-[13px] text-muted">Um PDF com as doses do mês. O app não avalia a saúde dela.</p>
+      <p className="-mt-2 text-center text-[13px] text-muted">Um PDF com as doses do mês. O app não avalia a saúde {pr.dela}.</p>
     </>
   );
 }

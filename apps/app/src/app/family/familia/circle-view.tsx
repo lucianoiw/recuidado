@@ -10,6 +10,7 @@ import { BellIcon, Button, FreeIcon, InfoIcon, ShareIcon, CheckIcon, ChevronRigh
 import { PageTitle } from "@/components/page-title";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
+import { pronouns } from "@/lib/pronouns";
 
 function firstName(name: string) {
   return name.trim().split(/\s+/)[0];
@@ -232,9 +233,10 @@ function FirstContact({
 }
 
 function consentText(p: Member, patient: string): string {
-  if (p.consentSource === "patient") return `${patient} aceitou no app dela.`;
-  if (p.consentSource === "caregiver") return `A família disse que ${patient} aceitou. Ela confirma no primeiro acesso ao app dela.`;
-  return `${patient} ainda não aceitou. Sem o aceite dela, o Recuidado não liga.`;
+  const pr = pronouns(p.gender);
+  if (p.consentSource === "patient") return `${patient} aceitou no app ${pr.dela}.`;
+  if (p.consentSource === "caregiver") return `A família disse que ${patient} aceitou. ${pr.Ela} confirma no primeiro acesso ao app ${pr.dela}.`;
+  return `${patient} ainda não aceitou. Sem o aceite ${pr.dela}, o Recuidado não liga.`;
 }
 
 /** LGPD rights: consent status, privacy notice, export and delete. */

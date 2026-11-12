@@ -22,6 +22,7 @@ import { callName, getDemoRun, startDemoRun, type DemoRun, type DemoStep } from 
 import { readDemoRun, saveDemoRun } from "@/lib/demo";
 import { useMe } from "@/lib/me";
 import { useFamily } from "@/lib/use-family";
+import { pronouns } from "@/lib/pronouns";
 
 const PILL: Record<DemoStep["state"], { tone: StatusTone; text: string }> = {
   waiting: { tone: "neutral", text: "Aguardando" },
@@ -132,6 +133,7 @@ export function DemoView() {
   }
 
   const name = data ? callName(data.patient) : "Dona Maria";
+  const pr = pronouns(data?.patient.gender);
   const running = doseId !== null;
   const hasPhone = data?.patient.hasPhone ?? (data?.patient.phone?.replace(/\D/g, "").length ?? 0) >= 10;
 
@@ -139,12 +141,12 @@ export function DemoView() {
     <>
       <PageTitle
         title="Demo em 2 minutos"
-        subtitle={`O dia de ${name} acelerado: o que acontece quando ela não confirma o remédio.`}
+        subtitle={`O dia de ${name} acelerado: o que acontece quando ${pr.ela} não confirma o remédio.`}
       />
 
       <Card className="flex flex-col gap-2 text-[16px] leading-snug">
         <p>
-          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular dela, ligação da IA e aviso para a
+          Cria uma dose de agora e segue o caminho de verdade: lembrete no celular {pr.dela}, ligação da IA e aviso para a
           família. A espera, que no dia a dia é de minutos, aqui é de segundos.
         </p>
         <p className="text-muted">A agenda normal dos remédios continua igual.</p>
@@ -169,7 +171,7 @@ export function DemoView() {
       {run?.finished ? (
         <p className="flex items-center gap-2 font-semibold text-brand">
           <CheckIcon size={22} />
-          {run.status === "taken" ? `${name} tomou o remédio.` : "A família já sabe e pode ligar para ela."}
+          {run.status === "taken" ? `${name} tomou o remédio.` : `A família já sabe e pode ligar para ${pr.ela}.`}
         </p>
       ) : null}
 

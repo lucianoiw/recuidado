@@ -11,6 +11,7 @@ import { useBuyChoice } from "@/lib/buy-choice";
 import { PharmacyCallCard } from "./pharmacy-call-card";
 import { useMonth } from "@/lib/use-month";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
+import { pronouns } from "@/lib/pronouns";
 
 export function BuyView() {
   const { data, error } = useFamily();
@@ -71,7 +72,7 @@ export function BuyView() {
           <PharmacyCallCard medications={paid} calls={data.calls !== false} />
 
           <section className="flex flex-col gap-2">
-            <h2 className="text-[18px] font-semibold">Farmácias perto dela</h2>
+            <h2 className="text-[18px] font-semibold">Farmácias perto {pronouns(data.patient.gender).dela}</h2>
             <PlacesMap places={pharmacies.slice(0, 3)} homeLabel={`Casa de ${callName(data.patient)}`} />
             <ul className="overflow-hidden rounded-card bg-surface">
               {pharmacies.slice(0, 3).map((p, i) => (

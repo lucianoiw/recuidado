@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { CameraIcon, InfoIcon } from "@/components/ui";
 import { removeMedicationPhoto, setMedicationPhoto, type Medication } from "@/lib/api";
+import { usePronouns } from "@/lib/pronouns";
 
 /** Longest side of the photo sent to the API: enough to read the box, small on mobile data. */
 const MAX_SIDE = 1280;
@@ -25,6 +26,7 @@ async function shrink(file: File): Promise<Blob> {
  * picture, so she does not mistake one pill for another. Saved right away, apart from the form.
  */
 export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: () => void }) {
+  const pr = usePronouns();
   const input = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(med.photoUrl ?? null);
   const [busy, setBusy] = useState(false);
@@ -64,7 +66,7 @@ export function MedPhotoField({ med, onChanged }: { med: Medication; onChanged: 
       ) : (
         <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
           <InfoIcon size={18} className="mt-0.5 shrink-0" />
-          Tire uma foto da caixa ou do comprimido que ela toma. O app dela mostra só essa foto. Sem foto,
+          Tire uma foto da caixa ou do comprimido que {pr.ela} toma. O app {pr.dela} mostra só essa foto. Sem foto,
           mostra só o nome, a dose e o horário.
         </p>
       )}

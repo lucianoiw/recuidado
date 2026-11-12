@@ -7,7 +7,8 @@ import { BellIcon, Button, Card, CheckIcon, PhoneIcon, PillIcon, buttonClass } f
 import { captureError, identifyMember, track } from "@/lib/analytics";
 import { refreshMs } from "@/lib/demo";
 import { PatientWelcome, usePatientReady } from "./patient-welcome";
-import { callName, confirmDose, formatTime, getFamily, telHref, type Dose, type FamilyOverview } from "@/lib/api";
+import { CallLink, canCall } from "@/components/call-link";
+import { callName, confirmDose, formatTime, getFamily, type Dose, type FamilyOverview } from "@/lib/api";
 
 function greeting(): string {
   const hour = Number(
@@ -143,7 +144,7 @@ export function PatientView() {
   }
 
   // Caregivers with a phone. One: call straight away. More: a screen with one button each.
-  const callable = data.caregivers.filter((c) => telHref(c) !== null);
+  const callable = data.caregivers.filter(canCall);
   // Photo of the real box or pill, only when the family took one. Never a generic picture.
   const photoOf = new Map(data.medications.map((m) => [m.id, m.photoUrl ?? null]));
 
@@ -244,10 +245,10 @@ export function PatientView() {
           Meus remédios
         </Link>
         {callable.length === 1 ? (
-          <a href={telHref(callable[0])!} className={buttonClass({ variant: "secondary", size: "lg" })}>
+          <CallLink member={callable[0]} className={buttonClass({ variant: "secondary", size: "lg" })}>
             <PhoneIcon size={26} />
             Ligar para {callable[0].name.trim().split(/\s+/)[0]}
-          </a>
+          </CallLink>
         ) : callable.length > 1 ? (
           <Link href="/patient/ligar" className={buttonClass({ variant: "secondary", size: "lg" })}>
             <PhoneIcon size={26} />

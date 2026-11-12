@@ -199,6 +199,7 @@ export class FamilyService implements OnApplicationBootstrap {
         id: members.id,
         name: members.name,
         nickname: members.nickname,
+        gender: members.gender,
         role: members.role,
         relation: members.relation,
         relationOther: members.relationOther,

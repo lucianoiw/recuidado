@@ -17,6 +17,7 @@ import { dueText, formatDay } from "@/lib/high-cost";
 import { formatDistance, mapsUrl } from "@/lib/pharmacies";
 import { highCostUnits } from "@/lib/sus-units";
 import { brl, medLabel } from "@/lib/use-family";
+import { usePronouns } from "@/lib/pronouns";
 
 const linkClass = "font-semibold text-brand underline underline-offset-2";
 
@@ -78,6 +79,7 @@ function Checklist({
 }
 
 export function HighCostView({ id }: { id: string }) {
+  const pr = usePronouns();
   const [path, setPath] = useState<HighCostPath | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -165,7 +167,7 @@ export function HighCostView({ id }: { id: string }) {
           </>
         )}
         {renewal
-          ? "Ela já recebe. Para continuar, a família entrega estes papéis na renovação."
+          ? `${pr.Ela} já recebe. Para continuar, a família entrega estes papéis na renovação.`
           : `${status.done} de ${status.total} itens prontos.`}
       </p>
       {guide.notes.map((n) => (
@@ -249,14 +251,14 @@ export function HighCostView({ id }: { id: string }) {
           .
         </p>
         <p className="text-[15px] leading-snug text-muted">
-          Outra pessoa pode entregar e retirar por ela. Leve: {guide.representative.join("; ").toLowerCase()}.
+          Outra pessoa pode entregar e retirar por {pr.ela}. Leve: {guide.representative.join("; ").toLowerCase()}.
         </p>
       </section>
 
       <p className="flex items-start gap-2 text-[14px] leading-snug text-muted">
         <InfoIcon size={18} className="mt-0.5 shrink-0" />
         <span>
-          O Recuidado só organiza o caminho. Quem avalia se ela tem direito é o médico e a Secretaria da Saúde.
+          O Recuidado só organiza o caminho. Quem avalia se {pr.ela} tem direito é o médico e a Secretaria da Saúde.
           Fontes:{" "}
           {guide.leafletUrl ? (
             <>

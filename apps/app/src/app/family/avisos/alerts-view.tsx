@@ -6,6 +6,7 @@ import { markAlertsSeen } from "@/lib/alerts-seen";
 import { captureError } from "@/lib/analytics";
 import { MonthSummary } from "./month-summary";
 import { formatTime, getAlerts, type AlertKind, type FamilyAlert } from "@/lib/api";
+import { usePronouns } from "@/lib/pronouns";
 
 const KINDS: Record<AlertKind, { label: string; icon: typeof AlertIcon; tone: string }> = {
   dose_missed: { label: "Dose não confirmada", icon: AlertIcon, tone: "bg-danger-soft text-danger" },
@@ -53,6 +54,7 @@ function dayTitle(iso: string, now: Date): string {
 
 /** Every alert the family got, grouped by day, newest first. */
 export function AlertsView() {
+  const pr = usePronouns();
   const [alerts, setAlerts] = useState<FamilyAlert[] | null>(null);
   const [error, setError] = useState(false);
   const [now, setNow] = useState(0);
@@ -108,7 +110,7 @@ export function AlertsView() {
               </span>
               <b className="text-[19px]">Nenhum aviso ainda</b>
               <p className="text-muted">
-                Quando uma dose não for confirmada, ela disser que não está bem, houver uma emergência ou um
+                Quando uma dose não for confirmada, {pr.ela} disser que não está bem, houver uma emergência ou um
                 remédio estiver acabando, o aviso aparece aqui.
               </p>
             </section>

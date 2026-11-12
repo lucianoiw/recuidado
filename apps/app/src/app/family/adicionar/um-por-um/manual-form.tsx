@@ -11,8 +11,10 @@ import { Button, CheckIcon, TopBar, buttonClass } from "@/components/ui";
 import { confirmPrescription, getFamily } from "@/lib/api";
 import type { MedResult } from "@/lib/med-search";
 import { parseUnits } from "@/lib/stock";
+import { usePronouns } from "@/lib/pronouns";
 
 export function ManualForm() {
+  const pr = usePronouns();
   const router = useRouter();
   const [name, setName] = useState("");
   const [strength, setStrength] = useState("");
@@ -80,7 +82,7 @@ export function ManualForm() {
         <span className="text-[15px] font-semibold">Horários</span>
         <TimeChips times={times} onChange={setTimes} />
         <span className="text-[14px] text-muted">
-          Use 8:00, 12:00 e 20:00 quando der. Assim ela toma tudo junto.
+          Use 8:00, 12:00 e 20:00 quando der. Assim {pr.ela} toma tudo junto.
         </span>
       </div>
       <StockField value={units} onValue={setUnits} invalid={tried && parseUnits(units) === undefined} />

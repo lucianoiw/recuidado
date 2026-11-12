@@ -1,5 +1,6 @@
 import { authHeader, setSession } from "./session";
 import { setMe, clearMe } from "./me";
+import { rememberGender } from "./pronouns";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -31,6 +32,8 @@ export interface Member {
   name: string;
   /** How the family calls the patient, e.g. "Dona Maria". */
   nickname?: string | null;
+  /** Set at sign-up for the patient; the family screens say "ela" or "ele" from it. */
+  gender?: "female" | "male";
   role: "caregiver" | "patient";
   relation?: string | null;
   relationOther?: string | null;
@@ -209,7 +212,9 @@ export function isFree(m: Medication): boolean {
 export async function getFamily(): Promise<FamilyOverview> {
   const res = await apiFetch("/family", { cache: "no-store" });
   if (!res.ok) throw new Error(`API ${res.status}`);
-  return res.json();
+  const family: FamilyOverview = await res.json();
+  rememberGender(family.patient.gender);
+  return family;
 }
 
 export async function confirmDose(doseId: string): Promise<void> {

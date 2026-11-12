@@ -24,7 +24,9 @@ import {
   type DoseStatus as RowStatus,
 } from "@/components/ui";
 import { DemoBanner } from "@/components/demo-banner";
-import { callName, confirmDose, formatTime, isFree, telHref, type Dose } from "@/lib/api";
+import { CallLink } from "@/components/call-link";
+import { callName, confirmDose, formatTime, isFree, type Dose } from "@/lib/api";
+import { pronouns } from "@/lib/pronouns";
 import { dueText } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
@@ -88,7 +90,7 @@ export function FamilyView() {
   const getsFree = (m: (typeof data.medications)[number]) => isFree(m) && !m.buyInsteadOfFree;
   const savedCents = data.medications.filter(getsFree).reduce((sum, m) => sum + m.monthlyCostCents, 0);
   const costCents = data.medications.filter((m) => !getsFree(m)).reduce((sum, m) => sum + m.monthlyCostCents, 0);
-  const tel = telHref(data.patient);
+  const pr = pronouns(data.patient.gender);
   const unwell = data.unwellReports?.[0];
   const runningOut = data.medications.filter((m) => m.stock?.low);
   const highCostDue = data.medications.filter((m) => m.highCostPath?.due);
@@ -137,12 +139,10 @@ export function FamilyView() {
           icon={<HeartIcon />}
           title={`${name} não está bem`}
           actions={
-            tel ? (
-              <a href={tel} className={pillClass("dark")}>
-                <PhoneIcon />
-                Ligar para ela
-              </a>
-            ) : null
+            <CallLink member={data.patient} className={pillClass("dark")}>
+              <PhoneIcon />
+              Ligar para {pr.ela}
+            </CallLink>
           }
         >
           Na ligação das {formatTime(unwell.at)}
@@ -153,7 +153,7 @@ export function FamilyView() {
           ) : (
             "."
           )}
-          <span className="mt-1 block text-[13px] text-muted">Ela mesma informou. O app não avalia a saúde dela.</span>
+          <span className="mt-1 block text-[13px] text-muted">{pr.Ela} mesm{pr.a} informou. O app não avalia a saúde {pr.dela}.</span>
         </Notice>
       ) : null}
 
@@ -169,12 +169,10 @@ export function FamilyView() {
             title={`Não confirmou ${names.length > 1 ? "os remédios" : names[0]} das ${formatTime(d.scheduledAt)}`}
             actions={
               <>
-                {tel ? (
-                  <a href={tel} className={pillClass("dark")}>
-                    <PhoneIcon />
-                    Ligar para ela
-                  </a>
-                ) : null}
+                <CallLink member={data.patient} className={pillClass("dark")}>
+                  <PhoneIcon />
+                  Ligar para {pr.ela}
+                </CallLink>
                 <button
                   type="button"
                   onClick={() => markTaken(group)}
@@ -182,14 +180,14 @@ export function FamilyView() {
                   className={pillClass()}
                 >
                   <CheckIcon />
-                  {confirming === d.scheduledAt ? "Anotando..." : "Ela já tomou"}
+                  {confirming === d.scheduledAt ? "Anotando..." : `${pr.Ela} já tomou`}
                 </button>
               </>
             }
           >
             {names.length > 1 ? <span className="block">{names.join(", ")}</span> : null}
             <span className="block text-muted">
-              {d.familyAlertedAt ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}.` : "Vale ligar para ela."}
+              {d.familyAlertedAt ? `A família foi avisada às ${formatTime(d.familyAlertedAt)}.` : `Vale ligar para ${pr.ela}.`}
             </span>
           </Notice>
         );

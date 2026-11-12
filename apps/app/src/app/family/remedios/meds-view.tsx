@@ -27,6 +27,7 @@ import { pathLine } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
 import { ubsUnits } from "@/lib/sus-units";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
+import { usePronouns } from "@/lib/pronouns";
 
 /** Nearest places where it can be free, e.g. "Drogasil, 240 m (Farmácia Popular) ou UBS Sé, 440 m". */
 function freeWhere(m: Medication): string | null {
@@ -43,6 +44,7 @@ function freeWhere(m: Medication): string | null {
 }
 
 function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void }) {
+  const pr = usePronouns();
   const { getsFree, setBuy } = useBuyChoice();
   const free = getsFree(m);
   const where = freeWhere(m);
@@ -66,7 +68,7 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="text-[18px] font-semibold leading-snug">{medLabel(m.name, m.strength)}</span>
             <span className="text-[14px] text-muted">
-              {m.photoUrl ? "Com foto da caixa no app dela" : "Toque para tirar a foto da caixa"}
+              {m.photoUrl ? `Com foto da caixa no app ${pr.dela}` : "Toque para tirar a foto da caixa"}
             </span>
           </span>
           <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cream text-muted">

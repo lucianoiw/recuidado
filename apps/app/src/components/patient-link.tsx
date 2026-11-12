@@ -6,6 +6,7 @@ import { CopyIcon } from "@/components/ui";
 import { getPatientLink } from "@/lib/api";
 import { useOrigin } from "@/lib/origin";
 import { useSignedIn } from "@/lib/session";
+import { usePronouns } from "@/lib/pronouns";
 
 const SEEN_KEY = "recuidado:patient-link-seen";
 
@@ -49,6 +50,7 @@ export function usePatientUrl(): { url: string; renew: () => Promise<void> } {
 
 /** QR code and copy button with the link to the patient app. */
 export function PatientLink() {
+  const pr = usePronouns();
   const { url } = usePatientUrl();
   const [copied, setCopied] = useState(false);
   async function copy() {
@@ -61,11 +63,11 @@ export function PatientLink() {
     <section className="flex items-stretch gap-4 rounded-card bg-surface p-4">
       <span className="flex size-[132px] shrink-0 items-center justify-center rounded-xl border border-line bg-white p-2">
         {url ? (
-          <QRCodeSVG value={url} size={114} fgColor="#161314" title="QR code do app dela" />
+          <QRCodeSVG value={url} size={114} fgColor="#161314" title={`QR code do app ${pr.dela}`} />
         ) : null}
       </span>
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5">
-        <p className="text-[16px] leading-snug">Aponte a câmera do celular dela para o código.</p>
+        <p className="text-[16px] leading-snug">Aponte a câmera do celular {pr.dela} para o código.</p>
         <button
           type="button"
           onClick={copy}
