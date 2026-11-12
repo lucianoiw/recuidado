@@ -13,6 +13,7 @@ export * from './alerts/alerts.service.js';
 export * from './push/push.service.js';
 export * from './email/email.service.js';
 export * from './email/alert-email.js';
+export * from './email/layout.js';
 export * from './stock/stock.service.js';
 export * from './stock/stock.js';
 export * from './billing/plan-gate.js';
