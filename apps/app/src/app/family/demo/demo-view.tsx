@@ -150,7 +150,11 @@ export function DemoView() {
         <p className="text-muted">A agenda normal dos remédios continua igual.</p>
       </Card>
 
-      {!hasPhone && data ? (
+      {data?.calls === false ? (
+        <p className="rounded-card bg-warn-soft p-4 text-[15px] text-warn">
+          A ligação é do plano pago, que chega em breve. A demo mostra o lembrete e o aviso para a família.
+        </p>
+      ) : !hasPhone && data ? (
         <p className="rounded-card bg-warn-soft p-4 text-[15px] text-warn">
           {name} está sem telefone no cadastro, então a ligação vai ser pulada.
         </p>

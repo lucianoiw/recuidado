@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { eq, or } from 'drizzle-orm';
-import { type Database, DB, families, telemetry } from '@recuidado/core';
+import { type Database, DB, families, PlanGate, telemetry } from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
 import { AbacatePay } from './abacatepay.js';
 import { patchFromEvent, webhookBody } from './webhook.js';
@@ -32,6 +32,7 @@ export class BillingService {
     @Inject(DB) private readonly db: Database,
     private readonly config: ConfigService,
     private readonly family: FamilyService,
+    private readonly gate: PlanGate,
   ) {
     this.productId = this.config.get<string>('ABACATEPAY_PRODUCT_ID');
   }
@@ -42,6 +43,11 @@ export class BillingService {
       priceCents: this.config.getOrThrow<number>('PLAN_PRICE_CENTS'),
       trialDays: this.config.getOrThrow<number>('PLAN_TRIAL_DAYS'),
     };
+  }
+
+  /** Families can open the checkout: AbacatePay is set up and PLAN_CHECKOUT_ENABLED is on. */
+  private get checkoutOpen(): boolean {
+    return Boolean(this.config.get<string>('ABACATEPAY_API_KEY')) && this.config.get<boolean>('PLAN_CHECKOUT_ENABLED') === true;
   }
 
   private client(): AbacatePay {
@@ -63,7 +69,9 @@ export class BillingService {
       .where(eq(families.id, ref.familyId));
     return {
       ...this.plan,
-      available: Boolean(this.config.get<string>('ABACATEPAY_API_KEY')),
+      available: this.checkoutOpen,
+      // Calls work for this family without paying (demo family, or a caregiver in PLAN_INCLUDED_EMAILS).
+      included: ref.isDemo || (await this.gate.includedFamily(ref.familyId)),
       isDemo: ref.isDemo,
       status: row?.status ?? null,
       trialEndsAt: row?.trialEndsAt?.toISOString() ?? null,
@@ -73,6 +81,7 @@ export class BillingService {
   /** Opens an AbacatePay subscription checkout for this family and returns its URL. */
   async checkout(familyId: string | null): Promise<{ url: string }> {
     const ref = await this.family.resolveFamily(familyId);
+    if (!this.checkoutOpen) throw new ServiceUnavailableException('O plano pago ainda não está disponível.');
     const client = this.client();
     this.productId ??= await client.ensurePlanProduct(this.plan);
     const web = this.config.getOrThrow<string>('WEB_URL');

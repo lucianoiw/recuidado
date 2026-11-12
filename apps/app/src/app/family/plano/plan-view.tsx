@@ -79,7 +79,7 @@ export function PlanView() {
         <ChevronLeftIcon size={22} />
         <span className="sr-only">Voltar</span>
       </Link>
-      <PageTitle title="Plano" subtitle={active ? `${plan.name} ativo` : "Plano grátis"} />
+      <PageTitle title="Plano" subtitle={active ? `${plan.name} ativo` : plan.included ? "Ligações incluídas" : "Plano grátis"} />
 
       {waiting ? (
         <Card tone="warn">
@@ -122,7 +122,11 @@ export function PlanView() {
           ))}
         </ul>
 
-        {active ? (
+        {plan.included && !active ? (
+          <p className="text-[15px] font-semibold">
+            {plan.isDemo ? "Ligações ativas na família de demonstração." : "Ligações ativas nesta conta."}
+          </p>
+        ) : active ? (
           <>
             <p className="text-[15px] font-semibold">
               {plan.trialEndsAt ? `Teste grátis até ${dateText(plan.trialEndsAt)}. Depois, ${price} por mês.` : "Ligações ativas."}
@@ -142,11 +146,10 @@ export function PlanView() {
             </p>
           </>
         ) : (
-          <p className="text-[15px] text-muted">O pagamento ainda não está disponível.</p>
+          <p className="rounded-2xl bg-blush p-3.5 text-[15px] font-semibold text-accent-ink">
+            Em breve. Por enquanto o Recuidado funciona no plano grátis, sem as ligações.
+          </p>
         )}
-        {plan.isDemo && !active ? (
-          <p className="text-[14px] text-muted">A família de demonstração recebe as ligações mesmo sem o plano.</p>
-        ) : null}
       </Card>
 
       {error ? <p className="font-semibold text-danger">{error}</p> : null}

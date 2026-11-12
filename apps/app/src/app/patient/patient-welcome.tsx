@@ -344,7 +344,9 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
                 : push === "unsupported"
                   ? "Este celular não recebe avisos por aqui."
                   : "Os avisos ainda não foram ligados."}{" "}
-              Se você não tocar em Tomei, o Recuidado liga para você.
+              {data.calls === false
+                ? `Se você não tocar em Tomei, ${host} recebe o aviso.`
+                : "Se você não tocar em Tomei, o Recuidado liga para você."}
             </Card>
           ) : (
             <Card className="px-4 py-4 text-left text-[22px] leading-snug">
@@ -363,7 +365,9 @@ export function PatientWelcome({ data }: { data: FamilyOverview }) {
         )}
         {blocked ? null : (
           <p className="text-center text-[22px] leading-snug text-muted">
-            Se não der, {host} recebe o aviso e o Recuidado liga para você.
+            {data.calls === false
+              ? `Se não der, ${host} recebe o aviso.`
+              : `Se não der, ${host} recebe o aviso e o Recuidado liga para você.`}
           </p>
         )}
       </div>

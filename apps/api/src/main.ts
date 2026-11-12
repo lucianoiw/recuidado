@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { AppModule } from './app.module.js';
 import { corsOrigins } from './cors.js';
 import { runMigrations } from './db/migrate.js';
+import { wipeIfAsked } from './db/wipe.js';
 import { accessLog } from './telemetry/access-log.middleware.js';
 import { TelemetryExceptionFilter } from './telemetry/exception.filter.js';
 import { telemetry, TelemetryLogger } from '@recuidado/core';
@@ -12,6 +13,8 @@ async function bootstrap() {
   // Only the API migrates; the worker never touches the schema.
   if (process.env.DATABASE_URL) {
     await runMigrations(process.env.DATABASE_URL);
+    // "Conta zero": empties the database once per WIPE_DATA_ON_BOOT label, before the demo seed runs.
+    if (process.env.REDIS_URL) await wipeIfAsked(process.env.DATABASE_URL, process.env.REDIS_URL, process.env.WIPE_DATA_ON_BOOT);
   }
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: new TelemetryLogger(telemetry),

@@ -46,9 +46,15 @@ export const envSchema = z.object({
   VAPID_PUBLIC_KEY: optionalString,
   VAPID_PRIVATE_KEY: optionalString,
   VAPID_SUBJECT: z.string().default('https://recuidado.com.br'),
-  // Paid plan (AbacatePay, API v2). With the key set, families need an active plan for calls
-  // (the demo family is exempt). Without it there is no plan screen checkout and calls stay free.
+  // Calls are the paid plan: a family gets calls only with an active plan, as the demo family, or with a
+  // caregiver listed in PLAN_INCLUDED_EMAILS. Everything else (app, push, e-mail, reminders) is free.
+  // AbacatePay (API v2) runs the checkout. Without the key the plan screen says "em breve".
   ABACATEPAY_API_KEY: optionalString,
+  // "true" lets families open the AbacatePay checkout. Off while nobody can really pay (Modo Teste would
+  // give calls for free to anyone who presses "Simular Pagamento"); the plan screen then says "em breve".
+  PLAN_CHECKOUT_ENABLED: z.preprocess((v) => v === true || v === 'true', z.boolean()),
+  // Comma-separated caregiver e-mails whose families get calls without paying (the team's account for the video).
+  PLAN_INCLUDED_EMAILS: optionalString,
   // Secret given when creating the webhook in AbacatePay (32+ characters). Webhooks without it get 401.
   ABACATEPAY_WEBHOOK_SECRET: optionalString,
   // Product of the plan (prod_...). Empty: found or created by externalId "recuidado-familia-mensal".

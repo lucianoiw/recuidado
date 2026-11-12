@@ -311,7 +311,11 @@ export function FamilyView() {
             </span>
           ) : null}
         </div>
-        {data.today.length === 0 ? (
+        {data.today.length === 0 && data.medications.length > 0 ? (
+          <Card>
+            <p className="text-muted">Nenhuma dose ainda. Os lembretes começam no próximo horário dos remédios.</p>
+          </Card>
+        ) : data.today.length === 0 ? (
           <Card className="flex flex-col gap-3">
             <p className="text-muted">
               Nenhuma dose hoje. Comece adicionando os remédios.

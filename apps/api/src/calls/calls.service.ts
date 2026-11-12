@@ -95,8 +95,13 @@ export class CallsService {
     this.logger.log(`Recording of ${sessionId} saved (${audio.length} bytes, ${this.r2 ? 'R2' : 'Postgres'}).`);
   }
 
-  /** Calls of the demo family (synthetic data), newest first. The panel is public, so nothing else. */
-  async listDemo(limit = 30): Promise<CallLogView[]> {
+  /** Who the panel shows: the signed-in family, or the demo family (synthetic data) for visitors. */
+  private familyFilter(familyId: string | null) {
+    return familyId ? eq(callLogs.familyId, familyId) : eq(families.name, DEMO_FAMILY);
+  }
+
+  /** Calls of one family, newest first: the signed-in family's, or the demo family's for visitors. */
+  async list(familyId: string | null, limit = 30): Promise<CallLogView[]> {
     const rows = await this.db
       .select({
         sessionId: callLogs.sessionId,
@@ -111,7 +116,7 @@ export class CallsService {
       })
       .from(callLogs)
       .innerJoin(families, eq(callLogs.familyId, families.id))
-      .where(and(eq(families.name, DEMO_FAMILY), isNotNull(callLogs.kind)))
+      .where(and(this.familyFilter(familyId), isNotNull(callLogs.kind)))
       .orderBy(desc(callLogs.createdAt))
       .limit(Math.min(Math.max(limit, 1), 100));
     return rows.map((r) => ({
@@ -126,13 +131,13 @@ export class CallsService {
     }));
   }
 
-  /** The recording of a demo family call: a signed R2 link, or the bytes kept in Postgres. */
-  async recording(sessionId: string): Promise<{ url: string } | { audio: Buffer }> {
+  /** The recording of a call of that family (demo for visitors): a signed R2 link, or the bytes kept in Postgres. */
+  async recording(sessionId: string, familyId: string | null): Promise<{ url: string } | { audio: Buffer }> {
     const [row] = await this.db
       .select({ key: callLogs.recordingKey, audio: callLogs.recording })
       .from(callLogs)
       .innerJoin(families, eq(callLogs.familyId, families.id))
-      .where(and(eq(callLogs.sessionId, sessionId), eq(families.name, DEMO_FAMILY), or(isNotNull(callLogs.recordingKey), isNotNull(callLogs.recording))));
+      .where(and(eq(callLogs.sessionId, sessionId), this.familyFilter(familyId), or(isNotNull(callLogs.recordingKey), isNotNull(callLogs.recording))));
     if (!row) throw new NotFoundException('Gravação não encontrada.');
     if (row.key && this.r2) return { url: await this.r2.signedUrl(row.key) };
     if (row.audio) return { audio: row.audio };
