@@ -11,5 +11,5 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except the home page, /validacao, Next assets and files in /public.
-  matcher: ["/((?!_next/|validacao|fotos/|logo-recuidado-texto\\.svg$|icon\\.svg$|favicon\\.ico$|robots\\.txt$|sitemap\\.xml$).+)"],
+  matcher: ["/((?!_next/|validacao|fotos/|logos/|logo-recuidado-texto\\.svg$|icon\\.svg$|favicon\\.ico$|robots\\.txt$|sitemap\\.xml$).+)"],
 };
