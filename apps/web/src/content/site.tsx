@@ -7,9 +7,9 @@ export const banner = {
 };
 
 export const nav = [
-  { href: "#como", label: "Como funciona" },
-  { href: "#preco", label: "Preço" },
-  { href: "#perguntas", label: "Perguntas" },
+  { href: "/#como", label: "Como funciona" },
+  { href: "/#preco", label: "Preço" },
+  { href: "/#perguntas", label: "Perguntas" },
 ];
 
 export const signUpLabel = "Começar o cadastro";
