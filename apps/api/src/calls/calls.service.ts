@@ -107,6 +107,7 @@ export class CallsService {
         sessionId: callLogs.sessionId,
         kind: callLogs.kind,
         outcome: callLogs.outcome,
+        inquiryStatus: pharmacyInquiries.status,
         durationSeconds: callLogs.durationSeconds,
         startedAt: callLogs.startedAt,
         createdAt: callLogs.createdAt,
@@ -116,13 +117,16 @@ export class CallsService {
       })
       .from(callLogs)
       .innerJoin(families, eq(callLogs.familyId, families.id))
+      // A pharmacy call the voice model ended as "unclear" can still get its answer later, when Claude
+      // reads the transcript. The inquiry has the final status, so the panel shows that one.
+      .leftJoin(pharmacyInquiries, eq(pharmacyInquiries.sessionId, callLogs.sessionId))
       .where(and(this.familyFilter(familyId), isNotNull(callLogs.kind)))
       .orderBy(desc(callLogs.createdAt))
       .limit(Math.min(Math.max(limit, 1), 100));
     return rows.map((r) => ({
       sessionId: r.sessionId,
       kind: r.kind,
-      outcome: r.outcome,
+      outcome: r.inquiryStatus && r.inquiryStatus !== 'calling' ? r.inquiryStatus : r.outcome,
       durationSeconds: r.durationSeconds,
       startedAt: (r.startedAt ?? r.createdAt).toISOString(),
       transcript: r.transcript,
