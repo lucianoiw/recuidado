@@ -66,6 +66,8 @@ export async function readPharmacyTranscript(
   medications: string[],
   transcript: { speaker: 'assistant' | 'patient'; text: string }[],
   model = TRANSCRIPT_READER_MODEL,
+  /** Receives the token usage, so the caller can record the cost. */
+  onUsage?: (usage: { model: string; input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null; cache_creation_input_tokens?: number | null }) => void,
 ): Promise<{ items: TranscriptAnswer[]; note: string | null; matchesOffers: 'yes' | 'no' | 'unknown' }> {
   const lines = transcript
     .map((l) => `${l.speaker === 'patient' ? 'Farmácia' : 'Assistente'}: ${l.text.trim()}`)
@@ -82,6 +84,7 @@ export async function readPharmacyTranscript(
       },
     ],
   });
+  onUsage?.({ model: response.model ?? model, ...response.usage });
   const text = response.content
     .filter((b) => b.type === 'text')
     .map((b) => b.text)

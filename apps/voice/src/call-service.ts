@@ -8,6 +8,7 @@ import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
 import { AsteriskVoiceGate, openGate, startRecording, waitForGlobal } from "./ami.js";
+import { UsageMeter } from "./usage.js";
 import { actorNumber, buildActorInstructions, simGreeting, simPharmacyFor, type SimMedication, type SimPharmacy } from "./sim-pharmacy.js";
 
 /** One step of a call for the calls panel: a log line of the call and when it happened. */
@@ -76,12 +77,18 @@ export interface StartedPharmacyCall {
   sessionId: string;
   call: PharmacyCall;
   trail: CallTrail;
+  usage: UsageMeter;
+  /** Simulated pharmacies only: the attendant AI is a second paid session. */
+  actorUsage: Promise<UsageMeter | undefined>;
+  /** True when the number is a simulated pharmacy (Asterisk answers it: no phone line cost). */
+  simulated: boolean;
 }
 
 export interface StartedCall {
   sessionId: string;
   call: ReminderCall;
   trail: CallTrail;
+  usage: UsageMeter;
 }
 
 export class CallService {
@@ -119,6 +126,7 @@ export class CallService {
     this.log(`call created ${sessionId}${greetingAudio ? " (recorded greeting)" : ""}`);
     // Attach right away: the sideband only replays the previous 3 seconds of call progress.
     const socket = this.live.attach(sessionId);
+    const usage = new UsageMeter().watch(socket);
     this.record(destination, sessionId, trail);
     const call = new ReminderCall({
       sessionId,
@@ -136,11 +144,14 @@ export class CallService {
         }
       },
     });
-    return { sessionId, call, trail };
+    return { sessionId, call, trail, usage };
   }
 
   /** Calls a family member with an urgent message. Same allowlist as reminder calls. */
-  async startAlert(phone: string, message: string): Promise<{ sessionId: string; call: AlertCall; trail: CallTrail }> {
+  async startAlert(
+    phone: string,
+    message: string,
+  ): Promise<{ sessionId: string; call: AlertCall; trail: CallTrail; usage: UsageMeter }> {
     const destination = toE164(phone);
     if (!isAllowed(this.config, destination)) {
       throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
@@ -149,6 +160,7 @@ export class CallService {
     const sessionId = await this.live.createAlertSipCall(destination, message);
     this.log(`alert call created ${sessionId}`);
     const socket = this.live.attach(sessionId);
+    const usage = new UsageMeter().watch(socket);
     this.record(destination, sessionId, trail);
     const call = new AlertCall({
       sessionId,
@@ -158,7 +170,7 @@ export class CallService {
       maxCallMs: 60_000,
       log: trail.log,
     });
-    return { sessionId, call, trail };
+    return { sessionId, call, trail, usage };
   }
 
   async startPharmacy(input: StartPharmacyCallInput): Promise<StartedPharmacyCall> {
@@ -172,6 +184,7 @@ export class CallService {
     if (decisionsError) this.log(`pharmacy call: Decisions triggers rejected, calling without them: ${decisionsError}`);
     this.log(`pharmacy call created ${sessionId} (decisions ${decisions ? "on" : "off"}, voice gate ${this.config.ami ? "on" : "off"})`);
     const socket = this.live.attach(sessionId);
+    const usage = new UsageMeter().watch(socket);
     this.record(destination, sessionId, trail);
     // The dialplan keys the AI's channel by the national number (DDD + number).
     const gate = this.config.ami
@@ -191,8 +204,8 @@ export class CallService {
     // A simulated pharmacy: its attendant is a second AI, dialed now so it is ringing when the
     // assistant gets past the menu. No real pharmacy is called.
     const sim = simPharmacyFor(destination);
-    if (sim) void this.startActor(sim, input.medications, sessionId, call);
-    return { sessionId, call, trail };
+    const actorUsage = sim ? this.startActor(sim, input.medications, sessionId, call) : Promise.resolve(undefined);
+    return { sessionId, call, trail, usage, actorUsage, simulated: Boolean(sim) };
   }
 
   /**
@@ -213,20 +226,25 @@ export class CallService {
   }
 
   /** The attendant AI of a simulated pharmacy. Hangs up when the pharmacy call ends. Never throws. */
-  private async startActor(sim: SimPharmacy, meds: SimMedication[], callerId: string, call: PharmacyCall) {
+  private async startActor(
+    sim: SimPharmacy,
+    meds: SimMedication[],
+    callerId: string,
+    call: PharmacyCall,
+  ): Promise<UsageMeter | undefined> {
     let ended = false;
     void call.result.finally(() => (ended = true));
     try {
       // Dial only when the caller gets past the menu (the line rings there), so the actor's call
       // never times out ringing during a long menu or hold.
-      if (this.config.ami && !(await waitForGlobal(this.config.ami, `SIM_READY_${sim.index}`, () => ended))) return;
+      if (this.config.ami && !(await waitForGlobal(this.config.ami, `SIM_READY_${sim.index}`, () => ended))) return undefined;
       const actorId = await this.live.createActorSipCall(
         actorNumber(sim),
         buildActorInstructions(sim, meds),
         simGreeting(sim),
       );
       this.log(`[${callerId}] simulated pharmacy ${sim.index} (${sim.name}): actor ${actorId}`);
-      this.watchActor(actorId, callerId);
+      const usage = this.watchActor(actorId, callerId);
       const hangup = () => this.live.hangup(actorId).catch((err: Error) => this.log(`actor hangup: ${err.message}`));
       // At most 5 minutes, even if the pharmacy call never reports an end.
       const timer = setTimeout(hangup, 5 * 60 * 1000);
@@ -234,15 +252,18 @@ export class CallService {
         clearTimeout(timer);
         void hangup();
       });
+      return usage;
     } catch (err) {
       this.log(`[${callerId}] simulated pharmacy ${sim.index}: actor not started: ${(err as Error).message}`);
+      return undefined;
     }
   }
 
   /** Logs the actor's errors and how its session ended, to see why an attendant goes quiet. */
-  private watchActor(actorId: string, callerId: string) {
+  private watchActor(actorId: string, callerId: string): UsageMeter | undefined {
     try {
       const socket = this.live.attach(actorId);
+      const usage = new UsageMeter().watch(socket);
       // What the attendant says and hears, one line per utterance: tells "the attendant never spoke"
       // apart from "the caller's transcription lost it".
       const lines = { said: "", heard: "" };
@@ -272,8 +293,10 @@ export class CallService {
         }
       });
       socket.on("error", (err) => this.log(`[${callerId}] actor sideband: ${err.message}`));
+      return usage;
     } catch (err) {
       this.log(`[${callerId}] actor sideband not attached: ${(err as Error).message}`);
+      return undefined;
     }
   }
 

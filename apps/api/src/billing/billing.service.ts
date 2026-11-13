@@ -155,6 +155,8 @@ export class BillingService {
       return { ok: true };
     }
     telemetry.capture('plan_webhook', {
+      // With usage_cost (same family_id), PostHog shows what each family paid and what it cost.
+      family_id: updated[0]!.id,
       event: parsed.data.event,
       status: patch.subscriptionStatus,
       dev_mode: parsed.data.devMode ?? null,

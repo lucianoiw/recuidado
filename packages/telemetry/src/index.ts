@@ -1,6 +1,8 @@
 import { PostHog } from "posthog-node";
 import { OtlpLogExporter, type LogAttributes, type LogLevel } from "./otlp-logs.ts";
+import { tokenCost, type Cost } from "./costs.ts";
 
+export * from "./costs.ts";
 export { OtlpLogExporter, toOtlpAttributes, type LogAttributes, type LogLevel } from "./otlp-logs.ts";
 
 export type Properties = Record<string, unknown>;
@@ -31,8 +33,35 @@ export interface LlmGeneration {
   output?: unknown;
   inputTokens?: number;
   outputTokens?: number;
+  /** OpenAI cached_tokens or Anthropic cache_read_input_tokens. */
+  cacheReadTokens?: number;
+  /** Anthropic cache_creation_input_tokens. */
+  cacheWriteTokens?: number;
+  /** Cost already known (voice billed by the second). Otherwise it comes from the token prices in costs.ts. */
+  cost?: Cost;
+  /** Family that used it: every cost carries it, to sum per family. */
+  familyId?: string;
   isError?: boolean;
   error?: string;
+  distinctId?: string;
+  properties?: Properties;
+}
+
+/**
+ * One paid use of a service, sent as `usage_cost`: the ledger of what each family costs.
+ * Every AI generation with a known price sends one too, so the ledger alone sums everything.
+ */
+export interface UsageCost {
+  /** "llm" (tokens), "voice" (GPT-Live seconds) or "telephony" (phone line minutes). */
+  kind: "llm" | "voice" | "telephony";
+  provider: string;
+  model?: string;
+  /** What it was for, e.g. "prescription_read", "reminder_call", "pharmacy_call". */
+  feature: string;
+  costUsd: number;
+  familyId?: string;
+  /** Call or request id, to sum the parts of one call. */
+  traceId?: string;
   distinctId?: string;
   properties?: Properties;
 }
@@ -123,8 +152,36 @@ export class Telemetry {
     this.log("error", message, attributes);
   }
 
-  llmGeneration(g: LlmGeneration): void {
+  usageCost(u: UsageCost): void {
+    this.capture(
+      "usage_cost",
+      {
+        cost_kind: u.kind,
+        provider: u.provider,
+        model: u.model,
+        feature: u.feature,
+        cost_usd: u.costUsd,
+        family_id: u.familyId ?? null,
+        $ai_trace_id: u.traceId,
+        ...u.properties,
+      },
+      u.distinctId ?? this.systemId,
+    );
+  }
+
+  /** Sends `$ai_generation` (LLM analytics) and, when its price is known, `usage_cost`. Returns the cost. */
+  llmGeneration(g: LlmGeneration): Cost | undefined {
     const distinctId = g.distinctId ?? this.systemId;
+    const cost =
+      g.cost ??
+      (g.inputTokens !== undefined || g.outputTokens !== undefined
+        ? tokenCost(g.provider, g.model, {
+            inputTokens: g.inputTokens,
+            outputTokens: g.outputTokens,
+            cacheReadTokens: g.cacheReadTokens,
+            cacheWriteTokens: g.cacheWriteTokens,
+          })
+        : undefined);
     this.capture(
       "$ai_generation",
       {
@@ -138,12 +195,32 @@ export class Telemetry {
         $ai_output_choices: g.output,
         $ai_input_tokens: g.inputTokens,
         $ai_output_tokens: g.outputTokens,
+        $ai_cache_read_input_tokens: g.cacheReadTokens,
+        $ai_cache_creation_input_tokens: g.cacheWriteTokens,
+        $ai_input_cost_usd: cost?.inputUsd,
+        $ai_output_cost_usd: cost?.outputUsd,
+        $ai_total_cost_usd: cost?.totalUsd,
         $ai_is_error: g.isError ?? false,
         $ai_error: g.error,
+        family_id: g.familyId ?? null,
         ...g.properties,
       },
       distinctId,
     );
+    if (cost && cost.totalUsd > 0) {
+      this.usageCost({
+        kind: g.model.startsWith("gpt-live") ? "voice" : "llm",
+        provider: g.provider,
+        model: g.model,
+        feature: g.spanName,
+        costUsd: cost.totalUsd,
+        familyId: g.familyId,
+        traceId: g.traceId,
+        distinctId,
+        properties: { input_tokens: g.inputTokens, output_tokens: g.outputTokens, ...g.properties },
+      });
+    }
+    return cost;
   }
 
   async flush(): Promise<void> {

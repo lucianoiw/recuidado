@@ -245,6 +245,8 @@ export class VoiceCallService {
       body: JSON.stringify({
         doseId,
         patientId: row.patientId,
+        // Every cost of the call is recorded under the family (PostHog usage_cost).
+        familyId: row.familyId,
         phone: row.phone,
         patientName: row.patientName,
         medications: [{ name: row.medication, dose: row.strength ?? undefined }],
@@ -561,7 +563,14 @@ export class VoiceCallService {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',
         headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ doseId, phone: c.phone, message: message.replace(NAME_SLOT, c.name), template: message, memberId: c.id }),
+        body: JSON.stringify({
+          doseId,
+          familyId: patient.familyId,
+          phone: c.phone,
+          message: message.replace(NAME_SLOT, c.name),
+          template: message,
+          memberId: c.id,
+        }),
       });
       const outcome = res.ok ? 'requested' : res.status === 403 ? 'number_not_allowed' : `error_${res.status}`;
       telemetry.capture('emergency_call', { dose_id: doseId, outcome, next: Boolean(afterId), calm }, c.id);
