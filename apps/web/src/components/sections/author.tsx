@@ -24,7 +24,7 @@ export function Author() {
         </div>
         <div className={styles.links}>
           {author.links.map((link) => (
-            <a key={link.href} href={link.href}>
+            <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
               {link.label}
             </a>
           ))}

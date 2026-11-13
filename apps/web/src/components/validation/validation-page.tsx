@@ -48,7 +48,7 @@ export function ValidationPage() {
             {v.title}
           </Heading>
           <Text className={styles.lead}>{v.text}</Text>
-          <a href={tribunalUrl} className={styles.button}>
+          <a href={tribunalUrl} className={styles.button} target="_blank" rel="noopener noreferrer">
             {v.tribunalAction}
           </a>
         </div>
@@ -189,7 +189,7 @@ export function ValidationPage() {
             </div>
           ))}
           <p className={styles.aboutFine}>
-            {v.about.fine} <a href={tribunalUrl}>{v.about.link}</a>.
+            {v.about.fine} <a href={tribunalUrl} target="_blank" rel="noopener noreferrer">{v.about.link}</a>.
           </p>
         </div>
       </Container>
