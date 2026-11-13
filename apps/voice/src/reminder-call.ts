@@ -296,7 +296,9 @@ export class ReminderCall {
         output: JSON.stringify({ recorded: taken !== undefined }),
       },
     });
-    this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
+    // After the goodbye there is nothing left to say: a new response made the model read the answer aloud
+    // ("É isso. Ela tá bem e já tomou, ok.").
+    if (!this.goodbyeHeard) this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
     if (this.recordTimer) clearTimeout(this.recordTimer);
     // The model does not always follow these steps: make sure she hears the line before the call ends.
@@ -336,7 +338,8 @@ export class ReminderCall {
       type: "session.commentary.append",
       event_id: `goodbye_${item.call_id}`,
       delegation_id: null,
-      content: `Say now, exactly: "${this.closingLine(taken)}"`,
+      // Without an opener she already heard ("Tá bom. Tá bom, Dona Maria").
+      content: `Say now, exactly: "${withoutSaidOpener(this.closingLine(taken), this.assistantSinceGreeting)}"`,
     });
     this.armSilenceHangup();
   }

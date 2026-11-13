@@ -488,3 +488,28 @@ test("the required line skips an opener the assistant already said", () => {
   assert.equal(withoutSaidOpener("Que bom. Vou avisar a sua família.", ""), "Que bom. Vou avisar a sua família.");
   assert.equal(withoutSaidOpener("Entendi. Vou avisar a sua família. Até já.", "Entendi."), "Vou avisar a sua família. Até já.");
 });
+
+test("answer recorded after the goodbye: no new response, so the model does not read the answer aloud", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "g", delta: "Oi, Maria! Como a senhora está?" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b", delta: "Obrigada, tchau!" });
+  socket.emitEvent(toolCall(true));
+  const result = await call.result;
+  assert.equal(result.outcome, "confirmed");
+  const types = socket.sent.map((e) => e.type);
+  assert.ok(types.includes("response.item.create"));
+  assert.ok(!types.includes("response.create"));
+});
+
+test("closing line asked for without the opener she already heard", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "a" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "g", delta: "Oi, Maria! Como a senhora está?" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "b", delta: "Tá bom." });
+  socket.emitEvent(toolCall(false, "não pode tomar agora"));
+  await call.result;
+  const asked = socket.sent.find((e) => e.type === "session.commentary.append" && String(e.content).startsWith("Say now, exactly"));
+  assert.ok(asked);
+  assert.doesNotMatch(String(asked.content), /"Tá bom/);
+});
