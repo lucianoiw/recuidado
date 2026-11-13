@@ -369,6 +369,7 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 | Leitura de receita (3 receitas sintéticas, uma manuscrita) | 3 de 3 corretas, de 12 a 16 s cada, cerca de US$ 0,06 por receita | `pnpm prescription:eval` |
 | Ligação de voz | Ligação real ponta a ponta para um celular, com confirmação da dose por voz | `POST /demo/missed-dose` na API |
 | Ligação para a farmácia com URA | Ligação real ao menu de teste: tecla 2 por DTMF escolhida por regra, estoque e preço gravados, 46 s (8ª ligação) | Botão "Perguntar à farmácia" em `/family/comprar` |
+| Custo por ligação (13/11/2026) | Farmácia simulada: US$ 0,137 em média (3 ligações de 77 a 96 s: voz da assistente US$ 0,074, atendente simulada US$ 0,063, bastidor US$ 0,0003; mais US$ 0,004 quando a transcrição é lida pelo Claude). Lembrete, estimado pelo histórico (média de 20 s): cerca de US$ 0,06 (voz US$ 0,017 e linha Nvoip US$ 0,04, mínimo de 30 s) | Painel "Recuidado: custo por família" no PostHog |
 | Qualidade do código | Lint, testes e build em todos os pacotes a cada push | [CI](https://github.com/lucianoiw/recuidado/actions/workflows/ci.yml) |
 
 ## Monitoria
@@ -395,6 +396,8 @@ Como cada parte é medida:
 - **Claude**: Opus 5.5 (receita) US$ 4/20 por milhão, Sonnet 5.5 (transcrição) US$ 2/10, com cache.
 - **Linha Nvoip**: só o tempo atendido, R$ 0,45 por minuto para celular (plano Free), convertido a R$ 5,61 por dólar. Suposição não confirmada com a Nvoip: cobrança mínima de 30 s e depois a cada 6 s.
 - **Farmácia simulada**: a atendente é uma segunda sessão GPT-Live e entra na conta da ligação; a linha não, porque o Asterisk atende sem passar pela Nvoip.
+
+Primeira medição (13/11/2026, rodada de 3 farmácias simuladas): US$ 0,41 no total, US$ 0,137 por ligação, e a soma do `usage_cost` bate com o `call_cost`. Isso explica a conta da OpenAI: em 12/11 foram 183 ligações de teste para farmácias simuladas, cerca de 198 minutos de voz da assistente e quase o mesmo da atendente simulada, perto de US$ 25. A farmácia simulada custa o dobro em voz porque são duas sessões GPT-Live.
 
 Os preços ficam em `packages/telemetry/src/costs.ts` (conferidos em 13/11/2026). Nenhum evento leva remédio, preço dito ou transcrição.
 
