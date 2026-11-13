@@ -372,6 +372,10 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 | Custo por ligação (13/11/2026) | Farmácia simulada: US$ 0,137 em média (3 ligações de 77 a 96 s: voz da assistente US$ 0,074, atendente simulada US$ 0,063, bastidor US$ 0,0003; mais US$ 0,004 quando a transcrição é lida pelo Claude). Lembrete, estimado pelo histórico (média de 20 s): cerca de US$ 0,06 (voz US$ 0,017 e linha Nvoip US$ 0,04, mínimo de 30 s) | Painel "Recuidado: custo por família" no PostHog |
 | Qualidade do código | Lint, testes e build em todos os pacotes a cada push | [CI](https://github.com/lucianoiw/recuidado/actions/workflows/ci.yml) |
 
+## Tribunal de Ideias
+
+Em 13/11/2026 o Recuidado passou pelo [Tribunal de Ideias](https://www.tribunaldeideias.com.br/pt/julgamento/cmwf7dqqk0003jzu6waeplpvh) (rito Plenário, preço real de R$ 19,90 com 7 dias grátis): 86/100. Doze modelos de IA aprovaram a ideia (dois com ressalvas, notas de 74 a 92); 38 de 60 compradores simulados comprariam, com faixa aceitável de R$ 10 a R$ 30. Pontos a provar: se o idoso aceita a ligação da assistente e se a família segue pagando depois dos 7 dias. O site cita o resultado com o link na seção "Quem está por trás" (decisão do Luciano, 13/11: só o link, sem seção própria, e sem a palavra "julgamento" em texto novo).
+
 ## Monitoria
 
 Tudo vai para o PostHog: logs de todos os serviços (que sobrevivem a deploy e restart), erros com stack trace, uma linha por requisição HTTP, eventos de produto (lembrete, dose confirmada, ligação, família avisada), cada chamada de IA com modelo, latência, tokens e custo, e o replay das telas com os campos mascarados.
