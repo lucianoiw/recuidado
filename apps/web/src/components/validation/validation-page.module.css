@@ -314,7 +314,7 @@
 
 .objection {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: 76px minmax(0, 1fr);
   gap: 4px 16px;
   padding: 16px 0;
   border-top: 1px solid var(--line);
@@ -325,6 +325,13 @@
   font-size: 36px;
   line-height: 1;
   letter-spacing: -0.03em;
+}
+
+.objectionOf {
+  margin-left: 2px;
+  color: var(--muted);
+  font-size: 0.42em;
+  letter-spacing: 0;
 }
 
 .objectionLabel {
@@ -544,7 +551,7 @@
   }
 
   .objection {
-    grid-template-columns: 72px minmax(0, 1fr);
+    grid-template-columns: 92px minmax(0, 1fr);
     gap: 4px 20px;
   }
 

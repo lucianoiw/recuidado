@@ -111,10 +111,11 @@ export function ValidationPage() {
             <ul className={styles.objections}>
               {v.buyers.objections.map((item) => (
                 <li key={item.label} className={styles.objection}>
-                  <span className={styles.objectionCount}>{item.count}</span>
-                  <span className={styles.objectionLabel}>
-                    {item.label} <span className={styles.muted}>{v.buyers.of}</span>
+                  <span className={styles.objectionCount}>
+                    {item.count}
+                    <span className={styles.objectionOf}>{v.buyers.of}</span>
                   </span>
+                  <span className={styles.objectionLabel}>{item.label}</span>
                   <span className={styles.objectionQuote}>“{item.quote}”</span>
                 </li>
               ))}
