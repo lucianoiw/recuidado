@@ -108,6 +108,7 @@ export function ValidationPage() {
           </div>
           <div>
             <h3 className={styles.h3}>{v.buyers.objectionsTitle}</h3>
+            <p className={styles.objectionsText}>{v.buyers.objectionsText}</p>
             <ul className={styles.objections}>
               {v.buyers.objections.map((item) => (
                 <li key={item.label} className={styles.objection}>
