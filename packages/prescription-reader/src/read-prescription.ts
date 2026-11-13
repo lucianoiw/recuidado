@@ -32,7 +32,12 @@ export interface ReadPrescriptionOptions {
 export interface ReadPrescriptionResult {
   reading: NormalizedReading;
   model: string;
-  usage: { input_tokens: number; output_tokens: number };
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+    cache_read_input_tokens?: number | null;
+    cache_creation_input_tokens?: number | null;
+  };
 }
 
 export type PrescriptionReadErrorCode = "too_large" | "unsupported_type" | "refused" | "truncated" | "invalid_output";
@@ -131,6 +136,11 @@ export async function readPrescription(
   return {
     reading: normalizeReading(fromModelReading(parsed.data)),
     model: response.model,
-    usage: { input_tokens: response.usage.input_tokens, output_tokens: response.usage.output_tokens },
+    usage: {
+      input_tokens: response.usage.input_tokens,
+      output_tokens: response.usage.output_tokens,
+      cache_read_input_tokens: response.usage.cache_read_input_tokens ?? undefined,
+      cache_creation_input_tokens: response.usage.cache_creation_input_tokens ?? undefined,
+    },
   };
 }

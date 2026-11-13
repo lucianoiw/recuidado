@@ -79,7 +79,7 @@ export class PrescriptionsController {
       return await this.prescriptions.parse({
         data: file.buffer,
         mediaType: file.mimetype as PrescriptionMediaType,
-      });
+      }, familyId);
     } catch (error) {
       throw toHttpError(error);
     }

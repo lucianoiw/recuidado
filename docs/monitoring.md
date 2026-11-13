@@ -38,6 +38,10 @@ O web manda o id da sessão para a API (`tracing_headers`). Assim cada log de ac
 | `call_refused`, `call_start_failed` | voice | `dose_id`, motivo |
 | `dose_confirm_tapped`, `prescription_upload_started`, `prescription_reviewed`, `prescription_saved`, `notifications_permission` | web | |
 | `service_started` | api, voice | |
+| `usage_cost` | api, voice | `cost_kind` (`voice`, `llm`, `telephony`), `provider`, `model`, `feature`, `cost_usd`, `family_id`, `$ai_trace_id` (id da ligação ou da leitura) |
+| `call_cost` | voice | `feature`, `call_id`, `family_id`, `cost_usd`, `voice_cost_usd`, `backend_cost_usd`, `telephony_cost_usd`, `actor_cost_usd`, `voice_seconds`, `answered_seconds` |
+
+Custo: todo uso pago (GPT-Live por segundo, tokens do modelo de bastidor, Claude e a linha Nvoip) gera um `usage_cost` com `family_id`. Somar `cost_usd` desse evento dá o custo por família, por dia ou por recurso. Preços em `packages/telemetry/src/costs.ts`. Detalhes no README, "Custo de cada uso, por família".
 
 LGPD: nenhum evento leva nome de remédio, transcrição ou o que ela disse. A transcrição fica só no Postgres e é esvaziada depois de `VOICE_TRANSCRIPT_RETENTION_DAYS` (90). O trace de IA da receita leva só quantos remédios foram lidos, não a leitura. O replay esconde todo o texto da tela (`maskTextSelector: "*"`). Exceção: `demo_run_started` leva o nome do remédio da família demo, que é sintética.
 

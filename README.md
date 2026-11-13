@@ -381,6 +381,23 @@ O painel mostra adesão às doses, o funil do lembrete até o "Tomei", ligaçõe
 
 Exemplo real do alerta (12/11/2026): uma demo terminou com a Dona Maria dizendo que não estava bem, o que agenda uma ligação de retorno 10 minutos depois. A demo foi encerrada antes disso e apagou a dose, mas a ligação de retorno ficou na fila. Quando ela rodou, não achou a dose e gerou um erro no worker. Nenhuma ligação foi feita. Correção: encerrar a demo também tira da fila a nova tentativa e as ligações de retorno, e uma ligação na fila de uma dose que não existe mais só é ignorada, sem erro.
 
+### Custo de cada uso, por família (13/11/2026)
+
+Motivo: a chave da OpenAI gastou US$ 25,51 em 7 dias, quase tudo em um dia de testes de ligação, e não sabíamos quanto custava cada ligação nem cada família. Agora todo uso pago vira evento no PostHog com `family_id`, o que permite somar por família e por dia e comparar com o que ela pagou (`plan_webhook` também leva `family_id`).
+
+- **`usage_cost`**: o livro-caixa. Um evento por parte paga: `cost_kind` (`voice`, `llm`, `telephony`), `provider`, `model`, `feature` (`reminder_call`, `checkin_call`, `alert_call`, `pharmacy_call`, `pharmacy_call_backend`, `pharmacy_call_actor`, `prescription_read`, `pharmacy_transcript_read`), `cost_usd`, `family_id` e o id da ligação.
+- **`$ai_generation`** (LLM analytics do PostHog) com tokens, tokens de cache e custo (`$ai_total_cost_usd`) de cada chamada de IA: voz GPT-Live, modelo de bastidor da ligação (delegação), leitura da receita e leitura da transcrição da farmácia.
+- **`call_cost`**: o total de cada ligação, separado em voz, bastidor, linha e atendente simulada.
+
+Como cada parte é medida:
+- **GPT-Live**: US$ 0,05 por minuto, cobrado por segundo, do momento em que a sessão é criada (inclui o tempo chamando) até fechar. Usamos o `usage.seconds` final que a própria OpenAI manda no `session.closed`.
+- **Bastidor da ligação** (`gpt-6-luna`, delegação Responses): tokens de cada `response.completed`, contados uma vez por resposta, a US$ 0,10 (entrada), 0,01 (entrada em cache) e 0,50 (saída) por milhão.
+- **Claude**: Opus 5.5 (receita) US$ 4/20 por milhão, Sonnet 5.5 (transcrição) US$ 2/10, com cache.
+- **Linha Nvoip**: só o tempo atendido, R$ 0,45 por minuto para celular (plano Free), convertido a R$ 5,61 por dólar. Suposição não confirmada com a Nvoip: cobrança mínima de 30 s e depois a cada 6 s.
+- **Farmácia simulada**: a atendente é uma segunda sessão GPT-Live e entra na conta da ligação; a linha não, porque o Asterisk atende sem passar pela Nvoip.
+
+Os preços ficam em `packages/telemetry/src/costs.ts` (conferidos em 13/11/2026). Nenhum evento leva remédio, preço dito ou transcrição.
+
 ## Dados públicos
 
 | Fonte | Uso |
@@ -492,7 +509,7 @@ Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coo
 - Corrigido no mesmo dia: a atendente da URA de teste dizia que a Rosuvastatina "sai pelo Farmácia Popular", contradizendo o "Para comprar" do app. Agora diz que não sai.
 - Corrigido no mesmo dia: os avisos da família demo estavam cheios de testes (falso "não está bem", ponto duplo, resumo no lugar das palavras dela). O texto foi corrigido no PR #108 e os avisos antigos foram apagados com `DEMO_CLEAR_ALERTS_BEFORE`.
 - Corrigido no PR #108: "Vale ligar para ela" agora respeita "O senhor".
-- Sem medição: custo por ligação. Temos só a duração (18 ligações, média 21 s, mediana 17 s); o custo do GPT-Live não vai para o PostHog.
+- Resolvido em 13/11: o custo de cada ligação vai para o PostHog (`call_cost` e `usage_cost`), por família. Ver "Custo de cada uso, por família".
 - Não testados ao vivo nesta revisão: "ainda dói" na ligação de volta, roteiro novo do PR #104, segunda ligação em 15 min, demo de 2 minutos (liga para o celular real), push chegando no aparelho.
 
 **Planejado e não feito**
@@ -518,7 +535,7 @@ Testado em produção em 11/11, com navegador (celular), API, MCP, PostHog e Coo
 
 **Melhorias que valem a pena**
 - Respeitar senhor ou senhora em todos os textos da família, não só na ligação.
-- Gravar o custo de cada ligação no PostHog, junto da duração.
+- Feito em 13/11: custo de cada ligação no PostHog, junto da duração.
 - Um monitor de disponibilidade da demo até 15/12 (regra 7.3).
 
 ## Rodar localmente

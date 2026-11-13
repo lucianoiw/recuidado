@@ -31,7 +31,7 @@ export class PrescriptionsService {
   ) {}
 
   /** Reads a prescription photo or PDF and returns structured, normalized data. */
-  async parse(input: PrescriptionInput): Promise<ReadPrescriptionResult> {
+  async parse(input: PrescriptionInput, familyId?: string | null): Promise<ReadPrescriptionResult> {
     const client = this.getClient();
     const traceId = randomUUID();
     const started = performance.now();
@@ -43,6 +43,8 @@ export class PrescriptionsService {
       // The image itself is not sent to PostHog, only what it was.
       input: [{ role: 'user', content: `[${kind} da receita, ${Math.round(input.data.byteLength / 1024)} KB]` }],
       properties: { media_type: input.mediaType, bytes: input.data.byteLength },
+      // Cost per family (usage_cost); visitors trying the reader have none.
+      familyId: familyId ?? undefined,
     };
     try {
       const result = await readPrescription(input, { client, model: this.model() });
@@ -53,11 +55,14 @@ export class PrescriptionsService {
         latencySeconds,
         inputTokens: result.usage.input_tokens,
         outputTokens: result.usage.output_tokens,
+        cacheReadTokens: result.usage.cache_read_input_tokens ?? undefined,
+        cacheWriteTokens: result.usage.cache_creation_input_tokens ?? undefined,
         // LGPD: medicine names and doses are health data and stay out of PostHog (US). Only the shape goes.
         output: [{ role: 'assistant', content: `[leitura com ${result.reading.items.length} remédio(s)]` }],
       });
       telemetry.capture('prescription_read', {
         $ai_trace_id: traceId,
+        family_id: familyId ?? null,
         model: result.model,
         items: result.reading.items.length,
         latency_seconds: Math.round(latencySeconds * 10) / 10,

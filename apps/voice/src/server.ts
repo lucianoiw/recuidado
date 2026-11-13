@@ -1,12 +1,13 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { timingSafeEqual } from "node:crypto";
-import { telemetryFromEnv } from "@recuidado/telemetry";
+import { telemetryFromEnv, telephonyCost, voiceCost } from "@recuidado/telemetry";
 import { loadConfig, type VoiceConfig } from "./config.js";
 import { CallService, NumberNotAllowedError } from "./call-service.js";
 import type { CallResult, ReminderCall } from "./reminder-call.js";
 import type { Medication } from "./prompt.js";
 import type { PharmacyCall, PharmacyCallResult } from "./pharmacy-call.js";
 import type { SimMedication } from "./sim-pharmacy.js";
+import type { UsageMeter } from "./usage.js";
 
 // Events, exceptions and logs go to PostHog; logs also stay on stdout.
 const telemetry = telemetryFromEnv("voice");
@@ -34,6 +35,127 @@ try {
 }
 const service = config ? new CallService(config, log) : undefined;
 const calls = new Map<string, CallRecord>();
+
+interface CallCostInput {
+  /** reminder_call, alert_call or pharmacy_call. */
+  feature: string;
+  callId: string;
+  familyId?: string;
+  distinctId: string;
+  usage: UsageMeter;
+  /** The attendant AI of a simulated pharmacy: a second voice session. */
+  actorUsage?: Promise<UsageMeter | undefined>;
+  /** False when Asterisk answers (simulated pharmacy): no phone line. */
+  phoneLine: boolean;
+  /** Shown on the voice generation (outcome of the call). */
+  outcome?: string;
+  isError?: boolean;
+  error?: string;
+  properties?: Record<string, unknown>;
+}
+
+/**
+ * Sends what a call cost to PostHog: the GPT-Live seconds, each delegated backend model, the phone
+ * line (Nvoip) and, for simulated pharmacies, the attendant AI. One `usage_cost` per part (the ledger)
+ * and one `call_cost` with the total. Never throws.
+ */
+async function reportCallCost(c: CallCostInput): Promise<void> {
+  if (!config) return;
+  try {
+    const usage = await c.usage.settle();
+    const props = { call_id: c.callId, ...c.properties };
+    const parts: Record<string, number> = { voice: 0, backend: 0, telephony: 0, actor: 0 };
+    const seconds = usage.voiceSeconds ?? 0;
+    parts.voice =
+      telemetry.llmGeneration({
+        traceId: c.callId,
+        spanName: c.feature,
+        provider: "openai",
+        model: config.liveModel,
+        latencySeconds: seconds,
+        output: c.outcome ? [{ role: "assistant", content: `outcome=${c.outcome}` }] : undefined,
+        cost: voiceCost(config.liveModel, seconds),
+        isError: c.isError,
+        error: c.error,
+        familyId: c.familyId,
+        distinctId: c.distinctId,
+        properties: { ...props, voice_seconds: usage.voiceSeconds ?? null, outcome: c.outcome },
+      })?.totalUsd ?? 0;
+    for (const b of usage.backend) {
+      parts.backend +=
+        telemetry.llmGeneration({
+          traceId: c.callId,
+          spanName: `${c.feature}_backend`,
+          provider: "openai",
+          model: b.model,
+          latencySeconds: 0,
+          inputTokens: b.inputTokens,
+          cacheReadTokens: b.cachedTokens,
+          outputTokens: b.outputTokens,
+          familyId: c.familyId,
+          distinctId: c.distinctId,
+          properties: { ...props, responses: b.responses },
+        })?.totalUsd ?? 0;
+    }
+    if (c.phoneLine && usage.answeredSeconds > 0) {
+      const line = telephonyCost(usage.answeredSeconds);
+      parts.telephony = line.usd;
+      telemetry.usageCost({
+        kind: "telephony",
+        provider: "nvoip",
+        feature: c.feature,
+        costUsd: line.usd,
+        familyId: c.familyId,
+        traceId: c.callId,
+        distinctId: c.distinctId,
+        properties: {
+          ...props,
+          answered_seconds: Math.round(usage.answeredSeconds),
+          billed_seconds: line.billedSeconds,
+          cost_brl: line.brl,
+        },
+      });
+    }
+    const actor = await c.actorUsage;
+    if (actor) {
+      const a = await actor.settle();
+      parts.actor =
+        telemetry.llmGeneration({
+          traceId: c.callId,
+          spanName: `${c.feature}_actor`,
+          provider: "openai",
+          model: config.liveModel,
+          latencySeconds: a.voiceSeconds ?? 0,
+          cost: voiceCost(config.liveModel, a.voiceSeconds ?? 0),
+          familyId: c.familyId,
+          distinctId: c.distinctId,
+          properties: { ...props, voice_seconds: a.voiceSeconds ?? null, simulated: true },
+        })?.totalUsd ?? 0;
+    }
+    const total = Math.round((parts.voice + parts.backend + parts.telephony + parts.actor) * 1e6) / 1e6;
+    telemetry.capture(
+      "call_cost",
+      {
+        ...props,
+        feature: c.feature,
+        family_id: c.familyId ?? null,
+        outcome: c.outcome,
+        cost_usd: total,
+        voice_cost_usd: parts.voice,
+        backend_cost_usd: Math.round(parts.backend * 1e6) / 1e6,
+        telephony_cost_usd: parts.telephony,
+        actor_cost_usd: parts.actor,
+        voice_seconds: usage.voiceSeconds ?? null,
+        answered_seconds: Math.round(usage.answeredSeconds),
+        backend_tokens: usage.backend.reduce((n, b) => n + b.inputTokens + b.outputTokens, 0),
+      },
+      c.distinctId,
+    );
+    telemetry.info(`call ${c.callId} cost US$ ${total.toFixed(4)}`, { call_id: c.callId, cost_usd: total });
+  } catch (err) {
+    telemetry.warn(`call cost not reported: ${(err as Error).message}`, { call_id: c.callId });
+  }
+}
 
 function json(res: ServerResponse, status: number, body: unknown) {
   res.writeHead(status, { "Content-Type": "application/json" });
@@ -69,6 +191,7 @@ function parseCallRequest(body: unknown) {
   if (typeof b.patientName !== "string" || !b.patientName.trim()) throw new Error("patientName is required");
   if (meds.length === 0) throw new Error("medications must have at least one item");
   const patientId = typeof b.patientId === "string" && b.patientId ? b.patientId : undefined;
+  const familyId = typeof b.familyId === "string" && b.familyId ? b.familyId : undefined;
   const checkIn = b.checkIn === true;
   const callBack = b.callBack !== false;
   const gender = b.gender === "male" ? ("male" as const) : ("female" as const);
@@ -78,6 +201,7 @@ function parseCallRequest(body: unknown) {
   return {
     doseId: b.doseId,
     patientId,
+    familyId,
     phone: b.phone,
     patientName: b.patientName.trim(),
     medications: meds,
@@ -141,12 +265,12 @@ const server = createServer(async (req, res) => {
       } catch (err) {
         return json(res, 400, { error: (err as Error).message });
       }
-      const { patientId, ...callInput } = input;
+      const { patientId, familyId, ...callInput } = input;
       const distinctId = patientId ?? telemetry.systemId;
       const startedAt = Date.now();
       let callId: string | undefined;
       try {
-        const { sessionId, call, trail } = await service.start(callInput, (status) => {
+        const { sessionId, call, trail, usage } = await service.start(callInput, (status) => {
           telemetry.capture(`call_${status}`, { dose_id: input.doseId, call_id: callId }, distinctId);
         });
         callId = sessionId;
@@ -171,20 +295,20 @@ const server = createServer(async (req, res) => {
             transcript_turns: result.transcript.length,
             error: result.error,
           };
-          telemetry.capture("call_ended", props, distinctId);
-          // The voice agent shows up in LLM analytics next to the prescription reader.
+          telemetry.capture("call_ended", { ...props, family_id: familyId ?? null }, distinctId);
+          // The voice agent shows up in LLM analytics next to the prescription reader, with its cost.
           // The transcript stays out: the API records the call in Postgres.
-          telemetry.llmGeneration({
-            traceId: sessionId,
-            spanName: "reminder_call",
-            provider: "openai",
-            model: config.liveModel,
-            latencySeconds: result.durationSeconds ?? props.wall_seconds,
-            output: [{ role: "assistant", content: `outcome=${result.outcome}` }],
+          void reportCallCost({
+            feature: input.checkIn ? "checkin_call" : "reminder_call",
+            callId: sessionId,
+            familyId,
+            distinctId,
+            usage,
+            phoneLine: true,
+            outcome: result.outcome,
             isError: result.outcome === "failed",
             error: result.error,
-            distinctId,
-            properties: { dose_id: input.doseId, outcome: result.outcome },
+            properties: { dose_id: input.doseId },
           });
           await service.report(input.doseId, { ...result, checkIn: input.checkIn, recall: input.recall });
           await service.reportLog({
@@ -220,7 +344,8 @@ const server = createServer(async (req, res) => {
       }
       const props = { dose_id: typeof b.doseId === "string" ? b.doseId : undefined };
       try {
-        const { sessionId, call, trail } = await service.startAlert(b.phone, b.message.trim());
+        const { sessionId, call, trail, usage } = await service.startAlert(b.phone, b.message.trim());
+        const familyId = typeof b.familyId === "string" && b.familyId ? b.familyId : undefined;
         telemetry.capture("alert_call_started", { ...props, call_id: sessionId }, telemetry.systemId);
         const memberId = typeof b.memberId === "string" ? b.memberId : undefined;
         void call.result.then(async (result) => {
@@ -230,6 +355,16 @@ const server = createServer(async (req, res) => {
             { ...props, call_id: sessionId, answered: result.answered, delivered: result.delivered, end_reason: result.endReason },
             telemetry.systemId,
           );
+          void reportCallCost({
+            feature: "alert_call",
+            callId: sessionId,
+            familyId,
+            distinctId: telemetry.systemId,
+            usage,
+            phoneLine: true,
+            outcome: result.delivered ? "delivered" : result.answered ? "answered" : "no_answer",
+            properties: { dose_id: props.dose_id },
+          });
           void service.reportLog({
             sessionId,
             kind: "caregiver",
@@ -270,7 +405,7 @@ const server = createServer(async (req, res) => {
       const distinctId = input.familyId ?? telemetry.systemId;
       const props = { inquiry_id: input.inquiryId, medications: input.medications.length };
       try {
-        const { sessionId, call, trail } = await service.startPharmacy(input);
+        const { sessionId, call, trail, usage, actorUsage, simulated } = await service.startPharmacy(input);
         const record: PharmacyCallRecord = { inquiryId: input.inquiryId, call };
         pharmacyCalls.set(sessionId, record);
         telemetry.capture("pharmacy_call_started", { ...props, call_id: sessionId }, distinctId);
@@ -281,6 +416,7 @@ const server = createServer(async (req, res) => {
             "pharmacy_call_ended",
             {
               ...props,
+              family_id: input.familyId ?? null,
               call_id: sessionId,
               outcome: result.outcome,
               items_with_price: result.items.filter((i) => i.priceCents != null).length,
@@ -291,17 +427,18 @@ const server = createServer(async (req, res) => {
             },
             distinctId,
           );
-          telemetry.llmGeneration({
-            traceId: sessionId,
-            spanName: "pharmacy_call",
-            provider: "openai",
-            model: config.liveModel,
-            latencySeconds: result.durationSeconds ?? 0,
-            output: [{ role: "assistant", content: `outcome=${result.outcome}` }],
+          void reportCallCost({
+            feature: "pharmacy_call",
+            callId: sessionId,
+            familyId: input.familyId,
+            distinctId,
+            usage,
+            actorUsage,
+            phoneLine: !simulated,
+            outcome: result.outcome,
             isError: result.outcome === "failed",
             error: result.error,
-            distinctId,
-            properties: { inquiry_id: input.inquiryId, outcome: result.outcome },
+            properties: { inquiry_id: input.inquiryId, medications: input.medications.length, simulated },
           });
           await service.reportPharmacy(input.inquiryId, result);
           await service.reportLog({

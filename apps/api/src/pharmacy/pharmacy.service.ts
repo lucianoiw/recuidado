@@ -300,6 +300,7 @@ export class PharmacyService {
     if (readLater) {
       void this.readTranscript(
         id,
+        row.familyId,
         row.medications.map((m) => [m.name, m.strength].filter(Boolean).join(' ')),
         result.transcript ?? [],
       );
@@ -308,11 +309,34 @@ export class PharmacyService {
   }
 
   /** Fills the answer from the call transcript. Never throws: on any problem the inquiry ends as unclear. */
-  async readTranscript(id: string, meds: string[], transcript: NonNullable<PharmacyVoiceResult['transcript']>) {
+  async readTranscript(
+    id: string,
+    familyId: string | null,
+    meds: string[],
+    transcript: NonNullable<PharmacyVoiceResult['transcript']>,
+  ) {
     let update: Partial<Inquiry> = { status: 'unclear' };
+    const started = performance.now();
     try {
       this.client ??= new Anthropic({ apiKey: this.config.get<string>('ANTHROPIC_API_KEY') });
-      const { items, note, matchesOffers } = await readPharmacyTranscript(this.client, meds, transcript);
+      const { items, note, matchesOffers } = await readPharmacyTranscript(this.client, meds, transcript, undefined, (u) =>
+        // Cost per family. LGPD: only the shape of the reading goes, not the medicines or prices.
+        telemetry.llmGeneration({
+          traceId: id,
+          spanName: 'pharmacy_transcript_read',
+          provider: 'anthropic',
+          model: u.model,
+          latencySeconds: (performance.now() - started) / 1000,
+          input: [{ role: 'user', content: `[transcrição com ${transcript.length} falas]` }],
+          inputTokens: u.input_tokens,
+          outputTokens: u.output_tokens,
+          cacheReadTokens: u.cache_read_input_tokens ?? undefined,
+          cacheWriteTokens: u.cache_creation_input_tokens ?? undefined,
+          familyId: familyId ?? undefined,
+          distinctId: familyId ?? undefined,
+          properties: { inquiry_id: id },
+        }),
+      );
       if (items.some((i) => i.available !== 'unknown' || i.priceCents != null)) {
         update = { status: 'answered', answers: items, note, matchesOffers };
         telemetry.capture('pharmacy_answer_from_transcript', {
