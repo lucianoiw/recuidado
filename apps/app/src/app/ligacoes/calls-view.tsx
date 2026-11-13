@@ -4,13 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { API_URL, apiFetch } from "@/lib/api";
 import { authHeader } from "@/lib/session";
 import { Logo } from "@/components/ui";
+import { type CallEvent, keySteps, type PharmacyAnswer, pharmacyAnswerText } from "./steps";
 
 type Kind = "reminder" | "recall" | "check_in" | "caregiver" | "pharmacy";
 
-interface CallEvent {
-  atMs: number;
-  text: string;
-}
 
 interface CallLog {
   sessionId: string;
@@ -20,6 +17,9 @@ interface CallLog {
   startedAt: string;
   transcript: { speaker: string; text: string }[];
   events: CallEvent[];
+  /** The voice did not record the answer; Claude read it from the transcript after the call. */
+  readFromTranscript?: boolean;
+  pharmacyAnswer?: PharmacyAnswer | null;
   hasRecording: boolean;
 }
 
@@ -55,33 +55,48 @@ function clock(ms: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-/** Lines that say what the system decided. The rest (sideband events) only show with "todos os passos". */
-const KEY_STEP =
-  /^(function |required line|dose answer|answer recorded|answer not recorded|pharmacy answer|goodbye|no goodbye|recording|voice gate|pressing keys|dtmf sent|menu |no menu|decision:|other side|person on the line|the person is back|voicemail|closed |alert |playing recorded|max call|nobody spoke|event (transport\.answered|transport\.failed|session\.closed))/i;
-
-function isKeyStep(text: string): boolean {
-  return KEY_STEP.test(text);
-}
-
-function Timeline({ events }: { events: CallEvent[] }) {
+function Timeline({
+  events,
+  readFromTranscript,
+  pharmacyAnswer,
+}: {
+  events: CallEvent[];
+  readFromTranscript?: boolean;
+  pharmacyAnswer?: PharmacyAnswer | null;
+}) {
   const [all, setAll] = useState(false);
-  const shown = all ? events : events.filter((e) => isKeyStep(e.text));
   if (events.length === 0) return <p className="text-[14px] text-muted">Sem passos registrados.</p>;
+  const steps = keySteps(events);
+  if (readFromTranscript) {
+    steps.push({
+      atMs: events.at(-1)!.atMs,
+      text: `Depois da ligação, o Claude leu as respostas na transcrição${pharmacyAnswer ? `: ${pharmacyAnswerText(pharmacyAnswer)}` : ""}`,
+      saved: true,
+    });
+  }
   return (
     <div className="flex flex-col gap-2">
-      <ol className="flex flex-col gap-1 font-mono text-[12.5px] leading-snug">
-        {shown.map((e, i) => (
+      <ol className="flex flex-col gap-1.5 text-[14px] leading-snug">
+        {steps.map((s, i) => (
           <li key={i} className="flex gap-2">
-            <span className="w-11 shrink-0 tabular-nums text-muted">{clock(e.atMs)}</span>
-            <span className={`min-w-0 break-words [overflow-wrap:anywhere] ${e.text.startsWith("function ") || e.text.startsWith("required line") ? "font-semibold text-brand" : ""}`}>
-              {e.text}
-            </span>
+            <span className="w-11 shrink-0 font-mono text-[12.5px] tabular-nums text-muted">{clock(s.atMs)}</span>
+            <span className={`min-w-0 break-words [overflow-wrap:anywhere] ${s.saved ? "font-semibold text-brand" : ""}`}>{s.text}</span>
           </li>
         ))}
       </ol>
       <button type="button" onClick={() => setAll((v) => !v)} className="self-start text-[13px] font-semibold text-brand underline">
-        {all ? "Só os passos principais" : `Todos os passos (${events.length})`}
+        {all ? "Esconder o log completo" : `Ver o log completo (${events.length} linhas)`}
       </button>
+      {all ? (
+        <ol className="flex flex-col gap-1 font-mono text-[12.5px] leading-snug">
+          {events.map((e, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="w-11 shrink-0 tabular-nums text-muted">{clock(e.atMs)}</span>
+              <span className="min-w-0 break-words [overflow-wrap:anywhere]">{e.text}</span>
+            </li>
+          ))}
+        </ol>
+      ) : null}
     </div>
   );
 }
@@ -158,7 +173,7 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
         </section>
         <section className="flex min-w-0 flex-col gap-2">
           <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">O que o sistema fez</h3>
-          <Timeline events={call.events} />
+          <Timeline events={call.events} readFromTranscript={call.readFromTranscript} pharmacyAnswer={call.pharmacyAnswer} />
         </section>
       </div>
     </article>

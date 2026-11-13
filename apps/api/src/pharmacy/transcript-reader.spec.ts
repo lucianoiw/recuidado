@@ -19,6 +19,7 @@ describe('readPharmacyTranscript', () => {
           package: 'caixa com 30 comprimidos',
         },
       ],
+      matches_offers: 'yes',
       note: '',
     });
     const result = await readPharmacyTranscript(client, ['Rosuvastatina 10 mg'], [
@@ -38,6 +39,7 @@ describe('readPharmacyTranscript', () => {
         },
       ],
       note: null,
+      matchesOffers: 'yes',
     });
     const content = create.mock.calls[0][0].messages[0].content as string;
     expect(content).toContain('Farmácia: custa trinta e\nAssistente: e quantos\nFarmácia: dois reais');
@@ -46,6 +48,7 @@ describe('readPharmacyTranscript', () => {
   it('keeps a missing price as null', async () => {
     const { client } = fakeClient({
       items: [{ medication: 'Losartana', available: 'no', generic_price_reais: null, reference_price_reais: null, price_reais: null, package: '' }],
+      matches_offers: 'unknown',
       note: 'Chega amanhã.',
     });
     const result = await readPharmacyTranscript(client, ['Losartana'], [{ speaker: 'patient', text: 'Não tem.' }]);

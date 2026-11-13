@@ -564,6 +564,8 @@ export interface PharmacyInquiry {
     package?: string;
   }[];
   note: string | null;
+  /** Whether they match a lower price from another pharmacy ("cobre oferta"). */
+  matchesOffers?: TriState | null;
   /** The call went through a recorded menu (keys pressed). */
   usedPhoneMenu: boolean;
   transcript: { speaker: "assistant" | "patient"; text: string }[];

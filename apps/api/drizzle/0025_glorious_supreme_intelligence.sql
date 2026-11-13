@@ -1,0 +1,1 @@
+ALTER TABLE "pharmacy_inquiries" ADD COLUMN "matches_offers" text;

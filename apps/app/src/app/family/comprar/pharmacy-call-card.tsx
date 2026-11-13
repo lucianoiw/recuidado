@@ -239,6 +239,25 @@ function Comparison({
           </div>
         );
       })}
+      {inquiries.some((i) => i.matchesOffers === "yes" || i.matchesOffers === "no") ? (
+        <div className="flex flex-col gap-1.5">
+          <b className="text-[17px]">Cobre oferta de outra farmácia?</b>
+          <ul className="overflow-hidden rounded-xl border border-line-soft">
+            {inquiries.map((i) => (
+              <li key={i.id} className="flex items-center justify-between gap-3 border-b border-line-soft px-3.5 py-3 last:border-b-0">
+                <span className="font-semibold">{i.pharmacyName}</span>
+                {i.matchesOffers === "yes" ? (
+                  <StatusPill tone="ok">Cobre</StatusPill>
+                ) : i.matchesOffers === "no" ? (
+                  <StatusPill tone="neutral">Não cobre</StatusPill>
+                ) : (
+                  <StatusPill tone={STOCK.unknown.tone}>Não disse</StatusPill>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {inquiries
         .filter((i) => i.note)
         .map((i) => (

@@ -41,6 +41,7 @@ const voiceResultBody = z.object({
     .max(10)
     .default([]),
   note: z.string().nullish(),
+  matchesOffers: triState.nullish(),
   keysPressed: z.array(z.string()).default([]),
   transcript: z
     .array(z.object({ speaker: z.enum(['assistant', 'patient']), text: z.string() }))
