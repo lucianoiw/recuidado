@@ -49,7 +49,7 @@ export const validationPage = {
   opinion: {
     eyebrow: "O parecer final",
     paragraphs: [
-      "Considero a ideia forte em relevância, solução, diferencial e timing. Entre os concorrentes encontrados, Goldies faz lembrete em app e RenovatioMed exige dispositivo físico. Nenhum reúne ligação de voz para quem não usa app, cruzamento da receita com o Farmácia Popular, ligação à farmácia e divisão da conta entre irmãos. A dificuldade de acompanhar a tomada dos remédios aparece em relatos reais, como o da família que duvidava se a idosa ingeria os medicamentos corretamente. Os R$ 19,90 estão dentro da faixa aceitável de R$ 10 a R$ 30.",
+      "Considero a ideia forte em relevância, solução, diferencial e timing. Entre os concorrentes encontrados, Goldies faz lembrete em app e RenovatioMed exige dispositivo físico. Nenhum reúne ligação de voz para quem não usa app, cruzamento da receita com o Farmácia Popular, ligação à farmácia e divisão da conta entre irmãos. A dificuldade de acompanhar a tomada dos remédios aparece em relatos reais, como o da família que duvidava se a idosa ingeria os medicamentos corretamente. Os R$ 19,90 estão dentro da faixa aceitável de R$ 10 a R$ 30 [...]",
       "As fragilidades estão em monetização e gestão de risco. Os compradores simulados questionaram se o idoso aceita a ligação da IA, o custo com chamadas extras, as receitas manuscritas e a falta de suporte humano. O ponto de equilíbrio é de 51 clientes, bem acima das 10 famílias previstas para o piloto.",
       "A dor de pagar por remédio que é grátis e a de dividir a conta entre irmãos ainda não têm relato real: são hipóteses a validar.",
     ],
@@ -100,18 +100,19 @@ export const validationPage = {
     pricesTitle: "Quanto pagariam por mês",
     prices: [
       { group: "Todos os compradores", range: "R$ 10 a R$ 30" },
-      { group: "Classe média, com pais morando sozinhos", range: "R$ 10 a R$ 30" },
+      { group: "Classe média, com pais morando sozinhos ou com o cônjuge", range: "R$ 10 a R$ 30" },
       { group: "Classe média alta em capitais, com pais em outra casa ou cidade", range: "R$ 10 a R$ 35" },
     ],
     pricesNote: "O plano custa R$ 19,90: dentro da faixa de todos os grupos.",
-    objectionsTitle: "Por que os outros não comprariam",
+    objectionsTitle: "A principal dúvida de cada um dos 60",
+    objectionsText: "Todos apontaram uma dúvida, inclusive os 38 que comprariam. Por isso a soma dá 60.",
     of: "/60",
     objections: [
       { label: "Se o idoso aceita a ligação da IA", count: 16, quote: "Não diz se a IA já foi testada com idosos reais para garantir que eles aceitam as ligações e não ficam assustados." },
       { label: "Recursos e compatibilidade", count: 14, quote: "Não sei se o Recuidado é compatível com o meu plano de saúde atual." },
       { label: "Preço e custo-benefício", count: 11, quote: "Não diz se o custo total com as ligações pode aumentar se o idoso precisar de muitos lembretes ou chamadas extras." },
       { label: "Receitas manuscritas", count: 9, quote: "Não diz se o sistema funciona bem com receitas manuscritas muito difíceis de ler, que minha mãe tem várias." },
-      { label: "Suporte humano", count: 6, quote: "Não diz se há suporte humano para casos em que a IA não consegue resolver." },
+      { label: "Suporte humano", count: 6, quote: "Não diz se há suporte humano para casos em que a IA não consegue resolver ou se a família pode intervir facilmente." },
       { label: "Ligação para a farmácia", count: 4, quote: "Não explica como a IA sabe qual tecla apertar se a farmácia muda o menu de atendimento." },
     ],
   },
@@ -129,12 +130,12 @@ export const validationPage = {
 
   evaluators: {
     title: "O que cada um dos 12 avaliadores escreveu",
-    text: "Doze modelos de IA, de onze empresas, deram nota sozinhos e depois revisaram a nota lendo os colegas.",
+    text: "Doze modelos de IA, de doze empresas diferentes, deram nota sozinhos e depois revisaram a nota lendo os colegas.",
     items: [
       { model: "Grok 4.20", company: "xAI", score: 92, quote: "Agente de voz resolve silêncio da distância com economia real." },
       { model: "MiniMax M3.1 Flash", company: "MiniMax", score: 91, quote: "A cunha é a voz para quem não usa app." },
       { model: "Nova 2 Lite", company: "Amazon", score: 90, quote: "Resolva dor real com IA para idosos." },
-      { model: "Seed 2.0 Mini", company: "ByteDance", score: 89, quote: "Atende dor real de cuidadores à distância, com soluções específicas e diferenciais claros, mas precisa validar aceitação e preço." },
+      { model: "Seed 2.0 Mini", company: "ByteDance", score: 89, quote: "Recuidado atende dor real de cuidadores à distância, com soluções específicas e diferenciais claros, mas precisa validar aceitação e preço." },
       { model: "Llama 4 Maverick", company: "Meta", score: 88, quote: "Dor específica e mecanismo viável, mas aceitação da IA ainda não provada." },
       { model: "Gemini 2.5 Flash", company: "Google", score: 88, quote: "Recuidado: a IA que traz a família de volta à vida." },
       { model: "Mistral Medium 3.1", company: "Mistral", score: 88, quote: "Dor real, solução inovadora, mas validação é chave." },
@@ -151,7 +152,7 @@ export const validationPage = {
     text: "O parecer pede duas provas: que quem toma o remédio aceita a ligação da assistente e que a família continua no plano pago depois dos 7 dias grátis. Estes são os passos, e são eles que guiam a fase de testes.",
     goal: "Meta:",
     items: [
-      { title: "Oferecer os 7 dias grátis a 30 filhos e filhas", goal: "19 de 30 aceitam em 3 semanas" },
+      { title: "Oferecer os 7 dias grátis a 30 filhos e filhas", goal: "pelo menos 19 de 30 dizem sim em 3 semanas" },
       { title: "Piloto de ligações com 10 famílias", goal: "8 de 10 idosos atendem e seguem recebendo ligações em 30 dias" },
       { title: "Criar um plano anual com desconto", goal: "3 em 10 assinantes escolhem o anual em 60 dias" },
       { title: "Dizer quantas ligações o plano inclui", goal: "8 de 10 famílias do piloto mantêm o plano depois do limite em 45 dias" },
