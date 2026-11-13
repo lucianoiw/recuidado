@@ -385,6 +385,13 @@ export class VoiceCallService {
       .update(doses)
       .set({ status: 'missed' })
       .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
+    // An emergency already sent the urgent push and called the first contact: a missed-dose push and a calm
+    // call on top would ring the same phones twice at the same time.
+    if (result.emergency) {
+      await (await this.queue.getJob(alertJobId(doseId)))?.remove();
+      telemetry.capture('dose_voice_result', { ...props, applied: 'missed_emergency' }, dose.patientId);
+      return 'missed';
+    }
     await this.alertNow(doseId);
     await this.callFamilyAboutDose(doseId, result.outcome);
     telemetry.capture('dose_voice_result', { ...props, applied: 'missed' }, dose.patientId);
@@ -431,15 +438,21 @@ export class VoiceCallService {
     this.logger.log(`Dose ${doseId}: not taken yet, calling her again in ${minutes} min.`);
   }
 
-  /** She told the assistant it would call back: queue that call (EMERGENCY_CHECKIN_MINUTES). */
+  /**
+   * She told the assistant it would call back: queue that call (EMERGENCY_CHECKIN_MINUTES). A demo run calls
+   * back after DEMO_CHECKIN_SECONDS, so the whole emergency fits in a demo.
+   */
   private async scheduleCheckIn(doseId: string, attempt = 1): Promise<void> {
-    const minutes = this.config.get<number>('EMERGENCY_CHECKIN_MINUTES') ?? 10;
+    const [dose] = await this.db.select({ demo: doses.demo }).from(doses).where(eq(doses.id, doseId));
+    const delayMs = dose?.demo
+      ? (this.config.get<number>('DEMO_CHECKIN_SECONDS') ?? 120) * 1000
+      : (this.config.get<number>('EMERGENCY_CHECKIN_MINUTES') ?? 10) * 60_000;
     await this.queue.add(
       'check-in',
       { kind: 'check-in', doseId, attempt },
-      { jobId: `${doseJobId('check-in', doseId)}-${attempt}`, delay: minutes * 60_000 },
+      { jobId: `${doseJobId('check-in', doseId)}-${attempt}`, delay: delayMs },
     );
-    this.logger.log(`Dose ${doseId}: calling her back in ${minutes} min (call back ${attempt}).`);
+    this.logger.log(`Dose ${doseId}: calling her back in ${Math.round(delayMs / 1000)} s (call back ${attempt}).`);
   }
 
   /**

@@ -119,6 +119,8 @@ export const envSchema = z.object({
   DEMO_CALL_AFTER_SECONDS: z.coerce.number().int().positive().default(20),
   // Seconds after the demo call starts before the family is alerted if the call never reports back.
   DEMO_ALERT_AFTER_SECONDS: z.coerce.number().int().positive().default(100),
+  // Seconds before the call back after an emergency on a demo run (real doses use EMERGENCY_CHECKIN_MINUTES).
+  DEMO_CHECKIN_SECONDS: z.coerce.number().int().positive().default(120),
   // The family is told a medicine is running out when this many days of pills or fewer are left.
   LOW_STOCK_DAYS: z.coerce.number().int().positive().default(5),
 });
