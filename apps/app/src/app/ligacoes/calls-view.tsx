@@ -15,7 +15,7 @@ interface CallLog {
   outcome: string | null;
   durationSeconds: number | null;
   startedAt: string;
-  transcript: { speaker: string; text: string }[];
+  transcript: { speaker: string; text: string; atMs?: number }[];
   events: CallEvent[];
   /** The voice did not record the answer; Claude read it from the transcript after the call. */
   readFromTranscript?: boolean;
@@ -151,6 +151,9 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
       <div className="grid gap-5 md:grid-cols-2">
         <section className="flex min-w-0 flex-col gap-2">
           <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">Conversa</h3>
+          <p className="text-[13px] text-muted">
+            O que a assistente ouviu e falou, transcrito na hora pela linha telefônica. Pode perder pedaços; o áudio é a gravação real.
+          </p>
           {call.transcript.length === 0 ? (
             <p className="text-[14px] text-muted">Sem transcrição.</p>
           ) : (
@@ -159,7 +162,10 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
                 const ai = l.speaker === "assistant";
                 return (
                   <li key={i} className={`flex flex-col ${ai ? "items-start" : "items-end"}`}>
-                    <span className="text-[12px] font-semibold text-muted">{ai ? "Assistente da Recuidado" : kind.other}</span>
+                    <span className="text-[12px] font-semibold text-muted">
+                      {ai ? "Assistente da Recuidado" : kind.other}
+                      {l.atMs != null ? <span className="ml-1.5 font-mono font-normal tabular-nums">{clock(l.atMs)}</span> : null}
+                    </span>
                     <span
                       className={`max-w-[92%] rounded-2xl px-3 py-2 text-[15px] leading-snug ${ai ? "bg-[#efe9df]" : "bg-brand text-white"}`}
                     >

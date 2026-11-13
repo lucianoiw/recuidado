@@ -30,7 +30,10 @@ const callLogSchema = z.object({
   outcome: z.string().max(60).nullish(),
   durationSeconds: z.number().nonnegative().nullish(),
   startedAt: z.iso.datetime().nullish(),
-  transcript: z.array(z.object({ speaker: z.string().max(20), text: z.string().max(4000) })).max(400).default([]),
+  transcript: z
+    .array(z.object({ speaker: z.string().max(20), text: z.string().max(4000), atMs: z.number().int().nonnegative().optional() }))
+    .max(400)
+    .default([]),
   events: z.array(z.object({ atMs: z.number().nonnegative(), text: z.string().max(2000) })).max(500).default([]),
 });
 

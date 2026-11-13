@@ -20,6 +20,8 @@ export type CallOutcome = "confirmed" | "not_taken" | "unclear" | "no_answer" | 
 export interface TranscriptLine {
   speaker: "assistant" | "patient";
   text: string;
+  /** When the line started (epoch ms), from the first transcribed piece: a little after the speech. */
+  at?: number;
 }
 
 export interface CallResult {
@@ -486,7 +488,7 @@ export class ReminderCall {
     if (!delta) return;
     const last = this.transcript.at(-1);
     if (last && last.speaker === speaker) last.text += delta;
-    else this.transcript.push({ speaker, text: delta });
+    else this.transcript.push({ speaker, text: delta, at: Date.now() });
   }
 
   /** Hangs up and waits briefly for session.closed so usage is final. */

@@ -623,7 +623,8 @@ test("overlapping speech keeps whole lines; what the AI said while muted stays o
   socket.emitEvent({ type: "session.input_transcript.delta", event_id: "i3", delta: " não?" });
   await call.endCall();
   const result = await call.result;
-  assert.deepEqual(result.transcript, [
+  assert.ok(result.transcript.every((l) => typeof l.at === "number"));
+  assert.deepEqual(result.transcript.map(({ speaker, text }) => ({ speaker, text })), [
     { speaker: "patient", text: "Farmácia Central, bom dia." },
     { speaker: "assistant", text: "Aqui é a assistente virtual da Recuidado." },
     { speaker: "patient", text: "Pois não?" },
