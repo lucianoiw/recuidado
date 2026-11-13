@@ -105,7 +105,7 @@ export const validationPage = {
     ],
     pricesNote: "O plano custa R$ 19,90: dentro da faixa de todos os grupos.",
     objectionsTitle: "Por que os outros não comprariam",
-    of: "de 60",
+    of: "/60",
     objections: [
       { label: "Se o idoso aceita a ligação da IA", count: 16, quote: "Não diz se a IA já foi testada com idosos reais para garantir que eles aceitam as ligações e não ficam assustados." },
       { label: "Recursos e compatibilidade", count: 14, quote: "Não sei se o Recuidado é compatível com o meu plano de saúde atual." },
