@@ -20,10 +20,7 @@ export function Author() {
         </div>
         <div className={styles.columns}>
           <Text className={styles.paragraph}>{author.career}</Text>
-          <div className={styles.stack}>
-            <Text className={styles.paragraph}>{author.ai}</Text>
-            <Text className={styles.paragraph}>{author.twins}</Text>
-          </div>
+          <Text className={styles.paragraph}>{author.ai}</Text>
         </div>
         <div className={styles.links}>
           {author.links.map((link) => (

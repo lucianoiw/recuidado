@@ -253,11 +253,6 @@ export const author = {
       <a href="https://www.tribunaldeideias.com.br">Tribunal de Ideias</a>, onde uma ideia de negócio vai a julgamento ao vivo. Antes da audiência, a plataforma investiga o negócio: analisa o mercado, testa a marca e simula 60 compradores reagindo à oferta para ver quem pagaria e por quê. Depois, até 25 modelos de IA de 20 empresas diferentes assumem acusação, defesa, testemunhas, júri e juiz, e entregam um laudo com o veredito e o que mudar. São mais de 100 chamadas de IA por julgamento, com direito a apelação.
     </>
   ),
-  twins: (
-    <>
-      Hoje faz um experimento chamado <a href="https://www.gemeosartificiais.com.br">Gêmeos Artificiais</a>, para entender o quanto o contexto de pessoas reais interfere nas decisões de pessoas artificiais.
-    </>
-  ),
   links: [
     { label: "lucianosouza.com.br", href: "https://www.lucianosouza.com.br" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/lcosouza/" },
