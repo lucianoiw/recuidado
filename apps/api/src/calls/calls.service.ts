@@ -39,6 +39,13 @@ export interface CallLogView {
   startedAt: string;
   transcript: { speaker: string; text: string }[];
   events: CallEvent[];
+  /** The voice did not record the pharmacy's answer; Claude read it from the transcript after the call. */
+  readFromTranscript: boolean;
+  /** Pharmacy calls: what was recorded, from the inquiry. */
+  pharmacyAnswer: {
+    answers: (typeof pharmacyInquiries.$inferSelect)['answers'];
+    matchesOffers: 'yes' | 'no' | 'unknown' | null;
+  } | null;
   hasRecording: boolean;
 }
 
@@ -108,6 +115,8 @@ export class CallsService {
         kind: callLogs.kind,
         outcome: callLogs.outcome,
         inquiryStatus: pharmacyInquiries.status,
+        inquiryAnswers: pharmacyInquiries.answers,
+        matchesOffers: pharmacyInquiries.matchesOffers,
         durationSeconds: callLogs.durationSeconds,
         startedAt: callLogs.startedAt,
         createdAt: callLogs.createdAt,
@@ -127,6 +136,8 @@ export class CallsService {
       sessionId: r.sessionId,
       kind: r.kind,
       outcome: r.inquiryStatus && r.inquiryStatus !== 'calling' ? r.inquiryStatus : r.outcome,
+      readFromTranscript: r.outcome === 'unclear' && r.inquiryStatus === 'answered',
+      pharmacyAnswer: r.inquiryAnswers ? { answers: r.inquiryAnswers, matchesOffers: r.matchesOffers ?? null } : null,
       durationSeconds: r.durationSeconds,
       startedAt: (r.startedAt ?? r.createdAt).toISOString(),
       transcript: r.transcript,

@@ -18,6 +18,7 @@ const ReadingSchema = z.object({
       package: z.string(),
     }),
   ),
+  matches_offers: TriState,
   note: z.string(),
 });
 
@@ -39,6 +40,7 @@ const SYSTEM = [
   'generic_price_reais: box price of the generic. reference_price_reais: box price of the reference brand. price_reais: a box price said without saying which one. Each in reais or null.',
   'available: "yes" only if they said they have it now, "no" if not, "unknown" otherwise.',
   'package: what the box has as they said it (for example "caixa com 30 comprimidos"), or empty.',
+  'matches_offers: "yes" if the pharmacy said they match (cobrem) a lower price from another pharmacy, "no" if they said they do not, "unknown" otherwise. Put any condition they gave in note.',
   'note: anything else useful for the family, in Portuguese, short, or empty.',
   'One item per medicine asked about, in the given order.',
 ].join('\n');
@@ -64,7 +66,7 @@ export async function readPharmacyTranscript(
   medications: string[],
   transcript: { speaker: 'assistant' | 'patient'; text: string }[],
   model = TRANSCRIPT_READER_MODEL,
-): Promise<{ items: TranscriptAnswer[]; note: string | null }> {
+): Promise<{ items: TranscriptAnswer[]; note: string | null; matchesOffers: 'yes' | 'no' | 'unknown' }> {
   const lines = transcript
     .map((l) => `${l.speaker === 'patient' ? 'Farmácia' : 'Assistente'}: ${l.text.trim()}`)
     .join('\n');
@@ -95,5 +97,6 @@ export async function readPharmacyTranscript(
         package: i.package.trim() || undefined,
       })),
     note: parsed.note.trim() || null,
+    matchesOffers: parsed.matches_offers,
   };
 }

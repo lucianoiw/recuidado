@@ -29,6 +29,8 @@ export interface PharmacyCallResult {
   outcome: PharmacyCallOutcome;
   items: PharmacyItem[];
   note?: string;
+  /** Whether the pharmacy matches a lower price from another pharmacy ("cobre oferta"). */
+  matchesOffers?: "yes" | "no" | "unknown";
   /** Keys pressed in a recorded menu (URA), in order. */
   keysPressed: string[];
   /** "speaker" is "patient" for the other side, to share the TranscriptLine shape. */
@@ -188,7 +190,7 @@ export class PharmacyCall {
   private readonly seen = new Set<string>();
   private readonly transcript: TranscriptLine[] = [];
   private readonly keysPressed: string[] = [];
-  private answer?: { items: PharmacyItem[]; note?: string };
+  private answer?: { items: PharmacyItem[]; note?: string; matchesOffers: "yes" | "no" | "unknown" };
   private answered = false;
   private heardOtherSide = false;
   /** A menu was heard and no key was pressed since. */
@@ -547,8 +549,15 @@ export class PharmacyCall {
       })
       .filter((i) => i.medication);
     const note = typeof args.note === "string" && args.note.trim() ? args.note.trim() : undefined;
-    this.answer = { items, note };
-    this.log(`pharmacy answer recorded: ${items.length} items`);
+    this.answer = { items, note, matchesOffers: triState(args.matches_offers) };
+    const reais = (c: number | null) => (c == null ? "?" : (c / 100).toFixed(2).replace(".", ","));
+    const said = items.map((i) =>
+      i.available === "no"
+        ? `${i.medication}: não tem`
+        : `${i.medication}: ${i.available === "yes" ? "tem" : "?"}, genérico ${reais(i.genericPriceCents)}, referência ${reais(i.referencePriceCents)}`,
+    );
+    const offers = { yes: "sim", no: "não", unknown: "?" }[this.answer.matchesOffers];
+    this.log(`pharmacy answer recorded: ${items.length} items | ${said.join(" | ")} | cobre oferta: ${offers}`);
     this.toolOutput(callId, { recorded: true });
     this.assistantAfterAnswer = "";
     // The model says goodbye while the answer is recorded: if it already did, hang up shortly.
@@ -1020,6 +1029,7 @@ export class PharmacyCall {
       sessionId: this.opts.sessionId,
       outcome: this.outcome(),
       items: this.answer?.items ?? [],
+      matchesOffers: this.answer?.matchesOffers,
       note: this.answer?.note ?? (this.closed ? "A farmácia estava fechada (mensagem gravada)." : undefined),
       keysPressed: [...this.keysPressed],
       transcript: this.transcript

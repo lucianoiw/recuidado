@@ -288,6 +288,8 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
     .notNull()
     .default([]),
   note: text(),
+  // Whether they match a lower price from another pharmacy ("cobre oferta"): the family can buy everything there.
+  matchesOffers: text().$type<'yes' | 'no' | 'unknown'>(),
   keysPressed: jsonb().$type<string[]>().notNull().default([]),
   transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
   durationSeconds: integer(),

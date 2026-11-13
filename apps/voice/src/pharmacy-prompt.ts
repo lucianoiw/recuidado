@@ -8,6 +8,9 @@ export interface PharmacyContext {
 export const PHARMACY_TOOL_NAME = "record_pharmacy_answer";
 export const KEYPAD_TOOL_NAME = "press_phone_keys";
 
+/** Asked once at the end: with several pharmacies, the family can buy everything at one that matches the lowest price. */
+export const PHARMACY_PRICE_MATCH_QUESTION = "Última pergunta: vocês cobrem oferta de outra farmácia?";
+
 /** The last line of a pharmacy call. */
 export const PHARMACY_GOODBYE = "Muito obrigada, tchau!";
 
@@ -38,7 +41,8 @@ export function buildPharmacyLiveInstructions(ctx: PharmacyContext, now: Date = 
     "Never buy, reserve or order anything, never give a name, CPF, address or phone number, and never discuss treatment or doses. If they ask for personal data, say: \"É só uma consulta de preço, obrigada.\"",
     "If they ask who is calling, say: \"Sou a assistente virtual da Recuidado, um app que ajuda famílias a cuidar dos remédios de uma pessoa idosa.\"",
     "Phone lines blur numbers (\"treze\" sounds like \"três\"). As soon as you have both prices of a medicine, while the attendant still remembers them, repeat them back once, in one short sentence, with words, and wait: \"Então o genérico <the generic price they said> e o de referência <the reference price they said>, certo?\". Repeat only prices the attendant actually said in this call, never a price from these instructions; if a price is missing, ask for it instead. If they correct a price, use the corrected one. Then go to the next medicine. Do not repeat anything else.",
-    `When you have the answers for all medicines, confirmed, or they cannot help, say exactly "${PHARMACY_GOODBYE}" and, at the same time, delegate once so the answers are recorded. Always delegate before or while saying goodbye, never skip it, and do not wait for the result. Do not say filler like \"vou anotar\".`,
+    `After the last medicine, ask once: "${PHARMACY_PRICE_MATCH_QUESTION}" and listen to the answer. Skip it if they cannot help at all.`,
+    `When you have the answers for all medicines, confirmed, and the answer about other pharmacies' offers, or they cannot help, say exactly "${PHARMACY_GOODBYE}" and, at the same time, delegate once so the answers are recorded. Always delegate before or while saying goodbye, never skip it, and do not wait for the result. Do not say filler like \"vou anotar\".`,
     "After the goodbye, say nothing else, even when the delegated result arrives.",
   ].join("\n");
 }
@@ -52,6 +56,7 @@ export function buildPharmacyDelegateInstructions(ctx: PharmacyContext): string 
     "available: \"yes\" only if they said they have it now, \"no\" if they said they do not, \"unknown\" otherwise.",
     "generic_price_reais: the price of one box of the generic in reais as they said it (for example 18.9), or null. reference_price_reais: the same for the reference brand, or null. price_reais: a box price they said without saying if it is generic or reference, or null. Never guess or compute a price.",
     "package: what the box has as they said it (for example \"caixa com 30 comprimidos\"), or empty.",
+    "matches_offers: \"yes\" if they said they match (cobrem) a lower price from another pharmacy, \"no\" if they said they do not, \"unknown\" otherwise. Put any condition they gave (for example \"só com print\") in note.",
     "note: anything else useful the family should know, in Portuguese, short, or empty.",
     `After the ${PHARMACY_TOOL_NAME} result, reply only: Recorded. The goodbye was already said; say nothing else.`,
   ].join("\n");
@@ -98,9 +103,10 @@ export const pharmacyTool = {
           additionalProperties: false,
         },
       },
+      matches_offers: { ...triState, description: "Whether they match a lower price from another pharmacy (cobrem oferta)" },
       note: { type: "string", description: "Other useful detail in Portuguese, or empty" },
     },
-    required: ["items", "note"],
+    required: ["items", "matches_offers", "note"],
     additionalProperties: false,
   },
 };

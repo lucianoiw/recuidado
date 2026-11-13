@@ -18,7 +18,6 @@ import { readPharmacyTranscript } from './transcript-reader.js';
 import { cmedPriceOf } from '../family/pricing.js';
 import { randomUUID } from 'node:crypto';
 
-/** At most this many medicines per call, so the call stays short. */
 /** A call that never reported back after this long is shown as failed. */
 const STALE_AFTER_MS = 6 * 60 * 1000;
 
@@ -35,6 +34,8 @@ export interface PharmacyVoiceResult {
     package?: string | null;
   }[];
   note?: string | null;
+  /** Whether the pharmacy matches a lower price from another pharmacy ("cobre oferta"). */
+  matchesOffers?: 'yes' | 'no' | 'unknown' | null;
   keysPressed?: string[];
   transcript?: { speaker: 'assistant' | 'patient'; text: string }[];
   durationSeconds?: number | null;
@@ -266,6 +267,7 @@ export class PharmacyService {
           package: i.package ?? undefined,
         })),
         note: result.note ?? null,
+        matchesOffers: result.matchesOffers ?? null,
         keysPressed: result.keysPressed ?? [],
         transcript: result.transcript ?? [],
         durationSeconds: result.durationSeconds == null ? null : Math.round(result.durationSeconds),
@@ -310,9 +312,9 @@ export class PharmacyService {
     let update: Partial<Inquiry> = { status: 'unclear' };
     try {
       this.client ??= new Anthropic({ apiKey: this.config.get<string>('ANTHROPIC_API_KEY') });
-      const { items, note } = await readPharmacyTranscript(this.client, meds, transcript);
+      const { items, note, matchesOffers } = await readPharmacyTranscript(this.client, meds, transcript);
       if (items.some((i) => i.available !== 'unknown' || i.priceCents != null)) {
-        update = { status: 'answered', answers: items, note };
+        update = { status: 'answered', answers: items, note, matchesOffers };
         telemetry.capture('pharmacy_answer_from_transcript', {
           inquiry_id: id,
           items: items.length,
@@ -346,6 +348,7 @@ export class PharmacyService {
       medications: row.medications,
       answers: row.answers,
       note: row.note,
+      matchesOffers: row.matchesOffers,
       usedPhoneMenu: row.keysPressed.length > 0,
       transcript: row.transcript,
       durationSeconds: row.durationSeconds,

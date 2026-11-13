@@ -13,12 +13,14 @@ export interface SimPharmacy {
   priceFactor: number;
   /** 0-based position of a medicine this pharmacy does not have in stock, if any. */
   outOfStock?: number;
+  /** What the attendant says when asked if they match another pharmacy's lower price ("cobre oferta"). */
+  priceMatch: string;
 }
 
 export const SIM_PHARMACIES: SimPharmacy[] = [
-  { index: 1, name: "Drogaria Vida", attendant: "Rafael", priceFactor: 0.9, outOfStock: 2 },
-  { index: 2, name: "Farmácia Central", attendant: "Marcos", priceFactor: 0.65 },
-  { index: 3, name: "Drogaria Bom Preço", attendant: "Paulo", priceFactor: 1.15, outOfStock: 1 },
+  { index: 1, name: "Drogaria Vida", attendant: "Rafael", priceFactor: 0.9, outOfStock: 2, priceMatch: "Cobrimos sim, é só mostrar o preço da outra farmácia no balcão." },
+  { index: 2, name: "Farmácia Central", attendant: "Marcos", priceFactor: 0.65, priceMatch: "Não, a gente não cobre oferta, mas o nosso preço já é baixo." },
+  { index: 3, name: "Drogaria Bom Preço", attendant: "Paulo", priceFactor: 1.15, outOfStock: 1, priceMatch: "Cobrimos, desde que seja farmácia aqui do bairro." },
 ];
 
 /** A medicine as the actor knows it: the CMED box the API sent, when there is one. */
@@ -105,6 +107,7 @@ export function buildActorInstructions(p: SimPharmacy, meds: SimMedication[], no
     "The caller is a virtual assistant asking about medicines for a family. Answer its questions using only these facts:",
     ...simFacts(p, meds).map((f) => `- ${f}`),
     "Say prices the way people say them on the phone, exactly as written in quotes above. The generic and the reference have different prices: never swap them and never say the same price for both. Before each price, say which one it is (\"o genérico sai ...\", \"o de referência sai ...\"). You may give both prices and the box size together.",
+    `If asked whether you match a lower price from another pharmacy ("cobrem oferta"), say: "${p.priceMatch}"`,
     "For any medicine not listed, say you need to check and do not have it now. Do not invent other prices or products.",
     "Never ask for or accept personal data, never sell or reserve anything, and never give advice about treatment or doses.",
     "When the caller repeats prices back to you, check them against your facts: if right, say \"Isso.\"; if any is wrong, correct it right away (\"Não, o genérico é ...\"). Never put the caller on hold.",
