@@ -66,7 +66,7 @@ test("confirmed dose: greets on answer, records tool call, hangs up", async () =
   assert.equal(result.confirmed, true);
   assert.equal(result.durationSeconds, 31);
   assert.equal(result.endReason, "hung_up_after_answer");
-  assert.deepEqual(result.transcript, [
+  assert.deepEqual(result.transcript.map(({ speaker, text }) => ({ speaker, text })), [
     { speaker: "assistant", text: "Bom dia, Maria. Já tomou o remédio?" },
     { speaker: "patient", text: "Tomei sim." },
   ]);

@@ -842,7 +842,7 @@ export class PharmacyCall {
       return;
     }
     this.newLine = false;
-    const line: TranscriptLine = { speaker, text: delta };
+    const line: TranscriptLine = { speaker, text: delta, at: now };
     this.transcript.push(line);
     this.openLines[speaker] = { line, at: now };
   }

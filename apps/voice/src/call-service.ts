@@ -44,7 +44,7 @@ export interface CallLog {
   outcome?: string;
   durationSeconds?: number;
   startedAt: string;
-  transcript: { speaker: string; text: string }[];
+  transcript: { speaker: string; text: string; at?: number }[];
   events: CallEvent[];
 }
 
@@ -206,7 +206,10 @@ export class CallService {
 
   /** Sends the transcript and the timeline of a call to the calls panel. */
   reportLog(log: CallLog): Promise<void> {
-    return this.post("/call-logs", log);
+    // Each line gets its time since the call started, like the events.
+    const start = Date.parse(log.startedAt);
+    const transcript = log.transcript.map(({ at, ...l }) => (at ? { ...l, atMs: Math.max(0, at - start) } : l));
+    return this.post("/call-logs", { ...log, transcript });
   }
 
   /** The attendant AI of a simulated pharmacy. Hangs up when the pharmacy call ends. Never throws. */

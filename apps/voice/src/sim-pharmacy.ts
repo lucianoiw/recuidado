@@ -19,7 +19,7 @@ export interface SimPharmacy {
 
 export const SIM_PHARMACIES: SimPharmacy[] = [
   { index: 1, name: "Drogaria Vida", attendant: "Rafael", priceFactor: 0.9, outOfStock: 2, priceMatch: "Cobrimos sim, é só mostrar o preço da outra farmácia no balcão." },
-  { index: 2, name: "Farmácia Central", attendant: "Marcos", priceFactor: 0.65, priceMatch: "Não, a gente não cobre oferta, mas o nosso preço já é baixo." },
+  { index: 2, name: "Farmácia Central", attendant: "Marcos", priceFactor: 0.65, priceMatch: "Não. A gente não faz isso, aqui o preço já é baixo." },
   { index: 3, name: "Drogaria Bom Preço", attendant: "Paulo", priceFactor: 1.15, outOfStock: 1, priceMatch: "Cobrimos, desde que seja farmácia aqui do bairro." },
 ];
 

@@ -322,7 +322,7 @@ export const callLogs = pgTable('call_logs', {
   outcome: text(),
   durationSeconds: integer(),
   // Emptied after VOICE_TRANSCRIPT_RETENTION_DAYS, with events and recording.
-  transcript: jsonb().$type<{ speaker: string; text: string }[]>().notNull().default([]),
+  transcript: jsonb().$type<{ speaker: string; text: string; atMs?: number }[]>().notNull().default([]),
   events: jsonb().$type<CallEvent[]>().notNull().default([]),
   recordingKey: text(),
   recording: bytea(),

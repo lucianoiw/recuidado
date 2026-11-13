@@ -26,7 +26,7 @@ export interface CallLogInput {
   outcome?: string | null;
   durationSeconds?: number | null;
   startedAt?: string | null;
-  transcript: { speaker: string; text: string }[];
+  transcript: { speaker: string; text: string; atMs?: number }[];
   events: CallEvent[];
 }
 
@@ -37,7 +37,7 @@ export interface CallLogView {
   outcome: string | null;
   durationSeconds: number | null;
   startedAt: string;
-  transcript: { speaker: string; text: string }[];
+  transcript: { speaker: string; text: string; atMs?: number }[];
   events: CallEvent[];
   /** The voice did not record the pharmacy's answer; Claude read it from the transcript after the call. */
   readFromTranscript: boolean;
