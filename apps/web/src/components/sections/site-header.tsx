@@ -17,9 +17,9 @@ export function SiteHeader() {
         </Link>
         <nav className={styles.nav}>
           {nav.map((item) => (
-            <a key={item.href} href={item.href} className={`${styles.link} ${styles.section}`}>
+            <Link key={item.href} href={item.href} className={`${styles.link} ${styles.section}`}>
               {item.label}
-            </a>
+            </Link>
           ))}
           <a href={links.signIn} className={styles.link}>
             Entrar
