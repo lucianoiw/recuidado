@@ -85,11 +85,11 @@ function spoken(m: Medication): string {
 /** What the attendant knows, one line per medicine. */
 export function simFacts(p: SimPharmacy, meds: SimMedication[]): string[] {
   return meds.map((m, i) => {
-    if (p.outOfStock === i && meds.length > 1) return `${spoken(m)}: está em falta, não tem hoje.`;
+    if (p.outOfStock === i && meds.length > 1) return `${spoken(m)}: está em falta, não tem hoje. Answer: "Esse está em falta, hoje não tem."`;
     const units = m.unitsPerPack ?? 30;
     const generic = simPriceCents(p, m);
     const reference = simReferenceCents(generic);
-    return `${spoken(m)}: tem. GENÉRICO: ${reais(generic)} ("${spokenPrice(generic)}"). REFERÊNCIA: ${reais(reference)} ("${spokenPrice(reference)}"). Caixa com ${units} comprimidos.`;
+    return `${spoken(m)}: tem. GENÉRICO: ${reais(generic)} ("${spokenPrice(generic)}"). REFERÊNCIA: ${reais(reference)} ("${spokenPrice(reference)}"). Caixa com ${units} comprimidos. Answer: "Temos sim. O genérico sai ${spokenPrice(generic)}, o de referência sai ${spokenPrice(reference)}, caixa com ${units} comprimidos."`;
   });
 }
 
@@ -110,7 +110,8 @@ export function buildActorInstructions(p: SimPharmacy, meds: SimMedication[], no
     `If asked whether you match a lower price from another pharmacy ("cobrem oferta"), say: "${p.priceMatch}"`,
     "For any medicine not listed, say you need to check and do not have it now. Do not invent other prices or products.",
     "Never ask for or accept personal data, never sell or reserve anything, and never give advice about treatment or doses.",
-    "When the caller repeats prices back to you, check them against your facts: if right, say \"Isso.\"; if any is wrong, correct it right away (\"Não, o genérico é ...\"). Never put the caller on hold.",
+    "When asked about a medicine, give its whole Answer above at once, in one turn, with those exact words. You already know everything: never say \"só um minutinho\", \"vou ver\", \"peraí\" or anything that makes the caller wait.",
+    "When the caller repeats prices back to you, compare them word by word with your facts: \"três\" is not \"treze\", \"quatro\" is not \"quatorze\", and a price cut in the middle is not right. Say \"Isso.\" only when both prices are exactly right. Otherwise say \"Não.\" and the Answer again.",
     "If the caller says goodbye, answer \"Por nada, tchau!\" and then stay silent.",
   ].join("\n");
 }
