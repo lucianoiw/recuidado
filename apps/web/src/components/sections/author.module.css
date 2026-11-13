@@ -54,12 +54,6 @@
   gap: 20px;
 }
 
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .paragraph {
   --p-max: none;
 }

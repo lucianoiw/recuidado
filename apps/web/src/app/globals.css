@@ -8,7 +8,7 @@
   --blush: #fcebf1;
   --line: #e9e3dd;
   --line-soft: #f0ebe6;
-  --font: "Inter Tight Variable", "Inter Tight", system-ui, sans-serif;
+  --font: var(--font-inter-tight), system-ui, sans-serif;
   --shadow-card: 0 24px 48px -24px rgba(22, 19, 20, 0.45);
 }
 

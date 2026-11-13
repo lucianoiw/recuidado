@@ -376,6 +376,10 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 
 Em 13/11/2026 o Recuidado passou pelo [Tribunal de Ideias](https://www.tribunaldeideias.com.br/pt/julgamento/cmwf7dqqk0003jzu6waeplpvh) (rito Plenário, preço real de R$ 19,90 com 7 dias grátis): 86/100. Doze modelos de IA aprovaram a ideia (dois com ressalvas, notas de 74 a 92); 38 de 60 compradores simulados comprariam, com faixa aceitável de R$ 10 a R$ 30. Pontos a provar: se o idoso aceita a ligação da assistente e se a família segue pagando depois dos 7 dias. No site (aprovado por Luciano no canvas em 13/11) o resultado se chama "validação", nunca "julgamento": uma dobra na home, antes de "Quem está por trás" (`components/sections/validation-fold.tsx`), leva para a página `/validacao` (`components/validation/`, texto em `content/validation.ts`), e só a página tem o link para o laudo público no Tribunal. O `proxy.ts` deixa `/validacao` no site em vez de mandar para o app.
 
+## Fonte do site
+
+O site (`apps/web`) carrega a Inter Tight por `next/font/local` (arquivo em `apps/web/src/app/fonts`, subconjunto latino, que cobre o português). O Next coloca o preload da fonte no HTML e cria uma fonte reserva com as medidas ajustadas, então o texto não pula quando a fonte chega. Antes, a fonte vinha do pacote `@fontsource-variable/inter-tight` sem preload e com reserva `system-ui` sem ajuste: o navegador mostrava a reserva e trocava (mudança de layout medida em 0,024 na home em produção, 13/11; depois da troca, 0 no build local).
+
 ## Monitoria
 
 Tudo vai para o PostHog: logs de todos os serviços (que sobrevivem a deploy e restart), erros com stack trace, uma linha por requisição HTTP, eventos de produto (lembrete, dose confirmada, ligação, família avisada), cada chamada de IA com modelo, latência, tokens e custo, e o replay das telas com os campos mascarados.
