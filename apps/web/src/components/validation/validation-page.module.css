@@ -179,8 +179,19 @@
 }
 
 .argWho {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--muted);
   font-size: 14px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 16px;
 }
 
 .argsDark .argText {
@@ -396,7 +407,7 @@
 .evaluator {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 24px;
@@ -405,27 +416,32 @@
 
 .evaluatorHead {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .evaluatorScore {
-  font-size: 40px;
+  margin-left: auto;
+  font-size: 36px;
   line-height: 1;
   letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .evaluatorName {
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  min-width: 0;
+  font-size: 15px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
 .evaluatorQuote {
   color: var(--body);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.45;
 }
 
@@ -594,7 +610,8 @@
   }
 
   .evaluators {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
   }
 
   .buyers {

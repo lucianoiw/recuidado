@@ -2,10 +2,11 @@ import { tribunalUrl, validationPage as v } from "@/content/validation";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { ModelLogo } from "./model-logo";
 import { ScoreBoard } from "./score-board";
 import styles from "./validation-page.module.css";
 
-type Argument = { who: string; quote: string; text: string };
+type Argument = { who: string; logo: string; quote: string; text: string };
 
 function Arguments({ label, items, dark }: { label: string; items: Argument[]; dark?: boolean }) {
   return (
@@ -16,7 +17,10 @@ function Arguments({ label, items, dark }: { label: string; items: Argument[]; d
           <li key={item.who} className={styles.arg}>
             <span className={styles.argQuote}>“{item.quote}”</span>
             <span className={styles.argText}>{item.text}</span>
-            <span className={styles.argWho}>{item.who}</span>
+            <span className={styles.argWho}>
+              <ModelLogo name={item.logo} size={24} />
+              {item.who}
+            </span>
           </li>
         ))}
       </ul>
@@ -59,7 +63,10 @@ export function ValidationPage() {
               <p key={text}>“{text}”</p>
             ))}
           </blockquote>
-          <span className={styles.muted}>{v.opinion.author}</span>
+          <span className={styles.author}>
+            <ModelLogo name={v.opinion.authorLogo} size={28} />
+            {v.opinion.author}
+          </span>
         </Container>
       </section>
 
@@ -144,11 +151,12 @@ export function ValidationPage() {
             {v.evaluators.items.map((item) => (
               <li key={item.model} className={styles.evaluator}>
                 <div className={styles.evaluatorHead}>
-                  <span className={styles.evaluatorScore}>{item.score}</span>
+                  <ModelLogo name={item.logo} size={36} />
                   <span className={styles.evaluatorName}>
                     {item.model}
                     <span className={styles.muted}>{item.company}</span>
                   </span>
+                  <span className={styles.evaluatorScore}>{item.score}</span>
                 </div>
                 <span className={styles.evaluatorQuote}>“{item.quote}”</span>
               </li>

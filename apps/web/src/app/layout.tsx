@@ -3,13 +3,13 @@ import type { ReactNode } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 
-// Inter Tight served by next/font: preloaded in the HTML and with a metric-matched fallback,
-// so the text does not jump when the font arrives. Latin subset covers pt-BR.
+// Inter Tight served by next/font: preloaded in the HTML, with a metric-matched fallback. Latin subset covers pt-BR.
 const interTight = localFont({
   src: "./fonts/inter-tight-latin-wght-normal.woff2",
   weight: "100 900",
   style: "normal",
-  display: "swap",
+  // block: the font is small and preloaded, so the text waits a moment instead of swapping fonts.
+  display: "block",
   variable: "--font-inter-tight",
   adjustFontFallback: "Arial",
 });
