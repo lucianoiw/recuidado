@@ -374,7 +374,7 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 
 ## Tribunal de Ideias
 
-Em 13/11/2026 o Recuidado passou pelo [Tribunal de Ideias](https://www.tribunaldeideias.com.br/pt/julgamento/cmwf7dqqk0003jzu6waeplpvh) (rito Plenário, preço real de R$ 19,90 com 7 dias grátis): 86/100. Doze modelos de IA aprovaram a ideia (dois com ressalvas, notas de 74 a 92); 38 de 60 compradores simulados comprariam, com faixa aceitável de R$ 10 a R$ 30. Pontos a provar: se o idoso aceita a ligação da assistente e se a família segue pagando depois dos 7 dias. O site cita o resultado com o link na seção "Quem está por trás" (decisão do Luciano, 13/11: só o link, sem seção própria, e sem a palavra "julgamento" em texto novo).
+Em 13/11/2026 o Recuidado passou pelo [Tribunal de Ideias](https://www.tribunaldeideias.com.br/pt/julgamento/cmwf7dqqk0003jzu6waeplpvh) (rito Plenário, preço real de R$ 19,90 com 7 dias grátis): 86/100. Doze modelos de IA aprovaram a ideia (dois com ressalvas, notas de 74 a 92); 38 de 60 compradores simulados comprariam, com faixa aceitável de R$ 10 a R$ 30. Pontos a provar: se o idoso aceita a ligação da assistente e se a família segue pagando depois dos 7 dias. No site (aprovado por Luciano no canvas em 13/11) o resultado se chama "validação", nunca "julgamento": uma dobra na home, antes de "Quem está por trás" (`components/sections/validation-fold.tsx`), leva para a página `/validacao` (`components/validation/`, texto em `content/validation.ts`), e só a página tem o link para o laudo público no Tribunal. O `proxy.ts` deixa `/validacao` no site em vez de mandar para o app.
 
 ## Monitoria
 

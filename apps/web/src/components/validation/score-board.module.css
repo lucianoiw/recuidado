@@ -1,0 +1,153 @@
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 28px;
+  border-radius: 32px;
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.score {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 1;
+}
+
+.scoreValue {
+  font-size: 96px;
+  letter-spacing: -0.05em;
+}
+
+.scoreMax {
+  color: #cfc7c1;
+  font-size: 28px;
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--pink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.summary {
+  margin: 0;
+  color: #e7e1dc;
+  font-size: 19px;
+  line-height: 1.45;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin: 8px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.facts dt {
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.facts dd {
+  margin: 2px 0 0;
+  color: #cfc7c1;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.criteria {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  background: #ffffff;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  row-gap: 6px;
+  font-size: 16px;
+}
+
+.barLabel {
+  color: var(--body);
+}
+
+.barValue {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.barMax {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.track {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+.top {
+  background: var(--pink);
+}
+
+@media (min-width: 640px) {
+  .verdict,
+  .criteria {
+    padding: 44px;
+  }
+
+  .scoreValue {
+    font-size: 132px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .board {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+}

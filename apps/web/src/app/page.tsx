@@ -14,6 +14,7 @@ import { SiteFooter } from "@/components/sections/site-footer";
 import { SiteHeader } from "@/components/sections/site-header";
 import { SundayCall } from "@/components/sections/sunday-call";
 import { Timeline } from "@/components/sections/timeline";
+import { ValidationFold } from "@/components/sections/validation-fold";
 
 // Product site, approved design (canvas "Site completo", 12/11/2026). Text in content/site.tsx.
 export default function Home() {
@@ -34,6 +35,7 @@ export default function Home() {
         <Faq />
         <Closing />
         <Inside />
+        <ValidationFold />
         <Author />
       </main>
       <SiteFooter />

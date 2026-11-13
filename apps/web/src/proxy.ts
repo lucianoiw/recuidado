@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-// Product site (recuidado.com.br and www). The home page is the site; any other path goes to
+// Product site (recuidado.com.br and www). The home page and /validacao are the site; any other path goes to
 // the app keeping the path, so old links (/patient?f=..., /family, /comecar) keep working.
 const APP_URL = process.env.APP_URL || "https://app.recuidado.com.br";
 
@@ -10,6 +10,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except the home page, Next assets and files in /public.
-  matcher: ["/((?!_next/|fotos/|logo-recuidado-texto\\.svg$|icon\\.svg$|favicon\\.ico$|robots\\.txt$|sitemap\\.xml$).+)"],
+  // Everything except the home page, /validacao, Next assets and files in /public.
+  matcher: ["/((?!_next/|validacao|fotos/|logo-recuidado-texto\\.svg$|icon\\.svg$|favicon\\.ico$|robots\\.txt$|sitemap\\.xml$).+)"],
 };
