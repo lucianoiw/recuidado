@@ -248,28 +248,41 @@ export class PharmacyService {
     // The call can end (the pharmacy hangs up) before the voice model records the answer.
     // Then Claude reads the answer from the transcript. Until it finishes, the family still sees "calling".
     const heard = (result.transcript ?? []).some((l) => l.speaker === 'patient' && l.text.trim());
+    // The recording may already have been read (it is the most complete): keep its answers.
+    const [current] = await this.db
+      .select({ answersSource: pharmacyInquiries.answersSource })
+      .from(pharmacyInquiries)
+      .where(eq(pharmacyInquiries.id, id));
+    const fromRecording = current?.answersSource === 'recording';
     const readLater =
+      !fromRecording &&
       result.outcome === 'unclear' &&
       result.items.length === 0 &&
       heard &&
       Boolean(this.config.get<string>('ANTHROPIC_API_KEY'));
+    const answers = fromRecording
+      ? {}
+      : {
+          answers: result.items.map((i) => ({
+            medication: i.medication,
+            available: i.available,
+            priceCents: i.priceCents,
+            genericPriceCents: i.genericPriceCents ?? null,
+            referencePriceCents: i.referencePriceCents ?? null,
+            package: i.package ?? undefined,
+          })),
+          note: result.note ?? null,
+          matchesOffers: result.matchesOffers ?? null,
+          transcript: result.transcript ?? [],
+          answersSource: result.items.length ? ('call' as const) : null,
+        };
     const [row] = await this.db
       .update(pharmacyInquiries)
       .set({
-        status: readLater ? 'calling' : result.outcome,
+        status: fromRecording ? 'answered' : readLater ? 'calling' : result.outcome,
         sessionId: result.sessionId,
-        answers: result.items.map((i) => ({
-          medication: i.medication,
-          available: i.available,
-          priceCents: i.priceCents,
-          genericPriceCents: i.genericPriceCents ?? null,
-          referencePriceCents: i.referencePriceCents ?? null,
-          package: i.package ?? undefined,
-        })),
-        note: result.note ?? null,
-        matchesOffers: result.matchesOffers ?? null,
+        ...answers,
         keysPressed: result.keysPressed ?? [],
-        transcript: result.transcript ?? [],
         durationSeconds: result.durationSeconds == null ? null : Math.round(result.durationSeconds),
         endReason: result.endReason ?? null,
         error: result.error ?? null,
@@ -338,7 +351,7 @@ export class PharmacyService {
         }),
       );
       if (items.some((i) => i.available !== 'unknown' || i.priceCents != null)) {
-        update = { status: 'answered', answers: items, note, matchesOffers };
+        update = { status: 'answered', answers: items, note, matchesOffers, answersSource: 'live_transcript' };
         telemetry.capture('pharmacy_answer_from_transcript', {
           inquiry_id: id,
           items: items.length,
@@ -353,6 +366,57 @@ export class PharmacyService {
       .set(update)
       .where(and(eq(pharmacyInquiries.id, id), eq(pharmacyInquiries.status, 'calling')))
       .catch((error: Error) => this.logger.warn(`saving pharmacy transcript reading failed: ${error.message}`));
+  }
+
+  /**
+   * The recording of a pharmacy call, transcribed after the call, is the most complete record of what was
+   * said: Claude reads the answers from it and they replace the ones taken during the call. Never throws.
+   */
+  async readRecording(sessionId: string, transcript: { speaker: 'assistant' | 'patient'; text: string; atMs?: number }[]) {
+    const [row] = await this.db.select().from(pharmacyInquiries).where(eq(pharmacyInquiries.sessionId, sessionId));
+    if (!row || row.status === 'failed' || row.status === 'no_answer') return;
+    if (!this.config.get<string>('ANTHROPIC_API_KEY')) return;
+    const meds = row.medications.map((m) => [m.name, m.strength].filter(Boolean).join(' '));
+    const started = performance.now();
+    try {
+      this.client ??= new Anthropic({ apiKey: this.config.get<string>('ANTHROPIC_API_KEY') });
+      const { items, note, matchesOffers } = await readPharmacyTranscript(this.client, meds, transcript, undefined, (u) =>
+        telemetry.llmGeneration({
+          traceId: row.id,
+          spanName: 'pharmacy_recording_read',
+          provider: 'anthropic',
+          model: u.model,
+          latencySeconds: (performance.now() - started) / 1000,
+          input: [{ role: 'user', content: `[transcrição da gravação com ${transcript.length} falas]` }],
+          inputTokens: u.input_tokens,
+          outputTokens: u.output_tokens,
+          cacheReadTokens: u.cache_read_input_tokens ?? undefined,
+          cacheWriteTokens: u.cache_creation_input_tokens ?? undefined,
+          familyId: row.familyId,
+          distinctId: row.familyId,
+          properties: { inquiry_id: row.id },
+        }),
+      );
+      if (!items.some((i) => i.available !== 'unknown' || i.priceCents != null)) return;
+      await this.db
+        .update(pharmacyInquiries)
+        .set({
+          status: 'answered',
+          answers: items,
+          note,
+          matchesOffers,
+          transcript: transcript.map(({ speaker, text }) => ({ speaker, text })),
+          answersSource: 'recording',
+        })
+        .where(eq(pharmacyInquiries.id, row.id));
+      telemetry.capture('pharmacy_answer_from_recording', {
+        inquiry_id: row.id,
+        items: items.length,
+        items_with_price: items.filter((i) => i.priceCents != null).length,
+      });
+    } catch (error) {
+      this.logger.warn(`reading pharmacy recording failed: ${(error as Error).message}`);
+    }
   }
 
   private async fail(id: string, error: string) {

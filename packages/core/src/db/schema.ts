@@ -290,6 +290,9 @@ export const pharmacyInquiries = pgTable('pharmacy_inquiries', {
   note: text(),
   // Whether they match a lower price from another pharmacy ("cobre oferta"): the family can buy everything there.
   matchesOffers: text().$type<'yes' | 'no' | 'unknown'>(),
+  // Where the answers came from: the voice model during the call, Claude reading the live transcript, or
+  // Claude reading the transcript of the recording (the most complete; nothing overwrites it).
+  answersSource: text().$type<'call' | 'live_transcript' | 'recording'>(),
   keysPressed: jsonb().$type<string[]>().notNull().default([]),
   transcript: jsonb().$type<{ speaker: 'assistant' | 'patient'; text: string }[]>().notNull().default([]),
   durationSeconds: integer(),
@@ -327,6 +330,9 @@ export const callLogs = pgTable('call_logs', {
   recordingKey: text(),
   recording: bytea(),
   recordingBytes: integer(),
+  // The recording transcribed after the call (apps/voice, OpenAI with speaker labels): the full conversation,
+  // which the live transcription sometimes cuts.
+  recordingTranscript: jsonb().$type<{ speaker: string; text: string; atMs?: number }[]>(),
   startedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });

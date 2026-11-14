@@ -19,6 +19,9 @@ interface CallLog {
   events: CallEvent[];
   /** The voice did not record the answer; Claude read it from the transcript after the call. */
   readFromTranscript?: boolean;
+  /** The recording transcribed after the call: the full conversation. */
+  recordingTranscript?: { speaker: string; text: string; atMs?: number }[] | null;
+  answersSource?: "call" | "live_transcript" | "recording" | null;
   pharmacyAnswer?: PharmacyAnswer | null;
   hasRecording: boolean;
 }
@@ -58,10 +61,12 @@ function clock(ms: number): string {
 function Timeline({
   events,
   readFromTranscript,
+  answersSource,
   pharmacyAnswer,
 }: {
   events: CallEvent[];
   readFromTranscript?: boolean;
+  answersSource?: CallLog["answersSource"];
   pharmacyAnswer?: PharmacyAnswer | null;
 }) {
   const [all, setAll] = useState(false);
@@ -70,7 +75,7 @@ function Timeline({
   if (readFromTranscript) {
     steps.push({
       atMs: events.at(-1)!.atMs,
-      text: `Depois da ligação, o Claude leu as respostas na transcrição${pharmacyAnswer ? `: ${pharmacyAnswerText(pharmacyAnswer)}` : ""}`,
+      text: `Depois da ligação, o Claude leu as respostas na transcrição${answersSource === "recording" ? " da gravação" : ""}${pharmacyAnswer ? `: ${pharmacyAnswerText(pharmacyAnswer)}` : ""}`,
       saved: true,
     });
   }
@@ -131,6 +136,7 @@ function SignedRecording({ sessionId }: { sessionId: string }) {
 
 function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
   const kind = call.kind ? KIND[call.kind] : { label: "Ligação", other: "Outro lado" };
+  const conversation = call.recordingTranscript?.length ? call.recordingTranscript : call.transcript;
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm sm:p-5">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
@@ -152,13 +158,15 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
         <section className="flex min-w-0 flex-col gap-2">
           <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">Conversa</h3>
           <p className="text-[13px] text-muted">
-            O que a assistente ouviu e falou, transcrito na hora pela linha telefônica. Pode perder pedaços; o áudio é a gravação real.
+            {call.recordingTranscript?.length
+              ? "Transcrição da gravação, feita depois da ligação."
+              : "O que a assistente ouviu e falou, transcrito na hora pela linha telefônica. Pode perder pedaços; o áudio é a gravação real."}
           </p>
-          {call.transcript.length === 0 ? (
+          {conversation.length === 0 ? (
             <p className="text-[14px] text-muted">Sem transcrição.</p>
           ) : (
             <ul className="flex flex-col gap-2">
-              {call.transcript.map((l, i) => {
+              {conversation.map((l, i) => {
                 const ai = l.speaker === "assistant";
                 return (
                   <li key={i} className={`flex flex-col ${ai ? "items-start" : "items-end"}`}>
@@ -179,7 +187,12 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
         </section>
         <section className="flex min-w-0 flex-col gap-2">
           <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">O que o sistema fez</h3>
-          <Timeline events={call.events} readFromTranscript={call.readFromTranscript} pharmacyAnswer={call.pharmacyAnswer} />
+          <Timeline
+            events={call.events}
+            readFromTranscript={call.readFromTranscript}
+            answersSource={call.answersSource}
+            pharmacyAnswer={call.pharmacyAnswer}
+          />
         </section>
       </div>
     </article>

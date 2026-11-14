@@ -213,6 +213,7 @@ test("pharmacy session has no greeting input and both tools", () => {
   const config = {
     openaiApiKey: "k",
     liveModel: "gpt-live-1",
+    transcribeModel: "gpt-4o-transcribe-diarize",
     liveVoice: "bossa",
     actorVoice: "tempo",
     patientActorVoice: "tempo",

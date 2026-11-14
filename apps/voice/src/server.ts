@@ -1,3 +1,4 @@
+import { MAX_RECORDING_BYTES, transcribeRecording } from "./transcribe.js";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { timingSafeEqual } from "node:crypto";
 import { telemetryFromEnv, telephonyCost, voiceCost } from "@recuidado/telemetry";
@@ -168,6 +169,17 @@ function authorized(req: IncomingMessage, config: VoiceConfig): boolean {
   return given.length === expected.length && timingSafeEqual(given, expected);
 }
 
+async function readRaw(req: IncomingMessage, max: number): Promise<Buffer> {
+  const chunks: Buffer[] = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += (chunk as Buffer).length;
+    if (size > max) throw new Error("body too large");
+    chunks.push(chunk as Buffer);
+  }
+  return Buffer.concat(chunks);
+}
+
 async function readJson(req: IncomingMessage): Promise<unknown> {
   const chunks: Buffer[] = [];
   let size = 0;
@@ -257,6 +269,21 @@ const server = createServer(async (req, res) => {
 
     if (!config || !service) return json(res, 503, { error: "voice service not configured", detail: configError });
     if (!authorized(req, config)) return json(res, 401, { error: "unauthorized" });
+
+    // The API sends the recording of a call after it ends; the transcript comes back with who said what.
+    if (req.method === "POST" && url.pathname === "/transcriptions") {
+      let wav: Buffer;
+      try {
+        wav = await readRaw(req, MAX_RECORDING_BYTES);
+      } catch (err) {
+        return json(res, 413, { error: (err as Error).message });
+      }
+      if (wav.length < 44) return json(res, 400, { error: "empty recording" });
+      const started = Date.now();
+      const lines = await transcribeRecording(config.openaiApiKey, wav, config.transcribeModel);
+      telemetry.info(`recording transcribed: ${lines.length} lines in ${Date.now() - started} ms`);
+      return json(res, 200, { lines });
+    }
 
     if (req.method === "POST" && url.pathname === "/calls") {
       let input;
