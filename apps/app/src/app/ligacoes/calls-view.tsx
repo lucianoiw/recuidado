@@ -136,7 +136,11 @@ function SignedRecording({ sessionId }: { sessionId: string }) {
 
 function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
   const kind = call.kind ? KIND[call.kind] : { label: "Ligação", other: "Outro lado" };
-  const conversation = call.recordingTranscript?.length ? call.recordingTranscript : call.transcript;
+  // The recording transcript sometimes comes back as one block with both sides mixed; then the live one reads better.
+  const recorded = call.recordingTranscript ?? [];
+  const useRecording =
+    recorded.length >= 3 && new Set(recorded.map((l) => l.speaker)).size > 1 && recorded.length * 2 >= call.transcript.length;
+  const conversation = useRecording ? recorded : call.transcript;
   return (
     <article className="flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-4 shadow-sm sm:p-5">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
@@ -158,7 +162,7 @@ function CallCard({ call, signedIn }: { call: CallLog; signedIn: boolean }) {
         <section className="flex min-w-0 flex-col gap-2">
           <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">Conversa</h3>
           <p className="text-[13px] text-muted">
-            {call.recordingTranscript?.length
+            {useRecording
               ? "Transcrição da gravação, feita depois da ligação."
               : "O que a assistente ouviu e falou, transcrito na hora pela linha telefônica. Pode perder pedaços; o áudio é a gravação real."}
           </p>
