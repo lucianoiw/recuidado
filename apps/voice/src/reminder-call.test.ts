@@ -221,6 +221,10 @@ test("never dictates a goodbye, and hangs up after a silence when none comes", a
   const result = await call.result;
   assert.equal(result.endReason, "hung_up_after_answer");
   assert.equal(socket.sent.filter((e) => /Say now/.test(String(e.content ?? ""))).length, 0);
+  // One reminder of the goal after the first silence, never a line to read.
+  const nudges = socket.sent.filter((e) => String(e.event_id).startsWith("nudge_"));
+  assert.equal(nudges.length, 1);
+  assert.equal(nudges[0].type, "session.instructions.append");
 });
 
 test("she goes on talking after the goodbye: the call goes on until the next goodbye", async () => {
