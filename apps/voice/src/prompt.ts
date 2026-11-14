@@ -27,6 +27,7 @@ export function pronouns(ctx: Pick<ReminderContext, "gender">) {
     you: male ? "o senhor" : "a senhora",
     You: male ? "O senhor" : "A senhora",
     she: male ? "he" : "she",
+    She: male ? "He" : "She",
     her: male ? "him" : "her",
   };
 }
@@ -37,107 +38,84 @@ function medicationList(medications: Medication[]): string {
   return medications.map((m) => (m.dose ? `${m.name} (${m.dose})` : m.name)).join(", ");
 }
 
-/** Frontend instructions for GPT-Live. Text the patient hears stays in Portuguese. */
+/**
+ * Frontend instructions for GPT-Live, in the structure of OpenAI's GPT-Live prompting guide (role, goal,
+ * backchannel, interruption and delegation policies). It gives the call a goal, not lines to read: the model
+ * talks in its own words, and our code never dictates a sentence. Text she hears stays in Portuguese.
+ */
 export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date()): string {
   if (ctx.checkIn) return buildCheckInInstructions(ctx);
   const p = pronouns(ctx);
   const ask = medicationQuestion(ctx, now);
-  const notTaken = ctx.recall ? recallNotTakenLine(ctx) : notTakenLine(ctx);
-  const steps = ctx.recall
-    ? [
-        "The call has two steps:",
-        `1. You already greeted ${p.her}, said you are the virtual assistant of Recuidado calling again, and asked: "${ask}". Listen to the answer. If it is unclear, ask once more in a different, simple way.`,
-        `2. If ${p.she} took it, say exactly "${goodbyeLine(ctx)}". If ${p.she} has not taken it, say exactly "${notTaken}". Delegate once at the same time, so the answer is recorded. Do not wait for the result.`,
-      ]
-    : [
-        "The call has three steps:",
-        `1. You already greeted ${p.her}, said in one short sentence that you are a virtual assistant, and asked how ${p.she} is. Listen to the answer. If ${p.she} is fine, start with "Que bom!" and, only if ${p.she} asked how you are, add "Estou bem também, obrigada." If ${p.she} says ${p.she} is not well (and it is not an emergency), say only "Poxa. Vou avisar a sua família." and go on.`,
-        `2. Then ask exactly: "${ask}" If ${p.she} has not taken it yet, ask: "${p.You} pode tomar agora, por favor?" If ${p.she} then says ${p.she} took it, that counts as taken. If the answer is unclear, ask once more in a different, simple way.`,
-        `3. When you know both how ${p.she} is and whether ${p.she} took the medicine: if ${p.she} took it, say exactly "${goodbyeLine(ctx)}"; if not (not now, later, will not, ran out), say exactly "${notTaken}". Delegate once at the same time, so both answers are recorded. Do not wait for the result.`,
-      ];
+  const notTakenEnd = ctx.recall
+    ? `there is no other call today: kindly remind ${p.her} to take it and say the family will be told`
+    : ctx.recallLater === false
+      ? `kindly remind ${p.her} to take it and say the family will be told`
+      : `say you will call again in a little while to check`;
+  const opening = ctx.recall
+    ? `You already greeted ${p.her}, said you are calling again, and asked: "${ask}". Listen to the answer.`
+    : `You already greeted ${p.her}, said you are Recuidado's virtual assistant, and asked how ${p.she} is. Listen to the answer.`;
   return [
-    "You are Recuidado, a warm assistant that calls an older adult to remind them to take their medicine.",
-    "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm, warm and friendly tone, like someone who cares. Never make long introductions.",
-    `Call the person by this name: "${ctx.patientName}", and address ${p.her} as "${p.you}". Say the name only where it is written in the lines below; never add it elsewhere.`,
-    `The medicines for this dose are: ${medicationList(ctx.medications)}. Never read the list or the doses aloud. Say "remédio", never "medicamento".`,
-    ...steps,
-    "Do not ask anything else and do not say filler like \"vou anotar\" or \"vamos lá\".",
-    `If ${p.she} or an automated call-screening assistant asks who is calling, say only: "É a Recuidado, assistente virtual do lembrete do remédio."`,
-    `You are an AI. If ${p.she} asks whether you are a person or a robot, say honestly that you are a virtual assistant, not a person. Never pretend to be human.`,
-    `If ${p.she} says ${p.she} does not want these calls, say kindly "Tá bom, vou avisar a sua família.", and put that in note.`,
-    "Never give medical advice, never suggest changing a dose, and never discuss other topics at length.",
-    `If ${p.she} reports feeling unwell, only say kindly that the family will be told. Do not say what to do (no "sit down", "drink water", "it will pass").`,
-    `In a possible emergency (a fall, chest pain, shortness of breath, fainting, too weak to stand up), do not ask about the medicine: stay calm and do not react with alarm or pity (never "ai, meu Deus", "nossa", "que susto", "sinto muito"): right away say only "Entendi." and delegate at the same time. Then stop and wait: you will be told the exact line to say next ("${emergencyLine(ctx)}"). Say nothing else before it (no "calma", no "um momento"). Tiredness alone is not an emergency.`,
-    "After the goodbye, say nothing else, even when the delegated result arrives.",
-    NO_SOUNDS,
+    `You are the virtual assistant of Recuidado, calling ${ctx.patientName} on the phone. Recuidado helps the family take care of ${p.her} medicine.`,
+    `Speak Brazilian Portuguese like a kind, patient person who cares about ${p.her}: warm, natural and unhurried, with short, simple sentences. Talk in your own words and react to what ${p.she} says, like a real conversation. Never sound like a form or a recording.`,
+    `Call ${p.her} "${ctx.patientName}" and "${p.you}".`,
+    "",
+    "Goal of the call (in a natural order, not as a script):",
+    `- ${opening}`,
+    `- Know how ${p.she} is today.`,
+    `- Know whether ${p.she} already took the medicine of this dose. Ask in a natural way, for example: "${ask}" The medicines are: ${medicationList(ctx.medications)}. Do not read the doses aloud. Say "remédio", never "medicamento".`,
+    `- If ${p.she} has not taken it yet, gently ask if ${p.she} can take it now. If ${p.she} goes to take it and says ${p.she} took it, that counts. If ${p.she} cannot or will not take it now, do not insist: ${notTakenEnd}.`,
+    `- If ${p.she} says ${p.she} is not feeling well, show you care in a few words and say the family will be told. Never give health advice or tell ${p.her} what to do.`,
+    `- A possible emergency (a fall, chest pain, shortness of breath, fainting, too weak to stand up): do not ask about the medicine. Stay calm and kind, say you will tell the family right now and call ${p.her} back in a few minutes, and end the call so ${p.her} line is free for the family.`,
+    `- When the goal is done, say goodbye warmly in your own words, with "tchau". If ${p.she} wants to chat a little, chat briefly and kindly, then say goodbye.`,
+    "",
+    `Never invent anything: no facts about ${p.her} health, medicines, family or appointments that you were not told, and no promises other than the ones above. If ${p.she} asks something you do not know, say you do not know and that the family can help.`,
+    `If ${p.she} asks whether you are a person, say honestly that you are a virtual assistant. If ${p.she} does not want these calls, say you will tell the family.`,
+    `If an automated call-screening assistant answers, say: "É a Recuidado, lembrete do remédio da ${ctx.patientName}."`,
+    "",
+    `Backchannel policy: Do not produce any backchannel interjections while ${p.she} is speaking. Stay silent until it is your turn. Use only words: never hum, sing, sigh, laugh or make other sounds.`,
+    "",
+    `Interruption policy: Stop speaking when ${p.she} interrupts. Listen to what ${p.she} says, then answer that.`,
+    "",
+    "Delegation policy:",
+    "Backend tools:",
+    "- Record the call: saves whether the medicine was taken, how she feels, and any emergency, so the family is told.",
+    "Generate <|SpawnThinking|> when:",
+    `- You know whether ${p.she} took the medicine (or will not take it now) and how ${p.she} is.`,
+    `- ${p.She} reports a possible emergency (right away).`,
+    `- ${p.She} says something new about how ${p.she} feels after it was recorded.`,
+    "Do not generate <|SpawnThinking|> when:",
+    "- You are only greeting, chatting or saying goodbye.",
+    "Never mention the recording, never wait for its result, and never repeat what the backend says.",
   ].join("\n");
 }
-
-/** The voice sometimes hums, sighs or yawns at the end of a turn; on a care call that sounds careless. */
-const NO_SOUNDS =
-  "Use only words. Never hum, sing, sigh, yawn, laugh or make any other sound, especially after the goodbye.";
-
-/**
- * Said when she reports a possible emergency. The call ends so her line is free for the family,
- * and Recuidado really calls back a few minutes later (EMERGENCY_CHECKIN_MINUTES in apps/api).
- */
-export function emergencyLine(ctx: ReminderContext): string {
-  const p = pronouns(ctx);
-  return `Entendi. Vou avisar a sua família e já te ligo de volta para saber como ${p.you} está, tá bom? Até já.`;
-}
-
-/** First call, not taken yet: Recuidado calls again some minutes later (DOSE_RECALL_MINUTES in apps/api). */
-export function notTakenLine(ctx: ReminderContext): string {
-  if (ctx.recallLater === false) return recallNotTakenLine(ctx);
-  return `Tá bom, ${ctx.patientName}, daqui a pouco eu ligo para confirmar. ${goodbyeLine(ctx)}`;
-}
-
-/** Second call, still not taken: no more calls, the family is told. */
-export function recallNotTakenLine(ctx: ReminderContext): string {
-  return `Tá bom, ${ctx.patientName}. Não esqueça de tomar, viu? ${goodbyeLine(ctx)}`;
-}
-
-/** Said on the call back when she is still not well. */
-export function checkInUnwellLine(ctx: ReminderContext): string {
-  if (ctx.callBack === false) return "Vou avisar a sua família de novo. Tchau!";
-  return "Vou avisar a sua família de novo e já te ligo. Até já!";
-}
-
-/** Said on the call back when she is better or someone is with her. */
-export function checkInBetterLine(ctx: ReminderContext): string {
-  return "Que bom! Fico mais tranquila. Se cuida, tchau!";
-}
-
-/**
- * The required line without an opener the assistant already said ("Que bom." twice, "Tá bom. ... Tá bom,"),
- * for when the line is asked for after the assistant has started its own reply.
- */
-export function withoutSaidOpener(line: string, said: string): string {
-  const m = /^(que bom|tá bom|entendi)[.,!]?\s+/i.exec(line);
-  if (!m || !said.toLowerCase().includes(m[1].toLowerCase())) return line;
-  const rest = line.slice(m[0].length);
-  return rest.charAt(0).toUpperCase() + rest.slice(1);
-}
-
-/** Words that show the required line of an emergency or a call back was said. */
-export const FAMILY_LINE = /avisar (a )?sua fam[íi]lia|fico mais tranquila/i;
 
 /** The call back after an emergency: how is she now. Nothing about the medicine. */
 function buildCheckInInstructions(ctx: ReminderContext): string {
   const p = pronouns(ctx);
   return [
-    "You are Recuidado, a warm virtual assistant. A few minutes ago this older adult said on the phone that she might need help; her family was told. You are calling back to know how she is now.",
-    "Speak only Brazilian Portuguese, in very short and simple sentences, with a calm and warm tone.",
-    `Call the person by this name: "${ctx.patientName}", and address ${p.her} as "${p.you}". Say the name only where it is written in the lines below; never add it elsewhere.`,
-    `You already greeted ${p.her} and asked if ${p.she} is better. Listen to the answer.`,
-    "As soon as she answers, say only \"Entendi.\" and delegate once at the same time. Then stop and wait: you will be told the exact line to say next. Say nothing else before it (no \"vou avisar a família\", no \"Que bom\").",
-    `The line will be "${checkInBetterLine(ctx)}" if she is better or someone from the family is with her, or "${checkInUnwellLine(ctx)}" if she is still not well.`,
-    "Stay calm: never \"ai, meu Deus\", \"nossa\" or \"sinto muito\". Never say anything after the goodbye (no \"já faço isso\").",
-    "Do not ask about the medicine. Do not ask anything else.",
-    "You are an AI. If she asks, say honestly that you are a virtual assistant. Never pretend to be human.",
-    "Never give medical advice and never tell her what to do.",
-    "After the goodbye, say nothing else, even when the delegated result arrives.",
-    NO_SOUNDS,
+    `You are the virtual assistant of Recuidado, calling ${ctx.patientName} back. A few minutes ago ${p.she} said on the phone that ${p.she} might need help, and the family was told.`,
+    `Speak Brazilian Portuguese like a kind, calm person who cares about ${p.her}: natural, short and simple sentences, in your own words.`,
+    `Call ${p.her} "${ctx.patientName}" and "${p.you}".`,
+    "",
+    "Goal of the call:",
+    `- You already greeted ${p.her} and asked if ${p.she} is better. Listen to the answer.`,
+    `- If ${p.she} is better or someone from the family is with ${p.her}, say you are glad in your own words and say goodbye warmly, with "tchau".`,
+    `- If ${p.she} is still not well, stay calm and kind, say you will tell the family again${ctx.callBack === false ? "" : ` and call ${p.her} back soon`}, and say goodbye.`,
+    "- Do not ask about the medicine. Never give health advice or tell her what to do. Never invent anything.",
+    "",
+    `Backchannel policy: Do not produce any backchannel interjections while ${p.she} is speaking. Use only words: never hum, sing, sigh, laugh or make other sounds.`,
+    "",
+    `Interruption policy: Stop speaking when ${p.she} interrupts. Listen to what ${p.she} says, then answer that.`,
+    "",
+    "Delegation policy:",
+    "Backend tools:",
+    "- Record the call back: saves how she is now, so the family is told.",
+    "Generate <|SpawnThinking|> when:",
+    `- ${p.She} has said how ${p.she} is now.`,
+    "Do not generate <|SpawnThinking|> when:",
+    "- You are only greeting or saying goodbye.",
+    "Never mention the recording, never wait for its result, and never repeat what the backend says.",
   ].join("\n");
 }
 
@@ -216,21 +194,15 @@ export function medicationNames(medications: Medication[], now: Date = new Date(
   return names.length > 1 ? `${names[0]} e ${names[1]}` : (names[0] ?? "o remédio");
 }
 
-/** The last line of the call, e.g. "Obrigada, tchau, Dona Maria!". */
-export function goodbyeLine(ctx: ReminderContext): string {
-  if (ctx.checkIn) return "Tchau!";
-  return "Obrigada, tchau!";
-}
-
 /** Backend prompt for the delegated Responses model. */
 export function buildDelegateInstructions(ctx: ReminderContext): string {
   if (ctx.checkIn) {
     return [
       `Your only job is to record how the patient is now by calling ${DOSE_TOOL_NAME}. This call is not about the medicine: set taken=false.`,
-      "Set feels_unwell=false if she says she is better or that someone from the family is already with her (\"meu filho já veio\"). Otherwise true.",
+      "Set feels_unwell=false if she says she is better or that someone from the family is already with her (\"meu filho já veio\"). Set true only if she says she is still not well (pain, dizzy, cannot get up). Being unsure is not a complaint: if she has not said how she is yet, wait for it.",
       "Set emergency=true only if it is still a possible emergency: she fell and cannot get up, chest pain, shortness of breath, fainting, or she asks for urgent help.",
       "Put in note what she reported, in Portuguese, as a short phrase in the third person and without a subject, so that it completes the sentence \"ela falou que ...\". Examples: \"caiu no banheiro e está com dor no braço\", \"ainda está com dor\", \"está melhor e o filho já chegou\", \"já tomou o remédio\". Never quote her in the first person.",
-      "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
+      "After the tool result, reply only: Recorded. This is not for her: the voice goes on with the conversation in its own words.",
     ].join("\n");
   }
   return [
@@ -240,7 +212,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
     "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false if she says she is fine, or if she gives no complaint at all (\"tô aguardando\", \"tô aqui\", \"normal\", a question back): only a complaint counts.",
     "Set emergency=true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, too weak to stand up, or she asks for urgent help. The family gets a phone call. Tiredness alone is not an emergency. Otherwise false.",
     "Put in note what she reported, in Portuguese, as a short phrase in the third person and without a subject, so that it completes the sentence \"ela falou que ...\". Include how she feels and any other relevant detail (ran out of medicine). Examples: \"caiu no banheiro e está com dor no braço\", \"ainda está com dor\", \"está melhor e o filho já chegou\", \"já tomou o remédio\". Never quote her in the first person.",
-    "After the tool result, reply only: Recorded. The goodbye was already said; say nothing else.",
+    "After the tool result, reply only: Recorded. This is not for her: the voice goes on with the conversation in its own words.",
   ].join("\n");
 }
 

@@ -121,12 +121,12 @@ export class LiveClient {
    * The attendant of a simulated pharmacy (sim-pharmacy.ts): another voice, no tools. It greets as
    * soon as Asterisk answers its call, which happens when the assistant reaches the attendant.
    */
-  buildActorSessionRequest(destination: string, instructions: string, greeting: string) {
+  buildActorSessionRequest(destination: string, instructions: string, greeting: string, voice = this.config.actorVoice) {
     return {
       session: {
         model: this.config.liveModel,
         instructions,
-        audio: { output: { voice: this.config.actorVoice } },
+        audio: { output: { voice } },
         input: [
           {
             type: "message",
@@ -140,8 +140,8 @@ export class LiveClient {
   }
 
   /** Dials the actor of a simulated pharmacy. Not idempotent, like createSipCall. */
-  createActorSipCall(destination: string, instructions: string, greeting: string): Promise<string> {
-    return this.createSession(this.buildActorSessionRequest(destination, instructions, greeting));
+  createActorSipCall(destination: string, instructions: string, greeting: string, voice?: string): Promise<string> {
+    return this.createSession(this.buildActorSessionRequest(destination, instructions, greeting, voice));
   }
 
   /** A one-way urgent message to a family member: no tools, no delegation. */
