@@ -52,8 +52,6 @@ export interface ReminderCallOptions {
   replyTailMs?: number;
   /** Longest time the patient's microphone stays muted while the greeting plays. */
   greetingMuteMs?: number;
-  /** Longest wait for the answer to be recorded after the goodbye was said. */
-  recordAfterGoodbyeMs?: number;
   /** Raw PCM16 24 kHz greeting recorded on an earlier call; played as soon as the call is answered. */
   greetingAudio?: Buffer;
   /** Called with the greeting audio when the model said the expected greeting line, to reuse it. */
@@ -111,7 +109,6 @@ export class ReminderCall {
   private greetingText = "";
   private goodbyeTimer?: NodeJS.Timeout;
   private silenceTimer?: NodeJS.Timeout;
-  private recordTimer?: NodeJS.Timeout;
   private goodbyeHeard = false;
   /** How many times the model was reminded of the goal after a silence. */
   private nudges = 0;
@@ -299,7 +296,6 @@ export class ReminderCall {
     // ("É isso. Ela tá bem e já tomou, ok.").
     if (!this.goodbyeHeard) this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
-    if (this.recordTimer) clearTimeout(this.recordTimer);
     if (this.goodbyeHeard) {
       // The goodbye was said while the answer was being recorded: give her a moment to answer it, then hang up.
       if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
@@ -330,7 +326,9 @@ export class ReminderCall {
           delegation_id: null,
           content: this.answer
             ? 'The answer is already recorded. She is waiting on the line. Continue the call in your own words: if anything of the goal is left, do it; otherwise say goodbye warmly, with "tchau".'
-            : 'She has gone quiet. Continue the call in your own words, toward the goal. If it is still not clear whether she took the medicine after asking, do not insist: say the family will check with her, and say goodbye warmly, with "tchau".',
+            : this.nudges === 1
+              ? 'She has gone quiet. Continue the call in your own words, toward the goal. If she went to get the medicine, ask kindly whether she managed to take it. Otherwise ask again, simply and slowly.'
+              : 'She is still quiet or not answering clearly. Do not insist and do not assume she took it: say the family will check with her, and say goodbye warmly, with "tchau".',
         });
         this.armSilenceHangup();
         return;
@@ -367,18 +365,11 @@ export class ReminderCall {
         this.patientAfterGoodbye = "";
         this.log("goodbye heard");
       }
-      if (this.answer) {
-        if (this.silenceTimer) clearTimeout(this.silenceTimer);
-        // Give her a moment to say goodbye back; minutes are paid, so do not wait long.
-        this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
-      } else if (!this.recordTimer) {
-        this.recordTimer = setTimeout(() => {
-          this.endReason ??= "hung_up_before_answer_recorded";
-          this.log("answer not recorded after the goodbye, hanging up");
-          void this.endCall();
-        }, this.opts.recordAfterGoodbyeMs ?? 12_000);
-        this.timers.push(this.recordTimer);
-      }
+      // Give her a moment to say goodbye back; minutes are paid, so do not wait long. The answer does not
+      // have to be recorded by now: when the model did not record it, the API reads it from the transcript
+      // (simulated calls on 14/11: the model often never delegated, and the call sat 12 s after the goodbye).
+      if (this.silenceTimer) clearTimeout(this.silenceTimer);
+      this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
       return;
     }
     // Still talking: restart the silence wait.
@@ -397,7 +388,7 @@ export class ReminderCall {
     this.patientAfterGoodbye += delta;
     const said = this.patientAfterGoodbye.trim();
     if (PATIENT_GOODBYE.test(said)) {
-      if (this.answer) this.armGoodbyeHangup(this.opts.replyTailMs ?? 1500);
+      this.armGoodbyeHangup(this.opts.replyTailMs ?? 1500);
       return;
     }
     if (said.split(/\s+/).filter(Boolean).length > SHORT_REPLY_WORDS) {
@@ -407,13 +398,11 @@ export class ReminderCall {
       this.assistantSinceGreeting = "";
       if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
       this.goodbyeTimer = undefined;
-      if (this.recordTimer) clearTimeout(this.recordTimer);
-      this.recordTimer = undefined;
       this.armSilenceHangup();
       return;
     }
     // A word or two: give her time to finish before deciding.
-    if (this.answer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+    this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
   }
 
   private speakGreeting() {

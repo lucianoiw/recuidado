@@ -238,7 +238,8 @@ test("both sides quiet before any answer: reminds the model of the goal, then ha
   assert.equal(result.outcome, "unclear");
   const nudges = socket.sent.filter((e) => String(e.event_id).startsWith("nudge_"));
   assert.equal(nudges.length, 2);
-  assert.match(String(nudges[0].content), /do not insist/);
+  assert.match(String(nudges[0].content), /ask again/);
+  assert.match(String(nudges[1].content), /do not assume she took it/);
 });
 
 test("she goes on talking after the goodbye: the call goes on until the next goodbye", async () => {
