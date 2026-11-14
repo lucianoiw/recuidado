@@ -1,4 +1,5 @@
 import type { SidebandSocket } from "./reminder-call.js";
+import { RECUIDADO_PRONUNCIATION } from "./prompt.js";
 
 /** Builds the message read to a family member when the patient reports an emergency (local test path). */
 export function buildEmergencyMessage(patientName: string, note?: string): string {
@@ -21,6 +22,7 @@ export function buildAlertInstructions(message: string): string {
   return [
     "You are the virtual assistant of Recuidado calling a family member with a message about an older relative.",
     "Speak only Brazilian Portuguese, calm and clear.",
+    RECUIDADO_PRONUNCIATION,
     `As soon as the call is answered, say exactly: "${message}"`,
     "If they ask you to repeat or ask what happened, repeat the message once. You know nothing beyond it.",
     "Never give medical advice and never discuss other topics. If an automated call-screening assistant asks who is calling, say: \"Recuidado, recado da família.\"",

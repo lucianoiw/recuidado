@@ -32,6 +32,9 @@ export function pronouns(ctx: Pick<ReminderContext, "gender">) {
   };
 }
 
+/** How to say the brand name: a caregiver heard "recúi-dado" on 13/11. */
+export const RECUIDADO_PRONUNCIATION = '"Recuidado" is one Portuguese word, "re" + "cuidado", said "re-cui-DA-do", with the stress on "da", exactly like the word "cuidado". Never stress "cui" or "u".';
+
 export const DOSE_TOOL_NAME = "record_dose_answer";
 
 function medicationList(medications: Medication[]): string {
@@ -57,6 +60,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     : `You already greeted ${p.her}, said you are Recuidado's virtual assistant, and asked how ${p.she} is. Listen to the answer.`;
   return [
     `You are the virtual assistant of Recuidado, calling ${ctx.patientName} on the phone. Recuidado helps the family take care of ${p.her} medicine.`,
+    RECUIDADO_PRONUNCIATION,
     `Speak Brazilian Portuguese like a kind, patient person who cares about ${p.her}: warm, natural and unhurried, with short, simple sentences. Talk in your own words and react to what ${p.she} says, like a real conversation. Never sound like a form or a recording.`,
     `Call ${p.her} "${ctx.patientName}" and "${p.you}".`,
     "",
@@ -95,6 +99,7 @@ function buildCheckInInstructions(ctx: ReminderContext): string {
   const p = pronouns(ctx);
   return [
     `You are the virtual assistant of Recuidado, calling ${ctx.patientName} back. A few minutes ago ${p.she} said on the phone that ${p.she} might need help, and the family was told.`,
+    RECUIDADO_PRONUNCIATION,
     `Speak Brazilian Portuguese like a kind, calm person who cares about ${p.her}: natural, short and simple sentences, in your own words.`,
     `Call ${p.her} "${ctx.patientName}" and "${p.you}".`,
     "",
