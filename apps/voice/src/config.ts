@@ -4,6 +4,8 @@ import { defaultGateway, type AmiConfig } from "./ami.js";
 export interface VoiceConfig {
   openaiApiKey: string;
   liveModel: string;
+  /** Speech to text with speaker labels for call recordings, after the call. */
+  transcribeModel: string;
   liveVoice: string;
   /** Voice of the attendant AI in the simulated pharmacies (another voice than the assistant's). */
   actorVoice: string;
@@ -59,6 +61,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
   return {
     openaiApiKey: required(env, "OPENAI_API_KEY"),
     liveModel: env.OPENAI_LIVE_MODEL?.trim() || "gpt-live-1",
+    transcribeModel: env.OPENAI_TRANSCRIBE_MODEL?.trim() || "gpt-4o-transcribe-diarize",
     liveVoice: env.OPENAI_LIVE_VOICE?.trim() || "bossa",
     actorVoice: env.PHARMACY_ACTOR_VOICE?.trim() || "tempo",
     patientActorVoice: env.PATIENT_ACTOR_VOICE?.trim() || env.PHARMACY_ACTOR_VOICE?.trim() || "tempo",

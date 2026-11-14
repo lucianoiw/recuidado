@@ -10,5 +10,6 @@ import { PharmacyService } from './pharmacy.service.js';
   imports: [FamilyModule, VoiceModule],
   controllers: [PharmacyController],
   providers: [PharmacyService, VoiceTokenGuard],
+  exports: [PharmacyService],
 })
 export class PharmacyModule {}

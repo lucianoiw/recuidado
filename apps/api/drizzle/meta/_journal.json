@@ -183,6 +183,13 @@
       "when": 1794577902070,
       "tag": "0025_glorious_supreme_intelligence",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794683975961,
+      "tag": "0026_heavy_luminals",
+      "breakpoints": true
     }
   ]
 }

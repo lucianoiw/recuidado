@@ -14,7 +14,10 @@ import {
   pharmacyInquiries,
   telemetry,
 } from '@recuidado/core';
+import { PharmacyService } from '../pharmacy/pharmacy.service.js';
 import { type R2Bucket, r2FromConfig } from './r2.js';
+
+type Line = { speaker: 'assistant' | 'patient'; text: string; atMs?: number };
 
 export type CallKind = 'reminder' | 'recall' | 'check_in' | 'caregiver' | 'pharmacy';
 
@@ -39,7 +42,11 @@ export interface CallLogView {
   startedAt: string;
   transcript: { speaker: string; text: string; atMs?: number }[];
   events: CallEvent[];
-  /** The voice did not record the pharmacy's answer; Claude read it from the transcript after the call. */
+  /** The recording transcribed after the call, when there is one: the full conversation. */
+  recordingTranscript: { speaker: string; text: string; atMs?: number }[] | null;
+  /** Where a pharmacy call's answers came from. */
+  answersSource: 'call' | 'live_transcript' | 'recording' | null;
+  /** Kept for older panels: answers read by Claude from a transcript after the call. */
   readFromTranscript: boolean;
   /** Pharmacy calls: what was recorded, from the inquiry. */
   pharmacyAnswer: {
@@ -60,9 +67,36 @@ export class CallsService {
 
   constructor(
     @Inject(DB) private readonly db: Database,
-    config: ConfigService,
+    private readonly config: ConfigService,
+    private readonly pharmacy: PharmacyService,
   ) {
     this.r2 = r2FromConfig(config);
+  }
+
+  /**
+   * Transcribes the recording after the call (apps/voice holds the OpenAI key) and keeps it on the call log.
+   * For a pharmacy call, Claude then reads the answers from it. Off with RECORDING_TRANSCRIPTS=off. Never throws.
+   */
+  async transcribeRecording(sessionId: string, audio: Buffer): Promise<void> {
+    const voiceUrl = this.config.get<string>('VOICE_URL');
+    const token = this.config.get<string>('VOICE_API_TOKEN');
+    if (!voiceUrl || !token || this.config.get<string>('RECORDING_TRANSCRIPTS') === 'off') return;
+    try {
+      const res = await fetch(`${voiceUrl.replace(/\/$/, '')}/transcriptions`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'audio/wav' },
+        body: new Uint8Array(audio),
+        signal: AbortSignal.timeout(120_000),
+      });
+      if (!res.ok) throw new Error(`voice returned ${res.status}`);
+      const { lines } = (await res.json()) as { lines: Line[] };
+      if (!lines?.length) return;
+      await this.db.update(callLogs).set({ recordingTranscript: lines }).where(eq(callLogs.sessionId, sessionId));
+      this.logger.log(`Recording of ${sessionId} transcribed (${lines.length} lines).`);
+      await this.pharmacy.readRecording(sessionId, lines);
+    } catch (error) {
+      this.logger.warn(`transcribing recording ${sessionId} failed: ${(error as Error).message}`);
+    }
   }
 
   async saveLog(input: CallLogInput): Promise<void> {
@@ -100,6 +134,8 @@ export class CallsService {
       .onConflictDoUpdate({ target: callLogs.sessionId, set });
     telemetry.capture('call_recording_saved', { call_id: sessionId, bytes: audio.length, storage: this.r2 ? 'r2' : 'postgres' });
     this.logger.log(`Recording of ${sessionId} saved (${audio.length} bytes, ${this.r2 ? 'R2' : 'Postgres'}).`);
+    // In the background: Asterisk is not held while the audio is transcribed.
+    void this.transcribeRecording(sessionId, audio);
   }
 
   /** Who the panel shows: the signed-in family, or the demo family (synthetic data) for visitors. */
@@ -117,6 +153,8 @@ export class CallsService {
         inquiryStatus: pharmacyInquiries.status,
         inquiryAnswers: pharmacyInquiries.answers,
         matchesOffers: pharmacyInquiries.matchesOffers,
+        answersSource: pharmacyInquiries.answersSource,
+        recordingTranscript: callLogs.recordingTranscript,
         durationSeconds: callLogs.durationSeconds,
         startedAt: callLogs.startedAt,
         createdAt: callLogs.createdAt,
@@ -136,7 +174,9 @@ export class CallsService {
       sessionId: r.sessionId,
       kind: r.kind,
       outcome: r.inquiryStatus && r.inquiryStatus !== 'calling' ? r.inquiryStatus : r.outcome,
-      readFromTranscript: r.outcome === 'unclear' && r.inquiryStatus === 'answered',
+      recordingTranscript: r.recordingTranscript ?? null,
+      answersSource: r.answersSource ?? null,
+      readFromTranscript: r.answersSource === 'live_transcript' || r.answersSource === 'recording',
       pharmacyAnswer: r.inquiryAnswers ? { answers: r.inquiryAnswers, matchesOffers: r.matchesOffers ?? null } : null,
       durationSeconds: r.durationSeconds,
       startedAt: (r.startedAt ?? r.createdAt).toISOString(),

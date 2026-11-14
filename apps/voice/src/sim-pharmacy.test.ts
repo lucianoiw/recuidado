@@ -34,6 +34,7 @@ test("the actor speaks with the actor voice and has no tools", () => {
   const config = {
     openaiApiKey: "k",
     liveModel: "gpt-live-1",
+    transcribeModel: "gpt-4o-transcribe-diarize",
     liveVoice: "bossa",
     actorVoice: "tempo",
     patientActorVoice: "tempo",
