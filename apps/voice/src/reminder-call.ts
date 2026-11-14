@@ -1,17 +1,4 @@
-import {
-  DOSE_TOOL_NAME,
-  FAMILY_LINE,
-  buildGreeting,
-  checkInBetterLine,
-  checkInUnwellLine,
-  withoutSaidOpener,
-  emergencyLine,
-  goodbyeLine,
-  greetingLine,
-  notTakenLine,
-  recallNotTakenLine,
-  type ReminderContext,
-} from "./prompt.js";
+import { DOSE_TOOL_NAME, buildGreeting, greetingLine, type ReminderContext } from "./prompt.js";
 import { normalizeSpeech } from "./greeting-cache.js";
 
 export type CallStatus = "dialing" | "ringing" | "answered" | "ended";
@@ -61,7 +48,7 @@ export interface ReminderCallOptions {
   goodbyeMs?: number;
   /** After the goodbye, how long to wait for her to answer before hanging up. */
   goodbyeTailMs?: number;
-  /** After the goodbye, hang up this long after she stops answering. */
+  /** After the goodbye, hang up this long after she says goodbye back. */
   replyTailMs?: number;
   /** Longest time the patient's microphone stays muted while the greeting plays. */
   greetingMuteMs?: number;
@@ -83,8 +70,14 @@ export interface ReminderCallOptions {
 /** Phrases from carrier voicemail greetings. Talking to a recording helps nobody, so the call ends. */
 const VOICEMAIL = /grave (a )?sua mensagem|deixe (a )?sua mensagem|ap[óo]s o sinal|caixa postal|caixa de mensagens/i;
 
-/** The goodbye the assistant is told to say at the end ("tchau", or "até já" when it calls back soon). */
+/** The assistant's goodbye: the prompt asks it to say "tchau" in its own words. */
 const GOODBYE = /tchau|at[ée] j[áa]/i;
+
+/** Her answer to the goodbye. Anything longer that is not one of these means she is still talking. */
+const PATIENT_GOODBYE = /tchau|at[ée] (logo|mais|j[áa])|obrigad|beij|valeu|t[áa] bom|t[áa] certo|de nada|fica com deus|igualmente/i;
+
+/** Words she can say after the goodbye before it counts as going on with the conversation. */
+const SHORT_REPLY_WORDS = 3;
 
 /** High-frequency events left out of the log. */
 const QUIET_EVENTS = new Set([
@@ -117,8 +110,9 @@ export class ReminderCall {
   private silenceTimer?: NodeJS.Timeout;
   private recordTimer?: NodeJS.Timeout;
   private goodbyeHeard = false;
-  /** Emergency or call back recorded but the family line not said yet: the goodbye only counts after it. */
-  private emergencyLinePending = false;
+  /** What she said since the assistant's goodbye, to tell a goodbye back from more conversation. */
+  private patientAfterGoodbye = "";
+  /** What the assistant said since the greeting, or since she went on talking after a goodbye. */
   private assistantSinceGreeting = "";
   private greetingDone = false;
   private readonly greetingLine: string;
@@ -234,8 +228,7 @@ export class ReminderCall {
         }
         this.appendTranscript("patient", String(event.delta ?? ""));
         this.checkVoicemail();
-        // She answered the goodbye: hang up shortly after she stops talking.
-        if (this.goodbyeTimer && event.delta) this.armGoodbyeHangup(this.opts.replyTailMs ?? 1000);
+        if (event.delta) this.onPatientSpeech(String(event.delta));
         break;
       case "session.output_transcript.delta":
         this.onAssistantSpeech(String(event.delta ?? ""), event);
@@ -296,66 +289,27 @@ export class ReminderCall {
         output: JSON.stringify({ recorded: taken !== undefined }),
       },
     });
+    // Our code never dictates a line: the model already has the goal of the call and says goodbye in its own words.
     // After the goodbye there is nothing left to say: a new response made the model read the answer aloud
     // ("É isso. Ela tá bem e já tomou, ok.").
     if (!this.goodbyeHeard) this.send({ type: "response.create", event_id: `continue_${item.call_id}` });
 
     if (this.recordTimer) clearTimeout(this.recordTimer);
-    // The model does not always follow these steps: make sure she hears the line before the call ends.
-    const ctx = this.opts.context;
-    const requiredLine = ctx.checkIn
-      ? taken === undefined
-        ? undefined
-        : feelsUnwell === false && !emergency
-          ? checkInBetterLine(ctx)
-          : checkInUnwellLine(ctx)
-      : emergency
-        ? emergencyLine(ctx)
-        : undefined;
-    if (requiredLine && !FAMILY_LINE.test(this.assistantSinceGreeting)) {
-      this.emergencyLinePending = true;
-      if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
-      this.goodbyeTimer = undefined;
-      const line = withoutSaidOpener(requiredLine, this.assistantSinceGreeting);
-      this.log("answer recorded without the family line: asking for it");
-      this.log(`required line sent: "${line}"`);
-      this.send({
-        type: "session.commentary.append",
-        event_id: `emergency_${item.call_id}`,
-        delegation_id: null,
-        content: `Say now, calmly and exactly: "${line}"`,
-      });
-      this.armSilenceHangup();
-      return;
-    }
     if (this.goodbyeHeard) {
-      // The goodbye was said while the answer was being recorded: give it a moment to finish, then hang up.
-      this.armGoodbyeHangup((this.opts.replyTailMs ?? 1000) * 2);
+      // The goodbye was said while the answer was being recorded: give her a moment to answer it, then hang up.
+      if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
       return;
     }
-    // No goodbye yet: ask for it once, and hang up after a few seconds of silence anyway.
-    this.send({
-      type: "session.commentary.append",
-      event_id: `goodbye_${item.call_id}`,
-      delegation_id: null,
-      // Without an opener she already heard ("Tá bom. Tá bom, Dona Maria").
-      content: `Say now, exactly: "${withoutSaidOpener(this.closingLine(taken), this.assistantSinceGreeting)}"`,
-    });
+    // No goodbye yet: the conversation goes on; hang up only if nobody says anything for a while.
     this.armSilenceHangup();
   }
 
-  /** The last line for this answer: plain goodbye, or "daqui a pouco eu ligo para confirmar" when not taken. */
-  private closingLine(taken: boolean | undefined): string {
-    const ctx = this.opts.context;
-    if (taken !== false || ctx.checkIn) return goodbyeLine(ctx);
-    return ctx.recall ? recallNotTakenLine(ctx) : notTakenLine(ctx);
-  }
-
+  /** After the answer is recorded and before any goodbye: hang up when nobody has spoken for goodbyeMs. */
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
       this.endReason ??= "hung_up_after_answer";
-      this.log("no goodbye heard, hanging up");
+      this.log("silence after the answer, hanging up");
       void this.endCall();
     }, this.opts.goodbyeMs ?? 8000);
     this.timers.push(this.silenceTimer);
@@ -380,18 +334,10 @@ export class ReminderCall {
       return;
     }
     this.assistantSinceGreeting += delta;
-    let spoken = this.assistantSinceGreeting;
-    if (this.emergencyLinePending) {
-      const samu = spoken.search(FAMILY_LINE);
-      if (samu < 0) {
-        if (this.answer) this.armSilenceHangup();
-        return;
-      }
-      spoken = spoken.slice(samu);
-    }
-    if (GOODBYE.test(spoken)) {
+    if (GOODBYE.test(this.assistantSinceGreeting)) {
       if (!this.goodbyeHeard) {
         this.goodbyeHeard = true;
+        this.patientAfterGoodbye = "";
         this.log("goodbye heard");
       }
       if (this.answer) {
@@ -408,8 +354,39 @@ export class ReminderCall {
       }
       return;
     }
-    // Still talking after the answer (for example telling her the family will be told): restart the silence wait.
+    // Still talking after the answer: restart the silence wait.
     if (this.answer) this.armSilenceHangup();
+  }
+
+  /**
+   * After the assistant's goodbye, a goodbye back ends the call a moment later; anything longer means she
+   * still has something to say, so the call goes on and the model answers her.
+   */
+  private onPatientSpeech(delta: string) {
+    if (!this.goodbyeHeard) {
+      if (this.answer && this.silenceTimer) this.armSilenceHangup();
+      return;
+    }
+    this.patientAfterGoodbye += delta;
+    const said = this.patientAfterGoodbye.trim();
+    if (PATIENT_GOODBYE.test(said)) {
+      if (this.answer) this.armGoodbyeHangup(this.opts.replyTailMs ?? 1500);
+      return;
+    }
+    if (said.split(/\s+/).filter(Boolean).length > SHORT_REPLY_WORDS) {
+      this.log("she went on talking after the goodbye: the call goes on");
+      this.goodbyeHeard = false;
+      this.patientAfterGoodbye = "";
+      this.assistantSinceGreeting = "";
+      if (this.goodbyeTimer) clearTimeout(this.goodbyeTimer);
+      this.goodbyeTimer = undefined;
+      if (this.recordTimer) clearTimeout(this.recordTimer);
+      this.recordTimer = undefined;
+      if (this.answer) this.armSilenceHangup();
+      return;
+    }
+    // A word or two: give her time to finish before deciding.
+    if (this.answer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
   }
 
   private speakGreeting() {

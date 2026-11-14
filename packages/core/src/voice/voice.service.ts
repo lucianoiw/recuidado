@@ -456,7 +456,8 @@ export class VoiceCallService {
   }
 
   /**
-   * After a call back: better or with family → tell the family and stop. Still not well, or no answer →
+   * After a call back: better or with family → tell the family and stop. Answered but unclear → tell the
+   * family her words and stop. Still not well, or no answer →
    * tell the first contact what she said and call her again, up to MAX_CHECK_INS call backs.
    */
   private async followCheckIn(doseId: string, result: VoiceResult): Promise<void> {
@@ -470,6 +471,18 @@ export class VoiceCallService {
         body: words ? `Na ligação de volta, ${she} disse: ${quoted(words)}.` : `Na ligação de volta, ${she} disse que está melhor.`,
       }));
       this.logger.log(`Dose ${doseId}: she is better after ${done} call back(s); stopping.`);
+      return;
+    }
+    // She answered but it is not clear how she is (not even after Claude read the transcript): the family gets
+    // her own words. "Not clear" is never reported as "still not well", and nobody's phone rings for it.
+    if (answered && result.feelsUnwell == null && !result.emergency) {
+      await this.notifyFamily(doseId, (name, she) => ({
+        title: `${name} atendeu a ligação de volta`,
+        body: words
+          ? `Na ligação de volta, ${she} disse: ${quoted(words)}. Vale ligar para ${she} se tiver dúvida.`
+          : `Não deu para entender como ${she} está. Vale ligar para ${she}.`,
+      }));
+      this.logger.log(`Dose ${doseId}: call back answered but unclear; family told, no caregiver call.`);
       return;
     }
     if (!answered) {

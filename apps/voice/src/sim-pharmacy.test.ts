@@ -36,6 +36,7 @@ test("the actor speaks with the actor voice and has no tools", () => {
     liveModel: "gpt-live-1",
     liveVoice: "bossa",
     actorVoice: "tempo",
+    patientActorVoice: "tempo",
     delegateModel: "gpt-6-luna",
     sip: { providerUrl: "sips:x:5061", username: "openai", password: "p", callerNumber: "+551100000000" },
     allowedNumbers: new Set<string>(),

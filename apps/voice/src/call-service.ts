@@ -9,6 +9,7 @@ import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
 import { AsteriskVoiceGate, openGate, startRecording, waitForGlobal } from "./ami.js";
 import { UsageMeter } from "./usage.js";
+import { SIM_PATIENT_GREETING, buildPatientActorInstructions, patientActorNumber, simPatientFor } from "./sim-patient.js";
 import { actorNumber, buildActorInstructions, simGreeting, simPharmacyFor, type SimMedication, type SimPharmacy } from "./sim-pharmacy.js";
 
 /** One step of a call for the calls panel: a log line of the call and when it happened. */
@@ -144,7 +145,41 @@ export class CallService {
         }
       },
     });
+    this.startSimPatient(destination, sessionId, call.result);
     return { sessionId, call, trail, usage };
+  }
+
+  /**
+   * A simulated patient (sim-patient.ts): dials the actor once Asterisk has the call ringing, and hangs it
+   * up when the call ends. Nobody real is called. Never throws.
+   */
+  private startSimPatient(destination: string, callerId: string, done: Promise<unknown>) {
+    const sim = simPatientFor(destination);
+    if (!sim || !this.config.ami) return;
+    const ami = this.config.ami;
+    let ended = false;
+    void done.finally(() => (ended = true));
+    void (async () => {
+      try {
+        if (!(await waitForGlobal(ami, `SIMP_READY_${sim.index}`, () => ended, 60_000))) return;
+        const actorId = await this.live.createActorSipCall(
+          patientActorNumber(sim),
+          buildPatientActorInstructions(sim),
+          SIM_PATIENT_GREETING,
+          this.config.patientActorVoice,
+        );
+        this.log(`[${callerId}] simulated patient ${sim.index} (${sim.label}): actor ${actorId}`);
+        this.watchActor(actorId, callerId);
+        const hangup = () => this.live.hangup(actorId).catch((err: Error) => this.log(`actor hangup: ${err.message}`));
+        const timer = setTimeout(hangup, 5 * 60 * 1000);
+        void done.finally(() => {
+          clearTimeout(timer);
+          void hangup();
+        });
+      } catch (err) {
+        this.log(`[${callerId}] simulated patient ${sim.index}: actor not started: ${(err as Error).message}`);
+      }
+    })();
   }
 
   /** Calls a family member with an urgent message. Same allowlist as reminder calls. */
@@ -170,6 +205,7 @@ export class CallService {
       maxCallMs: 60_000,
       log: trail.log,
     });
+    this.startSimPatient(destination, sessionId, call.result);
     return { sessionId, call, trail, usage };
   }
 
