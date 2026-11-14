@@ -74,6 +74,14 @@ const GOODBYE = /tchau|at[ée] j[áa]/i;
 /** Her answer to the goodbye. Anything longer that is not one of these means she is still talking. */
 const PATIENT_GOODBYE = /tchau|at[ée] (logo|mais|j[áa])|obrigad|beij|valeu|t[áa] bom|t[áa] certo|de nada|fica com deus|igualmente/i;
 
+/**
+ * After the assistant's goodbye: its transcript arrives before its audio ends, so wait long enough for her
+ * to hear it and start answering. After her goodbye back: her words arrive in pieces, so a "tá bom" can be
+ * followed by "mas antes..." (simulated calls, 14/11: cut twice mid-sentence with 3 s and 1.5 s).
+ */
+const GOODBYE_TAIL_MS = 5000;
+const REPLY_TAIL_MS = 3000;
+
 /** Reminders of the goal after a silence, before a silence hangs up. */
 const MAX_NUDGES = 2;
 
@@ -298,7 +306,7 @@ export class ReminderCall {
 
     if (this.goodbyeHeard) {
       // The goodbye was said while the answer was being recorded: give her a moment to answer it, then hang up.
-      if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+      if (!this.goodbyeTimer) this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? GOODBYE_TAIL_MS);
       return;
     }
     // No goodbye yet: the conversation goes on; hang up only if nobody says anything for a while.
@@ -369,7 +377,7 @@ export class ReminderCall {
       // have to be recorded by now: when the model did not record it, the API reads it from the transcript
       // (simulated calls on 14/11: the model often never delegated, and the call sat 12 s after the goodbye).
       if (this.silenceTimer) clearTimeout(this.silenceTimer);
-      this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+      this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? GOODBYE_TAIL_MS);
       return;
     }
     // Still talking: restart the silence wait.
@@ -394,7 +402,7 @@ export class ReminderCall {
     const last = matches.at(-1);
     const after = last ? said.slice((last.index ?? 0) + last[0].length) : said;
     if (last && words(after) <= SHORT_REPLY_WORDS) {
-      this.armGoodbyeHangup(this.opts.replyTailMs ?? 1500);
+      this.armGoodbyeHangup(this.opts.replyTailMs ?? REPLY_TAIL_MS);
       return;
     }
     if (words(after) > SHORT_REPLY_WORDS) {
@@ -409,7 +417,7 @@ export class ReminderCall {
     }
     // A word or two: give her time to finish before deciding. Her transcript can come seconds after she
     // speaks, so wait longer than for silence (simulated call, 14/11: cut after "Ah", mid-sentence).
-    this.armGoodbyeHangup((this.opts.goodbyeTailMs ?? 3000) * 2);
+    this.armGoodbyeHangup((this.opts.goodbyeTailMs ?? GOODBYE_TAIL_MS) + 2000);
   }
 
   private speakGreeting() {
