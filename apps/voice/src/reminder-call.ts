@@ -407,8 +407,9 @@ export class ReminderCall {
       this.armSilenceHangup();
       return;
     }
-    // A word or two: give her time to finish before deciding.
-    this.armGoodbyeHangup(this.opts.goodbyeTailMs ?? 3000);
+    // A word or two: give her time to finish before deciding. Her transcript can come seconds after she
+    // speaks, so wait longer than for silence (simulated call, 14/11: cut after "Ah", mid-sentence).
+    this.armGoodbyeHangup((this.opts.goodbyeTailMs ?? 3000) * 2);
   }
 
   private speakGreeting() {
