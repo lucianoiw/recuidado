@@ -110,6 +110,8 @@ export class ReminderCall {
   private silenceTimer?: NodeJS.Timeout;
   private recordTimer?: NodeJS.Timeout;
   private goodbyeHeard = false;
+  /** The model was reminded of the goal once after a silence. */
+  private silenceNudged = false;
   /** What she said since the assistant's goodbye, to tell a goodbye back from more conversation. */
   private patientAfterGoodbye = "";
   /** What the assistant said since the greeting, or since she went on talking after a goodbye. */
@@ -308,10 +310,25 @@ export class ReminderCall {
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
+      // The first silence: the model sometimes waits after the answer is recorded. Remind it of the goal
+      // (never a line to say) so she hears a goodbye; hang up only if a second silence follows.
+      if (!this.silenceNudged) {
+        this.silenceNudged = true;
+        this.log("silence after the answer, reminding the model of the goal");
+        this.send({
+          type: "session.instructions.append",
+          event_id: `nudge_${this.opts.sessionId}`,
+          delegation_id: null,
+          content:
+            "The answer is already recorded. She is waiting on the line. Continue the call in your own words: if anything of the goal is left, do it; otherwise say goodbye warmly, with \"tchau\".",
+        });
+        this.armSilenceHangup();
+        return;
+      }
       this.endReason ??= "hung_up_after_answer";
       this.log("silence after the answer, hanging up");
       void this.endCall();
-    }, this.opts.goodbyeMs ?? 8000);
+    }, this.silenceNudged ? (this.opts.goodbyeMs ?? 8000) : Math.round((this.opts.goodbyeMs ?? 8000) / 2));
     this.timers.push(this.silenceTimer);
   }
 
