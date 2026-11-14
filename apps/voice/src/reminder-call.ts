@@ -387,11 +387,17 @@ export class ReminderCall {
     }
     this.patientAfterGoodbye += delta;
     const said = this.patientAfterGoodbye.trim();
-    if (PATIENT_GOODBYE.test(said)) {
+    // What she said after her last goodbye word: "Tá bom, tchau" ends the call; "Tá bom, mas antes, o meu
+    // neto vem domingo" goes on (simulated call, 14/11: the call was cut while the model answered her).
+    const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
+    const matches = [...said.matchAll(new RegExp(PATIENT_GOODBYE.source, "gi"))];
+    const last = matches.at(-1);
+    const after = last ? said.slice((last.index ?? 0) + last[0].length) : said;
+    if (last && words(after) <= SHORT_REPLY_WORDS) {
       this.armGoodbyeHangup(this.opts.replyTailMs ?? 1500);
       return;
     }
-    if (said.split(/\s+/).filter(Boolean).length > SHORT_REPLY_WORDS) {
+    if (words(after) > SHORT_REPLY_WORDS) {
       this.log("she went on talking after the goodbye: the call goes on");
       this.goodbyeHeard = false;
       this.patientAfterGoodbye = "";

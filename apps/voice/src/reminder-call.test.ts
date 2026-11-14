@@ -263,7 +263,7 @@ test("she goes on talking after the goodbye: the call goes on until the next goo
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "m2", delta: "Oi, Maria! Como a senhora está?" });
   socket.emitEvent(toolCall(true));
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "m3", delta: "Que bom! Obrigada, tchau!" });
-  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "m4", delta: "Espera, minha filha vem hoje" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "m4", delta: "Tá bom, mas antes, minha filha vem hoje" });
   await new Promise((r) => setTimeout(r, 150));
   assert.equal(hangups, 0, "she was still talking");
   socket.emitEvent({ type: "session.output_transcript.delta", event_id: "m5", delta: "Que bom, aproveite a visita. Tchau!" });
