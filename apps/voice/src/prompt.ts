@@ -86,7 +86,7 @@ export function buildLiveInstructions(ctx: ReminderContext, now: Date = new Date
     `- You are about to say goodbye and have not generated it since ${p.she} last said something about the medicine or how ${p.she} feels.`,
     "Do not generate <|SpawnThinking|> when:",
     "- You are only greeting or chatting.",
-    "Never mention the recording, never wait for its result, and never repeat what the backend says.",
+    "Never mention the recording, never wait for its result, and never read aloud what the backend says: when it answers, just go on with the conversation toward the goal, and say goodbye when the goal is done.",
   ].join("\n");
 }
 
@@ -115,7 +115,7 @@ function buildCheckInInstructions(ctx: ReminderContext): string {
     `- ${p.She} has said how ${p.she} is now.`,
     "Do not generate <|SpawnThinking|> when:",
     "- You are only greeting or saying goodbye.",
-    "Never mention the recording, never wait for its result, and never repeat what the backend says.",
+    "Never mention the recording, never wait for its result, and never read aloud what the backend says: when it answers, just go on with the conversation toward the goal, and say goodbye when the goal is done.",
   ].join("\n");
 }
 
@@ -202,7 +202,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
       "Set feels_unwell=false if she says she is better or that someone from the family is already with her (\"meu filho já veio\"). Set true only if she says she is still not well (pain, dizzy, cannot get up). Being unsure is not a complaint: if she has not said how she is yet, wait for it.",
       "Set emergency=true only if it is still a possible emergency: she fell and cannot get up, chest pain, shortness of breath, fainting, or she asks for urgent help.",
       "Put in note what she reported, in Portuguese, as a short phrase in the third person and without a subject, so that it completes the sentence \"ela falou que ...\". Examples: \"caiu no banheiro e está com dor no braço\", \"ainda está com dor\", \"está melhor e o filho já chegou\", \"já tomou o remédio\". Never quote her in the first person.",
-      "After the tool result, reply only: Recorded. This is not for her: the voice goes on with the conversation in its own words.",
+      "After the tool result, reply only: Recorded. Go on with the call toward its goal, in your own words.",
     ].join("\n");
   }
   return [
@@ -212,7 +212,7 @@ export function buildDelegateInstructions(ctx: ReminderContext): string {
     "Set feels_unwell=true for any complaint at all, even mild: pain, dizziness, a fall, shortness of breath, tiredness or weakness (\"cansada\", \"fraca\"), feeling sick, sad, not sleeping or not well. The family decides what matters. Set false if she says she is fine, or if she gives no complaint at all (\"tô aguardando\", \"tô aqui\", \"normal\", a question back): only a complaint counts.",
     "Set emergency=true only for a possible emergency: a fall, chest pain, shortness of breath, fainting, too weak to stand up, or she asks for urgent help. The family gets a phone call. Tiredness alone is not an emergency. Otherwise false.",
     "Put in note what she reported, in Portuguese, as a short phrase in the third person and without a subject, so that it completes the sentence \"ela falou que ...\". Include how she feels and any other relevant detail (ran out of medicine). Examples: \"caiu no banheiro e está com dor no braço\", \"ainda está com dor\", \"está melhor e o filho já chegou\", \"já tomou o remédio\". Never quote her in the first person.",
-    "After the tool result, reply only: Recorded. This is not for her: the voice goes on with the conversation in its own words.",
+    "After the tool result, reply only: Recorded. Go on with the call toward its goal, in your own words.",
   ].join("\n");
 }
 

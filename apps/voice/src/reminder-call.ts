@@ -316,7 +316,8 @@ export class ReminderCall {
         this.silenceNudged = true;
         this.log("silence after the answer, reminding the model of the goal");
         this.send({
-          type: "session.instructions.append",
+          // Instructions alone did not make it speak (simulated call, 14/11); commentary starts a turn.
+          type: "session.commentary.append",
           event_id: `nudge_${this.opts.sessionId}`,
           delegation_id: null,
           content:
