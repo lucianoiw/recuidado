@@ -224,7 +224,8 @@ test("never dictates a goodbye, and hangs up after a silence when none comes", a
   // One reminder of the goal after the first silence, never a line to read.
   const nudges = socket.sent.filter((e) => String(e.event_id).startsWith("nudge_"));
   assert.equal(nudges.length, 1);
-  assert.equal(nudges[0].type, "session.instructions.append");
+  assert.equal(nudges[0].type, "session.commentary.append");
+  assert.match(String(nudges[0].content), /own words/);
 });
 
 test("she goes on talking after the goodbye: the call goes on until the next goodbye", async () => {
