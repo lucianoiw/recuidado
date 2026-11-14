@@ -76,6 +76,9 @@ const GOODBYE = /tchau|at[ée] j[áa]/i;
 /** Her answer to the goodbye. Anything longer that is not one of these means she is still talking. */
 const PATIENT_GOODBYE = /tchau|at[ée] (logo|mais|j[áa])|obrigad|beij|valeu|t[áa] bom|t[áa] certo|de nada|fica com deus|igualmente/i;
 
+/** Reminders of the goal after a silence, before a silence hangs up. */
+const MAX_NUDGES = 2;
+
 /** Words she can say after the goodbye before it counts as going on with the conversation. */
 const SHORT_REPLY_WORDS = 3;
 
@@ -110,8 +113,8 @@ export class ReminderCall {
   private silenceTimer?: NodeJS.Timeout;
   private recordTimer?: NodeJS.Timeout;
   private goodbyeHeard = false;
-  /** The model was reminded of the goal once after a silence. */
-  private silenceNudged = false;
+  /** How many times the model was reminded of the goal after a silence. */
+  private nudges = 0;
   /** What she said since the assistant's goodbye, to tell a goodbye back from more conversation. */
   private patientAfterGoodbye = "";
   /** What the assistant said since the greeting, or since she went on talking after a goodbye. */
@@ -306,30 +309,36 @@ export class ReminderCall {
     this.armSilenceHangup();
   }
 
-  /** After the answer is recorded and before any goodbye: hang up when nobody has spoken for goodbyeMs. */
+  /**
+   * Silence on the line (after the greeting, before any goodbye). The model sometimes waits for her, or
+   * after the answer is recorded, and both sides stay quiet (simulated calls, 14/11). The first silences
+   * get a reminder of the goal (never a line to say); after MAX_NUDGES, the next silence hangs up.
+   */
   private armSilenceHangup() {
     if (this.silenceTimer) clearTimeout(this.silenceTimer);
+    const base = this.opts.goodbyeMs ?? 8000;
+    const wait = this.nudges === 0 && this.answer ? Math.round(base / 2) : base;
     this.silenceTimer = setTimeout(() => {
-      // The first silence: the model sometimes waits after the answer is recorded. Remind it of the goal
-      // (never a line to say) so she hears a goodbye; hang up only if a second silence follows.
-      if (!this.silenceNudged) {
-        this.silenceNudged = true;
-        this.log("silence after the answer, reminding the model of the goal");
+      if (this.goodbyeHeard) return;
+      if (this.nudges < MAX_NUDGES) {
+        this.nudges++;
+        this.log(`silence on the line${this.answer ? " after the answer" : ""}, reminding the model of the goal`);
         this.send({
           // Instructions alone did not make it speak (simulated call, 14/11); commentary starts a turn.
           type: "session.commentary.append",
-          event_id: `nudge_${this.opts.sessionId}`,
+          event_id: `nudge_${this.nudges}_${this.opts.sessionId}`,
           delegation_id: null,
-          content:
-            "The answer is already recorded. She is waiting on the line. Continue the call in your own words: if anything of the goal is left, do it; otherwise say goodbye warmly, with \"tchau\".",
+          content: this.answer
+            ? 'The answer is already recorded. She is waiting on the line. Continue the call in your own words: if anything of the goal is left, do it; otherwise say goodbye warmly, with "tchau".'
+            : 'She has gone quiet. Continue the call in your own words, toward the goal. If it is still not clear whether she took the medicine after asking, do not insist: say the family will check with her, and say goodbye warmly, with "tchau".',
         });
         this.armSilenceHangup();
         return;
       }
-      this.endReason ??= "hung_up_after_answer";
-      this.log("silence after the answer, hanging up");
+      this.endReason ??= this.answer ? "hung_up_after_answer" : "hung_up_after_silence";
+      this.log("silence on the line, hanging up");
       void this.endCall();
-    }, this.silenceNudged ? (this.opts.goodbyeMs ?? 8000) : Math.round((this.opts.goodbyeMs ?? 8000) / 2));
+    }, wait);
     this.timers.push(this.silenceTimer);
   }
 
@@ -372,8 +381,8 @@ export class ReminderCall {
       }
       return;
     }
-    // Still talking after the answer: restart the silence wait.
-    if (this.answer) this.armSilenceHangup();
+    // Still talking: restart the silence wait.
+    this.armSilenceHangup();
   }
 
   /**
@@ -382,7 +391,7 @@ export class ReminderCall {
    */
   private onPatientSpeech(delta: string) {
     if (!this.goodbyeHeard) {
-      if (this.answer && this.silenceTimer) this.armSilenceHangup();
+      if (this.greetingDone) this.armSilenceHangup();
       return;
     }
     this.patientAfterGoodbye += delta;
@@ -400,7 +409,7 @@ export class ReminderCall {
       this.goodbyeTimer = undefined;
       if (this.recordTimer) clearTimeout(this.recordTimer);
       this.recordTimer = undefined;
-      if (this.answer) this.armSilenceHangup();
+      this.armSilenceHangup();
       return;
     }
     // A word or two: give her time to finish before deciding.

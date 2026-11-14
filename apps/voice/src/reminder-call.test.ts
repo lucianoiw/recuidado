@@ -221,11 +221,24 @@ test("never dictates a goodbye, and hangs up after a silence when none comes", a
   const result = await call.result;
   assert.equal(result.endReason, "hung_up_after_answer");
   assert.equal(socket.sent.filter((e) => /Say now/.test(String(e.content ?? ""))).length, 0);
-  // One reminder of the goal after the first silence, never a line to read.
+  // Reminders of the goal after a silence, never a line to read.
   const nudges = socket.sent.filter((e) => String(e.event_id).startsWith("nudge_"));
-  assert.equal(nudges.length, 1);
+  assert.equal(nudges.length, 2);
   assert.equal(nudges[0].type, "session.commentary.append");
   assert.match(String(nudges[0].content), /own words/);
+});
+
+test("both sides quiet before any answer: reminds the model of the goal, then hangs up", async () => {
+  const { socket, call } = setup();
+  socket.emitEvent({ type: "transport.answered", event_id: "q1" });
+  socket.emitEvent({ type: "session.output_transcript.delta", event_id: "q2", delta: "Oi, Maria! Como a senhora está?" });
+  socket.emitEvent({ type: "session.input_transcript.delta", event_id: "q3", delta: "Tô aqui, né." });
+  const result = await call.result;
+  assert.equal(result.endReason, "hung_up_after_silence");
+  assert.equal(result.outcome, "unclear");
+  const nudges = socket.sent.filter((e) => String(e.event_id).startsWith("nudge_"));
+  assert.equal(nudges.length, 2);
+  assert.match(String(nudges[0].content), /do not insist/);
 });
 
 test("she goes on talking after the goodbye: the call goes on until the next goodbye", async () => {
