@@ -374,8 +374,21 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 | Leitura de receita (3 receitas sintéticas, uma manuscrita) | 3 de 3 corretas, de 12 a 16 s cada, cerca de US$ 0,06 por receita | `pnpm prescription:eval` |
 | Ligação de voz | Ligação real ponta a ponta para um celular, com confirmação da dose por voz | `POST /demo/missed-dose` na API |
 | Ligação para a farmácia com URA | Ligação real ao menu de teste: tecla 2 por DTMF escolhida por regra, estoque e preço gravados, 46 s (8ª ligação) | Botão "Perguntar à farmácia" em `/family/comprar` |
-| Custo por ligação (13/11/2026) | Farmácia simulada: US$ 0,137 em média (3 ligações de 77 a 96 s: voz da assistente US$ 0,074, atendente simulada US$ 0,063, bastidor US$ 0,0003; mais US$ 0,004 quando a transcrição é lida pelo Claude). Lembrete, estimado pelo histórico (média de 20 s): cerca de US$ 0,06 (voz US$ 0,017 e linha Nvoip US$ 0,04, mínimo de 30 s) | Painel "Recuidado: custo por família" no PostHog |
+| Custo por ligação (13 e 14/11/2026, produção) | Lembrete para a mãe: US$ 0,134 em média (R$ 0,75), 23 ligações, 66 s em média; quando ela confirma, US$ 0,105 (49 s). Segunda ligação: US$ 0,060. Aviso para a família: US$ 0,050 (12 s). Farmácia simulada: US$ 0,155 (102 s, 12 ligações, paga duas vozes). No lembrete, 65% é a linha Nvoip e 35% a voz | Painel "Recuidado: custo por família" no PostHog (eventos `call_cost`) |
 | Qualidade do código | Lint, testes e build em todos os pacotes a cada push | [CI](https://github.com/lucianoiw/recuidado/actions/workflows/ci.yml) |
+
+## Números de negócio (16/11/2026)
+
+Pesquisa completa, com fontes, no doc "Recuidado: números de negócio" (Claude Docs). O resumo e as decisões:
+
+- **Mercado.** 5,7 milhões de idosos moram sozinhos (Censo 2022) e 93% dos idosos usam remédio contínuo (PNAUM 2016). Aplicando os 93%, são cerca de 5,3 milhões de famílias no alvo, R$ 1,26 bilhão por ano a R$ 19,90. Planos de saúde têm 8,66 milhões de beneficiários com 59 anos ou mais (IESS/ANS, jan/2026), a frente B2B, ainda hipótese.
+- **Custo medido.** Ligação de lembrete: R$ 0,75 em média; farmácia simulada: R$ 0,87 (tabela em "Resultados medidos").
+- **Sobra por família.** Com 10 lembretes por ligação no mês (suposição), sobram cerca de R$ 7,60 dos R$ 19,90, depois de 6% de Simples e cerca de 4% de taxa (suposição). O Tribunal estimava R$ 6 de custo; o medido é maior, porque o lembrete real dura 66 s e não 20 s.
+- **Limite de ligações (proposta).** Acima de cerca de 18 lembretes por mês o plano dá prejuízo. Proposta: 20 ligações incluídas por mês, o que também atende o pedido dos compradores simulados do Tribunal.
+- **Empate.** Cerca de 80 famílias pagantes cobrem o custo fixo de R$ 600 por mês.
+- **Projeção (suposições).** Conservador: 450 famílias e R$ 108 mil de receita anual recorrente no mês 36. Base: 3.600 famílias e R$ 861 mil.
+- **Concorrência.** Goldies cobra R$ 9,90 (Básico) e R$ 29,90 (Família) por mês e não liga; a JoyCalls (EUA) liga para o idoso e estima US$ 20 a 30 por mês, sem receita, Farmácia Popular nem farmácia. O Tribunal tinha usado R$ 8,74 para a Goldies; a loja do Brasil mostra outros valores.
+- **Vídeo.** Shark Tank completo não cabe em 3 minutos sem cortar a demo. Entra uma fala de 25 s no fechamento: preço, custo medido por ligação e 5,7 milhões de idosos sozinhos. Sem pedido de investimento nem projeção no vídeo.
 
 ## Tribunal de Ideias
 
