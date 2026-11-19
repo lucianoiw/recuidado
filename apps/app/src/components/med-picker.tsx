@@ -24,6 +24,9 @@ export async function matchMedication(name: string, ingredient?: string | null):
       return words.every((w) => have.includes(w));
     });
     if (hits.length === 1) return hits[0]!;
+    // "Dapagliflozina" also fits "Dapagliflozina butanodiol monoidratado": the one named exactly as read wins.
+    const exact = hits.filter((m) => fold(m.name) === fold(wanted));
+    if (exact.length === 1) return exact[0]!;
     if (hits.length > 1) return null;
     // A brand written as such ("Entresto"): only when exactly one product has that name.
     const brands = results.filter((m) => m.kind === "brand" && fold(m.name) === fold(wanted));
