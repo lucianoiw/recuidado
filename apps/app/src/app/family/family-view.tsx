@@ -91,6 +91,10 @@ export function FamilyView() {
   const getsFree = (m: (typeof data.medications)[number]) => isFree(m) && !m.buyInsteadOfFree;
   const savedCents = data.medications.filter(getsFree).reduce((sum, m) => sum + m.monthlyCostCents, 0);
   const costCents = data.medications.filter((m) => !getsFree(m)).reduce((sum, m) => sum + m.monthlyCostCents, 0);
+  // Part of what is bought that the Alto Custo program can give for free once the request is approved.
+  const highCostCents = data.medications
+    .filter((m) => !getsFree(m) && m.highCost && !m.buyInsteadOfFree)
+    .reduce((sum, m) => sum + m.monthlyCostCents, 0);
   const pr = pronouns(data.patient.gender);
   const unwell = data.unwellReports?.[0];
   const runningOut = data.medications.filter((m) => m.stock?.low);
@@ -278,6 +282,11 @@ export function FamilyView() {
           <span className="text-[14px] leading-snug text-muted">
             {costCents > 0 ? `Comprar: até ${brl.format(costCents / 100)}` : "Nada para comprar"}
           </span>
+          {highCostCents > 0 ? (
+            <span className="text-[14px] leading-snug text-accent-ink">
+              Alto Custo: {brl.format(highCostCents / 100)} pode sair grátis
+            </span>
+          ) : null}
         </Link>
         <Link href="/family/adicionar" className={tile}>
           <span className="text-[14px] text-muted">Remédios</span>
