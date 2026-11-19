@@ -247,7 +247,14 @@ export class FamilyService implements OnApplicationBootstrap {
     const stopped = await this.db
       .select({ id: medications.id, name: medications.name, strength: medications.strength, createdAt: medications.createdAt, stoppedAt: medications.stoppedAt })
       .from(medications)
-      .where(and(eq(medications.patientId, patientId), isNotNull(medications.stoppedAt)))
+      .where(
+        and(
+          eq(medications.patientId, patientId),
+          isNotNull(medications.stoppedAt),
+          // Removed within a day of being added: a correction (wrong reading, typo), not something she stopped taking.
+          sql`${medications.stoppedAt} > ${medications.createdAt} + interval '1 day'`,
+        ),
+      )
       .orderBy(desc(medications.stoppedAt));
     const stock = await this.stock.statusFor(meds);
     // Program lists (refreshed monthly) and her age, for rules such as "65 anos ou mais".
