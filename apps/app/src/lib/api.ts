@@ -5,13 +5,43 @@ import { rememberGender } from "./pronouns";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
-/** fetch to the API with this screen's login (caregiver session or patient link). */
-export function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
-  return fetch(`${API_URL}${path}`, {
-    cache: "no-store",
-    ...init,
-    headers: { ...authHeader(), ...(init.headers as Record<string, string> | undefined) },
-  });
+/** Shown when the API cannot be reached at all (no connection, or a deploy restarting it). */
+export const OFFLINE_MESSAGE = "Sem conexão com o Recuidado agora.";
+
+const RETRY_WAITS_MS = [1500, 3000, 6000, 10000];
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * fetch to the API with this screen's login (caregiver session or patient link).
+ * While the API restarts (a deploy takes a few seconds to switch), the proxy answers 502 without
+ * CORS headers and the browser reports "Failed to fetch". Requests that are safe to repeat
+ * (GET, PUT, PATCH, DELETE) try again a few times; a POST is never repeated. A request that still
+ * cannot reach the API fails with a message in Portuguese, never the browser's English one.
+ */
+export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const method = (init.method ?? "GET").toUpperCase();
+  const retries = method === "POST" ? 0 : RETRY_WAITS_MS.length;
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const response = await fetch(`${API_URL}${path}`, {
+        cache: "no-store",
+        ...init,
+        headers: { ...authHeader(), ...(init.headers as Record<string, string> | undefined) },
+      });
+      if (attempt < retries && [502, 503, 504].includes(response.status)) {
+        await sleep(RETRY_WAITS_MS[attempt]!);
+        continue;
+      }
+      return response;
+    } catch (error) {
+      if (init.signal?.aborted) throw error;
+      if (attempt < retries) {
+        await sleep(RETRY_WAITS_MS[attempt]!);
+        continue;
+      }
+      throw new Error(OFFLINE_MESSAGE);
+    }
+  }
 }
 
 export type DoseStatus = "pending" | "taken" | "missed";
