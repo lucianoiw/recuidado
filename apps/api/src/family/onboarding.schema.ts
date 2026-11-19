@@ -103,8 +103,10 @@ export const medicationUpdateBody = z
     strength: z.string().trim().max(60).nullable().optional(),
     times: z.array(clock).min(1, 'Pelo menos um horário.').max(6).optional(),
     stockUnits: stockUnits.nullable().optional(),
+    // Price of one pack with the family's discount, in cents; null goes back to the CMED price.
+    paidPackCents: z.number().int().min(1).max(10_000_000).nullable().optional(),
   })
-  .refine((b) => b.strength !== undefined || b.times !== undefined || b.stockUnits !== undefined, {
+  .refine((b) => b.strength !== undefined || b.times !== undefined || b.stockUnits !== undefined || b.paidPackCents !== undefined, {
     message: 'Nada para mudar.',
   });
 

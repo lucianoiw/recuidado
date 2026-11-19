@@ -115,6 +115,7 @@ function elsewhere(m: Med, tab: Tab): string {
   }
   if (tab === "fp" && atUbs(m)) return "Pegue no posto de saúde";
   if (tab === "ubs" && atFp(m)) return "Pegue na Farmácia Popular";
+  if (m.highCostReceiving) return "Pegue na Farmácia de Alto Custo";
   if (m.highCost) return "Alto Custo, precisa de laudo";
   return "Precisa comprar";
 }

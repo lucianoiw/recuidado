@@ -190,6 +190,13 @@
       "when": 1794683975961,
       "tag": "0026_heavy_luminals",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1795122514826,
+      "tag": "0027_youthful_freak",
+      "breakpoints": true
     }
   ]
 }

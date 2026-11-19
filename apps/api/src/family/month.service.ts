@@ -93,6 +93,8 @@ export class MonthService implements OnApplicationBootstrap {
         freeInFarmaciaPopular: medications.freeInFarmaciaPopular,
         monthlyCostCents: medications.monthlyCostCents,
         buyInsteadOfFree: medications.buyInsteadOfFree,
+        highCostSince: medications.highCostSince,
+        paidPackCents: medications.paidPackCents,
       })
       .from(medications)
       .where(and(eq(medications.patientId, ref.patientId), isNull(medications.stoppedAt)))
@@ -106,17 +108,23 @@ export class MonthService implements OnApplicationBootstrap {
       const access = freeAccessOf(m.activeIngredient ?? m.name, m.strength, m.name, programIndex, patientFacts);
       const price = cmedPriceOf(m.activeIngredient, m.name, m.strength, m.times.length);
       priceListDate ??= price?.listDate ?? null;
-      const freeAt = access.freeAt ?? [];
-      const free = (m.freeInFarmaciaPopular || freeAt.length > 0) && !m.buyInsteadOfFree;
+      // Approved in the Alto Custo: free there, and its CMED price counts as saved.
+      const receiving = Boolean(access.highCost && m.highCostSince);
+      const freeAt = [...(access.freeAt ?? []), ...(receiving ? ['high_cost'] : [])];
+      const free = receiving || ((m.freeInFarmaciaPopular || freeAt.length > 0) && !m.buyInsteadOfFree);
+      const monthlyCents = free
+        ? monthlyCostOf(m.monthlyCostCents, price)
+        : monthlyCostOf(m.monthlyCostCents, price, { packCents: m.paidPackCents, dosesPerDay: m.times.length });
       return {
         id: m.id,
         name: m.name,
         strength: m.strength,
-        monthlyCents: monthlyCostOf(m.monthlyCostCents, price),
+        monthlyCents,
         free,
         freeAt: m.freeInFarmaciaPopular && !freeAt.includes('farmacia_popular') ? [...freeAt, 'farmacia_popular'] : freeAt,
-        highCost: access.highCost ?? false,
-        priced: monthlyCostOf(m.monthlyCostCents, price) > 0,
+        highCost: (access.highCost ?? false) && !receiving,
+        discounted: !free && m.paidPackCents != null,
+        priced: monthlyCents > 0,
       };
     });
     const sum = (list: typeof items) => list.reduce((total, i) => total + i.monthlyCents, 0);
