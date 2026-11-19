@@ -13,8 +13,16 @@ const MARKER = 'recuidado:wipe:';
  * label wipes once: a Redis marker remembers it, so later boots and redeploys keep the data. Doses queue jobs are
  * removed, so restart the worker after it, which schedules the hourly planner again.
  * Call recordings and box photos of the deleted families stay in R2, but nothing points to them.
+ * With includeDemo (WIPE_DATA_INCLUDE_DEMO=true) the demo family is emptied too: its medicines (with doses and
+ * reminder results), alerts, cost shares and pharmacy inquiries go, but the family and its members stay, so the
+ * phones the team set and the push subscriptions survive. The demo seed puts its fixed story back on the same boot.
  */
-export async function wipeIfAsked(databaseUrl: string, redisUrl: string, label: string | undefined): Promise<boolean> {
+export async function wipeIfAsked(
+  databaseUrl: string,
+  redisUrl: string,
+  label: string | undefined,
+  includeDemo = false,
+): Promise<boolean> {
   const tag = label?.trim();
   if (!tag) return false;
   const redis = new Redis(redisUrl, { maxRetriesPerRequest: null });
@@ -24,6 +32,16 @@ export async function wipeIfAsked(databaseUrl: string, redisUrl: string, label: 
     try {
       await pool.query('delete from families where name <> $1', [DEMO_FAMILY]);
       await pool.query('delete from login_codes');
+      if (includeDemo) {
+        const demo = 'select id from families where name = $1';
+        await pool.query(
+          `delete from medications where patient_id in (select id from members where family_id in (${demo}))`,
+          [DEMO_FAMILY],
+        );
+        for (const table of ['alerts', 'cost_shares', 'pharmacy_inquiries']) {
+          await pool.query(`delete from ${table} where family_id in (${demo})`, [DEMO_FAMILY]);
+        }
+      }
     } finally {
       await pool.end();
     }
@@ -31,7 +49,11 @@ export async function wipeIfAsked(databaseUrl: string, redisUrl: string, label: 
     await queue.obliterate({ force: true });
     await queue.close();
     await redis.set(MARKER + tag, new Date().toISOString());
-    telemetry.warn(`Families other than the demo deleted on boot (WIPE_DATA_ON_BOOT=${tag}).`);
+    telemetry.warn(
+      includeDemo
+        ? `Families other than the demo deleted and the demo family emptied on boot (WIPE_DATA_ON_BOOT=${tag}).`
+        : `Families other than the demo deleted on boot (WIPE_DATA_ON_BOOT=${tag}).`,
+    );
     return true;
   } finally {
     redis.disconnect();
