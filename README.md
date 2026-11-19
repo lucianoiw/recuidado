@@ -367,6 +367,14 @@ Ninguém consegue pagar ainda, então o checkout fica desligado (`PLAN_CHECKOUT_
 
 Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurado, cria conta e testa tudo do plano grátis, inclusive a leitura da receita pela IA (limites `PRESCRIPTION_LIMIT_*`). Só as ligações ficam para as contas da equipe (`PLAN_INCLUDED_EMAILS`), porque não há crédito de telefonia para todo mundo.
 
+### Produção limpa para o vídeo (19/11/2026)
+
+- **Banco zerado de novo.** `WIPE_DATA_ON_BOOT=2026-11-19-video` com `WIPE_DATA_INCLUDE_DEMO=true` (PR #230) e `WIPE_CALLS_ON_BOOT`. A nova opção também esvazia a Família Demo (remédios, doses, avisos, divisão e cotações), mas mantém a família e os membros, para não perder os telefones que a equipe pôs nela; o seed devolve a história fixa no mesmo boot. A Família Demo passou de 43 avisos de teste para 1.
+- **Família do vídeo criada pelo cadastro normal**, como o jurado faria: login por código no e-mail, onboarding (Carlos, filho; Ana, filha; Dona Maria, 68 anos, CEP da Avenida Paulista) e os remédios pela foto de uma receita manuscrita sintética. O e-mail da equipe está em `PLAN_INCLUDED_EMAILS` e os dois telefones em `CALL_ALLOWED_NUMBERS`.
+- **A IA pegou um erro do roteiro.** A primeira receita tinha Losartana e Sacubitril valsartana juntos. O Claude leu os quatro remédios e avisou na tela que os dois agem no mesmo sistema e que vale confirmar com a médica. É uma combinação que não se usa junto. A proposta para o vídeo troca a Losartana por Hidroclorotiazida (grátis no Farmácia Popular), à espera do ok do Luciano. Leitura da receita: 21 a 29 s.
+- **Alto Custo com o nome invertido.** O catálogo de remédios grava "Valsartana + Sacubitril", e a busca dos programas só achava "Sacubitril valsartana". A tela Mês perdia o "Pode economizar mais R$ 438,36 por mês". Corrigido no PR #231: combinações também são procuradas em ordem alfabética.
+- **Ensaio sem ligação.** Demo de 2 minutos na família nova, "Tomei" pelo link da mãe 3 s depois: a tela do filho mostrou "tomada" em 1,2 s e a demo foi parada antes de ligar. Mês: R$ 45,40 economizados (Hidroclorotiazida e Metformina grátis), R$ 477,32 a comprar, R$ 438,36 possíveis pelo Alto Custo.
+
 ## Resultados medidos
 
 | O quê | Resultado | Como medir de novo |
