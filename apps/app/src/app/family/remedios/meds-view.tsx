@@ -27,7 +27,7 @@ import { useBuyChoice } from "@/lib/buy-choice";
 import { formatDistance, pharmacies } from "@/lib/pharmacies";
 import { pathLine } from "@/lib/high-cost";
 import { stockText } from "@/lib/stock";
-import { ubsUnits } from "@/lib/sus-units";
+import { highCostUnits, ubsUnits } from "@/lib/sus-units";
 import { extraPrograms, restrictedPlace } from "@/lib/programs";
 import { brl, medLabel, useFamily } from "@/lib/use-family";
 
@@ -42,6 +42,10 @@ function freeWhere(m: Medication): string | null {
   const unit = ubs ? ubsUnits[0] : undefined;
   if (unit) places.push(`${unit.name}, ${formatDistance(unit.distanceKm)}`);
   else if (ubs) places.push("UBS");
+  if (m.highCostReceiving) {
+    const hc = highCostUnits[0];
+    places.push(hc ? `${hc.name}, ${formatDistance(hc.distanceKm)}` : "Farmácia de Alto Custo");
+  }
   return places.length > 0 ? places.join(" ou ") : null;
 }
 
@@ -106,7 +110,10 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
               <RestrictedText text={m.ubsRestricted} />
             </InfoLine>
           ) : null}
-          {extraPrograms(m.programs, m.highCost ?? false).map((x) => (
+          {extraPrograms(m.programs, m.highCost ?? false)
+            // Already free in the Alto Custo: the lab discount "while it is not approved" is over.
+            .filter((x) => !(m.highCostReceiving && x.kind === "discount"))
+            .map((x) => (
             <InfoLine
               key={x.id}
               icon={x.kind === "home_delivery" ? <HomeIcon /> : x.kind === "discount" ? <FreeIcon /> : x.kind === "supplies" ? <PillIcon /> : <PinIcon />}
@@ -131,7 +138,12 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
             ) : null
           ) : (
             <InfoLine icon={<CartIcon />} tone="ink">
-              {m.monthlyCostCents > 0 ? (
+              {m.paidPackCents && m.monthlyCostCents > 0 ? (
+                <>
+                  Com desconto: <b>{brl.format(m.monthlyCostCents / 100)}</b> por mês
+                  {m.referenceMonthlyCents ? ` (CMED até ${brl.format(m.referenceMonthlyCents / 100)})` : ""}
+                </>
+              ) : m.monthlyCostCents > 0 ? (
                 <>
                   Até <b>{brl.format(m.monthlyCostCents / 100)}</b> por mês (preço máximo CMED)
                 </>
@@ -158,7 +170,7 @@ function MedRow({ m, onEdit }: { m: Medication; onEdit: (m: Medication) => void 
           <ChevronRightIcon size={18} className="mt-px shrink-0" />
         </Link>
       ) : null}
-      {isFree(m) ? (
+      {isFree(m) && !(m.highCostReceiving && m.freeAt?.length === 1 && !m.freeInFarmaciaPopular) ? (
         <FreeOrBuy name={m.name} free={free} onChange={(f) => setBuy(m.id, !f)} />
       ) : null}
     </li>

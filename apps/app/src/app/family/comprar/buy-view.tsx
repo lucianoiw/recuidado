@@ -55,7 +55,9 @@ export function BuyView() {
                   <span className="text-[15px] text-muted">
                     {m.times.length} {m.times.length === 1 ? "vez" : "vezes"} ao dia
                     {isFree(m) ? ". Vocês escolheram comprar" : ""}
-                    {m.price?.unitsPerPack ? `. Caixa com ${m.price.unitsPerPack}: até ${brl.format(m.price.packCents / 100)}` : ""}
+                    {m.paidPackCents && m.price?.unitsPerPack
+                      ? `. Com desconto: caixa com ${m.price.unitsPerPack} por ${brl.format(m.paidPackCents / 100)}`
+                      : m.price?.unitsPerPack ? `. Caixa com ${m.price.unitsPerPack}: até ${brl.format(m.price.packCents / 100)}` : ""}
                   </span>
                 </div>
                 <span className="whitespace-nowrap font-semibold">

@@ -9,6 +9,7 @@ import { brl, medLabel } from "@/lib/use-family";
 function placeText(freeAt: string[]): string {
   const fp = freeAt.includes("farmacia_popular");
   const ubs = freeAt.includes("ubs");
+  if (freeAt.includes("high_cost")) return "Alto Custo";
   if (fp && ubs) return "Farmácia Popular ou posto";
   if (fp) return "Farmácia Popular";
   if (ubs) return "Posto de saúde";

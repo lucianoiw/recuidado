@@ -52,6 +52,14 @@ export function cmedPriceOf(
 }
 
 /** Monthly cost the screens use: a price the family saved wins over the CMED reference. */
-export function monthlyCostOf(storedCents: number, price: MedicationPrice | null): number {
+export function monthlyCostOf(
+  storedCents: number,
+  price: MedicationPrice | null,
+  paid?: { packCents: number | null; dosesPerDay: number },
+): number {
+  // Bought with a discount: what the family told it pays per pack, for a month of doses.
+  if (paid?.packCents && price?.unitsPerPack && paid.dosesPerDay > 0) {
+    return Math.round((paid.packCents / price.unitsPerPack) * paid.dosesPerDay * 30);
+  }
   return storedCents > 0 ? storedCents : (price?.monthlyCents ?? 0);
 }

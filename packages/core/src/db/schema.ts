@@ -140,6 +140,9 @@ export const medications = pgTable('medications', {
   lmeFilledOn: date(),
   // Day the state approved it (or last renewed it): the next renewal counts from here.
   highCostSince: date(),
+  // What the family pays for one pack when it buys with a discount (lab program, pharmacy deal).
+  // Null: it pays the CMED reference price.
+  paidPackCents: integer(),
   // R2 key of the photo the family took of the real box or pill; her screen shows only this photo.
   photoKey: text(),
   // Set when the family removes it from her list. The row stays so the dose history keeps its name.

@@ -99,8 +99,14 @@ export interface Medication {
   monthlyCostCents: number;
   /** Free in Farmácia Popular, but the family chose to buy it. */
   buyInsteadOfFree?: boolean;
-  /** Where it is free: "farmacia_popular", "ubs". Optional until the API sends it. */
+  /** Where it is free: "farmacia_popular", "ubs", "high_cost" (already approved). Optional until the API sends it. */
   freeAt?: string[];
+  /** Already approved in the Alto Custo: the family gets it free there. */
+  highCostReceiving?: boolean;
+  /** What the family pays for one pack with a discount, in cents; null when it pays the CMED price. */
+  paidPackCents?: number | null;
+  /** CMED reference for a month, to compare with the discount price. */
+  referenceMonthlyCents?: number;
   /** In the state high cost program (CEAF): needs the LME form from the doctor. */
   highCost?: boolean;
   /** Extra Farmácia Popular rule (age, diagnosis), already in pt-BR; null when none. */
@@ -486,7 +492,7 @@ export async function saveOnboarding(body: unknown): Promise<{ caregiverId: stri
 /** Family edits the dose text or the times of a medication. */
 export async function updateMedication(
   id: string,
-  body: { strength?: string | null; times?: string[]; stockUnits?: number | null },
+  body: { strength?: string | null; times?: string[]; stockUnits?: number | null; paidPackCents?: number | null },
 ): Promise<void> {
   await send("PATCH", `/family/medications/${id}`, body, "Não deu para salvar a mudança.");
 }
@@ -632,6 +638,8 @@ export interface MonthItem {
   free: boolean;
   freeAt: string[];
   highCost: boolean;
+  /** Bought with the family's discount price. */
+  discounted?: boolean;
   priced: boolean;
 }
 

@@ -239,6 +239,7 @@ export class FamilyService implements OnApplicationBootstrap {
         highCostChecked: medications.highCostChecked,
         lmeFilledOn: medications.lmeFilledOn,
         highCostSince: medications.highCostSince,
+        paidPackCents: medications.paidPackCents,
         photoKey: medications.photoKey,
       })
       .from(medications)
@@ -282,11 +283,17 @@ export class FamilyService implements OnApplicationBootstrap {
         ({ activeIngredient, stockUnits: _counted, highCostChecked, lmeFilledOn, highCostSince, photoKey: _key, ...med }) => {
           const access = freeAccessOf(activeIngredient ?? med.name, med.strength, med.name, programIndex, patientFacts);
           const price = cmedPriceOf(activeIngredient, med.name, med.strength, med.times.length);
+          // Already approved in the Alto Custo: she gets it free there, like a Farmácia Popular item.
+          const highCostReceiving = Boolean(access.highCost && highCostSince);
           return {
             ...med,
             ...access,
-            // Saved price, else the CMED ceiling of the cheapest pack for a month of doses.
-            monthlyCostCents: monthlyCostOf(med.monthlyCostCents, price),
+            freeAt: highCostReceiving ? [...(access.freeAt ?? []), 'high_cost'] : access.freeAt,
+            highCostReceiving,
+            // Saved price, the family's discount price, else the CMED ceiling of the cheapest pack for a month.
+            monthlyCostCents: monthlyCostOf(med.monthlyCostCents, price, { packCents: med.paidPackCents, dosesPerDay: med.times.length }),
+            // The CMED reference for the same month, to show next to a discount price.
+            referenceMonthlyCents: monthlyCostOf(med.monthlyCostCents, price),
             price,
             // Pills left and days they last; null when the family has not counted them.
             stock: stock.get(med.id) ?? null,
@@ -352,6 +359,7 @@ export class FamilyService implements OnApplicationBootstrap {
   ): Promise<void> {
     const { patientId } = await this.writableFamily(familyId);
     const changes = {
+      ...(input.paidPackCents !== undefined ? { paidPackCents: input.paidPackCents } : {}),
       ...(input.strength !== undefined ? { strength: input.strength || null } : {}),
       ...(input.times !== undefined ? { times: [...new Set(input.times)].sort() } : {}),
     };
