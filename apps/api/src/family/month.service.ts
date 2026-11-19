@@ -5,7 +5,7 @@ import {
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
-import { and, asc, eq, gte, isNull, lt, ne } from 'drizzle-orm';
+import { and, asc, eq, gte, isNull, lt, ne, or, sql } from 'drizzle-orm';
 import {
   costShares,
   type Database,
@@ -278,6 +278,8 @@ export class MonthService implements OnApplicationBootstrap {
           lt(doses.scheduledAt, now),
           // Extra doses of the 2 minute demo run would skew the month.
           eq(doses.demo, false),
+          // A medication removed within a day of being added was a correction, not her treatment.
+          or(isNull(medications.stoppedAt), sql`${medications.stoppedAt} > ${medications.createdAt} + interval '1 day'`),
         ),
       );
     const taken = rows.filter((r) => r.status === 'taken').length;

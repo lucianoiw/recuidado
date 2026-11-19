@@ -268,7 +268,12 @@ export class DosesService {
         and(
           eq(medications.patientId, patientId),
           // A removed medication keeps what she already did today, not what was still waiting.
-          or(isNull(medications.stoppedAt), ne(doses.status, 'pending')),
+          // Removed within a day of being added it was a correction (wrong reading, prescription
+          // read again): its doses go too, or the day would list the same medicine twice.
+          or(
+            isNull(medications.stoppedAt),
+            and(ne(doses.status, 'pending'), sql`${medications.stoppedAt} > ${medications.createdAt} + interval '1 day'`),
+          ),
           gte(doses.scheduledAt, start),
           lt(doses.scheduledAt, end),
         ),
