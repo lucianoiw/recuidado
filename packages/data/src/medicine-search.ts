@@ -98,10 +98,15 @@ export function presentationStrength(presentation: string): string | null {
   return strengths.length > 0 ? strengths.map((s) => formatStrength(s).replace(".", ",")).join(" + ") : null;
 }
 
+/** Brand names written as acronyms, kept in capitals: "AAS", not "Aas". */
+const ACRONYMS = new Set(["aas"]);
+
 /** "LOSARTANA POTÁSSICA" -> "Losartana potássica"; drops notes such as "(PORT. 344/98 LISTA C 1)". */
 function sentenceCase(text: string): string {
   const clean = text.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
-  return clean.charAt(0).toUpperCase() + clean.slice(1);
+  const words = clean.split(" ").map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w));
+  const joined = words.join(" ");
+  return joined.charAt(0).toUpperCase() + joined.slice(1);
 }
 
 function words(text: string): string[] {

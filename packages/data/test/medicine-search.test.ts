@@ -43,4 +43,8 @@ describe("searchMedicines", () => {
   it("respects the limit", () => {
     expect(searchMedicines("ac", 3)).toHaveLength(3);
   });
+
+  it("keeps AAS in capitals", () => {
+    expect(searchMedicines("aas", 5).some((m) => m.name === "AAS")).toBe(true);
+  });
 });
