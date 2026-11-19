@@ -15,7 +15,12 @@ async function bootstrap() {
     await runMigrations(process.env.DATABASE_URL);
     // "Conta zero": empties the database once per WIPE_DATA_ON_BOOT label, before the demo seed runs.
     if (process.env.REDIS_URL) {
-      await wipeIfAsked(process.env.DATABASE_URL, process.env.REDIS_URL, process.env.WIPE_DATA_ON_BOOT);
+      await wipeIfAsked(
+        process.env.DATABASE_URL,
+        process.env.REDIS_URL,
+        process.env.WIPE_DATA_ON_BOOT,
+        process.env.WIPE_DATA_INCLUDE_DEMO === 'true',
+      );
       // A clean calls panel to measure a new version of the calls.
       await wipeCallsIfAsked(process.env.DATABASE_URL, process.env.REDIS_URL, process.env.WIPE_CALLS_ON_BOOT);
     }
