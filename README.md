@@ -375,6 +375,7 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 - **Alto Custo com o nome invertido.** O catálogo de remédios grava "Valsartana + Sacubitril", e a busca dos programas só achava "Sacubitril valsartana". A tela Mês perdia o "Pode economizar mais R$ 438,36 por mês". Corrigido no PR #231: combinações também são procuradas em ordem alfabética.
 - **Ensaio sem ligação.** Demo de 2 minutos na família nova, "Tomei" pelo link da mãe 3 s depois: a tela do filho mostrou "tomada" em 1,2 s e a demo foi parada antes de ligar. Mês: R$ 156,71 economizados (Dapagliflozina e AAS grátis), R$ 438,36 possíveis pelo Alto Custo e R$ 55,81 da Rosuvastatina para comprar.
 - **"Não toma mais" só com histórico real.** Remover e salvar de novo a receita (para trocar "Aas" por "AAS", PR #236) deixava os 4 remédios na lista "Não toma mais" da tela Remédios. Agora um remédio removido em menos de 1 dia depois de cadastrado conta como correção, não como tratamento interrompido, e não aparece nessa lista.
+- **Combinação na ordem da receita.** A CMED lista o Entresto como "Valsartana + Sacubitril" e a médica escreve "Sacubitril + valsartana". A tela de conferência mostrava a ordem da CMED e parecia erro. Agora, quando a leitura acha a combinação com as partes em outra ordem, o nome fica na ordem da receita; preço e programas já achavam as duas ordens (PR #231).
 
 ## Resultados medidos
 

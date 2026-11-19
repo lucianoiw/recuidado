@@ -8,6 +8,25 @@ const fold = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("pt-BR").replace(/\s+/g, " ").trim();
 
 /**
+ * A combination named in the order the prescription wrote it: CMED lists Entresto as "Valsartana +
+ * Sacubitril", the doctor writes "Sacubitril + valsartana". Same medicine; prices and programs
+ * match either order. Kept as listed when a strength has one value per part ("5 mg + 100 mg"),
+ * since that order follows the list.
+ */
+function inReadOrder(m: MedResult, wanted: string): MedResult {
+  const parts = m.name.split(" + ");
+  if (parts.length < 2 || m.strengths.some((s) => s.strength.includes("+"))) return m;
+  const read = fold(wanted);
+  const at = (part: string) => read.indexOf(fold(part).split(" ")[0]!);
+  if (parts.some((part) => at(part) < 0)) return m;
+  const sorted = [...parts].sort((a, b) => at(a) - at(b));
+  if (sorted.every((part, i) => part === parts[i])) return m;
+  const name = sorted.join(" + ");
+  const activeIngredient = m.activeIngredient === m.name ? name : m.activeIngredient;
+  return { ...m, name, activeIngredient };
+}
+
+/**
  * The one medicine in the CMED list that matches a name read from a prescription, or null when
  * there is none or more than one could fit (then the family picks). "Losartana potássica" finds
  * its generic; "Diclofenaco" stays open because it can be sódico, potássico and others.
@@ -23,10 +42,10 @@ export async function matchMedication(name: string, ingredient?: string | null):
       const have = fold(m.name).split(" ");
       return words.every((w) => have.includes(w));
     });
-    if (hits.length === 1) return hits[0]!;
+    if (hits.length === 1) return inReadOrder(hits[0]!, wanted);
     // "Dapagliflozina" also fits "Dapagliflozina butanodiol monoidratado": the one named exactly as read wins.
     const exact = hits.filter((m) => fold(m.name) === fold(wanted));
-    if (exact.length === 1) return exact[0]!;
+    if (exact.length === 1) return inReadOrder(exact[0]!, wanted);
     if (hits.length > 1) return null;
     // A brand written as such ("Entresto"): only when exactly one product has that name.
     const brands = results.filter((m) => m.kind === "brand" && fold(m.name) === fold(wanted));
