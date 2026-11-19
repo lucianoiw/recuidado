@@ -190,11 +190,35 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
                     </b>
                   </span>
                   {m.highCost ? (
-                    <span className="text-[15px] leading-snug text-brand">
-                      Pode sair de graça pelo Alto Custo do estado, com laudo do médico.
+                    // The biggest saving of the prescription: a box of its own, so it is not missed.
+                    <Link
+                      href={`/family/alto-custo/${m.id}`}
+                      className="mt-1.5 flex flex-col gap-1.5 rounded-2xl bg-ok-soft px-3.5 py-3 text-ink no-underline"
+                    >
+                      <span className="flex items-center gap-2 text-[17px] font-semibold text-ok">
+                        <FreeIcon size={20} className="shrink-0" />
+                        Pode sair de graça
+                      </span>
+                      <span className="text-[15px] leading-snug">
+                        O Estado entrega este remédio de graça pelo programa Alto Custo, quando o médico preenche um laudo.
+                        {m.monthlyCostCents > 0 ? (
+                          <>
+                            {" "}
+                            Economia de até <b>{brl.format(m.monthlyCostCents / 100)}</b> por mês.
+                          </>
+                        ) : null}
+                      </span>
+                      <span className="flex items-center gap-1 text-[15px] font-semibold text-ok">
+                        Ver o passo a passo
+                        <ChevronRightIcon size={18} />
+                      </span>
+                    </Link>
+                  ) : null}
+                  {discount ? (
+                    <span className="text-[15px] leading-snug text-muted">
+                      {m.highCost ? discount.text.replace("Enquanto o Alto Custo não sai", "Enquanto o laudo não é aprovado") : discount.text}
                     </span>
                   ) : null}
-                  {discount ? <span className="text-[15px] leading-snug text-muted">{discount.text}</span> : null}
                 </li>
               );
             })}
