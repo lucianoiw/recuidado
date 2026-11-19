@@ -31,6 +31,10 @@ describe("program index", () => {
     expect(access.highCostConditions.length).toBeGreaterThan(0);
   });
 
+  it("finds a combo written in the other order, as the medicine catalog names it", () => {
+    expect(index.find("Valsartana + Sacubitril", "50 mg", "Valsartana + Sacubitril").highCost).toBe(true);
+  });
+
   it("checks the Alto Custo age to start: yes within it, missing past it (she may already receive it)", () => {
     const startRule = (age?: number) =>
       index

@@ -225,10 +225,18 @@ export class ProgramIndex {
   find(activeIngredient: string, strength: string | null | undefined, name?: string | null, patient: Patient = {}): FreeAccess {
     const ingredients = activeIngredient.split("+").map((part) => part.trim()).filter(Boolean);
     let found = this.lookup(ingredients, strength);
-    // Combos are listed both ways: "sacubitril + valsartana" and "sacubitril valsartana sódica".
+    // Combos are listed both ways: "sacubitril + valsartana" and "sacubitril valsartana sódica". The catalog and
+    // the prescription may also swap the order ("valsartana + sacubitril"), so the joined name is tried as given
+    // and in alphabetical order.
     if (found.exact.length === 0 && found.highCostEntries.length === 0 && ingredients.length > 1) {
-      const joined = this.lookup([ingredients.join(" ")], strength);
-      if (joined.exact.length > 0 || joined.highCostEntries.length > 0) found = joined;
+      const orders = [ingredients, [...ingredients].sort((a, b) => a.localeCompare(b, "pt-BR"))];
+      for (const order of orders) {
+        const joined = this.lookup([order.join(" ")], strength);
+        if (joined.exact.length > 0 || joined.highCostEntries.length > 0) {
+          found = joined;
+          break;
+        }
+      }
     }
     const xr = isExtendedRelease(`${name ?? ""} ${activeIngredient} ${strength ?? ""}`);
     const plainExists = found.exact.some((e) => e.program.id !== PROGRAM_IDS.highCost && !e.item.extendedRelease);
