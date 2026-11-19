@@ -47,4 +47,9 @@ describe("searchMedicines", () => {
   it("keeps AAS in capitals", () => {
     expect(searchMedicines("aas", 5).some((m) => m.name === "AAS")).toBe(true);
   });
+
+  it("spells the ingredients with accents, also under a brand", () => {
+    const aas = searchMedicines("aas", 5).find((m) => m.name === "AAS");
+    expect(aas?.activeIngredient).toBe("Ácido acetilsalicílico");
+  });
 });

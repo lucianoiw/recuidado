@@ -28,4 +28,8 @@ describe('medicationBox', () => {
       generic: false,
     });
   });
+
+  it('keeps an acronym brand in capitals', () => {
+    expect(medicationBox('AAS', 'Ácido acetilsalicílico', true).title).toBe('AAS');
+  });
 });

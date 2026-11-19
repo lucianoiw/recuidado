@@ -33,9 +33,13 @@ const SMALL_WORDS = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
 export function titleCase(text: string): string {
   return text
     .trim()
-    .toLocaleLowerCase('pt-BR')
     .split(/\s+/)
-    .map((word, i) => (i > 0 && SMALL_WORDS.has(word) ? word : capitalize(word)))
+    .map((raw, i) => {
+      // A name written as an acronym stays in capitals: "AAS", not "Aas".
+      const word = raw.toLocaleLowerCase('pt-BR');
+      if (i > 0 && SMALL_WORDS.has(word)) return word;
+      return /^\p{Lu}{2,4}$/u.test(raw) ? raw : capitalize(word);
+    })
     .join(' ');
 }
 
