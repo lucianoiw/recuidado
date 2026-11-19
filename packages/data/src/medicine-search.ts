@@ -37,6 +37,8 @@ interface Entry {
   activeIngredient: string;
   kind: MedicineKind;
   laboratory: string | null;
+  /** Key of the generic entry with the same ingredients (brands only). */
+  genericKey?: string;
   /** Folded words of name and active ingredient, for prefix matching. */
   nameWords: string[];
   ingredientWords: string[];
@@ -109,6 +111,11 @@ function sentenceCase(text: string): string {
   return joined.charAt(0).toUpperCase() + joined.slice(1);
 }
 
+/** Letters with an accent: "Ácido acetilsalicílico" has 2, "Acido acetilsalicilico" none. */
+function accents(text: string): number {
+  return text.normalize("NFD").replace(/[^\u0300-\u036f]/g, "").length;
+}
+
 function words(text: string): string[] {
   return foldText(text)
     .split(/[^a-z0-9]+/)
@@ -141,6 +148,11 @@ function load(path = join(SEED_DIR, "cmed-pmc.csv.gz")): Entry[] {
 
     const genericKey = `g|${foldText(activeIngredient)}`;
     let generic = byKey.get(genericKey);
+    // Some rows drop the accents ("Acido acetilsalicilico"): keep the spelling with them.
+    if (generic && accents(activeIngredient) > accents(generic.activeIngredient)) {
+      generic.name = activeIngredient;
+      generic.activeIngredient = activeIngredient;
+    }
     if (!generic) {
       generic = {
         name: activeIngredient,
@@ -169,6 +181,7 @@ function load(path = join(SEED_DIR, "cmed-pmc.csv.gz")): Entry[] {
         activeIngredient,
         kind: "brand",
         laboratory: row.laboratory?.trim() || null,
+        genericKey,
         nameWords: productWords,
         ingredientWords,
         presentations: 0,
@@ -177,6 +190,11 @@ function load(path = join(SEED_DIR, "cmed-pmc.csv.gz")): Entry[] {
       byKey.set(brandKey, brand);
     }
     addPresentation(brand, presentation);
+  }
+  // A brand shows its ingredients as its generic spells them.
+  for (const entry of byKey.values()) {
+    const generic = entry.genericKey ? byKey.get(entry.genericKey) : undefined;
+    if (generic) entry.activeIngredient = generic.activeIngredient;
   }
   entries = [...byKey.values()];
   return entries;
