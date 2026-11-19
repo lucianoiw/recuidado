@@ -13,17 +13,18 @@ const fold = (s: string) =>
  * match either order. Kept as listed when a strength has one value per part ("5 mg + 100 mg"),
  * since that order follows the list.
  */
-function inReadOrder(m: MedResult, wanted: string): MedResult {
-  const parts = m.name.split(" + ");
-  if (parts.length < 2 || m.strengths.some((s) => s.strength.includes("+"))) return m;
+function inReadOrder(m: MedResult, wanted: string | null | undefined): MedResult {
+  if (!wanted || m.strengths.some((s) => s.strength.includes("+"))) return m;
   const read = fold(wanted);
-  const at = (part: string) => read.indexOf(fold(part).split(" ")[0]!);
-  if (parts.some((part) => at(part) < 0)) return m;
-  const sorted = [...parts].sort((a, b) => at(a) - at(b));
-  if (sorted.every((part, i) => part === parts[i])) return m;
-  const name = sorted.join(" + ");
-  const activeIngredient = m.activeIngredient === m.name ? name : m.activeIngredient;
-  return { ...m, name, activeIngredient };
+  const reorder = (text: string) => {
+    const parts = text.split(" + ");
+    if (parts.length < 2) return text;
+    const at = (part: string) => read.indexOf(fold(part).split(" ")[0]!);
+    if (parts.some((part) => at(part) < 0)) return text;
+    return [...parts].sort((a, b) => at(a) - at(b)).join(" + ");
+  };
+  // A brand ("Entresto") keeps its name; only its active ingredients follow the read order.
+  return { ...m, name: m.kind === "brand" ? m.name : reorder(m.name), activeIngredient: reorder(m.activeIngredient) };
 }
 
 /**
@@ -49,7 +50,7 @@ export async function matchMedication(name: string, ingredient?: string | null):
     if (hits.length > 1) return null;
     // A brand written as such ("Entresto"): only when exactly one product has that name.
     const brands = results.filter((m) => m.kind === "brand" && fold(m.name) === fold(wanted));
-    if (brands.length === 1) return brands[0]!;
+    if (brands.length === 1) return inReadOrder(brands[0]!, ingredient);
   }
   return null;
 }
