@@ -32,6 +32,7 @@ import type { MedResult } from "@/lib/med-search";
 import { TimeChips, normalizeTime } from "@/components/time-chips";
 import { useBuyChoice } from "@/lib/buy-choice";
 import { brl, medLabel } from "@/lib/use-family";
+import { extraPrograms } from "@/lib/programs";
 import { useScrollTopOn } from "@/lib/scroll-top";
 
 interface Draft {
@@ -177,14 +178,26 @@ function Result({ family, count }: { family: FamilyOverview | null; count: numbe
             Precisa comprar
           </h2>
           <ul className="px-4 py-1">
-            {paid.map((m) => (
-              <li key={m.id} className="flex items-center justify-between gap-3 py-2.5">
-                <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
-                <b className="whitespace-nowrap">
-                  {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : "Comprar"}
-                </b>
-              </li>
-            ))}
+            {paid.map((m) => {
+              // A medicine bought today may still get cheaper: say so here, before she starts buying it.
+              const discount = extraPrograms(m.programs, Boolean(m.highCost)).find((p) => p.kind === "discount");
+              return (
+                <li key={m.id} className="flex flex-col gap-1 py-2.5">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="font-semibold">{medLabel(m.name, m.strength)}</span>
+                    <b className="whitespace-nowrap">
+                      {m.monthlyCostCents > 0 ? `${brl.format(m.monthlyCostCents / 100)}/mês` : "Comprar"}
+                    </b>
+                  </span>
+                  {m.highCost ? (
+                    <span className="text-[15px] leading-snug text-brand">
+                      Pode sair de graça pelo Alto Custo do estado, com laudo do médico.
+                    </span>
+                  ) : null}
+                  {discount ? <span className="text-[15px] leading-snug text-muted">{discount.text}</span> : null}
+                </li>
+              );
+            })}
           </ul>
           <Link
             href="/family/comprar"

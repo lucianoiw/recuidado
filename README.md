@@ -379,6 +379,7 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 - **Alto Custo no Hoje.** Com a receita escrita "Entresto", o card "Economia do mês" mostrava só "Comprar: até R$ 494,17" e o Alto Custo ficava escondido na tela Mês. O card agora diz também quanto disso pode sair grátis pelo Alto Custo (R$ 438,36). A leitura e os programas já tratavam Entresto como Alto Custo.
 - **Caixa do AAS.** A caixa desenhada mostrava "Aas" e "Acido Acetilsalicilico" sem acento: o título da caixa baixava todas as letras e a linha da CMED da marca AAS vem sem acento. Agora sigla curta fica em maiúsculas e a marca usa a grafia com acento do genérico.
 - **"Failed to fetch" durante o deploy.** Enquanto a API reinicia, o proxy responde 502 sem CORS e o navegador mostra "Failed to fetch" (aconteceu no cadastro em 19/11). Agora o app tenta de novo por até cerca de 20 s nos pedidos que podem ser repetidos (GET, PUT, PATCH, DELETE; POST nunca) e, se não conseguir, mostra "Sem conexão com o Recuidado agora" em português.
+- **Alto Custo já na receita salva.** Pedido do Luciano (19/11): na tela que aparece depois de salvar a receita, cada remédio de "Precisa comprar" que está no Alto Custo diz que pode sair de graça com laudo do médico, e o desconto do laboratório (Vale Mais Saúde no Entresto) aparece logo abaixo.
 
 ## Resultados medidos
 
