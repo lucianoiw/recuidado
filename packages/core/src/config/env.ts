@@ -114,6 +114,12 @@ export const envSchema = z.object({
     z.boolean(),
   ),
   // Seconds a demo run holds the button: a second press in this time follows the same run.
+  // "HH:MM": the demo dose is of that time today (for the video), not due now. Empty: due now.
+  DEMO_DOSE_AT: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
   DEMO_RUN_LOCK_SECONDS: z.coerce.number().int().positive().default(240),
   // Seconds after the demo reminder before the call.
   DEMO_CALL_AFTER_SECONDS: z.coerce.number().int().positive().default(20),

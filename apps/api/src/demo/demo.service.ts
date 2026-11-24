@@ -12,6 +12,8 @@ import {
   doses,
   DOSES_QUEUE,
   families,
+  localDate,
+  localDateTime,
   MAX_CHECK_INS,
   medications,
   members,
@@ -21,6 +23,20 @@ import {
 } from '@recuidado/core';
 import { FamilyService } from '../family/family.service.js';
 import { demoSteps, type JobInfo, type JobState } from './demo.steps.js';
+
+/**
+ * Medicine and time of the demo dose. By default the first medicine, due now. With DEMO_DOSE_AT
+ * ("12:00") the dose is of that time today (São Paulo), of a medicine taken at that time when there
+ * is one, so the call asks about the same dose whatever the hour the video is recorded.
+ * The instant keeps now's milliseconds (at least 1): it never clashes with a scheduled dose
+ * (unique medication + time).
+ */
+export function demoDose<M extends { times: string[] }>(meds: M[], at: string | undefined, now: Date): { med: M; scheduledAt: Date } {
+  const fixed = at ? localDateTime(localDate(now), at) : null;
+  if (!fixed) return { med: meds[0]!, scheduledAt: now };
+  const med = meds.find((m) => m.times.includes(at!.trim())) ?? meds[0]!;
+  return { med, scheduledAt: new Date(fixed.getTime() + (now.getMilliseconds() || 1)) };
+}
 
 const KEEP_FINISHED = { removeOnComplete: { age: 24 * 3600 }, removeOnFail: { age: 24 * 3600 } };
 
@@ -54,18 +70,17 @@ export class DemoService {
       return { doseId: running.doseId, alreadyRunning: true };
     }
     const { patientId } = ref;
-    const [med] = await this.db
-      .select({ id: medications.id, name: medications.name })
+    const meds = await this.db
+      .select({ id: medications.id, name: medications.name, times: medications.times })
       .from(medications)
       .where(and(eq(medications.patientId, patientId), isNull(medications.stoppedAt)))
-      .orderBy(asc(medications.createdAt))
-      .limit(1);
-    if (!med) throw new ConflictException('Adicione pelo menos um remédio antes de rodar a demo.');
+      .orderBy(asc(medications.createdAt));
+    if (meds.length === 0) throw new ConflictException('Adicione pelo menos um remédio antes de rodar a demo.');
+    const { med, scheduledAt } = demoDose(meds, this.config.get<string>('DEMO_DOSE_AT'), now);
 
-    // Exact instant with milliseconds: never clashes with a scheduled dose (unique medication + time).
     const [dose] = await this.db
       .insert(doses)
-      .values({ medicationId: med.id, scheduledAt: now, demo: true })
+      .values({ medicationId: med.id, scheduledAt, demo: true })
       .returning({ id: doses.id });
     const second = 1000;
     // One run at a time: a second press while a run is going follows the same run.
