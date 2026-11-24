@@ -50,14 +50,8 @@ export default function Welcome() {
           <Link href="/entrar" className={buttonClass()}>
             Começar
           </Link>
-          <Link href="/family" className={buttonClass({ variant: "secondary" })}>
-            Ver a demonstração
-          </Link>
-          <Link href="/patient" className="py-2 text-center text-[15px] font-semibold text-ink underline underline-offset-4">
-            Abrir o app da Dona Maria
-          </Link>
           <p className="text-center text-[13px] text-muted">
-            Demonstração com dados fictícios. Não substitui orientação médica.
+            Não substitui orientação médica.
           </p>
         </div>
       </main>
