@@ -4,6 +4,12 @@ import { Resend } from 'resend';
 import { telemetry } from '../telemetry/telemetry.js';
 import { alertEmail, type AlertEmailKind } from './alert-email.js';
 
+/** Reserved for examples and tests (RFC 2606): never delivered, and Resend refuses the whole batch for one. */
+export function deliverable(address: string): boolean {
+  const domain = address.split('@')[1] ?? '';
+  return !/(^|\.)example\.(com|org|net)$|\.(test|example|invalid|localhost)$/.test(domain);
+}
+
 /** Family alerts by e-mail, sent with Resend. Without RESEND_API_KEY nothing is sent. */
 @Injectable()
 export class EmailService {
@@ -18,7 +24,7 @@ export class EmailService {
   /** One e-mail per address, so nobody sees the others. Returns how many Resend accepted. */
   async sendAlert(to: string[], alert: { kind: AlertEmailKind; title: string; body: string; link: string }): Promise<number> {
     const { kind } = alert;
-    const addresses = [...new Set(to.map((a) => a.trim().toLowerCase()).filter(Boolean))];
+    const addresses = [...new Set(to.map((a) => a.trim().toLowerCase()).filter(Boolean))].filter(deliverable);
     if (addresses.length === 0) return 0;
     if (!this.resend) {
       this.logger.log(`RESEND_API_KEY not set: skipped ${addresses.length} alert e-mail(s)`);
