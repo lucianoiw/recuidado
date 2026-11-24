@@ -15,7 +15,7 @@ import {
   type PrescriptionInput,
   type ReadPrescriptionResult,
 } from '@recuidado/prescription-reader';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { type Database, DB, DosesService, families, medications, members, telemetry } from '@recuidado/core';
 import { DEMO_FAMILY, DEMO_READ_ONLY } from '../family/family.service.js';
 import type { ConfirmPrescriptionBody } from './confirm.schema.js';
@@ -102,10 +102,24 @@ export class PrescriptionsService {
     // Only the signed-in family adds medicines to its own patient.
     if (patient.familyId !== familyId) throw new NotFoundException('Paciente não encontrado.');
 
+    // Saving the same prescription again must not give her each medicine twice (two reminders, two costs).
+    const active = await this.db
+      .select({ name: medications.name, strength: medications.strength })
+      .from(medications)
+      .where(and(eq(medications.patientId, patient.id), isNull(medications.stoppedAt)));
+    const taken = new Set(active.map((m) => sameMedicineKey(m.name, m.strength)));
+    const items = body.items.filter((item) => {
+      const key = sameMedicineKey(item.name, item.strength);
+      if (taken.has(key)) return false;
+      taken.add(key);
+      return true;
+    });
+    if (items.length === 0) return { medications: [], skipped: body.items.length };
+
     const saved = await this.db
       .insert(medications)
       .values(
-        body.items.map((item) => ({
+        items.map((item) => ({
           patientId: patient.id,
           name: item.name,
           activeIngredient: item.activeIngredient,
@@ -133,7 +147,7 @@ export class PrescriptionsService {
       { medications: saved.length, daily_doses: saved.reduce((n, m) => n + m.times.length, 0) },
       patient.id,
     );
-    return { medications: saved };
+    return { medications: saved, skipped: body.items.length - saved.length };
   }
 
   /** PRESCRIPTION_MODEL, or the reader's default model. */
@@ -153,4 +167,10 @@ export class PrescriptionsService {
     }
     return this.client;
   }
+}
+
+/** "AAS" + "100 mg" and "aas" + "100MG" are the same medicine on her list. */
+export function sameMedicineKey(name: string, strength: string | null | undefined): string {
+  const clean = (t: string) => t.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, '');
+  return `${clean(name)}|${clean(strength ?? '')}`;
 }
