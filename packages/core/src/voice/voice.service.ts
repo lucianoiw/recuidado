@@ -18,6 +18,7 @@ import { DEMO_FAMILY } from '../family/demo-family.js';
 import { mayContact } from '../privacy/consent.js';
 import { StockService } from '../stock/stock.service.js';
 import { minutesSince } from '../doses/time.js';
+import { claimGroupCall, sameTimeDoses } from '../doses/same-time.js';
 import { telemetry } from '../telemetry/telemetry.js';
 
 /** Body that apps/voice posts to /doses/:id/voice-result. */
@@ -239,7 +240,21 @@ export class VoiceCallService {
       return null;
     }
 
-    const res = await fetch(new URL('/calls', voiceUrl), {
+    // Medicines she takes at the same time go in one call. The first call job of the group makes it;
+    // the others find it claimed. A recall or a call back asks about what is still pending.
+    const together = await sameTimeDoses(this.db, doseId);
+    if (!checkIn && !opts.recall && !(await claimGroupCall(this.db, doseId, together.map((d) => d.id)))) {
+      this.logger.log(`Dose ${doseId} was asked about in the call of another dose at the same time; not calling.`);
+      return null;
+    }
+    const pendingTogether = together.filter((d) => d.status === 'pending' && (opts.recall || checkIn || !d.callRequestedAt));
+    const unclaim = async () => {
+      if (!checkIn && !opts.recall) await this.db.update(doses).set({ callRequestedAt: null }).where(eq(doses.id, doseId));
+    };
+
+    let res: Response;
+    try {
+      res = await fetch(new URL('/calls', voiceUrl), {
       method: 'POST',
       headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -249,7 +264,10 @@ export class VoiceCallService {
         familyId: row.familyId,
         phone: row.phone,
         patientName: row.patientName,
-        medications: [{ name: row.medication, dose: row.strength ?? undefined }],
+        medications: [
+          { name: row.medication, dose: row.strength ?? undefined },
+          ...pendingTogether.map((d) => ({ name: d.name, dose: d.strength ?? undefined })),
+        ],
         checkIn,
         callBack: opts.callBack ?? true,
         gender: row.gender,
@@ -258,17 +276,23 @@ export class VoiceCallService {
         // Demo run doses keep the two-minute flow: no second call.
         recallLater: !checkIn && !opts.recall && !row.demo,
       }),
-    });
+      });
+    } catch (error) {
+      await unclaim();
+      throw error;
+    }
     if (res.status === 403) {
+      await unclaim();
       // apps/voice only calls numbers in CALL_ALLOWED_NUMBERS. Push and the family alert still work.
       telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'number_not_allowed' }, row.patientId);
       this.logger.log(`Voice refused the number of dose ${doseId}; push only.`);
       return null;
     }
     if (!res.ok) {
+      await unclaim();
       throw new Error(`Voice service answered ${res.status}: ${await res.text()}`);
     }
-    if (!checkIn) await this.db.update(doses).set({ callRequestedAt: new Date() }).where(eq(doses.id, doseId));
+    if (!checkIn && opts.recall) await this.db.update(doses).set({ callRequestedAt: new Date() }).where(eq(doses.id, doseId));
     const body = (await res.json()) as { callId: string };
     telemetry.capture(
       checkIn ? 'emergency_checkin_requested' : 'dose_call_requested',
@@ -347,6 +371,11 @@ export class VoiceCallService {
       return 'ignored';
     }
     const props = { dose_id: doseId, call_id: result.sessionId, outcome: result.outcome, demo: dose.demo };
+    // Medicines of the same time that this call asked about too (still pending, not called on their own).
+    const together = (await sameTimeDoses(this.db, doseId)).filter((d) => d.status === 'pending' && !d.callRequestedAt);
+    const dropAlerts = async () => {
+      for (const d of together) await (await this.queue.getJob(alertJobId(d.id)))?.remove();
+    };
     // Confirmed in the app while the phone was ringing: the app wins.
     if (dose.status === 'taken') {
       telemetry.capture('dose_voice_result', { ...props, applied: 'ignored' }, dose.patientId);
@@ -366,16 +395,32 @@ export class VoiceCallService {
         .set({ status: 'taken', confirmedVia: 'voice', confirmedAt: new Date() })
         .where(eq(doses.id, doseId));
       await (await this.queue.getJob(alertJobId(doseId)))?.remove();
-      try {
-        await this.stock.checkAfterDose(doseId);
-      } catch (error) {
-        telemetry.captureException(error, { step: 'low_stock_check', dose_id: doseId });
+      for (const d of together) {
+        await this.db
+          .update(doses)
+          .set({ status: 'taken', confirmedVia: 'voice', confirmedAt: new Date() })
+          .where(and(eq(doses.id, d.id), eq(doses.status, 'pending')));
+        telemetry.capture(
+          'dose_confirmed',
+          { dose_id: d.id, via: 'voice', call_id: result.sessionId, minutes_since_scheduled: minutesSince(dose.scheduledAt), demo: dose.demo },
+          dose.patientId,
+        );
+      }
+      await dropAlerts();
+      for (const id of [doseId, ...together.map((d) => d.id)]) {
+        try {
+          await this.stock.checkAfterDose(id);
+        } catch (error) {
+          telemetry.captureException(error, { step: 'low_stock_check', dose_id: id });
+        }
       }
       return 'taken';
     }
 
     // "Ainda não tomei" on the first call: she was told Recuidado calls again to confirm.
     if (result.outcome === 'not_taken' && !result.recall && !dose.demo) {
+      // The recall asks about all of them again, and its fallback alert names all of them.
+      await dropAlerts();
       await this.scheduleRecall(doseId);
       telemetry.capture('dose_voice_result', { ...props, applied: 'recall' }, dose.patientId);
       return 'ignored';
@@ -385,6 +430,11 @@ export class VoiceCallService {
       .update(doses)
       .set({ status: 'missed' })
       .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
+    for (const d of together) {
+      await this.db.update(doses).set({ status: 'missed' }).where(and(eq(doses.id, d.id), eq(doses.status, 'pending')));
+    }
+    // One family alert (on this dose) names all of them.
+    await dropAlerts();
     // An emergency already sent the urgent push and called the first contact: a missed-dose push and a calm
     // call on top would ring the same phones twice at the same time.
     if (result.emergency) {

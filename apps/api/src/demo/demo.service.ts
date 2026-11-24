@@ -2,7 +2,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { ConflictException, Inject, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Job, Queue } from 'bullmq';
-import { and, asc, desc, eq, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm';
 import {
   type Database,
   DB,
@@ -14,6 +14,7 @@ import {
   families,
   localDate,
   localDateTime,
+  sameTimeDoses,
   MAX_CHECK_INS,
   medications,
   members,
@@ -25,17 +26,17 @@ import { FamilyService } from '../family/family.service.js';
 import { demoSteps, type JobInfo, type JobState } from './demo.steps.js';
 
 /**
- * Medicine and time of the demo dose. By default the first medicine, due now. With DEMO_DOSE_AT
- * ("12:00") the dose is of that time today (São Paulo), of a medicine taken at that time when there
- * is one, so the call asks about the same dose whatever the hour the video is recorded.
+ * Medicines and time of the demo dose. By default the first medicine, due now. With DEMO_DOSE_AT
+ * ("08:00") the doses are of that time today (São Paulo), of every medicine taken at that time (the first
+ * medicine when none is), so the call asks about the same doses whatever the hour the video is recorded.
  * The instant keeps now's milliseconds (at least 1): it never clashes with a scheduled dose
- * (unique medication + time).
+ * (unique medication + time), and all doses of the run share it, so one call asks about all of them.
  */
-export function demoDose<M extends { times: string[] }>(meds: M[], at: string | undefined, now: Date): { med: M; scheduledAt: Date } {
+export function demoDose<M extends { times: string[] }>(meds: M[], at: string | undefined, now: Date): { meds: M[]; scheduledAt: Date } {
   const fixed = at ? localDateTime(localDate(now), at) : null;
-  if (!fixed) return { med: meds[0]!, scheduledAt: now };
-  const med = meds.find((m) => m.times.includes(at!.trim())) ?? meds[0]!;
-  return { med, scheduledAt: new Date(fixed.getTime() + (now.getMilliseconds() || 1)) };
+  if (!fixed) return { meds: [meds[0]!], scheduledAt: now };
+  const atTime = meds.filter((m) => m.times.includes(at!.trim()));
+  return { meds: atTime.length > 0 ? atTime : [meds[0]!], scheduledAt: new Date(fixed.getTime() + (now.getMilliseconds() || 1)) };
 }
 
 const KEEP_FINISHED = { removeOnComplete: { age: 24 * 3600 }, removeOnFail: { age: 24 * 3600 } };
@@ -76,12 +77,16 @@ export class DemoService {
       .where(and(eq(medications.patientId, patientId), isNull(medications.stoppedAt)))
       .orderBy(asc(medications.createdAt));
     if (meds.length === 0) throw new ConflictException('Adicione pelo menos um remédio antes de rodar a demo.');
-    const { med, scheduledAt } = demoDose(meds, this.config.get<string>('DEMO_DOSE_AT'), now);
+    const run = demoDose(meds, this.config.get<string>('DEMO_DOSE_AT'), now);
+    const med = run.meds[0]!;
 
-    const [dose] = await this.db
+    // The run follows the first dose; the others share its instant and go in the same call and alert.
+    const [dose, ...others] = await this.db
       .insert(doses)
-      .values({ medicationId: med.id, scheduledAt, demo: true })
+      .values(run.meds.map((m) => ({ medicationId: m.id, scheduledAt: run.scheduledAt, demo: true })))
       .returning({ id: doses.id });
+    if (!dose) throw new ConflictException('Não deu para começar a demo.');
+    if (others.length > 0) this.logger.log(`Demo run also asks about ${others.length} more medicine(s).`);
     const second = 1000;
     // One run at a time: a second press while a run is going follows the same run.
     this.current.set(ref.familyId, {
@@ -134,7 +139,10 @@ export class DemoService {
       if (state === 'delayed' || state === 'waiting' || state === 'prioritized') await job.remove().catch(() => undefined);
     }
     // The call in progress still writes its result on this dose: keep it until then.
-    if (!callActive) await this.db.delete(doses).where(eq(doses.id, doseId));
+    if (!callActive) {
+      const together = await sameTimeDoses(this.db, doseId);
+      await this.db.delete(doses).where(inArray(doses.id, [doseId, ...together.map((d) => d.id)]));
+    }
     if (this.current.get(ref.familyId)?.doseId === doseId) this.current.delete(ref.familyId);
     telemetry.capture('demo_run_stopped', { dose_id: doseId, call_active: callActive, demo_family: ref.isDemo }, ref.patientId);
     this.logger.log(`Demo run ${doseId} stopped.`);
