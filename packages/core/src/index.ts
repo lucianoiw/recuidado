@@ -8,6 +8,7 @@ export * from './telemetry/telemetry.logger.js';
 export * from './doses/doses.queue.js';
 export * from './doses/doses.service.js';
 export * from './doses/time.js';
+export * from './doses/same-time.js';
 export * from './voice/voice.service.js';
 export * from './alerts/alerts.service.js';
 export * from './push/push.service.js';

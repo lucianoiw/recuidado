@@ -15,6 +15,7 @@ import { PushService } from '../push/push.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { telemetry } from '../telemetry/telemetry.js';
 import { DOSES_QUEUE, doseJobId, type DoseJob } from './doses.queue.js';
+import { medicationsLabel, sameTimeDoses } from './same-time.js';
 import {
   earlierTodayDoseTimes,
   localDate,
@@ -157,11 +158,21 @@ export class DosesService {
       .update(doses)
       .set({ status: 'missed' })
       .where(and(eq(doses.id, doseId), eq(doses.status, 'pending')));
+    // Medicines of the same time she has not confirmed either go in this one alert.
+    const together = (await sameTimeDoses(this.db, doseId)).filter((d) => d.status !== 'taken' && !d.familyAlertedAt);
+    for (const d of together) {
+      await this.db
+        .update(doses)
+        .set({ status: 'missed', familyAlertedAt: new Date() })
+        .where(and(eq(doses.id, d.id), ne(doses.status, 'taken')));
+      await (await this.queue.getJob(doseJobId('alert-family', d.id)))?.remove().catch(() => undefined);
+    }
+    const label = medicationsLabel([{ name: dose.medicationName, strength: dose.strength }, ...together]);
 
     const { caregivers, sent } = await this.alerts.notifyCaregivers(dose.familyId, {
       kind: 'dose_missed',
-      title: `${dose.patientName} não confirmou o remédio`,
-      body: `${dose.medicationLabel} das ${localTime(dose.scheduledAt)}. Vale ligar para ${dose.gender === 'male' ? 'ele' : 'ela'}.`,
+      title: `${dose.patientName} não confirmou ${together.length > 0 ? 'os remédios' : 'o remédio'}`,
+      body: `${label} das ${localTime(dose.scheduledAt)}. Vale ligar para ${dose.gender === 'male' ? 'ele' : 'ela'}.`,
       url: '/family',
       doseId,
     });
