@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { Button, Field, Logo, TopBar } from "@/components/ui";
@@ -107,9 +106,6 @@ export function SignIn() {
             <Button type="submit" disabled={busy}>
               {busy ? "Enviando..." : "Receber o código"}
             </Button>
-            <Link href="/family" className="py-2 text-center text-[15px] font-semibold text-brand">
-              Só quero ver a demonstração
-            </Link>
           </div>
         </form>
       ) : (
