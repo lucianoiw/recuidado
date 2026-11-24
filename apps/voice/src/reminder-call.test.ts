@@ -293,6 +293,25 @@ test("plays a recorded greeting when one exists", async () => {
   await call.result;
 });
 
+test("recorded greeting followed by silence: reminds the model of the goal, then hangs up", async () => {
+  const socket = new FakeSocket();
+  const call = new ReminderCall({
+    sessionId: "live_fixture_quiet",
+    context: { patientName: "Maria", medications: [{ name: "Losartana" }] },
+    socket,
+    hangup: async () => socket.emitEvent({ type: "session.closed", event_id: "closed", reason: "close_requested" }),
+    maxCallMs: 60_000,
+    greetingAudio: Buffer.alloc(48_000),
+    goodbyeMs: 5,
+    closeGraceMs: 5,
+  });
+  socket.emitEvent({ type: "transport.answered", event_id: "fq1" });
+  socket.emitEvent({ type: "session.output_audio.fixture.played", event_id: "fq2" });
+  const result = await call.result;
+  assert.equal(result.endReason, "hung_up_after_silence");
+  assert.equal(socket.sent.filter((e) => String(e.event_id).startsWith("nudge_")).length, 2);
+});
+
 test("records the greeting audio when the model says the expected line", async () => {
   const socket = new FakeSocket();
   let recorded: Buffer | undefined;

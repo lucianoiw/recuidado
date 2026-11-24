@@ -216,6 +216,9 @@ export class ReminderCall {
           delegation_id: null,
           content: `You just greeted her out loud with: "${this.greetingLine}". Do not repeat it. Listen to her answer.`,
         });
+        // If neither side speaks now, the silence reminder makes the model go on (production, 24/11: after the
+        // recorded greeting her answer never reached the model and the call sat silent until the time limit).
+        this.armSilenceHangup();
         break;
       case "session.output_audio.delta":
         this.captureGreetingAudio(event);
