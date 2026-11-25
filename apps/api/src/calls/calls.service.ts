@@ -154,6 +154,8 @@ export class CallsService {
         inquiryAnswers: pharmacyInquiries.answers,
         matchesOffers: pharmacyInquiries.matchesOffers,
         answersSource: pharmacyInquiries.answersSource,
+        doseStatus: doses.status,
+        doseConfirmedVia: doses.confirmedVia,
         recordingTranscript: callLogs.recordingTranscript,
         durationSeconds: callLogs.durationSeconds,
         startedAt: callLogs.startedAt,
@@ -167,23 +169,28 @@ export class CallsService {
       // A pharmacy call the voice model ended as "unclear" can still get its answer later, when Claude
       // reads the transcript. The inquiry has the final status, so the panel shows that one.
       .leftJoin(pharmacyInquiries, eq(pharmacyInquiries.sessionId, callLogs.sessionId))
+      // Same for a dose call: the model can end it as "unclear" and Claude then reads "tomei" in the transcript.
+      .leftJoin(doses, eq(doses.id, callLogs.doseId))
       .where(and(this.familyFilter(familyId), isNotNull(callLogs.kind)))
       .orderBy(desc(callLogs.createdAt))
       .limit(Math.min(Math.max(limit, 1), 100));
-    return rows.map((r) => ({
-      sessionId: r.sessionId,
-      kind: r.kind,
-      outcome: r.inquiryStatus && r.inquiryStatus !== 'calling' ? r.inquiryStatus : r.outcome,
-      recordingTranscript: r.recordingTranscript ?? null,
-      answersSource: r.answersSource ?? null,
-      readFromTranscript: r.answersSource === 'live_transcript' || r.answersSource === 'recording',
-      pharmacyAnswer: r.inquiryAnswers ? { answers: r.inquiryAnswers, matchesOffers: r.matchesOffers ?? null } : null,
-      durationSeconds: r.durationSeconds,
-      startedAt: (r.startedAt ?? r.createdAt).toISOString(),
-      transcript: r.transcript,
-      events: r.events,
-      hasRecording: r.hasRecording,
-    }));
+    return rows.map((r) => {
+      const doseReadLater = r.outcome === 'unclear' && r.doseStatus === 'taken' && r.doseConfirmedVia === 'voice';
+      return {
+        sessionId: r.sessionId,
+        kind: r.kind,
+        outcome: r.inquiryStatus && r.inquiryStatus !== 'calling' ? r.inquiryStatus : doseReadLater ? 'confirmed' : r.outcome,
+        recordingTranscript: r.recordingTranscript ?? null,
+        answersSource: r.answersSource ?? (doseReadLater ? 'live_transcript' : null),
+        readFromTranscript: r.answersSource === 'live_transcript' || r.answersSource === 'recording' || doseReadLater,
+        pharmacyAnswer: r.inquiryAnswers ? { answers: r.inquiryAnswers, matchesOffers: r.matchesOffers ?? null } : null,
+        durationSeconds: r.durationSeconds,
+        startedAt: (r.startedAt ?? r.createdAt).toISOString(),
+        transcript: r.transcript,
+        events: r.events,
+        hasRecording: r.hasRecording,
+      };
+    });
   }
 
   /** The recording of a call of that family (demo for visitors): a signed R2 link, or the bytes kept in Postgres. */
