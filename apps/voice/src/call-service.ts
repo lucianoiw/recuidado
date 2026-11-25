@@ -3,14 +3,35 @@ import { LiveClient } from "./live.js";
 import { toE164 } from "./phone.js";
 import { greetingLine, type ReminderContext } from "./prompt.js";
 import { GreetingCache } from "./greeting-cache.js";
-import { ReminderCall, type CallResult, type CallStatus } from "./reminder-call.js";
+import {
+  ReminderCall,
+  type CallResult,
+  type CallStatus,
+} from "./reminder-call.js";
 import { AlertCall } from "./alert-call.js";
 import { PharmacyCall, type PharmacyCallResult } from "./pharmacy-call.js";
 import type { PharmacyContext } from "./pharmacy-prompt.js";
-import { AsteriskVoiceGate, openGate, startRecording, waitForGlobal } from "./ami.js";
+import {
+  AsteriskVoiceGate,
+  openGate,
+  startRecording,
+  waitForGlobal,
+} from "./ami.js";
 import { UsageMeter } from "./usage.js";
-import { SIM_PATIENT_GREETING, buildPatientActorInstructions, patientActorNumber, simPatientFor } from "./sim-patient.js";
-import { actorNumber, buildActorInstructions, simGreeting, simPharmacyFor, type SimMedication, type SimPharmacy } from "./sim-pharmacy.js";
+import {
+  SIM_PATIENT_GREETING,
+  buildPatientActorInstructions,
+  patientActorNumber,
+  simPatientFor,
+} from "./sim-patient.js";
+import {
+  actorNumber,
+  buildActorInstructions,
+  simGreeting,
+  simPharmacyFor,
+  type SimMedication,
+  type SimPharmacy,
+} from "./sim-pharmacy.js";
 
 /** One step of a call for the calls panel: a log line of the call and when it happened. */
 export interface CallEvent {
@@ -31,7 +52,10 @@ export class CallTrail {
   readonly log = (msg: string, extra?: unknown) => {
     if (this.events.length < 500) {
       const text = msg.replace(/^(\S+Z )?\[[^\]]+\] /, "");
-      this.events.push({ atMs: Date.now() - this.startedAt.getTime(), text: text.slice(0, 2000) });
+      this.events.push({
+        atMs: Date.now() - this.startedAt.getTime(),
+        text: text.slice(0, 2000),
+      });
     }
     this.print(msg, extra);
   };
@@ -57,15 +81,24 @@ export interface StartCallInput extends ReminderContext {
 export class NumberNotAllowedError extends Error {}
 
 /** Listed numbers, or any Brazilian number when CALL_ALLOWED_NUMBERS has "*". Never international. */
-export function isAllowed(config: Pick<VoiceConfig, "allowedNumbers" | "allowAnyBrazilian">, e164: string): boolean {
-  return config.allowedNumbers.has(e164) || (config.allowAnyBrazilian && e164.startsWith("+55"));
+export function isAllowed(
+  config: Pick<VoiceConfig, "allowedNumbers" | "allowAnyBrazilian">,
+  e164: string,
+): boolean {
+  return (
+    config.allowedNumbers.has(e164) ||
+    (config.allowAnyBrazilian && e164.startsWith("+55"))
+  );
 }
 
 /**
  * Pharmacies are third parties: only numbers listed one by one in CALL_ALLOWED_NUMBERS,
  * never through "*". The demo "pharmacy" is a phone the team controls.
  */
-export function isAllowedPharmacy(config: Pick<VoiceConfig, "allowedNumbers">, e164: string): boolean {
+export function isAllowedPharmacy(
+  config: Pick<VoiceConfig, "allowedNumbers">,
+  e164: string,
+): boolean {
   return config.allowedNumbers.has(e164);
 }
 
@@ -104,10 +137,15 @@ export class CallService {
     this.greetings = new GreetingCache(config.greetingCacheDir);
   }
 
-  async start(input: StartCallInput, onStatusChange?: (status: CallStatus) => void): Promise<StartedCall> {
+  async start(
+    input: StartCallInput,
+    onStatusChange?: (status: CallStatus) => void,
+  ): Promise<StartedCall> {
     const destination = toE164(input.phone);
     if (!isAllowed(this.config, destination)) {
-      throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
+      throw new NumberNotAllowedError(
+        `Number ${destination} is not in CALL_ALLOWED_NUMBERS`,
+      );
     }
     const context: ReminderContext = {
       patientName: input.patientName,
@@ -121,10 +159,18 @@ export class CallService {
     };
     const now = new Date();
     const line = greetingLine(context, now);
-    const greetingAudio = this.greetings.get(this.config.liveVoice, line);
+    const greetingAudio = this.config.recordedGreeting
+      ? this.greetings.get(this.config.liveVoice, line)
+      : undefined;
     const trail = new CallTrail(this.log);
-    const sessionId = await this.live.createSipCall(destination, context, greetingAudio ? line : undefined);
-    this.log(`call created ${sessionId}${greetingAudio ? " (recorded greeting)" : ""}`);
+    const sessionId = await this.live.createSipCall(
+      destination,
+      context,
+      greetingAudio ? line : undefined,
+    );
+    this.log(
+      `call created ${sessionId}${greetingAudio ? " (recorded greeting)" : ""}`,
+    );
     // Attach right away: the sideband only replays the previous 3 seconds of call progress.
     const socket = this.live.attach(sessionId);
     const usage = new UsageMeter().watch(socket);
@@ -139,11 +185,15 @@ export class CallService {
       onStatusChange,
       now,
       greetingAudio,
-      onGreetingRecorded: (spoken, audio) => {
-        if (this.greetings.set(this.config.liveVoice, spoken, audio)) {
-          this.log(`greeting recorded for later calls (${(audio.length / 48_000).toFixed(1)} s)`);
-        }
-      },
+      onGreetingRecorded: !this.config.recordedGreeting
+        ? undefined
+        : (spoken, audio) => {
+            if (this.greetings.set(this.config.liveVoice, spoken, audio)) {
+              this.log(
+                `greeting recorded for later calls (${(audio.length / 48_000).toFixed(1)} s)`,
+              );
+            }
+          },
     });
     this.startSimPatient(destination, sessionId, call.result);
     return { sessionId, call, trail, usage };
@@ -153,7 +203,11 @@ export class CallService {
    * A simulated patient (sim-patient.ts): dials the actor once Asterisk has the call ringing, and hangs it
    * up when the call ends. Nobody real is called. Never throws.
    */
-  private startSimPatient(destination: string, callerId: string, done: Promise<unknown>) {
+  private startSimPatient(
+    destination: string,
+    callerId: string,
+    done: Promise<unknown>,
+  ) {
     const sim = simPatientFor(destination);
     if (!sim || !this.config.ami) return;
     const ami = this.config.ami;
@@ -161,23 +215,38 @@ export class CallService {
     void done.finally(() => (ended = true));
     void (async () => {
       try {
-        if (!(await waitForGlobal(ami, `SIMP_READY_${sim.index}`, () => ended, 60_000))) return;
+        if (
+          !(await waitForGlobal(
+            ami,
+            `SIMP_READY_${sim.index}`,
+            () => ended,
+            60_000,
+          ))
+        )
+          return;
         const actorId = await this.live.createActorSipCall(
           patientActorNumber(sim),
           buildPatientActorInstructions(sim),
           SIM_PATIENT_GREETING,
           this.config.patientActorVoice,
         );
-        this.log(`[${callerId}] simulated patient ${sim.index} (${sim.label}): actor ${actorId}`);
+        this.log(
+          `[${callerId}] simulated patient ${sim.index} (${sim.label}): actor ${actorId}`,
+        );
         this.watchActor(actorId, callerId);
-        const hangup = () => this.live.hangup(actorId).catch((err: Error) => this.log(`actor hangup: ${err.message}`));
+        const hangup = () =>
+          this.live
+            .hangup(actorId)
+            .catch((err: Error) => this.log(`actor hangup: ${err.message}`));
         const timer = setTimeout(hangup, 5 * 60 * 1000);
         void done.finally(() => {
           clearTimeout(timer);
           void hangup();
         });
       } catch (err) {
-        this.log(`[${callerId}] simulated patient ${sim.index}: actor not started: ${(err as Error).message}`);
+        this.log(
+          `[${callerId}] simulated patient ${sim.index}: actor not started: ${(err as Error).message}`,
+        );
       }
     })();
   }
@@ -186,10 +255,17 @@ export class CallService {
   async startAlert(
     phone: string,
     message: string,
-  ): Promise<{ sessionId: string; call: AlertCall; trail: CallTrail; usage: UsageMeter }> {
+  ): Promise<{
+    sessionId: string;
+    call: AlertCall;
+    trail: CallTrail;
+    usage: UsageMeter;
+  }> {
     const destination = toE164(phone);
     if (!isAllowed(this.config, destination)) {
-      throw new NumberNotAllowedError(`Number ${destination} is not in CALL_ALLOWED_NUMBERS`);
+      throw new NumberNotAllowedError(
+        `Number ${destination} is not in CALL_ALLOWED_NUMBERS`,
+      );
     }
     const trail = new CallTrail(this.log);
     const sessionId = await this.live.createAlertSipCall(destination, message);
@@ -209,22 +285,36 @@ export class CallService {
     return { sessionId, call, trail, usage };
   }
 
-  async startPharmacy(input: StartPharmacyCallInput): Promise<StartedPharmacyCall> {
+  async startPharmacy(
+    input: StartPharmacyCallInput,
+  ): Promise<StartedPharmacyCall> {
     const destination = toE164(input.phone);
     if (!isAllowedPharmacy(this.config, destination)) {
-      throw new NumberNotAllowedError(`Pharmacy number ${destination} is not listed in CALL_ALLOWED_NUMBERS`);
+      throw new NumberNotAllowedError(
+        `Pharmacy number ${destination} is not listed in CALL_ALLOWED_NUMBERS`,
+      );
     }
     const context: PharmacyContext = { medications: input.medications };
     const trail = new CallTrail(this.log);
-    const { sessionId, decisions, decisionsError } = await this.live.createPharmacySipCall(destination, context);
-    if (decisionsError) this.log(`pharmacy call: Decisions triggers rejected, calling without them: ${decisionsError}`);
-    this.log(`pharmacy call created ${sessionId} (decisions ${decisions ? "on" : "off"}, voice gate ${this.config.ami ? "on" : "off"})`);
+    const { sessionId, decisions, decisionsError } =
+      await this.live.createPharmacySipCall(destination, context);
+    if (decisionsError)
+      this.log(
+        `pharmacy call: Decisions triggers rejected, calling without them: ${decisionsError}`,
+      );
+    this.log(
+      `pharmacy call created ${sessionId} (decisions ${decisions ? "on" : "off"}, voice gate ${this.config.ami ? "on" : "off"})`,
+    );
     const socket = this.live.attach(sessionId);
     const usage = new UsageMeter().watch(socket);
     this.record(destination, sessionId, trail);
     // The dialplan keys the AI's channel by the national number (DDD + number).
     const gate = this.config.ami
-      ? new AsteriskVoiceGate(this.config.ami, destination.replace(/^\+55/, ""), (m) => trail.log(`[${sessionId}] ${m}`))
+      ? new AsteriskVoiceGate(
+          this.config.ami,
+          destination.replace(/^\+55/, ""),
+          (m) => trail.log(`[${sessionId}] ${m}`),
+        )
       : openGate;
     const call = new PharmacyCall({
       sessionId,
@@ -234,14 +324,26 @@ export class CallService {
       hangup: () => this.live.hangup(sessionId),
       // Recorded menus take time: allow a bit longer than a reminder call, and 40 s more for each
       // extra medicine (about one question, the prices and the read-back).
-      maxCallMs: (Math.max(this.config.maxCallSeconds, 180) + 40 * (input.medications.length - 1)) * 1000,
+      maxCallMs:
+        (Math.max(this.config.maxCallSeconds, 180) +
+          40 * (input.medications.length - 1)) *
+        1000,
       log: trail.log,
     });
     // A simulated pharmacy: its attendant is a second AI, dialed now so it is ringing when the
     // assistant gets past the menu. No real pharmacy is called.
     const sim = simPharmacyFor(destination);
-    const actorUsage = sim ? this.startActor(sim, input.medications, sessionId, call) : Promise.resolve(undefined);
-    return { sessionId, call, trail, usage, actorUsage, simulated: Boolean(sim) };
+    const actorUsage = sim
+      ? this.startActor(sim, input.medications, sessionId, call)
+      : Promise.resolve(undefined);
+    return {
+      sessionId,
+      call,
+      trail,
+      usage,
+      actorUsage,
+      simulated: Boolean(sim),
+    };
   }
 
   /**
@@ -250,14 +352,21 @@ export class CallService {
    */
   private record(destination: string, sessionId: string, trail: CallTrail) {
     if (!this.config.ami || !this.config.recordCalls) return;
-    void startRecording(this.config.ami, destination.replace(/^\+55/, ""), sessionId, (m) => trail.log(`[${sessionId}] ${m}`));
+    void startRecording(
+      this.config.ami,
+      destination.replace(/^\+55/, ""),
+      sessionId,
+      (m) => trail.log(`[${sessionId}] ${m}`),
+    );
   }
 
   /** Sends the transcript and the timeline of a call to the calls panel. */
   reportLog(log: CallLog): Promise<void> {
     // Each line gets its time since the call started, like the events.
     const start = Date.parse(log.startedAt);
-    const transcript = log.transcript.map(({ at, ...l }) => (at ? { ...l, atMs: Math.max(0, at - start) } : l));
+    const transcript = log.transcript.map(({ at, ...l }) =>
+      at ? { ...l, atMs: Math.max(0, at - start) } : l,
+    );
     return this.post("/call-logs", { ...log, transcript });
   }
 
@@ -273,15 +382,28 @@ export class CallService {
     try {
       // Dial only when the caller gets past the menu (the line rings there), so the actor's call
       // never times out ringing during a long menu or hold.
-      if (this.config.ami && !(await waitForGlobal(this.config.ami, `SIM_READY_${sim.index}`, () => ended))) return undefined;
+      if (
+        this.config.ami &&
+        !(await waitForGlobal(
+          this.config.ami,
+          `SIM_READY_${sim.index}`,
+          () => ended,
+        ))
+      )
+        return undefined;
       const actorId = await this.live.createActorSipCall(
         actorNumber(sim),
         buildActorInstructions(sim, meds),
         simGreeting(sim),
       );
-      this.log(`[${callerId}] simulated pharmacy ${sim.index} (${sim.name}): actor ${actorId}`);
+      this.log(
+        `[${callerId}] simulated pharmacy ${sim.index} (${sim.name}): actor ${actorId}`,
+      );
       const usage = this.watchActor(actorId, callerId);
-      const hangup = () => this.live.hangup(actorId).catch((err: Error) => this.log(`actor hangup: ${err.message}`));
+      const hangup = () =>
+        this.live
+          .hangup(actorId)
+          .catch((err: Error) => this.log(`actor hangup: ${err.message}`));
       // At most 5 minutes, even if the pharmacy call never reports an end.
       const timer = setTimeout(hangup, 5 * 60 * 1000);
       void call.result.finally(() => {
@@ -290,13 +412,18 @@ export class CallService {
       });
       return usage;
     } catch (err) {
-      this.log(`[${callerId}] simulated pharmacy ${sim.index}: actor not started: ${(err as Error).message}`);
+      this.log(
+        `[${callerId}] simulated pharmacy ${sim.index}: actor not started: ${(err as Error).message}`,
+      );
       return undefined;
     }
   }
 
   /** Logs the actor's errors and how its session ended, to see why an attendant goes quiet. */
-  private watchActor(actorId: string, callerId: string): UsageMeter | undefined {
+  private watchActor(
+    actorId: string,
+    callerId: string,
+  ): UsageMeter | undefined {
     try {
       const socket = this.live.attach(actorId);
       const usage = new UsageMeter().watch(socket);
@@ -308,50 +435,93 @@ export class CallService {
         lines[kind] += delta;
         if (timers[kind]) clearTimeout(timers[kind]);
         timers[kind] = setTimeout(() => {
-          if (lines[kind].trim()) this.log(`[${callerId}] actor ${kind}: ${lines[kind].trim()}`);
+          if (lines[kind].trim())
+            this.log(`[${callerId}] actor ${kind}: ${lines[kind].trim()}`);
           lines[kind] = "";
         }, 1200);
       };
       socket.on("message", (data) => {
-        let event: { type?: string; error?: unknown; reason?: unknown; delta?: unknown };
+        let event: {
+          type?: string;
+          error?: unknown;
+          reason?: unknown;
+          delta?: unknown;
+        };
         try {
           event = JSON.parse(String(data));
         } catch {
           return;
         }
-        if (event.type === "session.output_transcript.delta" && typeof event.delta === "string") add("said", event.delta);
-        if (event.type === "session.input_transcript.delta" && typeof event.delta === "string") add("heard", event.delta);
-        if (event.type === "error") this.log(`[${callerId}] actor error ${JSON.stringify(event.error)}`);
-        if (event.type?.startsWith("transport.") && !event.type.includes("dtmf")) this.log(`[${callerId}] actor ${event.type}`);
+        if (
+          event.type === "session.output_transcript.delta" &&
+          typeof event.delta === "string"
+        )
+          add("said", event.delta);
+        if (
+          event.type === "session.input_transcript.delta" &&
+          typeof event.delta === "string"
+        )
+          add("heard", event.delta);
+        if (event.type === "error")
+          this.log(`[${callerId}] actor error ${JSON.stringify(event.error)}`);
+        if (
+          event.type?.startsWith("transport.") &&
+          !event.type.includes("dtmf")
+        )
+          this.log(`[${callerId}] actor ${event.type}`);
         if (event.type === "session.closed") {
-          this.log(`[${callerId}] actor session closed: ${String(event.reason ?? "unknown")}`);
+          this.log(
+            `[${callerId}] actor session closed: ${String(event.reason ?? "unknown")}`,
+          );
           socket.close();
         }
       });
-      socket.on("error", (err) => this.log(`[${callerId}] actor sideband: ${err.message}`));
+      socket.on("error", (err) =>
+        this.log(`[${callerId}] actor sideband: ${err.message}`),
+      );
       return usage;
     } catch (err) {
-      this.log(`[${callerId}] actor sideband not attached: ${(err as Error).message}`);
+      this.log(
+        `[${callerId}] actor sideband not attached: ${(err as Error).message}`,
+      );
       return undefined;
     }
   }
 
   /** Sends the result to the Recuidado API, which alerts the family when confirmed is false. */
-  report(doseId: string, result: CallResult & { checkIn?: boolean; recall?: boolean }): Promise<void> {
-    return this.post(`/doses/${encodeURIComponent(doseId)}/voice-result`, result);
+  report(
+    doseId: string,
+    result: CallResult & { checkIn?: boolean; recall?: boolean },
+  ): Promise<void> {
+    return this.post(
+      `/doses/${encodeURIComponent(doseId)}/voice-result`,
+      result,
+    );
   }
 
   /** Tells the Recuidado API how an emergency call to a caregiver ended; not delivered calls the next one. */
   reportAlert(
     doseId: string,
-    result: { sessionId: string; memberId: string; message: string; answered: boolean; delivered: boolean },
+    result: {
+      sessionId: string;
+      memberId: string;
+      message: string;
+      answered: boolean;
+      delivered: boolean;
+    },
   ): Promise<void> {
-    return this.post(`/doses/${encodeURIComponent(doseId)}/alert-call-result`, result);
+    return this.post(
+      `/doses/${encodeURIComponent(doseId)}/alert-call-result`,
+      result,
+    );
   }
 
   /** Sends what the pharmacy said to the Recuidado API. */
   reportPharmacy(inquiryId: string, result: PharmacyCallResult): Promise<void> {
-    return this.post(`/pharmacy-inquiries/${encodeURIComponent(inquiryId)}/voice-result`, result);
+    return this.post(
+      `/pharmacy-inquiries/${encodeURIComponent(inquiryId)}/voice-result`,
+      result,
+    );
   }
 
   private async post(path: string, result: unknown): Promise<void> {
@@ -360,15 +530,26 @@ export class CallService {
       return;
     }
     const url = `${this.config.apiUrl.replace(/\/$/, "")}${path}`;
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
     headers.Authorization = `Bearer ${this.config.voiceApiToken}`;
     for (let attempt = 1; attempt <= 4; attempt++) {
       try {
-        const res = await fetch(url, { method: "POST", headers, body: JSON.stringify(result) });
+        const res = await fetch(url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(result),
+        });
         if (res.ok) return;
-        this.log(`voice-result POST returned ${res.status} (attempt ${attempt})`);
+        this.log(
+          `voice-result POST returned ${res.status} (attempt ${attempt})`,
+        );
       } catch (err) {
-        this.log(`voice-result POST failed (attempt ${attempt})`, (err as Error).message);
+        this.log(
+          `voice-result POST failed (attempt ${attempt})`,
+          (err as Error).message,
+        );
       }
       await new Promise((r) => setTimeout(r, 2 ** attempt * 1000));
     }

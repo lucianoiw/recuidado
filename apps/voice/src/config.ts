@@ -16,6 +16,11 @@ export interface VoiceConfig {
   delegateReasoningEffort?: string;
   /** Where recorded greetings are kept between calls. */
   greetingCacheDir?: string;
+  /**
+   * Play a greeting recorded on an earlier call instead of letting the model say it. Off by default:
+   * on real phones (25/11) the patient's answer never reached the model after the recorded greeting.
+   */
+  recordedGreeting?: boolean;
   sip: {
     providerUrl: string;
     username: string;
@@ -68,6 +73,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): VoiceConfig {
     delegateModel: env.OPENAI_DELEGATE_MODEL?.trim() || "gpt-6-luna",
     delegateReasoningEffort: env.OPENAI_DELEGATE_REASONING_EFFORT?.trim() ?? "low",
     greetingCacheDir: env.GREETING_CACHE_DIR?.trim() || "/tmp/recuidado-greetings",
+    recordedGreeting: env.RECORDED_GREETING?.trim() === "true",
     sip: {
       providerUrl,
       username: env.OPENAI_SIP_USERNAME?.trim() || "openai",
