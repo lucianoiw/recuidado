@@ -88,6 +88,8 @@ export type OnboardingBody = z.infer<typeof onboardingBody>;
 
 export const buyChoiceBody = z.object({ buy: z.boolean() });
 
+export const callsPausedBody = z.object({ paused: z.boolean() });
+
 const clock = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Horário no formato 08:00.');
 
 /** Pills at home, as counted by the family. */

@@ -188,6 +188,7 @@ export class VoiceCallService {
         consentAt: members.consentAt,
         familyId: members.familyId,
         familyName: families.name,
+        callsPausedAt: families.callsPausedAt,
         medication: medications.name,
         strength: medications.strength,
         stoppedAt: medications.stoppedAt,
@@ -225,6 +226,12 @@ export class VoiceCallService {
       // LGPD: no call before she (or the family for her) agreed. Push and the family alert still work.
       telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'no_consent' }, row.patientId);
       this.logger.log(`Patient of dose ${doseId} has not consented; not calling.`);
+      return null;
+    }
+    if (row.callsPausedAt && !checkIn) {
+      // The family paused the calls. Her reminder and the family alert still work.
+      telemetry.capture('dose_call_skipped', { dose_id: doseId, reason: 'paused' }, row.patientId);
+      this.logger.log(`Family of dose ${doseId} paused the calls; push only.`);
       return null;
     }
     // The call back after an emergency always goes out, even if the plan ended in between.
@@ -604,10 +611,12 @@ export class VoiceCallService {
         name: sql<string>`coalesce(${members.nickname}, ${members.name})`,
         familyId: members.familyId,
         gender: members.gender,
+        callsPausedAt: families.callsPausedAt,
       })
       .from(doses)
       .innerJoin(medications, eq(doses.medicationId, medications.id))
       .innerJoin(members, eq(medications.patientId, members.id))
+      .innerJoin(families, eq(members.familyId, families.id))
       .where(eq(doses.id, doseId));
     return patient;
   }
@@ -632,9 +641,11 @@ export class VoiceCallService {
     if (!voiceUrl || !token) return 'none_left';
     const patient = await this.patientOf(doseId);
     if (!patient) return 'none_left';
+    const calm = message.includes(NAME_SLOT);
+    // Calls paused by the family: the calm missed-dose call does not go out. An emergency always does.
+    if (calm && patient.callsPausedAt) return 'none_left';
     const all = await this.emergencyContacts(patient.familyId);
     const previous = afterId ? all.find((c) => c.id === afterId) : undefined;
-    const calm = message.includes(NAME_SLOT);
     for (const c of contactsAfter(all, afterId)) {
       const res = await fetch(new URL('/alert-calls', voiceUrl), {
         method: 'POST',

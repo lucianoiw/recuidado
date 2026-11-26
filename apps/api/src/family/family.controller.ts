@@ -20,7 +20,7 @@ import { z } from 'zod';
 import { Auth, type AuthContext, CaregiverId, FamilyId } from '../auth/auth.context.js';
 import { AuthService } from '../auth/auth.service.js';
 import { FamilyService } from './family.service.js';
-import { buyChoiceBody, highCostBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
+import { buyChoiceBody, callsPausedBody, highCostBody, medicationUpdateBody, onboardingBody } from './onboarding.schema.js';
 
 /** Photos of the box or pill. The app shrinks them before sending; this is a ceiling. */
 const MAX_PHOTO_BYTES = 8 * 1024 * 1024;
@@ -92,6 +92,13 @@ export class FamilyController {
   @HttpCode(204)
   async setEmergencyContact(@Param('id', new ParseUUIDPipe()) id: string, @FamilyId({ write: true }) familyId: string | null) {
     await this.family.setEmergencyContact(familyId, id);
+  }
+
+  /** The family pauses the calls, or turns them back on. Reminders and alerts are not affected. */
+  @Put('calls-paused')
+  @HttpCode(204)
+  async setCallsPaused(@Body() body: unknown, @FamilyId({ write: true }) familyId: string | null) {
+    await this.family.setCallsPaused(familyId, parse(callsPausedBody, body).paused);
   }
 
   /** "Pegar grátis" or "Comprar" for a medication that is free in Farmácia Popular. */

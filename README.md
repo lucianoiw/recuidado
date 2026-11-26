@@ -382,6 +382,18 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 - **Alto Custo já na receita salva.** Pedido do Luciano (19/11): na tela que aparece depois de salvar a receita, cada remédio de "Precisa comprar" que está no Alto Custo diz que pode sair de graça com laudo do médico, e o desconto do laboratório (Vale Mais Saúde no Entresto) aparece logo abaixo.
 - **"Como vocês pegam?"** Pedido do Luciano (19/11): no Alto Custo o remédio sai de graça depois que o laudo (LME) é aprovado, e o desconto do laboratório só baixa o preço. A folha de edição do remédio agora pergunta como a família pega: preço normal (CMED), com desconto (a família digita quanto paga por caixa; esse valor vira o gasto do mês e entra na divisão) ou grátis pelo Alto Custo (o remédio passa para "Grátis", a economia entra no Mês e o lembrete da renovação conta da data de aprovação). Coluna nova `paid_pack_cents`; "recebe pelo Alto Custo" usa a data `high_cost_since` que já existia.
 
+### Últimos ajustes antes da entrega (24 a 26/11/2026)
+
+- **Sem login, o app pede para entrar** (PR #248 e #249). Visitante não vê mais a família de demonstração dentro do app, e sessão vencida volta para "Entrar". A API continua servindo a demonstração para o MCP e para a demo de 2 minutos.
+- **Receita salva duas vezes não duplica remédio** (PR #247). Confirmar uma receita ignora o remédio que ela já toma.
+- **Remédios do mesmo horário, uma ligação só** (PR #250). Entresto e Dapagliflozina às 8h viram uma ligação que pergunta dos dois e um aviso só para a família. A demo de 2 minutos pode usar um horário fixo (`DEMO_DOSE_AT`).
+- **Saudação gravada desligada** (PR #253). Com a saudação pré-gravada, em telefone de verdade o modelo não ouvia a primeira resposta da paciente. Foi achado na ligação real para a mãe do Luciano, em 25/11. Hoje a IA fala a saudação ao vivo (`RECORDED_GREETING=false`). Limitação conhecida: ela demora cerca de 10 segundos para começar a falar depois do "alô".
+- **Painel segue a dose** (PR #254). Se a resposta só foi lida na transcrição depois da ligação, o painel mostra "Tomou" em vez de "Sem resposta clara".
+- **Foto de cada caixa quando há dois remédios no horário** (PR #255). Antes a tela dela só mostrava foto com um remédio no horário.
+- **Pausar ligações** (26/11). Na tela Família, quem tem ligações pode pausar e voltar quando quiser: viagem, internação ou só uma pausa. Enquanto está pausado não sai a ligação do lembrete, nem a de retorno, nem a ligação calma para a família; o lembrete no celular dela e os avisos da família continuam. A ligação de volta depois de uma emergência sai mesmo assim. Coluna `families.calls_paused_at`, `PUT /family/calls-paused`, e o motivo `paused` no evento `dose_call_skipped`. Nasceu de um caso real: a equipe queria manter a família do vídeo sem receber ligação todo dia, e tirar o telefone da lista de liberados era gambiarra.
+- **Ligações para jurados.** As ligações estão liberadas só para telefones autorizados (`CALL_ALLOWED_NUMBERS`), para controlar custo e para ninguém cadastrar o telefone de um terceiro. Para testar com o seu número, escreva para contato@recuidado.com.br. Lembrete, leitura de receita e divisão da conta funcionam para qualquer cadastro.
+- **Vídeo de entrega.** 2 min 36 s, montado em Remotion. As telas são capturas do produto em produção, a ligação da farmácia é a gravação de uma ligação de verdade para uma farmácia simulada por outra IA, e a ligação com a paciente foi gravada com a mãe do Luciano, que topou aparecer.
+
 ## Resultados medidos
 
 | O quê | Resultado | Como medir de novo |
