@@ -9,12 +9,33 @@ O Recuidado lê a receita, mostra o que é de graça no Farmácia Popular, cota 
 
 Projeto do Hack Brasil 2026, trilha Saúde e bem-estar. Toda a demonstração usa dados fictícios. O Recuidado não faz diagnóstico, não recomenda tratamento e não altera dose.
 
-- App: https://app.recuidado.com.br (a demonstração da Dona Maria abre sem login)
+- App: https://app.recuidado.com.br (entra com o e-mail, sem senha; o cadastro é aberto)
 - Os dois celulares lado a lado, filho e mãe, com os apps de verdade: https://painel.recuidado.com.br
 - Site: https://recuidado.com.br
 - Contexto completo do projeto: [docs/context.md](docs/context.md)
 - Painel de monitoria ao vivo (público, sem login): https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg
 - Como a monitoria funciona: [docs/monitoring.md](docs/monitoring.md)
+
+## Como testar
+
+**Sem login, em 2 minutos**
+
+- **Vídeo de entrega (2 min 36 s):** https://youtu.be/A5r57XaOjz8
+- **Ligações gravadas:** https://painel.recuidado.com.br/ligacoes mostra as ligações da família de demonstração: o áudio, a conversa e o que o código fez em cada momento (a função que registrou a resposta, as teclas da URA, a classificação de quem atendeu). A paciente e as farmácias dessas ligações são simuladas por outra IA; a linha telefônica e a assistente são as de produção.
+- **Monitoria ao vivo:** https://us.posthog.com/shared/agEAVqAn6xCM9GgdRycesljavVRvLg
+- **Servidor MCP:** ver [Servidor MCP](#servidor-mcp). Conecta na família de demonstração sem login.
+
+**Com cadastro, em 5 minutos**
+
+1. Abra https://painel.recuidado.com.br (os dois celulares lado a lado, filho e mãe) ou https://app.recuidado.com.br no celular.
+2. Entre com o seu e-mail. Chega um código de 6 números; não tem senha.
+3. Faça o cadastro com dados fictícios e fotografe uma receita, ou cadastre os remédios um por um.
+4. Veja o que sai de graça e onde pegar, o teto de preço da CMED, a divisão da conta entre irmãos e a tela dela com o botão "Tomei".
+5. Em Família, "Celular dela", copie o link dela e abra no outro celular do painel.
+
+**Ligações de voz**
+
+As ligações (para ela, para a família e para a farmácia) saem só para telefones autorizados, para controlar custo e para ninguém cadastrar o telefone de um terceiro. Para receber uma ligação no seu número, escreva para contato@recuidado.com.br. Sem isso, as telas mostram a ligação como "plano pago, em breve" e o resto funciona igual.
 
 ## O que já funciona em produção
 
@@ -154,7 +175,7 @@ Decisões de 11/11/2026 (pedido do Luciano: profissionalizar o que foi feito em 
 - **Irmãos convidados por e-mail.** No passo "Quem cuida junto?" (e em Família, "Chamar mais alguém") vai o e-mail da pessoa. Ela recebe um link que vale 7 dias e já entra na família. Quem prefere mandar pelo WhatsApp manda o link `/entrar?convite=<família>&nome=<nome>`: a pessoa entra com o e-mail dela e assume o convite com aquele nome.
 - **A mãe não se cadastra.** O filho abre Família, Celular dela, e manda o link `app.recuidado.com.br/m/<segredo>` (ou mostra o QR code). O celular dela guarda o segredo e abre o app dela. Esse link só lê e confirma dose; não muda remédio. O mesmo link conecta a família no MCP.
 - **Dois logins no mesmo navegador sem misturar.** As telas `/patient` mandam só o link dela; as da família mandam só a sessão do filho. Por isso o painel funciona com os dois apps no mesmo navegador.
-- **Visitante continua vendo a demonstração.** Sem login, o app mostra a família da Dona Maria, só leitura, como antes. O vídeo e os jurados não precisam de login (regulamento 7.2).
+- **Visitante via a demonstração (até 24/11).** Sem login, o app mostrava a família da Dona Maria, só leitura. Desde o PR #248 o app pede o e-mail; ver [Como testar](#como-testar).
 - **O painel** (`/painel`, servido pelo próprio app no domínio `painel`) põe os dois apps reais em molduras de Android: um Pixel 6 Pro para o filho e um Galaxy S8 para a mãe, desenhados em CSS pelo [devices.css](https://github.com/picturepan2/devices.css) (MIT). Cada celular tem uma barra de endereço: o filho copia o link dela à esquerda e cola no celular da mãe à direita. O app avisa o painel do endereço atual por `postMessage`, e "Começar de novo" apaga os dois logins. Notificação push não funciona dentro do painel (o navegador bloqueia em moldura); o lembrete aparece na tela dela do mesmo jeito.
 
 ## Foto do remédio
@@ -391,6 +412,7 @@ Cadastro aberto (decisão do Luciano, 12/11): qualquer pessoa, inclusive o jurad
 - **Painel segue a dose** (PR #254). Se a resposta só foi lida na transcrição depois da ligação, o painel mostra "Tomou" em vez de "Sem resposta clara".
 - **Foto de cada caixa quando há dois remédios no horário** (PR #255). Antes a tela dela só mostrava foto com um remédio no horário.
 - **Pausar ligações** (26/11). Na tela Família, quem tem ligações pode pausar e voltar quando quiser: viagem, internação ou só uma pausa. Enquanto está pausado não sai a ligação do lembrete, nem a de retorno, nem a ligação calma para a família; o lembrete no celular dela e os avisos da família continuam. A ligação de volta depois de uma emergência sai mesmo assim. Coluna `families.calls_paused_at`, `PUT /family/calls-paused`, e o motivo `paused` no evento `dose_call_skipped`. Nasceu de um caso real: a equipe queria manter a família do vídeo sem receber ligação todo dia, e tirar o telefone da lista de liberados era gambiarra.
+- **Família de demonstração só liga para paciente simulada** (26/11). O seed põe em todos os telefones dela o número da paciente simulada, atendida por outra IA dentro do Asterisk de teste. Como a demo de 2 minutos dela roda sem login, ela não pode tocar o telefone de uma pessoa.
 - **Ligações para jurados.** As ligações estão liberadas só para telefones autorizados (`CALL_ALLOWED_NUMBERS`), para controlar custo e para ninguém cadastrar o telefone de um terceiro. Para testar com o seu número, escreva para contato@recuidado.com.br. Lembrete, leitura de receita e divisão da conta funcionam para qualquer cadastro.
 - **Vídeo de entrega.** 2 min 36 s, montado em Remotion. As telas são capturas do produto em produção, a ligação da farmácia é a gravação de uma ligação de verdade para uma farmácia simulada por outra IA, e a ligação com a paciente foi gravada com a mãe do Luciano, que topou aparecer.
 
