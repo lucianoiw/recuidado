@@ -40,6 +40,9 @@ export const families = pgTable('families', {
   rotationStartMonth: text(),
   // "2026-11": last month the family got the "whose turn it is" alert.
   rotationNotifiedMonth: text(),
+  // The family paused the calls (she is travelling, in hospital, or they just want a break).
+  // No call goes out while set; reminders on her phone and family alerts keep working.
+  callsPausedAt: timestamp({ withTimezone: true }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

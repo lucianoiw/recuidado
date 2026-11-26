@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { callName, deleteFamilyData, downloadFamilyData, getMe, setEmergencyContact, signOut, type Me, type Member } from "@/lib/api";
+import { callName, deleteFamilyData, downloadFamilyData, getMe, setCallsPaused, setEmergencyContact, signOut, type Me, type Member } from "@/lib/api";
 import { track } from "@/lib/analytics";
 import { EnableNotifications } from "@/components/enable-notifications";
 import Link from "next/link";
@@ -81,6 +81,11 @@ export function CircleView() {
       {/* Who the call reaches in an emergency: only with calls (the paid plan). */}
       {data.calls !== false ? <FirstContact caregivers={data.caregivers} patient={patient} onSaved={reload} /> : null}
 
+      {/* Only with calls, and never on the demo family (read-only). */}
+      {data.calls !== false && !data.isDemo ? (
+        <PauseCalls paused={Boolean(data.callsPaused)} patient={patient} onSaved={reload} />
+      ) : null}
+
       <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
         <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
           <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><BellIcon size={18} /></span>
@@ -136,6 +141,46 @@ export function CircleView() {
 }
 
 /** Who gets the phone call when she reports an emergency. Calling everyone would cause alarm. */
+/** The family turns the calls off for a while (trip, hospital, a break) and back on. */
+function PauseCalls({ paused, patient, onSaved }: { paused: boolean; patient: string; onSaved: () => void }) {
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function toggle() {
+    if (saving) return;
+    setSaving(true);
+    setError(null);
+    try {
+      await setCallsPaused(!paused);
+      track(paused ? "calls_resumed" : "calls_paused");
+      onSaved();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Não deu para salvar.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
+      <h2 className="flex items-center gap-2.5 text-[18px] font-semibold">
+        <span className="flex size-9 items-center justify-center rounded-full bg-blush text-accent-ink"><PhoneIcon size={18} /></span>
+        <span className="flex-1">Ligações</span>
+        {paused ? <StatusPill tone="warn">Pausadas</StatusPill> : null}
+      </h2>
+      <p className="text-[15px] leading-snug text-muted">
+        {paused
+          ? `O Recuidado não está ligando para ${patient} nem para a família. O lembrete no celular e os avisos continuam.`
+          : `Viagem, internação ou só uma pausa: desligue as ligações quando quiser. O lembrete no celular de ${patient} e os avisos da família continuam.`}
+      </p>
+      <Button variant="secondary" size="lg" onClick={toggle} disabled={saving}>
+        {saving ? "Salvando..." : paused ? "Voltar a ligar" : "Pausar ligações"}
+      </Button>
+      {error ? <p role="alert" className="text-[15px] font-semibold text-danger">{error}</p> : null}
+    </section>
+  );
+}
+
 function FirstContact({
   caregivers,
   patient,

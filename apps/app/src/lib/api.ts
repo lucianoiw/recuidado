@@ -271,6 +271,8 @@ export interface FamilyOverview {
   isDemo?: boolean;
   /** The family gets calls (the paid part). False on the free plan: screens say "plano pago, em breve". */
   calls?: boolean;
+  /** The family paused the calls itself. Reminders and alerts keep working. */
+  callsPaused?: boolean;
   patient: Member;
   caregivers: Member[];
   medications: Medication[];
@@ -397,6 +399,11 @@ async function send(method: string, path: string, body: unknown, fallback: strin
 /** The caregiver phoned when she reports an emergency on the call; the others get only the push. */
 export async function setEmergencyContact(memberId: string): Promise<void> {
   await send("PUT", `/family/members/${memberId}/emergency-contact`, {}, "Não deu para salvar o primeiro contato.");
+}
+
+/** Pauses the calls of the family, or turns them back on. */
+export async function setCallsPaused(paused: boolean): Promise<void> {
+  await send("PUT", "/family/calls-paused", { paused }, "Não deu para salvar.");
 }
 
 /** "Pegar grátis" (buy = false) or "Comprar" (buy = true). */

@@ -23,6 +23,7 @@ describe('FamilyController', () => {
   let app: INestApplication;
   const saveOnboarding = vi.fn();
   const setBuyChoice = vi.fn();
+  const setCallsPaused = vi.fn();
   const attach = vi.fn();
   const sendInvite = vi.fn();
   const updateMedication = vi.fn();
@@ -33,7 +34,7 @@ describe('FamilyController', () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [FamilyController],
       providers: [
-        { provide: FamilyService, useValue: { saveOnboarding, setBuyChoice, updateMedication, removeMedication, saveHighCost } },
+        { provide: FamilyService, useValue: { saveOnboarding, setBuyChoice, setCallsPaused, updateMedication, removeMedication, saveHighCost } },
         { provide: AuthService, useValue: { attach, sendInvite } },
       ],
     }).compile();
@@ -106,6 +107,13 @@ describe('FamilyController', () => {
       .send({ buy: true });
     expect(res.status).toBe(204);
     expect(setBuyChoice).toHaveBeenCalledWith(null, id, true);
+  });
+
+  it('pauses and resumes the calls of the family', async () => {
+    const res = await request(app.getHttpServer()).put('/family/calls-paused').send({ paused: true });
+    expect(res.status).toBe(204);
+    expect(setCallsPaused).toHaveBeenCalledWith(null, true);
+    expect((await request(app.getHttpServer()).put('/family/calls-paused').send({})).status).toBe(400);
   });
 
   it('rejects a buy choice without boolean', async () => {

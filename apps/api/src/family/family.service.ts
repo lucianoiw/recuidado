@@ -277,6 +277,8 @@ export class FamilyService implements OnApplicationBootstrap {
       isDemo,
       // Calls are the paid part: false on the free plan, and the screens say "plano pago, em breve".
       calls: await this.plan.callsAllowed(familyId, isDemo),
+      // The family paused the calls itself (Família screen).
+      callsPaused: await this.callsPaused(familyId),
       patient: shown.find((p) => p.id === patientId)!,
       caregivers: withFirstContact(shown.filter((p) => p.role === 'caregiver')),
       medications: meds.map(
@@ -759,6 +761,20 @@ export class FamilyService implements OnApplicationBootstrap {
         .set({ emergencyContact: false })
         .where(and(eq(members.familyId, familyId), ne(members.id, memberId)));
     });
+  }
+
+  private async callsPaused(familyId: string): Promise<boolean> {
+    const [row] = await this.db.select({ at: families.callsPausedAt }).from(families).where(eq(families.id, familyId));
+    return Boolean(row?.at);
+  }
+
+  /** Pauses the calls of this family (reminder, call back and the calm call to the family), or turns them back on. */
+  async setCallsPaused(familyId: string | null | undefined, paused: boolean): Promise<void> {
+    const { familyId: family } = await this.writableFamily(familyId);
+    await this.db
+      .update(families)
+      .set({ callsPausedAt: paused ? new Date() : null })
+      .where(eq(families.id, family));
   }
 
   /** Free in Farmácia Popular, but the family chose to buy it (buy = true) or to get it free. */
