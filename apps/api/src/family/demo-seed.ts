@@ -92,10 +92,15 @@ function demoTranscript(name: string, medication: string) {
   ];
 }
 
+/** Simulated patient 1 ("took it, fine"): answered by a second AI inside the test Asterisk, never dialed out. */
+export const DEMO_SIMULATED_PHONE = '00000000021';
+
 /**
  * Brings the demo family to its fixed state. Runs on boot and is safe to run again:
  * profile and medicines are set to the values above, the stock count restarts now,
- * and missing history is filled in. The patient's phone is never touched (set by the team).
+ * and missing history is filled in. Every phone is set to a simulated patient of the test Asterisk
+ * (apps/voice sim-patient.ts): visitors start the demo run without login, so the demo family must
+ * never ring a real person.
  */
 export async function seedDemoFamily(
   db: Database,
@@ -106,6 +111,7 @@ export async function seedDemoFamily(
     .update(members)
     .set({ birthDate: DEMO_PATIENT_PROFILE.birthDate, cep: DEMO_PATIENT_PROFILE.cep, prefersVoice: true })
     .where(eq(members.id, ids.patientId));
+  await db.update(members).set({ phone: DEMO_SIMULATED_PHONE }).where(eq(members.familyId, ids.familyId));
   await db
     .update(members)
     .set({ nickname: DEMO_PATIENT_PROFILE.nickname })
