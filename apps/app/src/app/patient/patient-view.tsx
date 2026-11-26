@@ -190,14 +190,18 @@ export function PatientView() {
           <p className="font-display text-[32px] text-accent-ink">{formatTime(due[0].scheduledAt)}</p>
           {due.length === 1 && photoOf.get(due[0].medicationId) ? (
             <PhotoZoom src={photoOf.get(due[0].medicationId)!} name={due[0].medicationName} className="my-3 h-44 w-32" />
-          ) : (
+          ) : due.some((d) => photoOf.get(d.medicationId)) ? null : (
             <span className="my-3 flex size-28 items-center justify-center rounded-full bg-blush text-accent">
               <BellIcon size={52} strokeWidth={1.8} />
             </span>
           )}
-          <ul className="flex w-full flex-col gap-3">
+          <ul className={due.length > 1 && due.some((d) => photoOf.get(d.medicationId)) ? "mt-3 flex w-full flex-col gap-5" : "flex w-full flex-col gap-3"}>
             {due.map((d) => (
               <li key={d.id} className="flex flex-col items-center">
+                {/* Several at the same time: each one with its own box, so she does not mix them up. */}
+                {due.length > 1 && photoOf.get(d.medicationId) ? (
+                  <PhotoZoom src={photoOf.get(d.medicationId)!} name={d.medicationName} className="mb-2 h-36 w-28" />
+                ) : null}
                 <h2 className={due.length > 1 ? "font-display text-[32px] leading-tight" : "font-display text-[40px] leading-tight"}>
                   {d.medicationName}
                 </h2>
