@@ -237,7 +237,7 @@ export function CallsView() {
           <p className="max-w-2xl text-[16px] text-muted">
             Cada ligação que a assistente fez para {signedIn ? "a sua família" : "a família de demonstração"}: o áudio gravado,
             o que cada lado disse e o que o sistema fez em cada momento (registro da resposta, frase garantida pelo código,
-            teclas na farmácia).{signedIn ? "" : " Dados de teste; as vozes são da equipe."}
+            teclas na farmácia).{signedIn ? "" : " Dados fictícios: a paciente e as farmácias destas ligações são simuladas por outra IA; a linha e a assistente são as de produção."}
           </p>
         </header>
         {error && <p className="text-[15px] font-semibold text-red-700">Não foi possível carregar as ligações agora.</p>}
